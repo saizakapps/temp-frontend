@@ -1,0 +1,146 @@
+<!-- login container portion start  -->
+<div class="login-fun-background">
+  <div class="login-container">
+    <div class="d-flex justify-content-center h-100">
+      <div class="login_card">
+        <div class="justify-content-center">
+          <div class="brand_logo_container">
+            <img src="/assets/images/smyths-360-logo.png" height="137" width="254" alt="logo" />
+          </div>
+          <!-- close icon -->
+          <!-- <div style="position: relative;">
+              <img src="/assets/images/forgot-close.svg" class="close-icon" width="14" height="14" alt="close" />
+            </div> -->
+        </div>
+        <div class="d-flex justify-content-center form_container loginDetails">
+
+          <!-- username password portion -->
+          <div *ngIf="show === 'login'">
+            <form class="login-form w-100 " #loginForm="ngForm">
+              <div class="form-group">
+                <label for="username" class="login-label">Username</label>
+                <div style="position: relative;">
+                  <input type="username" class="form-control" id="username" name="username" [(ngModel)]="username"
+                    required>
+                  <!-- <span class="email-alert">
+                    <span> <img src="/assets/images/warning.svg" height="18" width="18" alt="alert" /> </span>
+                    Incorrect email format.
+                  </span> -->
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 30px;">
+                <label for="password" class="login-label">Password</label>
+                <div style="position: relative;" class="d-flex">
+                  <input [type]="viewPassword.login ? 'text' : 'password'" class="form-control" id="conpassword"
+                    name="password" [(ngModel)]="password" required>
+                  <span (click)="viewPassword.login = !viewPassword.login"
+                    class="viewPassword d-flex justify-content-center align-items-center">
+                    <img [src]=" viewPassword.login ? '/assets/images/hide.png' : '/assets/images/view.png'"
+                      width="20px" height="20px">
+                  </span>
+                  <!-- <span class="email-alert password-alert error-alert">
+                    <span class="arrow_box"><img src="/assets/images/logw.svg" class="warning-ico" height="18" width="18"
+                        alt="alert" />
+                      Password doesn’t match this Email.</span>
+                  </span> -->
+                </div>
+
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mobilewrap-flex">
+                <!-- submit portion -->
+                <div class="text-center float-left">
+                  <button (click)="login_sso()" type="submit" [disabled]="loginForm.invalid"
+                    class="btn btn-primary login-submit">
+                    Log in</button>
+                </div>
+
+                <!-- forgot password -->
+                <div class="text-center cursor-pointer float-right" style="margin-top: 10px !important;">
+                  <a (click)="show = 'forgot'; viewPassword.login = false" class="forgot-password">
+                    Forgot password?</a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- forgot portion -->
+          <div *ngIf="show === 'forgot'">
+            <form class="login-form w-100 " #loginForm="ngForm">
+              <span class="lblHeading d-flex justify-content-center">Forgot Password</span>
+              <div class="form-group">
+                <label for="emailID" class="login-label">Email ID</label>
+                <div style="position: relative;">
+                  <input id="email" type="text" class="form-control" name="emailID"
+                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$" #email="ngModel" [(ngModel)]="mailId"
+                    required>
+                  <!-- <span class="email-alert">
+                    <span> <img src="/assets/images/warningss.svg" height="18" width="18" alt="alert" /> </span>
+                    Incorrect email format.
+                  </span> -->
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mobilewrap-flex">
+                <!-- submit portion -->
+                <div class="text-center float-left">
+                  <a (click)="show = 'login'; mailId = '';" class="forgot-password">
+                    Back to log in</a>
+                </div>
+
+                <!-- forgot password -->
+                <div class="text-center cursor-pointer float-right" style="margin-top: 10px !important;">
+                  <button (click)="forgotPassword()" type="submit"
+                    [disabled]="loginForm.invalid || email.errors && email.errors?.['pattern']"
+                    class="btn btn-primary login-submit">
+                    Confirm</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- reset portion -->
+          <div *ngIf="show === 'change'">
+            <form class="login-form w-100 " #loginForm="ngForm">
+              <span class="lblHeading d-flex justify-content-center">Change Password</span>
+              <div class="form-group">
+                <label for="emailID" class="login-label">New Password</label>
+                <div style="position: relative;" class="d-flex">
+                  <input [type]="viewPassword.new ? 'text' : 'password'" class="form-control" name="newPassword"
+                    [(ngModel)]="newPassword" required>
+                  <span (click)="viewPassword.new = !viewPassword.new" class="viewPassword">
+                    <img [src]="viewPassword.new ? '/assets/images/hide.png' : '/assets/images/view.png'" width="20px"
+                      height="20px">
+                  </span>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label for="empID" class="login-label">Confirm Password</label>
+                <div style="position: relative;" class="d-flex">
+                  <input [type]="viewPassword.confirm ? 'text' : 'password'" type="password" class="form-control"
+                    name="confimrPassword" [(ngModel)]="confirmPassword" required>
+                  <span (click)="viewPassword.confirm = !viewPassword.confirm" class="viewPassword">
+                    <img [src]="viewPassword.confirm ? '/assets/images/hide.png' : '/assets/images/view.png'"
+                      width="20px" height="20px">
+                  </span>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mobilewrap-flex">
+                <!-- <div class="text-center float-left">
+                  <a (click)="showLogin = true; showChangePassword = false" class="forgot-pass  word">
+                    Back to log in</a>
+                </div> -->
+                <div class="text-center cursor-pointer float-right" style="margin-top: 10px !important;">
+                  <button (click)="resetConfirm()" type="submit" [disabled]="loginForm.invalid"
+                    class="btn btn-primary login-submit">
+                    Confirm</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

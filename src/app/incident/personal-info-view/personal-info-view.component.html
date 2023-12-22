@@ -1,0 +1,51 @@
+
+<div class="incidentDetailView d-flex flex-column">
+				<div class="labelView d-flex" *ngIf="personalInfoData.formFieldAccess.injuredPersonFullName.view">
+					<label class="label-name">Injured:</label>
+				<div class="data-view" [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
+				{{(!isRedacted)?personalInfoData.showData.injuredPersonFullName:'REDACTED'}}
+			</div>
+			
+				</div>
+					<div class="labelView d-flex" *ngIf="personalInfoData.formFieldAccess.ageValue.view">
+					<label class="label-name">Age:</label>
+				<div class="data-view " [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
+				<span >
+</span>{{(!isRedacted)?(personalInfoData.showData.ageValue+' '+personalInfoData.showData.ageType+'s'+((personalInfoData.showData.appropriateAge)?';  Approximate':'')):'REDACTED'}}
+			</div>
+				</div>
+				<div class="labelView d-flex" *ngIf="personalInfoData.formFieldAccess.injuredPersonContactNo.view">
+					<label class="label-name">Phone:</label>
+				<div class="data-view" [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
+				{{(!isRedacted)?personalInfoData.showData.injuredPersonContactNumber:'REDACTED'}}
+			</div>
+				</div>
+				<div class="labelView d-flex" *ngIf="personalInfoData.formFieldAccess.emailAddress.view">
+					<label class="label-name">Email:</label>
+				<div class="data-view " [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
+				{{(!isRedacted)?personalInfoData.showData.injuredPersonEmail:'REDACTED'}}
+			</div>
+				</div>
+				<div class="labelView d-flex"  *ngIf="personalInfoData.formFieldAccess.address.view">
+					<label class="label-name ">Address:</label>
+				<div class="data-view" [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
+				{{(!isRedacted)?personalInfoData.showData.injuredPersonAddress:'REDACTED'}}
+			</div>
+				</div>
+				
+			<!-- 	<div class="labelView d-flex" *ngIf="personalInfoData.formFieldAccess.store.view">
+					<label class="label-name">store:</label>
+				<div class="data-view ">
+				{{personalInfoData.showData.store}}
+			</div>
+				</div> -->
+				<div class="labelView d-flex" *ngIf="personalInfoData.formFieldAccess.significantOther.view">
+					<label class="label-name">Significant:</label>
+				<div class="data-view">
+				{{personalInfoData.showData.significantOthers}}
+			</div>
+				</div>
+				<!-- <div class="labelView d-flex">
+					<span class="edit-personal-info" (click)="editPersonalInfo()">Edit personal information</span>
+				</div> -->
+			</div>

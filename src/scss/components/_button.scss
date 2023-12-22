@@ -1,0 +1,78 @@
+.btn {
+    border-radius: 6px;
+    border: solid #a39595 1px;
+    padding: 8px;
+    font-weight: 500;
+}
+.btn:hover{
+      border: solid #fff 1px;
+      background:grey;
+      color:white;
+}
+
+.newCourseBtn {
+  height: 30px;
+  line-height: 16px;
+  font-size: 14px;
+  background-color: #1f96f4;
+  border-color: #1f96f4;
+  /* padding: 10px 15px 11px; */
+}
+
+.statusBtn:after {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+  margin-top: 4px;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  color: #fff !important;
+  background-color: #1f96f4 !important;
+  border-color: #1f96f4 !important;
+  box-shadow: none !important;
+}
+.btn:focus {
+  box-shadow: none !important;
+}
+
+.green-snackbar {
+    background-color: #000000 !important;
+    color: white !important;
+    --mat-mdc-snack-bar-button-color: #000000;
+    --mdc-snackbar-container-color: #000000 !important;
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+
+}
+ 
+.green-snackbar button {
+    background-color: #000000 !important;
+    color: white !important;
+    border: none !important;
+}
+.red-snackbar {
+    background: #000000;
+    color: white;
+     --mat-mdc-snack-bar-button-color:#000000 ;
+    --mdc-snackbar-container-color: #000000 !important;
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+}
+.red-snackbar button {
+    background-color: #000000 !important;
+    color: white !important;
+    border: none;
+    --mat-mdc-snack-bar-button-color: #000000;
+    --mdc-snackbar-container-color: #000000 !important;
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+
+}
+
+
+

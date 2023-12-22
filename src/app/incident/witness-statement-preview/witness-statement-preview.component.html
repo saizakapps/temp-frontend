@@ -1,0 +1,41 @@
+<div class="" >
+	<!-- gallerize="gallery-2" -->
+                     <div class="group-2 d-flex wrapflex" >
+                        <div class="text-center" *ngFor="let img of imageObjectWitnessStatement; let i = index">
+                        	<!--   [lightbox]="0" -->
+                          <img 
+                         
+                           [src]="img.thumbImage || img.posterImage"    *ngIf="img.type=='Photo' && isHistory" (click)="openImageViewer(imageView)" >
+                            <img 
+                         
+                           [src]="img.thumbImage || img.posterImage"    *ngIf="img.type=='Photo' && !isHistory" (click)="openImageViewerNotHistory()" >
+                           <img 
+                           [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent,'pdf',i)"  *ngIf="img.type=='pdf'">
+                           <img 
+                           [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent,'word',i)"  *ngIf="img.type=='word'">
+                      
+                        </div>
+                     </div>
+                                       <div class="row align-right"  *ngIf="imageObjectWitnessStatement.length>0" title="Download All">
+             <span class="download-label" (click)="downloadWitnessFiles()">
+                Download Witness files
+             </span>
+         </div>
+                  </div>
+
+<ng-template #pdfContent>
+   <div class="popup-view-pdf">
+   <app-pdf-viewer [pdfURL]="pdfURL" *ngIf="pdfURL!='' && pdfURL!=null"></app-pdf-viewer>
+ 
+   <app-document-viewer [docURL]="docURL" *ngIf="docURL!='' && docURL!=null" ></app-document-viewer>
+   <mat-icon class="close-doc-viewer" mat-dialog-close>close</mat-icon>
+  
+   </div>
+</ng-template>
+<ng-template #imageView  class="ShowImagePreview">
+   <app-custom-image-viewer [imageSrc]="imageSRC"  [historyView] = "isHistory" *ngIf="isHistory"></app-custom-image-viewer>
+</ng-template>
+
+<div  class="ShowImagePreview" *ngIf="ngxservice.isShowImagePreview && !isHistory">
+   <app-custom-image-viewer [imageSrc]="imageSRC" [historyView] = "isHistory"></app-custom-image-viewer>
+</div>

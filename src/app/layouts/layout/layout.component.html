@@ -1,0 +1,74 @@
+<div class="sidenav" *ngIf="this.ngxservice.mobileView == false">
+  <app-sidenav></app-sidenav>
+</div>
+
+
+<div class="main-content" [ngClass]="{'overflowcontent' : router.url == '/incident/mobile/create', 'main-content-noleft' : this.ngxservice.mobileView}">
+  <div class="pageheader" *ngIf="this.ngxservice.mobileView == true">
+    <app-header></app-header>
+ </div>
+  <router-outlet></router-outlet>
+</div>
+<div class="modal logoutModal confirmModal fade bootstrapBackground_Pop" id="logoutModal" tabindex="-1" role="dialog"
+  aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-centered" role="document">
+    <div class="modal-content ">
+
+      <!-- modal header -->
+      <div class="modal-header">
+        <!-- title -->
+        <div class="confirmHeader">
+          Alert
+        </div>
+
+        <!-- close icon -->
+        <button type="button" class="close d-flex px-3 py-2 logoutClose" data-dismiss="modal" aria-label="Close">
+          <mat-icon class="clr-white  mb-2">close</mat-icon>
+        </button>
+
+      </div>
+      <div class="modal-body d-flex align-items-center">
+
+        <!-- modal content -->
+        <div>
+          <h6 class="mt-2"> Are you want to logout? </h6>
+        </div>
+
+      </div>
+      <div class="modal-footer p-0 border-0 pb-3">
+        <div class="m-0 w-100 d-flex justify-content-end">
+          <button class="btn userDlgBtn cancelBtn float-right mr-2 saveDraft" data-dismiss="modal">Cancel</button>
+          <button (click)="logout()" class="btn btn-primary cancelBtn saveDraft cform">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal policyModal confirmModal fade loginPolicyModal bootstrapBackground_Pop" id="policyModal" tabindex="-1"
+  role="dialog" aria-labelledby="policyModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content ">
+
+      <!-- modal header -->
+      <div class="modal-header">
+        <!-- title -->
+        <div class="d-flex justify-content-center w-100">
+          <img src="/assets/images/smyths-logo.png" height="31.66px" width="95.2px" alt="logoPolicy" />
+        </div>
+
+        <!-- close icon -->
+        <button type="button" class="close d-flex px-3 py-2" data-dismiss="modal" aria-label="Close">
+          <mat-icon class="clr-white  mb-2">close</mat-icon>
+        </button>
+
+      </div>
+      <div class="modal-body d-flex align-items-center p-3 flex-column">
+
+
+        <iframe src="../../../assets/privacy-policy.html"></iframe>
+      </div>
+    </div>
+  </div>
+</div>

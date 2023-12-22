@@ -1,0 +1,147 @@
+.multiselect-container {
+  position: relative;
+    // width: 360px;
+
+}
+
+.multiselect {
+  border: 1px solid #616161;
+  padding: 5px 10px;
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.selected-options {
+  flex: 1;
+  overflow: hidden;
+}
+
+.dropdown-arrow {
+  margin-left: 5px;
+}
+
+.options {
+  border: 1px solid #ccc;
+  // padding: 5px 10px;
+  // max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 2;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+mat-icon{
+  font-size: 15px;
+  color: #1f96f4;
+}
+.remove-button{
+  mat-icon{
+    padding-top: 1px;
+    // color: red;
+    padding-left: 2px;
+    margin-right: 10px;
+  }
+}
+.clear-button{
+  mat-icon{
+    padding-top: 0px;
+  }
+}
+.items{
+  margin-right: 5px;
+}
+.multiselect{
+  background-color: white !important;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23424242%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0-4.2-1.6-7.9-4.8-11.2-3.2-3.2-6.9-4.8-11.2-4.8H16c-4.2%200-7.9%201.6-11.2%204.8S0%20163.8%200%20168c0%204.4%201.6%208.2%204.8%2011.4l112%20112c3.1%203.1%206.8%204.6%2011.2%204.6%204.4%200%208.2-1.5%2011.4-4.6l112-112c3-3.2%204.5-7%204.5-11.4z%22%2F%3E%3C%2Fsvg%3E%0A") !important;
+  background-position: right 10px center !important;
+  background-repeat: no-repeat !important;
+  background-size: auto 42% !important;
+  // padding: 8px 25px 8px 10px !important;
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  padding-right: 22px;
+  width: 350px;
+  border-radius: 3px;
+  &::-ms-expand {
+    display: none;
+  }
+}
+.itemsdata{
+  width: 307px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.checkboxdivAccess{
+  padding: 10px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dedede;
+
+  &:hover{
+    background-color: #f0f0f0;
+  }
+}
+.optionsData:last-child{
+.checkboxdivAccess{
+  border-bottom: 1px solid transparent !important;
+}
+}
+.Labl{
+  padding-left: 7px;
+  padding-top: 1px;
+}
+.placeholder{
+  color: #bbb;
+}
+
+.disable {
+// pointer-events: none;
+opacity: .3;
+}
+.no-cursor{
+  cursor: default;
+}
+.newClass{
+  border: 2px solid green;
+}
+.subTable{
+  margin: 10px;
+  margin-left: 5px;
+  width: calc(100% - 20px);
+  .noborder{
+    border-bottom: 0px !important;
+    justify-content: center;
+    padding: 0px;
+    &:hover{
+      background-color: transparent;
+    }
+  }
+  td,th{
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  th{
+    text-align: center;
+  }
+  th:nth-child(1){
+    width: 26px;
+  }
+  th:nth-child(2){
+    text-align: left;
+  }
+  th:nth-child(3),th:nth-child(4),th:nth-child(5){
+  min-width: 58px;
+  }
+}
+.disableClass{
+  opacity: 0.6;
+  pointer-events: none;
+}

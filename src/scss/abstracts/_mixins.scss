@@ -1,0 +1,36 @@
+.trackerbox{
+   background-color: $white;
+   padding: 7px 15px;
+   border-radius: 10px;
+   width:fit-content;
+   h3{
+   font-weight: bold;
+}
+}
+.row-padding-right{
+  padding-right:$row-padding;
+}
+form{
+  label{
+  padding:3px;
+  }
+  .data-view{
+  padding:3px;
+  }
+}
+
+
+.sidenav {
+  height: 100%;
+  width: calc($left-menu-width * 1px);
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+.main-content {
+  margin-left: 200px;
+  height: 100%;
+}

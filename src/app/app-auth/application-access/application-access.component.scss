@@ -1,0 +1,274 @@
+.appAuthSection{
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.app-auth-page-container-top{
+  padding: 20px;
+  padding-bottom: 0px;
+  background: #fff;
+  border-radius: 5px;
+}
+.app-auth-page-container {
+  height: calc(100vh - 172px);
+  background: #fff;
+
+  position: relative;
+  overflow: auto;
+}
+
+/* Add borders to table */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Add borders to table header cells */
+th {
+  padding: 8px 8px;
+  padding-top: 0px !important;
+}
+
+/* Add borders to table cells */
+td {
+  padding: 8px 8px;
+}
+td:nth-child(1), th:nth-child(1){
+  padding-left: 2px;
+  padding-right: 0px;
+}
+td:last-child, th:last-child{
+  padding-right: 10px;
+  width: 100%;
+}
+tr{
+  padding: 0px 5px;
+}
+
+.addrowButton{
+  background-color: #1F96F4;
+  color: #fff;
+  font-weight: 500;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none !important;
+}
+.disablebutton{
+  opacity: 0.5;
+  pointer-events: none;
+}
+.app-auth-page-container{
+  table{
+
+    tbody :hover{
+      // border-bottom: 1px solid #e8e8e8;
+      background-color: #ededed;
+    }
+    // tr:nth-child(1){
+    //   border-bottom: 1px solid #e8e8e8;
+    // }
+    th{
+      background-color: #fff;
+      font-weight: 600;
+    }
+  }
+  .textinput{
+    border: 1px solid #616161!important;
+    width: 210px;
+    /* margin-top: 0px; */
+    font-weight: 500;
+    color: #212529;
+    height: 32px;
+    border-radius: 3px;
+    padding-left: 10px;
+  }
+  .textinput:hover {
+    background-color: #ffffff !important;
+  }
+  /* .textinput:focus-visible{
+    border-bottom: 1px solid #1F96F4 !important;
+  } */
+}
+:focus-visible {
+  outline: none !important;
+}
+.checkboxdivAccess{
+  display: flex;
+  justify-content: center;
+}
+
+thead tr th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  // border-bottom: 1px solid #e8e8e8;
+}
+.fa{
+  font-size: 20px;
+  cursor: pointer;
+}
+.disableButton{
+  opacity: 0.5;
+  pointer-events: none;
+  .fa{
+    font-size: 22px;
+    opacity: 0.5;
+  }
+}
+.fitwidth{
+  width: 40px;
+  cursor: pointer;
+}
+.addRoleButton{
+  background-color: #1F96F4;
+  color: #fff;
+  font-weight: 500;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  border: none !important;
+}
+.disablebutton{
+  opacity: 0.5;
+  pointer-events: none;
+}
+.disabled {
+  opacity: 0.5;
+//  pointer-events: none;
+input{
+  background-color: #fff;
+}
+}
+.label{
+  margin-bottom: 0px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 2px;
+}
+.headerNav{
+  margin-bottom: 20px;
+}
+.newfa{
+  color: #1F96F4;
+  font-size: 24px;
+}
+svg{
+  width: 35px;
+}
+.filter-svg{
+  width: fit-content !important;
+}
+.editIcon {
+  vertical-align: middle;
+  font-size: 13px;
+  opacity: 0;
+}
+.opacity1{
+  opacity: 1;
+}
+
+
+
+.tabDiv {
+  // flex-wrap: wrap;
+  // grid-gap: 10px;
+  margin-bottom: -2px;
+
+}
+.tabGroup {
+  z-index: 0;
+  margin-bottom: 20px;
+}
+.tabDetails {
+  background: #ffffff;
+  border: 1px solid #818181 !important;
+  border-right: 0px solid #818181 !important;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 16px;
+  border-radius: 0px;
+}
+.tabGroup:last-child{
+  .tabDetails{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-right: 1px solid #818181 !important;
+  }
+  .activeTabbutton{
+    border-right: 1px solid #1f96f4 !important;
+  }
+}
+.tabGroup:first-child{
+  .tabDetails{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+}
+
+.activeTabbutton{
+  background: #1f96f4;
+  /* border-radius: 0; */
+  color: #fff;
+  border-color: #1f96f4 !important;
+  border: 1px solid #1f96f4 !important;
+
+}
+// .tabDetails.active {
+//   background: #1f96f4;
+//   /* border-radius: 0; */
+//   color: #fff;
+//   border-color: #1f96f4 !important;
+// }
+.modulesDD {
+  border: 1px solid red;
+  border-radius: 5px;
+}
+.app-auth-page-container .roleNameInputAlert {
+  border-color: red !important;
+}
+.roleSearch {
+  padding-right: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  padding-top: 2px;
+  padding-left: 2px;
+}
+.borderTr {
+  border-bottom: 1px solid #e8e8e8;
+}
+.tabDiv .btn-group .button:first-child {
+  border-radius: 6px 0 0 6px !important;
+}
+
+.tabDiv .btn-group .button:last-child {
+  border-radius: 0 6px 6px 0 !important;
+  margin-left: -1px;
+}
+
+.tabDiv .btn-group .button:only-child {
+  border-radius: 6px !important;
+  margin-left: 0;
+}
+.height-th{
+  height: 25px;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.active {
+  background-color: #1f96f4;
+  padding: 2px;
+  border-radius: 3px;
+  color: #ffffff;
+  padding-left: 8px;
+}

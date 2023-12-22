@@ -1,0 +1,15 @@
+<div class="d-flex mx-2 justify-content-between align-items-center relativeheader">
+	<div class="hamburger" id="hamburger-1" [ngClass]="{'isactive' : commonservice.showMenu == true}" (click)="show()">
+		<span class="line"></span>
+		<span class="line"></span>
+		<span class="line"></span>
+	  </div>
+			<div class="abslogo"  (click)="commonservice.showMenu = false">
+			<img src="assets/images/logo.png" alt="">
+			</div>
+
+		  <div class="abslistbox" *ngIf="commonservice.showMenu">
+			<div class="list" data-toggle="modal" data-target="#policyModal" (click)="commonservice.showMenu = false">Privacy Policy</div>
+			<div class="list" data-toggle="modal" data-target="#logoutModal" (click)="commonservice.showMenu = false">Log Out</div>
+		  </div>
+</div>

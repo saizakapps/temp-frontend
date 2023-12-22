@@ -1,0 +1,259 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  min-width: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+th.mat-header-cell {
+  background-color: white !important;
+  color: white !important;
+}
+
+.mdc-data-table__header-cell {
+  background-color: white !important;
+}
+.mdc-data-table__header-cell {
+  color: grey !important;
+}
+.mat-mdc-table .mdc-data-table__row {
+  background: white !important;
+}
+.mdc-data-table__pagination-total,
+.mdc-data-table__pagination-rows-per-page-label,
+.mdc-data-table__cell {
+  color: grey !important;
+}
+
+.new-box {
+  padding: 8px 7px 7px;
+  gap: 10px;
+  width: 38px;
+  height: 22px;
+  background: #FFD82D;
+  border-radius: 3px;
+  color: #000;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  text-align: center;
+}
+.table-responsive {
+  // min-height: 300px;
+  // height: calc(100vh - 145px);
+  overflow: auto;
+}
+.incidentListTblView {
+  display: table;
+  width: 100%;
+  background-color: #fff;
+  padding:20px;
+}
+
+.incidentListTblView tr {
+  display: table;
+  height: 32px !important;
+  width: 100%;
+}
+.incidentListTblView th{
+  font-weight:600;
+}
+.incidentListTblView td, .incidentListTblView th {
+  height: 32px;
+  border-bottom: 1px solid #C5C5C5;
+  padding: 0 10px 0px 0px;
+  color: #0d0d0d !important;
+  font-family: "Inter" !important;
+}
+.incidentListTblView td span, .incidentListTblView th span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+.incidentListTblView th:nth-child(1),.incidentListTblView td:nth-child(1) {
+  width: 115px;
+  max-width: 115px;
+}
+.incidentListTblView td:nth-child(1) .emptyContentDiv {
+  width: 104px;
+}
+.incidentListTblView th:nth-child(2),.incidentListTblView td:nth-child(2){
+  width: 123px;
+}
+.incidentListTblView th:nth-child(2) span,.incidentListTblView td:nth-child(2) span{
+  max-width: 90px;
+}
+.incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
+  width: 126px;
+}
+.incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
+  max-width: 114px;
+}
+
+// .table-responsive {
+//   min-height: 300px;
+//   height: calc(100vh - 145px);
+//   overflow: auto;
+// }
+// .courseListTblView tr:hover {
+//   cursor: pointer;
+// }
+
+// .courseListTblView thead tr:first-child {
+//   position: sticky;
+//     top: 0;
+//     z-index: 2;
+//     background: #fff;
+//     height: 35px;
+//     display: table-caption;
+//     width: 100%;
+// }
+// .courseListTblView tr {
+//   z-index: 1;
+//     height: 36px;
+//     width: 100%;
+//     border-bottom: 1px solid #C5C5C5!important;
+//     display: flex;
+//     align-items: center;
+// }
+
+// .courseListTblView th {
+//   width: 155px;
+// }
+
+// .courseListTblView {
+//   min-height: 300px;
+//   height: calc(100vh - 190px);
+//   padding: 0px 10px;
+//   display: table;
+//   overflow: auto;
+//   width: 100%;
+// }
+// .courseListTblView tr th:nth-child(1){
+//   width: 40px;
+// }
+// .courseListTblView:nth-child(2) tr th:nth-child(2),.courseListTblView:nth-child(2) tr td:nth-child(2) {
+//   width: 155px !important;
+// }
+// .courseListTblView td {
+//   /* border-bottom: 1px solid #C5C5C5!important; */
+//   font-size: 14px!important;
+//   vertical-align: middle!important;
+//   width: 155px;
+// }
+
+// .courseTblView span {
+//   max-width: 150px;
+//   overflow: hidden;
+//   white-space: nowrap;
+//   text-overflow: ellipsis;
+// }
+
+// .courseListTblView th,.courseListTblView td {
+//   padding: 0px 10px;
+// }
+
+// .courseListTblView td {
+//   /* border-bottom: 1px solid #C5C5C5!important; */
+//   font-size: 14px!important;
+//   vertical-align: middle!important;
+//   width: 155px;
+//   background-color: #fff !important;
+// }
+
+// .courseListTblView .courseViewLst td:nth-child(2),.courseView tr th:nth-child(2) {
+//   width: 500px !important;
+// }
+// .courseListTblView .tableIcons  {
+//   position: relative;
+//   left: 0px;
+//   color: #818181;
+// }
+// .courseListTblView tr th:nth-child(1),.courseListTblView tr td:nth-child(1){
+//   width: 40px;
+// }
+// .courseListTblView tr th:nth-child(2),.courseListTblView tr td:nth-child(2){
+//   width: 103px;
+// }
+// .courseListTblView tr th:nth-child(3),.courseListTblView tr td:nth-child(3){
+//   width: 126px;
+// }
+.no-data-found{
+  text-align:center;
+}
+.textcase{
+  text-transform:capitalize;
+  cursor:pointer;
+}
+.app-no-record-found-health {
+ display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: 50px;
+    background: #f2f2f2;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 25px;
+}
+.cursor-pointer{
+  cursor:pointer;
+}
+.allCheckboxhidden{
+opacity : 0;
+/*pointer-events:none;*/
+display: none;
+}
+.draftid{
+      margin-left: 37px;
+
+}
+.text-camel{
+  text-transform: capitalize;
+}
+.row-blue{
+  background:#1f96f4 !important;
+}
+
+.incidentListTblView td:nth-child(1) .lockVisible {
+  width: 16px;
+  height: 21px;
+}
+.lockVisible .mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+.restoreBtn {
+  border: none !important;
+  width: 62px;
+  height: 24px;
+  color: #fff;
+  background: #1f96f4;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.historyincidentListTblView{
+  padding: 0px !important;
+}
+.incidentListTblView td:nth-child(2) span {
+  max-width: 150px !important;
+}
+.row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}

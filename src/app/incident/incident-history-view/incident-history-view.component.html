@@ -1,0 +1,97 @@
+<div class="container-fluid incidentContainer p-0" *ngIf="mainContentShow">
+	
+	<section class="incidentSection">
+		<div class="d-flex justify-content-end row-padding-right">
+			
+		</div>
+		<form [formGroup]="incidentForm" class="incidentCreateForm">
+			<div class="d-flex align-items-start">
+				<div class=" paddTop incidentCreateView">
+
+					<div class="title-incident incidentCustomer">{{incidentSelectedTypeData.name}} Incident<span>{{(incidentData.isAdd==false)?': '+incidentData.incidentRowData.incidentId:''}}</span> </div>
+                      <app-basic-info-view *ngIf="showBasicInfoView" [basicInfoData]="basicInfoViewData"></app-basic-info-view>
+					<div class="">
+						<div class="personal-info-title personalInfoCls d-block">1. Personal Information</div>
+						<!-- perfornal info view -->
+						<div class="" [hidden]="isPersonalInfoViewHidden">
+									<app-personal-info-view *ngIf="!isPersonalInfoViewHidden" [personalInfoData]="personalInfoView" (editPersonalInfo)="editPersonalInfo($event)"></app-personal-info-view>
+						</div>
+
+					</div>
+					<div class="detailView">
+						<div class="personal-info-title">2. Incident Details</div>
+					</div>
+					<!-- incident details view -->
+					<div class="" [hidden]="isIncidentDetailsViewHidden">
+						<app-incident-details-view *ngIf="!isIncidentDetailsViewHidden" [incidentDetailsData]="incidentViewData" (incidentDetailsEdit)="editIncidentDetails($event)"></app-incident-details-view>
+					</div>
+
+					<div class="" *ngIf="incidentSelectedTypeData.name=='Product'">
+						<div class="personal-info-title">3. Product Details</div>
+						<div class="product-form-view" [hidden]="isProductDetailsViewHidden">
+							<app-product-details-view *ngIf="!incidentData.isAdd" [productDetailsData]="productDetailsView" (productDetailsEdit)="editProductDetails($event)"></app-product-details-view>
+						</div>
+					</div>
+					<div class="" *ngIf="isAssginHandlingShow">
+						<div class="personal-info-title">{{(incidentSelectedTypeData.name=='Product')?'4. ':'3. '}}Issue Handling</div>
+						<div [hidden]="handlingissuesViewHidden">
+							<app-issues-handling-view *ngIf="!incidentData.isAdd" [issuesHandlingData]="issuesHandlingViewData"(issuesHandlingEdit)="editHandlingIssues($event)"></app-issues-handling-view>
+						</div>
+						
+					</div>
+				</div>
+				<div>
+					<div class="addCommentbox" *ngIf="this.incidentForm.value.resolveActions.length>0">
+						<div class="" [ngClass]="{'boxlist' : !boxList}">
+							<div *ngFor="let cmt of this.incidentForm.value.resolveActions;index as i;">
+								<div *ngIf="i<=showMoreCommentCount">
+									<div class="d-flex align-items-center color pb-10">
+										<div><img src="assets/healthsafetyimages/small_msg_icon.png" alt="" class="marginImg"></div>
+										<div class="wrapflex-form">
+										<div class="fw-600-bold  uname">{{cmt.createdByName}}</div>
+										<div class="fontset">{{cmt.addedDateTime+'(UTC)'}}</div>
+										</div>
+									</div>
+									<div class="lh-17 pb-10 break-word"><span class="fw-500">Actions:</span>
+										{{(cmt.resolveAction!='')?cmt.resolveAction:'-'}}
+									</div>
+									<div class="lh-17 pb-10 break-word"><span class="fw-500">Goodwill:</span>
+										{{(cmt.goodwill!='')?cmt.goodwill:'-'}}</div>
+										<div class="lh-17 pb-10 break-word"><span class="fw-500">follow-up call:</span>
+										{{(cmt.followUpCall!='')?cmt.followUpCall:'-'}}</div>
+									<div class="lh-17 pb-20 break-word">{{(cmt.comments!='')?cmt.comments:'-'}}</div>
+									<div class="line"></div>
+								</div>
+
+							</div>
+						</div>
+						<button (click)="showMoreCmd()"
+							*ngIf="this.incidentForm.value.resolveActions.length>2 && boxList == true"
+							class="add-comment-btn add-comment-btn1">Show More
+							({{this.incidentForm.value.resolveActions.length - 2}})</button>
+						<button (click)="showLessCmd()"
+							*ngIf="this.incidentForm.value.resolveActions.length>2 && boxList == false"
+							class="add-comment-btn add-comment-btn1">Show Less</button>
+					</div>
+					<div class="priorityBox" *ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write || formFieldAccess.priority.view) && incidentSelectedTypeData.name=='Product'">
+						<div class="priorityBoxtitle d-flex align-items-center">Priority<span class="selectPriority d-flex align-items-center" >:&nbsp;<span class="editminicircledot {{optionData}}1" [style.background-color]="optionData"></span>{{this.productDetailsView.showData.priority}}</span></div>
+						
+					</div>
+					<div class="legal-info" *ngIf="!incidentData.isAdd && isShowInsuranceVerification">
+						<div >
+							<app-insurance-verification-view [insuranceVerificationData]="insuranceVerificationData" *ngIf="isShowInsuranceVerification"></app-insurance-verification-view>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+	<footer class="d-flex align-items-center footerBtns">
+		<div class="d-flex submitbox">
+		
+
+		</div>
+	</footer>
+</div>
+
+

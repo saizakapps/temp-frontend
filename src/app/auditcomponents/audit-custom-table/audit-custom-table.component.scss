@@ -1,0 +1,657 @@
+@import '../../../scss/abstracts/variables';
+.mdc-data-table__header-cell {
+  background-color: white !important;
+}
+// .auditListTblView{
+//   display: block;
+//   width: 100%;
+//   height: 100%;
+//   background-color: #fff;
+// }
+// .auditListTblView tr td:last-child{
+//   width: 100%;
+// }
+.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  padding: 0px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.mat-mdc-table .mdc-data-table__row {
+  background: white !important;
+}
+
+.mdc-data-table__pagination-total,
+.mdc-data-table__pagination-rows-per-page-label,
+.mdc-data-table__cell {
+  font-weight: 400;
+}
+
+.table-responsiveTop {
+  background-color: #fff;
+  padding: 20px;
+  padding-right: 10px;
+  // padding-top: 15px;
+  padding-bottom: 0px;
+  width: calc(100vw - 240px);
+  margin-top: -15px;
+  position: relative;
+  
+  .absthline{
+    position: absolute;
+    top: 52px;
+    z-index: 2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    width: calc(100% - 48px);
+    height: 1px;
+    left: 20px;
+  }
+}
+
+.table-responsive {
+  background-color: #fff;
+  padding-top: 0px;
+  // padding: 20px;
+  overflow: auto;
+  width: calc(100vw - 280px);
+  display: block;
+  height: calc(100vh - 176px);
+  max-height: calc(100vh - 176px);
+  position: relative;
+
+}
+
+.hiddenFlow {
+  overflow-x: hidden !important;
+}
+
+.auditListTblView th span {
+  font-weight: 600;
+}
+
+.auditListTblView tr:hover{
+  background-color: #f2f2f257 !important;
+}
+// .auditListTblView tr{
+//   display: table;
+//   width: 100%;
+// }
+.auditListTblView th span,
+.auditListTblView td span {
+  font-family: "Inter" !important;
+  color: #0d0d0d !important;
+  white-space: nowrap;
+}
+
+.auditListTblView td span {
+  font-weight: 400;
+}
+
+.auditListTblView td .blue_text {
+  color: $app-primary-color !important;
+  cursor: pointer !important;
+  font-weight: 550 !important;
+  padding-top: 6px;
+  padding-bottom: 8px;
+}
+
+.auditListTblView td .black_text {
+  color: #000000 !important;
+  font-weight: 550 !important;
+  pointer-events: none;
+}
+.auditListTblView td .red_text {
+  color: red !important;
+  font-weight: 550 !important;
+}
+
+.auditListTblView .document_width {
+  color: $app-primary-color !important;
+  font-weight: 550 !important;
+}
+
+.app-no-record-found-health {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  height: 50px;
+  background: #f2f2f2;
+  padding-left: 12px;
+  padding-right: 12px;
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 110px;
+  text-align: center;
+}
+
+.auditListTblView tr {
+  height: 32px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.auditListTblViewRemovetr tr{
+  border-bottom: none !important;
+}
+
+.pdfView {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #000000CC;
+  z-index: 100;
+  margin: 0 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .pdfViewImg {
+    max-width: 540px;
+  }
+}
+
+.f-400 {
+  font-weight: unset !important;
+}
+
+.allCheckbox {
+    width: 16px !important;
+    margin-right: 9px;
+}
+
+
+.camelCase {
+  text-transform: capitalize;
+}
+
+.auditListTblView {
+  .store_name_width {
+    width: 135px !important;
+    min-width: 135px !important;
+    max-width: 180px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .document_width {
+    width: 113px !important;
+    max-width: 241px !important;
+    text-overflow: ellipsis;
+    cursor: default;
+  }
+
+  .rm_width {
+    width: 157px !important;
+    max-width: 157px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .uploaddate_width {
+    width: 115px !important;
+    max-width: 115px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .uploadname_width {
+    width: 105px;
+    max-width: 130px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .viewname_width {
+    width: 105px;
+    max-width: 155px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .viewdate_width {
+    width: 115px !important;
+    max-width: 115px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .status_width {
+    width: 79px !important;
+    max-width: 79px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+
+  .storeId_width {
+    width: 98px !important;
+    max-width: 98px !important;
+    text-overflow: ellipsis;
+    color: #0d0d0d !important;
+  }
+  .newbutton_width{
+    max-width: 50px;
+    width: 50px;
+  }
+}
+.auditListTblView {
+  .row-blue {
+    background: $app-primary-color !important;
+    color: #fff !important;
+    
+    span {
+      color: #fff !important;
+    }
+  }
+}
+.newbutton {
+  font-size: 10px;
+  font-weight: 700;
+  background-color: #FFD82D;
+  width: 38px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  border-radius: 3px;
+  color: #000000 !important;
+  font-family: "Inter";
+}
+
+.viewer {
+  max-width: 540px;
+  height: 100%;
+  position: relative;
+  width: 540px;
+ min-width: 540px;
+ z-index: 2;
+}
+
+.closeIcon {
+  width: 16px;
+  height: 16px;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.box-125{
+  width: 125px;
+  min-width: 125px;
+  max-width: 125px;
+  height: 100vh;
+  z-index: 2;
+  position: relative;
+}
+.historyLeft{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  z-index: 2;
+  position: relative;
+}
+.dummyHeight{
+  width: 631px;
+  flex: 1;
+  height: auto;
+  height: 100vh;
+}
+.historyBox {
+  width: 631px;
+  min-width: 631px;
+  background-color: #fff;
+  max-height: calc(100vh - 40px);
+  overflow-y: hidden;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-radius: 5px;
+  padding: 20px;
+  overflow-x: hidden;
+  .historybox_title_alignment{
+   margin-bottom: 20px;
+   height: 32px;
+  }
+  .historybox_title {
+    font-family: "Inter";
+    font-size: 20px;
+    font-weight: 550;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #0D0D0D;
+  }
+
+  .bottombutton {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+    letter-spacing: 0em;
+    color: #fff;
+    background-color: #000000;
+    padding: 10px 15px 11px 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    position: relative;
+
+    .retryText{
+      position: absolute;
+      right: 100%;
+      top: 10px;
+      color: red;
+      padding-right: 10px;
+    }
+  }
+
+  .historyTableresponse {
+    max-height: calc(100vh - 192px);
+    overflow-y: auto;
+    overflow-x: inherit;
+    position: relative;
+  }
+
+  .absShimmerTable {
+    position: absolute;
+    width: 583px;
+    top: 32px;
+    left: 0px;
+    z-index: 2;
+  }
+  .historyListTblView td{
+    overflow: hidden !important;
+  }
+  .historyListTblView th:nth-child(1),
+  .historyListTblView td:nth-child(1) {
+    width: 105px !important;
+    max-width: 105px !important;
+    text-overflow: ellipsis;
+  }
+
+  .historyListTblView th:nth-child(2),
+  .historyListTblView td:nth-child(2) {
+    width: 205px !important;
+    max-width: 205px !important;
+    text-overflow: ellipsis;
+  }
+
+  .historyListTblView th:nth-child(3),
+  .historyListTblView td:nth-child(3) {
+    width: 114px !important;
+    max-width: 114px !important;
+    text-overflow: ellipsis;
+  }
+
+  .historyListTblView th:nth-child(4),
+  .historyListTblView td:nth-child(4) {
+    width: 180px !important;
+    max-width: 180px !important;
+    min-width: 180px !important;
+    text-overflow: ellipsis;
+  }
+  .historyListTblView td:nth-child(1){
+   span{
+    font-weight: 550 !important;
+   }
+  }
+  .historyListTblView td:nth-child(2){
+    span{
+     font-weight: 550 !important;
+    }
+   }
+   .historyListTblView tr:hover{
+    background-color: #f2f2f257 !important;
+  }
+}
+.heightData{
+  height: 100vh;
+  width: 1366px;
+  margin: 0 auto;
+  position: relative;
+
+  .absoutclick{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+  }
+}
+.overflowtest {
+  height: 300px;
+  overflow-y: auto;
+}
+
+.fixedInput {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+}
+
+.historyListTblView {
+  .activehistoryData {
+    color: #fff !important;
+    background-color: $app-primary-color !important;
+  }
+
+  .activehistoryData span {
+    color: #fff !important;
+  }
+}
+
+.historyListTblView_New tr:nth-child(1) {
+
+  td {
+    padding-top: 38px !important;
+    padding-bottom: 6px !important;
+    color: #0d0d0d !important;
+    background-color: #fff !important;
+  }
+
+  td span {
+    color: #0d0d0d !important;
+
+  }
+}
+.pdfLoader{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00000095;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.loader {
+  border: 6px solid #f3f3f3; /* Light grey */
+  border-top: 6px solid $app-primary-color; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.historyFilterPop{
+  .filterpad{
+    padding: 2px 7px;
+  }
+}
+.saveDraft {
+  line-height: 15px !important;
+  width: 85px !important;
+  font-size: 13px !important;
+  height: 30px !important;
+  background: $app-primary-color !important;
+  border-radius: 6px !important;
+  color: #fff !important;
+  margin-right: 15px !important;
+  border-color: $app-primary-color !important;
+}
+
+.addBtn {
+  background: #0d0d0d !important; 
+  border-color: #0d0d0d !important;
+}
+
+.filter-popover {
+  .active-status{
+    background-color: $app-primary-color;
+    border-radius: 4px; 
+    span{
+      color: #fff !important;
+    }
+  }
+}
+
+.alertBoxFixed{
+  position: fixed;
+  z-index: 1000;
+  top: 0px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.alertBox{
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #00000052;
+  box-shadow: 0px 0px 5px #0000006a;
+  padding: 25px 20px;
+  width: fit-content;
+  margin: 0 auto;
+   .alert_text{
+    padding-right: 60px;
+   }
+  .okbutton{
+    margin-top: 20px;
+    background-color: $app-primary-color;
+    color: #fff;
+    font-weight: 550;
+    padding: 5px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+iframe{
+  height: 500px;
+}
+
+.auditListTblView th{
+  white-space: nowrap;
+  font-weight: 550;
+  background-color: #fff !important;
+  font-family: "Inter" !important;
+  overflow: unset !important;
+}
+.auditListTblView td{
+  overflow: hidden !important;
+}
+.auditListTblView th:nth-child(1) span{
+font-weight: 550;
+}
+.auditListTblView th:nth-child(1),  .auditListTblView td:nth-child(1){
+padding-left: 7px !important;
+  }
+.auditListTblView .mdc-form-field>label {
+  padding: 0 !important;
+  white-space: nowrap;
+}
+
+.auditListTblView .mat-mdc-checkbox-touch-target {
+  height: 16px !important;
+  left: 30%;
+  width: 16px  !important;
+}
+.auditListTblView .mat-mdc-checkbox .mdc-checkbox {
+  padding: 0 0px;
+  padding-right: 10px;
+  width: 16px  !important;
+  height: 16px  !important;
+  margin-bottom: 2px;
+}
+.auditListTblView .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control {
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 16px !important;
+  height: 16px !important;
+}
+.auditListTblView .mat-mdc-checkbox .mdc-checkbox__ripple, .auditListTblView .mat-mdc-checkbox-ripple, .mdc-checkbox__ripple {
+  width: 16px !important;
+  height: 16px !important;
+}
+.auditListTblView .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background {
+  top: 0;
+  left: 0;
+}
+
+.auditListTblView th .camelCase{
+  color :#645e5e !important;
+  font-weight: 400 !important;
+}
+.auditListTblView th .activeFilterName{
+  background-color: #1f96f4 !important;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: #fff !important;
+}
+
+.auditListTblView th .activeFiltericon{
+  background-color: #1f96f4;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: #fff !important;
+
+  span{
+    color: #fff !important;
+  }
+
+}
+.showNamepad{
+  padding-left: 5px;
+}
+.showIconpad{
+padding-right: 5px;
+}
+.showNamepadtbody{
+  padding-left: 7px;
+  padding-right: 3px;
+}
+.tableClear{
+  width: 100%;
+}
+.auditListTblView th .tableCleartext{
+  color: #1f96f4 !important;  
+  opacity: 0.4;
+  pointer-events: none;
+}
+.auditListTblView th .disabledClear{
+  color: #1f96f4 !important;  
+  opacity: 1 !important;
+  pointer-events: unset !important;
+  cursor: pointer;
+}
+.auditListTblView{
+  width: 100% !important;
+}
+
+.disablebuttoncommon{
+  opacity: 0.5;
+  pointer-events: none !important;
+}
+.row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}

@@ -1,0 +1,1034 @@
+/* You can add global styles to this file, and also import other style files */
+@charset 'utf-8';
+
+//Vendor
+@import "scss/vendor/_vendor-dir";
+
+//Abstracts
+@import "scss/abstracts/__abstracts-dir";
+
+//Base Styles
+@import "scss/base/__base-dir";
+
+//Components
+@import "scss/components/__components-dir";
+
+//Layout
+@import "scss/layouts/__layouts-dir";
+
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden !important;
+}
+* {
+  padding: 0px;
+  margin: 0px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-size: 14px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden !important;
+  margin: 0;
+  font-family: "Inter" !important;
+}
+
+.fw-500 {
+  font-weight: $font-weight-500;
+}
+
+.fw-600 {
+  font-weight: $font-weight-600;
+}
+.mat-mdc-menu-panel.mat-mdc-menu-panel {
+max-width:100% !important;
+width:unset !important;
+margin-top: 4px;
+}
+
+.mdc-menu-surface {
+    background-color: #fbfbfb !important;
+    color: #000000de !important;
+}
+
+.coursePopup .mat-menu-item:hover:not([disabled]),
+.mat-menu-item.cdk-program-focused:not([disabled]),
+.mat-menu-item.cdk-keyboard-focused:not([disabled]),
+.mat-menu-item-highlighted:not([disabled]),
+.courseMenu:hover {
+  background-color: #1f96f4 !important;
+  color: #fff !important;
+}
+.mat-menu-item:hover {
+  color: #fff !important;
+}
+
+.courseMenu {
+  border-bottom: 1px solid #e6e6e6 !important;
+  padding: 0 !important;
+}
+.courseMenu:last-child {
+  border: 0 !important;
+}
+.courseMenu button{
+  padding: 10px 20px 10px 20px !important;
+  height: 41px;
+  min-height: 41px !important;
+}
+
+thead{
+  color : #212529;
+font-weight : bold;
+
+}
+.mat-mdc-option {
+    color: #212529 !important;
+}
+.mat-pseudo-checkbox-full {
+    color: rgba(255,255,255,.7);
+    border: 1px solid #212529 !important;
+}
+
+.relative{
+  position: relative;
+  width: fit-content;
+}
+.cal{
+  position: absolute;
+    right: 13px;
+    top: 9px;
+    width: 20px !important;
+    height: 20px !important;
+    overflow: unset !important;
+}
+.input-icons i {
+  position: absolute;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+background-color: transparent;
+}
+
+.mdc-text-field{
+ padding: 0px !important;
+}
+
+.mdc-text-field input{
+height: 38px;
+}
+
+.mdc-text-field--no-label:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) .mat-mdc-form-field-infix{
+padding-top: 2px;
+padding-bottom: 2px;
+margin-bottom: -15px;
+}
+
+.mdc-text-field--no-label:not(.mdc-text-field--textarea) .mat-mdc-form-field-input-control.mdc-text-field__input, .mat-mdc-text-field-wrapper .mat-mdc-form-field-input-control{
+height: 33px !important;
+padding: 6px 12px;
+cursor: pointer;
+}
+
+.form-control:focus{
+box-shadow: none;
+border-color: #bdbdbd;
+}
+
+.mat-tree-node, .mat-nested-tree-node {
+color: #212529 !important;
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+color: #000000;
+}
+
+.mat-mdc-table tbody, .mat-mdc-table tfoot, .mat-mdc-table thead, .mat-mdc-cell, .mat-mdc-footer-cell, .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row, .mat-mdc-table .mat-mdc-header-cell {
+  background: #fff !important;
+}
+
+.incidentListTblView thead {
+  width: 100%;
+  display: grid;
+  position: static;
+  top: 0;
+  z-index: 2;
+}
+
+.incidentListTblView tbody {
+  display: grid;
+  overflow: auto;
+  max-height: calc(100vh - 210px);
+}
+
+.incidentListTblView th:nth-child(1) span,.incidentListTblView td:nth-child(1) label {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  width: 96px;
+}
+
+.incidentListTblView th:nth-child(1) span,.incidentListTblView td:nth-child(1) label {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  width: 121px;
+  font-family: 'Inter';
+  color: #0d0d0d;
+
+}
+
+.incidentListTblView th:nth-child(1) span{
+font-weight: 600;
+}
+
+.sidenav {
+  width: 200px !important;
+}
+
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled ~ .mdc-checkbox__background {
+  border-color: #1f96f4!important;
+  background-color: #1f96f4 !important;
+}
+.mdc-text-field--filled .mdc-line-ripple::after {
+    border-bottom-color: transparent !important;
+}
+.mdc-text-field .mdc-text-field__input {
+    caret-color: unset !important;
+}
+.progress-cont {
+  width: 540px !important;
+}
+.progress-cont {
+.mdc-text-field--filled .mdc-line-ripple::after {
+  width: 540px !important;
+    border-bottom-color: #BDBDBD !important;
+}
+}
+.modal-backdrop.show {
+.mdc-text-field .mdc-text-field__input {
+  opacity: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  caret-color: unset !important;
+}
+}
+.modal-backdrop {
+  z-index: 2;
+}
+.mat-mdc-menu-content {
+  padding: 0 !important;
+}
+.courseMenu:hover span {
+  color: #fff !important;
+}
+.courseMenu span {
+  width: 143px;
+}
+.courseMenu1 span{
+  width: unset !important;
+}
+.incidentListTblView .mdc-form-field>label {
+  padding: 0 !important;
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 0px 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.modal-header {
+  background-color: #1f96f4;
+  color: #fff;
+}
+.modal-header,
+.modal-footer {
+  height: 40px;
+  line-height: 10px;
+}
+.modal-backdrop {
+  z-index: 2;
+}
+.modal-title {
+  line-height: 1;
+}
+.modal-content {
+  border: 0 !important;
+}
+
+.incidentListTblView .mat-mdc-checkbox-touch-target {
+  height: 16px;
+  left: 50%;
+  width: 16px;
+}
+.incidentListTblView .mat-mdc-checkbox .mdc-checkbox {
+  padding: 0 8px;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 2px;
+}
+.incidentListTblView .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control {
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+}
+.incidentListTblView .mat-mdc-checkbox .mdc-checkbox__ripple, .incidentListTblView .mat-mdc-checkbox-ripple, .mdc-checkbox__ripple {
+  width: 14px;
+  height: 14px;
+}
+.incidentListTblView .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background {
+  top: 0;
+  left: 10px;
+}
+
+.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+    border-bottom-color: unset !important;
+}
+select:focus {
+  outline: none;
+}
+
+.cdk-overlay-dark-backdrop{
+  background-color: #0009 !important;
+}
+.mat-mdc-dialog-container .mdc-dialog__surface{
+  width: 600px !important;
+}
+.mdc-line-ripple::before {
+    border-bottom-width: 0px !important;
+}
+.mdc-line-ripple::after {
+    border-bottom-width: 0px !important;
+}
+
+@media screen and (min-width: 900px) and (max-width: 1300px) {
+  .listview {
+    height: calc(100vh - 145px) !important;
+  }
+  .incidentListTblView tbody {
+    max-height: calc(100vh - 240px) !important;
+  }
+  .newCourseBtn,.newIncidentBtn {
+    margin: 0 !important;
+  }
+}
+.row-blue .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled ~ .mdc-checkbox__background {
+  border: 1px solid #fff !important;
+  border-radius: 0 !important;
+}
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
+  border-color: #818181!important;
+  background-color: white !important;
+  border-width: 1px !important;
+  border-radius: 0px !important;
+}
+.row-blue .new-box,.row-blue span {
+  color: #fff !important;
+}
+.incidentListTblView th:nth-child(1) .mdc-form-field, .incidentListTblView td:nth-child(1) .mdc-form-field {
+  gap: 5px;
+}
+.assingIcon {
+  height: 57px;
+}
+
+.marginminus .mat-mdc-text-field-wrapper {
+    width: 180px !important;
+}
+.confirmBtnDiv .mat-mdc-button:active .mat-mdc-button-persistent-ripple::before, .mat-mdc-outlined-button:active .mat-mdc-button-persistent-ripple::before {
+  opacity: 0 !important;
+}
+
+.ageCheckBox .mdc-checkbox__ripple.ageCheckBox .mat-mdc-checkbox .mdc-form-field, .ageCheckBox .mdc-checkbox, .ageCheckBox .mat-mdc-checkbox-touch-target {
+  width: 14px !important;
+  height: 14px !important;
+}
+.ageCheckBox .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control {
+  top: 0px !important;
+  right: 0 !important;
+  left: 0px !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+.ageCheckBox .mat-mdc-checkbox-ripple, .mdc-checkbox__ripple {
+  top: 0px !important;
+  left: 0px !important;
+  right: 0px !important;
+  bottom: 0px !important;
+  display: none;
+}
+.ageCheckBox .mat-mdc-checkbox .mdc-checkbox__ripple {
+  background: #fff !important;
+}
+.ageCheckBox .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background {
+  top: 0 !important;
+  left: 0 !important;
+  width: 14px;
+  height: 14px;
+  border-radius: 0px;
+}
+.ageCheckBox .mat-mdc-checkbox .mdc-checkbox {
+  padding: 0 !important;
+}
+.ageCheckBox .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background .mdc-checkbox__checkmark {
+  padding: 0.5px !important;
+}
+.ageCheckBox .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background{
+  border-color: #1f96f4 !important;
+}
+
+// date picker css//
+.theme-dark-blue .bs-datepicker-head {
+  background-color: #fff !important;
+  padding: 0 !important;
+    height: 35px !important;
+}
+.bs-datepicker-head button {
+  color: #000 !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+.bs-datepicker-body {
+  border: 0 !important;
+  padding: 0 !important;
+  min-height: auto !important;
+}
+.bs-datepicker-body table td {
+  color: #000 !important;
+}
+.bs-datepicker-body table th {
+  font-weight: 600 !important;
+  color: #000 !important;
+  font-size: 12px !important;
+}
+.bs-datepicker-body table td span.is-other-month, .bs-datepicker-body table td.is-other-month span {
+  color: #999 !important;
+}
+.bs-datepicker-body table td span {
+  border-radius: 4px !important;
+  height: 24px !important;
+    line-height: 24px !important;
+    font-family: "Inter" !important;
+    font-size: 12px !important;
+}
+.mdc-checkbox__background {
+  border-radius: 0px !important;
+}
+.witness-box label {
+  font-weight: 500;
+  }
+.courseMenu .mat-mdc-menu-item {
+    min-height: 41px !important;
+  }
+  .mat-mdc-option.mdc-list-item--selected:not(.mat-mdc-option-multiple):not(.mdc-list-item--disabled){
+    background-color: #1f96f4;
+    .mdc-list-item__primary-text{
+      color: #fff !important;
+      }
+    }
+.mat-mdc-option .mat-pseudo-checkbox-minimal {
+  opacity: 0 !important;
+  }
+  .example-full-width{
+    position: relative !important;
+  }
+
+  .marginminus1 .mat-mdc-text-field-wrapper {
+    width: 319px !important;
+}
+.break-word{
+ word-wrap: break-word !important;
+}
+      .my-custom-class .tooltip-inner {
+        background-color: #FFFFFF;
+        font-size: 125%;
+        min-width:550px;
+        max-width:550px;
+        opacity: 1;
+        display: block;
+        box-shadow: 0px 0px 5px #ccc;
+      }
+      .my-custom-class.bs-tooltip-end .tooltip-arrow::before {
+        border-right-color: #FFFFFF;
+      }
+      .my-custom-class.bs-tooltip-start .tooltip-arrow::before {
+        border-left-color: #FFFFFF;
+      }
+      .my-custom-class.bs-tooltip-top .tooltip-arrow::before {
+        border-top-color: #FFFFFF;
+      }
+      .my-custom-class.bs-tooltip-bottom .tooltip-arrow::before {
+        border-bottom-color: #FFFFFF;
+      }
+
+      .loginMenu .mat-mdc-menu-item {
+        width: 100%;
+        height: 39px;
+        line-height: 1;
+        border-bottom: 1px solid #e6e6e6;
+        min-height: unset !important;
+        font-size: 12px !important;
+      }
+      .loginMenu .mat-mdc-menu-content{
+        padding: 0px !important;
+        width: 145px !important;
+
+      }
+      .loginMenu .mat-mdc-menu-content .mat-mdc-menu-item .mdc-list-item__primary-text{
+        font-size: 12px !important;
+        color: #000000DE;
+      }
+
+      .example-tree .mat-tree-node {
+        min-height: 35px !important;
+        max-height: 30px;
+        overflow: hidden;
+      }
+
+      select option {
+        padding: 10px !important;
+        pointer-events: none;
+    }
+    .form-check-input {
+      width: 12px !important;
+      height: 12px !important;
+    }
+
+  .form-check-input:checked {
+    background-color: #1f96f4 !important;
+    border-color: #1f96f4 !important;
+}
+
+  // Audit List SCSS
+
+  h2,h3, h4{
+    font-weight: bold !important;
+  }
+
+  .cursor{
+    cursor: pointer;
+  }
+
+  button{
+    border: none;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+  background: #ffffff;
+  border: 1px solid #BDBDBD;
+  border-radius: 2px;
+  }
+
+  input,
+  select {
+  height: 35px !important;
+  font-size: 14px !important;
+  }
+    .mdc-line-ripple::before {
+      border-bottom-width: 0px;
+  }
+
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background{
+    border: 1px solid !important;
+  }
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background{
+    background-color: $app-primary-color !important;
+    border-color: #ffffff !important;
+   }
+
+   .mat-mdc-checkbox.mat-accent .mdc-checkbox--selected~.mdc-checkbox__ripple {
+    opacity: 0 !important;
+    display: none;
+  }
+
+  .mdc-checkbox__ripple{
+    opacity: 0 !important;
+    display: none;
+  }
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before{
+    opacity: 0 !important;
+    display: none;
+  }
+
+  .mat-mdc-form-field-focus-overlay {
+    background-color: transparent !important;
+  }
+
+  .green-snackbar {
+    background-color: #333 !important;
+    color: white !important;
+    --mat-mdc-snack-bar-button-color: #484444d3;
+    --mdc-snackbar-container-color: #333 !important;
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+
+  }
+
+  .green-snackbar button {
+    background-color: #333 !important;
+    color: white !important;
+    border: none !important;
+  }
+  .red-snackbar {
+    background: #333;
+    color: white;
+     --mat-mdc-snack-bar-button-color: #484444d3;
+    --mdc-snackbar-container-color: #333 !important;
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+  }
+  .red-snackbar button {
+    background-color: #333 !important;
+    color: white !important;
+    border: none;
+    --mat-mdc-snack-bar-button-color: #484444d3;
+    --mdc-snackbar-container-color: #333 !important;
+    --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+
+  }
+  .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background{
+    background-color: $app-primary-color !important;
+    border-color: $app-primary-color !important;
+  }
+
+  .mdc-checkbox__background{
+   border: 1px solid !important;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    padding: 0px 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .modal-header {
+    background-color: $app-primary-color;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .modal-header,
+  .modal-footer {
+    height: 50px;
+    line-height: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .modal-backdrop {
+    z-index: 100;
+  }
+  .modal-title {
+    line-height: 1;
+  }
+  .modal-content {
+    border: 0 !important;
+  }
+  /* Popover CSS */
+
+  .historyTableresponse{
+    .popover{
+      margin-top: -1px !important;
+      width: 100px !important;
+    }
+  }
+  .popover-arrow:after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    border-style: solid;
+    border-width: 10px 10px 0;
+    border-color: #ccc transparent;
+    display: block;
+    width: 0;
+    z-index: 0;
+    transform: rotate(180deg);
+  }
+  .bs-popover-bottom > .popover-arrow::before{
+    border-bottom-color: #ccc;
+  }
+  .bs-popover-bottom > .popover-arrow::after{
+    display: none !important;
+  }
+  .filter-popover{
+    max-height: 300px;
+    overflow: hidden auto;
+  }
+  .filter-popover1{
+    max-height: 30px !important;
+  }
+  .filter-popover2{
+    max-height: 60px !important;
+  }
+  .filter-popover3{
+    max-height: 90px !important;
+  }
+  .filter-popover4{
+    max-height: 120px !important;
+  }
+  .popover-body {
+    padding: 0 !important;
+  }
+
+  .popover  {
+    width: 125px;
+    margin-top: -3px !important;
+  }
+  .bottompopover{
+    .popover  {
+      width: 125px;
+      transform: translate(0px, 20px) !important;
+    }
+  }
+  .mat-mdc-checkbox .mdc-form-field {
+    color: #645e5e !important;
+  }
+
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
+    border-color: #373737 !important;
+    background-color: white !important;
+    border-width: 1px !important;
+    border-radius: 0px !important;
+  }
+  .alltreeCheckbox input {
+    display: inline-block;
+    height: 16px;
+    line-height: 0;
+    margin: auto 8px auto auto;
+    order: 0;
+    position: relative;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 16px;
+    flex-shrink: 0;
+    border-radius: 0!important;
+  }
+
+  .example-tree-audit{
+    .mat-tree-node {
+      min-height: 35px!important;
+      max-height: 30px;
+      overflow: hidden;
+      padding-left: 21px !important;
+    }
+  }
+  .mat-mdc-option.mdc-list-item--selected:not(.mat-mdc-option-multiple):not(.mdc-list-item--disabled){
+    background-color: $app-primary-color;
+    .mdc-list-item__primary-text{
+      color: #fff !important;
+      }
+    }
+  .mat-mdc-option .mat-pseudo-checkbox-minimal {
+  opacity: 0 !important;
+  }
+  .width-200{
+    width: 200px !important;
+  }
+  .width-100{
+    width: 100px !important;
+  }
+  .mdc-checkbox__background{
+  width: 16px !important;
+  height: 16px !important;
+  }
+  .no-wrap{
+    white-space: nowrap;
+  }
+  .mat-mdc-checkbox-ripple{
+    opacity: 0 !important;
+  }
+  .topcheckbox{
+    position: relative;
+    .dummyborder{
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #373737;
+      left: 0px;
+      top: 2px;
+      // border-radius: 2px;
+
+    }
+    .dummyborder1{
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #373737;
+      left: 0px;
+      top: 3px;
+      // border-radius: 2px;
+    }
+  }
+
+  .loginMenu .mat-mdc-menu-item {
+    width: 100%;
+    height: 39px;
+    line-height: 1;
+    border-bottom: 1px solid #e6e6e6;
+    min-height: unset !important;
+    font-size: 12px !important;
+  }
+  .loginMenu .mat-mdc-menu-content{
+    padding: 0px !important;
+    width: 145px !important;
+
+  }
+  .loginMenu .mat-mdc-menu-content .mat-mdc-menu-item .mdc-list-item__primary-text{
+    font-size: 12px !important;
+    color: #000000DE;
+  }
+  .mdc-menu-surface.mat-mdc-autocomplete-panel{
+    padding: 0px !important;
+  }
+  .redcolor{
+    color: red;
+    font-size: 12px;
+  }
+
+  .mailbodyCss {
+    .mailInput {
+      height: 30px !important;
+      font-size: 13px !important;
+      color: #0009 !important;
+      font-weight: 600 !important;
+      background-color: #fff !important;
+      padding: 0 10px !important;
+      border: 1px solid #ced4da !important;
+      border-radius: 0.25rem !important;
+      margin-right: 25px !important;
+    }
+
+    .invalid {
+      border-color: red !important;
+    }
+
+    .emailtext {
+      font-size: 12px;
+      margin-right: 23px;
+    }
+
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .mailAddbtn {
+      background-color: $app-primary-color;
+      border-color: $app-primary-color;
+    }
+  .removeimage{
+    height: 26px;
+  }
+    .mailTag {
+      border: 1px solid #0d0d0d4d;
+      background: #f2f2f2;
+      border-radius: 5px;
+      padding: 0px 0px 0px 8px;
+      margin-left: 10px;
+      font-size: 12px;
+      min-height: 28px;
+      max-width: 338px;
+      span{
+        word-break: break-all;
+      }
+    }
+
+    .mailCloseIcon {
+      height: 20px !important;
+      font-size: 12px;
+      margin-top: 8px;
+      margin-left: 5px;
+      width: 20px !important;
+    }
+
+    .mailCls {
+      margin-left: 51px;
+    }
+
+  }
+  .filter-popover {
+    .active-status{
+      background-color: $app-primary-color;
+      border-radius: 4px;
+      span{
+        color: #fff !important;
+      }
+    }
+  }
+
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark {
+    color: #fff !important;
+    width: 12px;
+    margin: 0px;
+    margin-left: 1px;
+    margin-top: 1px;
+  }
+
+  input:-internal-autofill-selected{
+    background-color: none !important;
+  }
+  input:-internal-autofill-selected{
+    background-color: #fff !important;
+  }
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background{
+    top: 0px !important;
+    left: 0px !important;
+  }
+  .mat-mdc-checkbox .mdc-checkbox{
+    padding: 0px !important;
+  }
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control{
+    width: 0px !important;
+    height: 0px !important;
+  }
+  .mat-mdc-checkbox-touch-target{
+  width: 16px !important;
+  height: 16px !important;
+  top: 47%;
+  left: 47%;
+  }
+  .mat-mdc-table{
+    background-color: #0000001f;
+  }
+
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__mixedmark {
+    border-color: #fff !important;
+    width: 10px !important;
+}
+.tooltip-inner {
+  text-align: left;
+  min-width: fit-content !important;
+  width: fit-content !important;
+}
+.my-custom-class1 .tooltip-inner {
+  max-width: 154px !important;
+}
+
+.mat-elevation-z8, .mat-mdc-elevation-specific.mat-elevation-z8{
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1) !important;
+}
+
+.camelCase{
+  text-transform: capitalize;
+}
+.placeholder-class::placeholder {
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+input#autoCompleteTrigger::placeholder {
+  color: #dedede !important;
+}
+
+.filter-popover .mat-mdc-checkbox-touch-target{
+  width: 14px !important;
+  height: 14px !important;
+  top: 50%;
+  left: 42%;
+}
+.filter-popover .mdc-checkbox__background {
+  width: 14px !important;
+  height: 14px !important;
+}
+.filter-popover .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background .mdc-checkbox__checkmark{
+  margin-left: 0px !important;
+  margin-top: 0px !important;
+}
+.filter-popover .mdc-checkbox {
+  flex: 0 0 14px !important;
+}
+.filter-popover .mdc-form-field > label{
+  padding-left: 2px !important;
+}
+.filter-popover .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control {
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+}
+.filter-popover .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background {
+  top: 0;
+  left: 0;
+}
+.filter-popover .mat-mdc-checkbox .mdc-checkbox {
+  display: inline-block;
+    height: 14px;
+    line-height: 0;
+    margin-right: 6px;
+    order: 0;
+    position: relative;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 14px;
+    flex-shrink: 0;
+    margin-bottom: 0px !important;
+    padding: 0 !important;
+}
+.filter-popover .mat-mdc-checkbox .mdc-checkbox__ripple {
+  width: 14px;
+  height: 14px;
+}
+.filter-popover .mdc-form-field > label {
+  line-height: 24px;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.filter-popover .mat-mdc-checkbox .mdc-form-field {
+  width: 100%;
+}
+.filter-popover .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled ~ .mdc-checkbox__background {
+  border-color: #1f96f4!important;
+  background-color: #1f96f4 !important;
+}
+
+.incidentListTblView .filter-popover-incident  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark {
+  top: 0px;
+  left: 0px !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+.ngx-doc-viewer{
+  img{
+    max-width: 100%;
+  }
+}
+

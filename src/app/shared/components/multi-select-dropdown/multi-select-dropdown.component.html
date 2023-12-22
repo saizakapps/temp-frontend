@@ -1,0 +1,48 @@
+<div [ngClass]="{'disableClass': items[0].name === '' || isDisabled}" class="multiselect-container">
+  <div [matMenuTriggerFor]="multiselectmenu" [ngClass]="{'no-cursor' : isDisabled}" class="multiselect" (click)="toggleDropdown()">
+    <div *ngIf="selectedItemsCount() === 0" class="selected-options placeholder d-flex justify-content-between">
+      Select modules...
+    </div>
+    <div *ngIf="selectedItemsCount() > 0" class="selected-options d-flex justify-content-between">
+      {{selectedItemsCount()}} items selected
+    </div>
+  </div>
+  <mat-menu #multiselectmenu="matMenu" class="multiselect-matmenu">
+    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" *ngIf="isDropdownOpen">
+      <div *ngIf="items.length > 1" class="checkboxdivAccess">
+        <mat-checkbox [checked]="items.length === selectedItemsCount()"
+          [indeterminate]="(selectedItemsCount() > 0) && (items.length !== selectedItemsCount())"
+          (change)="selectAll($event)"></mat-checkbox> <span class="Labl">All</span>
+      </div>
+      <table class="subTable">
+        <th *ngFor="let column of tableCoumns">
+          {{column}}
+        </th>
+        <tr *ngFor="let item of items">
+          <td>
+            <div class="checkboxdivAccess noborder">
+            <mat-checkbox [(ngModel)]="item.access" (change)="updateSelectedItems(); onAccessChange(item)"></mat-checkbox>
+           </div>
+          </td>
+          <td>{{item[bindLabel]}}</td>
+          <td>
+            <div class="checkboxdivAccess noborder disableClass">
+            <mat-checkbox [(ngModel)]="item.view" (change)="updateSelectedItems()"></mat-checkbox>
+           </div>
+          </td>
+          <td>
+            <div class="checkboxdivAccess noborder">
+            <mat-checkbox [disabled]="!item.access" [(ngModel)]="item.create" (change)="updateSelectedItems()"></mat-checkbox>
+           </div>
+          </td>
+          <td>
+            <div class="checkboxdivAccess noborder">
+            <mat-checkbox [disabled]="!item.access" [(ngModel)]="item.update" (change)="updateSelectedItems()"></mat-checkbox>
+           </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </mat-menu>
+  <mat-menu #dummy="matMenu" class="d-none" [hasBackdrop]="false"></mat-menu>
+</div>

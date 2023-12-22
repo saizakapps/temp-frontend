@@ -1,0 +1,930 @@
+/*------------------------------- Header Css Start ---------------------------------*/
+.courseListSection {
+  height: 100%;
+  background-color: #f2f2f2;
+  z-index: 3;
+}
+:host {
+  --employee-navbar-height: 45;
+  --employee-scroll-width: 6;
+}
+.navbar-container {
+  background: var(--app-gray-color);
+  height: calc(var(--navbar-height) * 1px);
+}
+.employee-navbar-container {
+  /* background: #f0f8ff; */
+  height: calc(var(--employee-navbar-height) * 1px);
+}
+
+.ng-select .ng-select-container,
+.ng-select.ng-select-single .ng-select-container {
+  height: 30px !important;
+  min-height: 30px !important;
+  background: #ffffff !important;
+  border: 1px solid #bdbdbd !important;
+  box-sizing: border-box !important;
+  border-radius: 0px !important;
+  width: 120px !important;
+}
+
+/* search input css  */
+.search-input {
+  width: 165px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid #bdbdbd;
+  margin-bottom: 17px;
+}
+
+.search-input:focus,
+.search-box:focus {
+  outline: none !important;
+}
+
+.search-box {
+  border: none;
+}
+
+.date-range {
+  position: relative;
+  bottom: 0px;
+  height: 35px;
+  border: 1px solid #818181;
+  border-radius: 2px;
+  background: #fff;
+  width: 155px;
+  top: 5px;
+  // padding-right: 12px;
+}
+
+span.input-group-text {
+  position: relative;
+  right: 7px;
+  height: 30px;
+}
+
+/*------------------------------- Header Css End ---------------------------------*/
+
+/*--------------------------------Body Css Start----------------------------------*/
+.employee-management-page-container {
+  height: calc(100vh - 140px);
+  background: #fff;
+  width: 100%;
+  border-radius: 5px;
+  margin: 20px;
+  margin-top: 50px;
+  width: auto;
+  padding: 20px 20px 10px;
+}
+
+.employee-management-container {
+  position: relative;
+  z-index: 0;
+  height: 100%;
+}
+
+/* page scroll */
+::-webkit-scrollbar {
+  width: calc(var(--employee-scroll-width) * 1px);
+}
+
+.table-div {
+  background-color: #c5c5c5;
+  height: 0px;
+  margin-top: 8px;
+  border-top: 0.5px solid #c5c5c5 !important;
+}
+
+.employee-header {
+  padding: 0px 5px;
+}
+.employee-footer {
+  padding: 2px 0px 0px 0px;
+}
+/*--------------------------------Body Css End----------------------------------*/
+
+/*-------------------------------Footer Css Start----------------------------------*/
+
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  width: calc(100vw - calc(var(--left-menu-width) * 1px));
+  background-color: var(--app-gray-color);
+  color: var(--app-black-color);
+  text-align: center;
+  height: calc(var(--footer-height) * 1px);
+}
+
+.saveConfirmationModel {
+  width: 500px;
+}
+.saveConfirmationModel .setupOption {
+  display: grid;
+  grid-gap: 20px;
+}
+.publishCls {
+  display: grid;
+  grid-gap: 10px;
+}
+.saveDraft {
+  line-height: 15px;
+  font-size: 13px;
+  height: 30px;
+  background: #000000;
+  border-radius: 6px;
+  color: #fff;
+  margin-right: 5px;
+  border-color: #000;
+}
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+.setupOption span {
+  font-size: 13px;
+  gap: 5px;
+  display: flex;
+}
+.statusFooter {
+  border-top: 1px solid #ccc !important;
+  padding-top: 8px !important;
+  margin-bottom: 8px;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.newCourseBtn {
+  height: 30px;
+  line-height: 16px;
+  font-size: 12px;
+}
+
+/*-------------------------------Footer Css End----------------------------------*/
+.empListTbl {
+  overflow: auto hidden !important;
+  /* min-height: calc(100vh - 200px); */
+  max-height: 83.5vh;
+}
+.empListTbl .filter-popover {
+  max-height: 300px;
+  overflow: hidden auto;
+}
+/* .employeeSection {
+  z-index: 2;
+} */
+/* .roleSection {
+  z-index: 1;
+} */
+
+/* linked employee css */
+.currentEmployee span {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.employeeDetails {
+  font-weight: 600;
+}
+.createUserModal .currentEmployee .row:nth-child(2) {
+  margin-top: 10px !important;
+  align-items: center;
+}
+.currentEmployee {
+  /* background: #f2f2f2; */
+  padding: 4px 15px 16px;
+  border-radius: 5px;
+  margin: 5px 0px;
+  font-size: 13px;
+  height: 100%;
+}
+.linkedEmployee .modal-dialog {
+  max-width: 800px;
+}
+.suggestCourseModal .modal-dialog {
+  max-width: 700px !important;
+}
+.createUserModal .modal-dialog {
+  max-width: 700px !important;
+}
+.createUserModal .modal-header {
+  background-color: #e6e6e6;
+  color: #000;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 15px !important;
+  line-height: 22px;
+  height: 52px;
+}
+.createUserModal .modal-footer {
+  padding-left: 12px !important;
+}
+.inviteModal .modal-dialog {
+  max-width: 450px !important;
+}
+.inviteModal .modal-content {
+  height: 180px;
+}
+
+.employeeContent button,
+.employeeContent .btn-secondary:not(:disabled):not(.disabled):active,
+.employeeContent .btn-secondary:not(:disabled):not(.disabled).active,
+.employeeContent.show > .btn-secondary.dropdown-toggle {
+  color: #000;
+  background-color: #fff;
+  border-color: #4e555b;
+  font-size: 13px;
+  box-shadow: none;
+  height: 25px;
+  line-height: 1;
+}
+.employeeContent .btn-secondary:not(:disabled):not(.disabled):active:focus,
+.employeeContent .btn-secondary:not(:disabled):not(.disabled).active:focus,
+.employeeContent.show > .btn-secondary.dropdown-toggle:focus {
+  box-shadow: none;
+}
+.employeeContent .dropdown-menu {
+  font-size: 13px;
+  margin-top: 0;
+  min-width: fit-content !important;
+  overflow: hidden auto;
+  height: calc(100vh - 645px);
+}
+.employeeContent .dropdown-item {
+  padding: 0.25rem 0rem 0.25rem 0.25rem !important;
+}
+.currPromemployee {
+  font-size: 13px;
+  font-weight: 600;
+}
+.saveDraft {
+  line-height: 15px;
+  font-size: 13px;
+  height: 30px;
+  background: #000000;
+  border-radius: 6px;
+  color: #fff;
+  margin-right: 5px;
+  border-color: #000;
+}
+.newCourseBtn {
+  height: 30px;
+  line-height: 16px;
+  font-size: 12px;
+  background-color: #1f96f4;
+  border-color: #1f96f4;
+}
+.currentEmployee .form-control {
+  border-color: #818181;
+  font-size: 12px;
+  width: 320px;
+  border-radius: 2px;
+  height: 36px;
+  margin-top: 5px;
+  padding: 8px 10px;
+}
+.currentEmployee .col-sm-6 {
+  max-width: 320px;
+  margin-right: 10px;
+  padding-right: 0;
+}
+.currentEmployee .form-control:focus {
+  box-shadow: none !important;
+  border-color: #d2cfcf;
+}
+.linkedEmployee .modal-header {
+  padding: 20px 10px;
+  height: 52px !important;
+  /* background: #e6e6e6;
+  color: #000; */
+}
+.linkedEmployee .close {
+  padding: 11px 15px;
+  display: none;
+}
+.linkedEmployee label {
+  white-space: nowrap;
+}
+.linkedEmployee label,
+.linkedEmployee th,
+.linkedEmployee td {
+  font-size: 14px;
+}
+.linkedEmployee th,
+.linkedEmployee td {
+  padding: 0 10px;
+  border: 0;
+  vertical-align: middle;
+}
+
+.rolesTbl tr {
+  height: 40px;
+}
+.completedCourse {
+  margin-left: 10px;
+}
+.fontBold {
+  font-weight: 600;
+}
+.completeCourseName {
+  width: 200px;
+}
+.createUserModal {
+  z-index: 3;
+}
+.exampleTree ul li ul {
+  margin-left: 21px;
+}
+.createUserModal .error {
+  white-space: nowrap !important;
+  position: absolute;
+  top: 30px !important;
+  color: #e20512;
+  font-size: 9px;
+}
+.linkedEmployee .error {
+  white-space: normal;
+  top: 30px;
+  position: absolute;
+  color: #e20512;
+  font-size: 11px;
+}
+/* .employeeContent {
+  height: 30px;
+} */
+.employeeInput {
+  border-radius: 2px;
+  margin-bottom: 16px;
+  margin-top: 4px;
+  border-color: #d2cfcf;
+}
+
+.InactiveRow {
+  color: #aaa6a6 !important;
+}
+/* .currentEmployee .form-control.ng-invalid {
+  border: 1px solid red;
+} */
+nav button {
+  white-space: nowrap;
+}
+.example-tree ul li .mat-tree-node, .node1 {
+  color: #000;
+  padding-left: 21px;
+  font-weight: 600;
+}
+.example-tree ul li .mat-tree-node,
+.node1 {
+  color: #000;
+  /* margin-left: 25px; */
+  font-weight: 600;
+}
+.example-tree ul li .mat-tree-node .mat-checkbox-frame {
+  border-color: #1f96f4 !important;
+}
+.example-tree ul li ul li,
+.node2,
+.example-tree ul ul li .mat-tree-node {
+  font-weight: 500;
+  color: #000;
+  /* margin-left: 90px; */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.example-tree ul li ul li .mat-tree-node .mat-checkbox-frame,
+.example-tree ul ul li .mat-tree-node .mat-checkbox-frame {
+  border-color: #000 !important;
+}
+.example-tree ul li ul li ul li,
+.node3 {
+  color: #000;
+  font-weight: 500;
+  /* margin-left: 15px; */
+}
+.example-tree ul li ul li ul li .mat-checkbox-frame {
+  border-color: #000 !important;
+}
+.empoyeeRoleDropdown {
+  margin-top: 3px;
+}
+.exampleTree ul li ul {
+  margin-left: 21px;
+}
+.example-tree li {
+  list-style-type: none;
+}
+.countryCheckbox.mat-checkbox {
+  /* margin-left: 40px !important; */
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.example-tree .mat-tree-node,
+.example-tree .mat-nested-tree-node {
+  color: rgb(31 150 244);
+  font-weight: 600;
+}
+
+.allCheckbox {
+  padding-left: 40px !important;
+  padding: 10px;
+}
+li.mat-tree-node.storeList,
+.example-tree ul li ul li {
+  padding-left: 45px;
+}
+
+.allCheckbox:hover {
+  background: #1f96f4;
+  color: #fff;
+}
+.countryList li.storeList {
+  padding-left: 85px !important;
+}
+
+.roleSection .searchby-dd .ng-select-single .ng-select-container {
+  width: 120px !important;
+  height: 30px;
+}
+.roleSection {
+  margin-top: 12px !important;
+  padding: 0.5rem 0;
+}
+.createUserModal .modal-footer,
+.linkedEmployee .modal-footer,
+.statusModal .modal-footer {
+  padding-bottom: 5px !important;
+  height: 50px;
+  padding-right: 12px !important;
+}
+.createUserModal .modal-body,
+.linkedEmployee .modal-body,
+.statusModal .modal-body {
+  padding-bottom: 0;
+}
+
+.tableIcons {
+  vertical-align: middle;
+  font-size: 13px;
+}
+.navigationCls {
+  position: absolute;
+  right: 10px;
+}
+
+/* Hide Arrows From Input Number */
+/* Chrome, Safari, Edge, Opera */
+input.noarrow::-webkit-outer-spin-button,
+input.noarrow::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.noarrow input[type="number"] {
+  -moz-appearance: textfield;
+}
+.dropdown.employeeContent {
+  min-width: 150px;
+}
+/* .roleContent {
+  max-width: 200px !important;
+  min-width: 200px !important;
+} */
+.countryContent {
+  min-width: 140px !important;
+}
+.storeContent {
+  width: 204px !important;
+}
+.dateContent {
+  min-width: 135px;
+}
+.lastNameCls {
+  min-width: 240px !important;
+}
+.phoneNumber {
+  min-width: 227px !important;
+}
+.emailIdCls {
+  min-width: 256px !important;
+}
+
+.statusActionBtn {
+  width: 82px;
+}
+.active-row {
+  background: #1f96f4;
+  color: white !important;
+}
+.rolesTbl {
+  width: fit-content;
+}
+.removeText,
+.removeText:hover {
+  color: #e20512;
+  text-decoration: none;
+}
+.currentCourse {
+  background-color: #c5d8f1;
+}
+.suggestedCourseRow {
+  background-color: #efefef;
+}
+.linkedEmployee td {
+  border-bottom: 1px solid #e8e8e8;
+}
+.empIdLink {
+  text-decoration: underline;
+  text-decoration-color: #1f96f4;
+  color: #1f96f4;
+}
+.redLink,
+.mat-row.active-row .mat-cell span.redLink {
+  text-decoration: underline;
+  text-decoration-color: #e20512;
+  color: #e20512 !important;
+}
+.InactiveRow .empIdLink {
+  text-decoration-color: #aaa6a6 !important;
+  color: #aaa6a6;
+}
+.suggestedEmpName {
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.courseConfirmBtn {
+  background: #00a224;
+  border-color: #00a224;
+  border-radius: 5px;
+  color: #fff;
+  height: 30px;
+  padding: 0px 16px;
+  border: 0;
+}
+.suggestCourseTbl tr.mat-row {
+  height: 40px !important;
+}
+.suggestEmployee {
+  margin-top: 13px !important;
+}
+.coursePopup .mat-focus-indicator {
+  height: 30px;
+  line-height: 30px;
+}
+.courseDetailModal .modal-dialog {
+  max-width: 800px;
+}
+.tblScrollCss {
+  overflow: auto;
+  height: 300px;
+}
+.courseDetailModal .suggestedEmpName {
+  max-width: 215px;
+}
+
+.suggestedNorecord {
+  background: var(--app-gray-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  width: 160px;
+  height: 30px;
+  position: absolute;
+  top: 206px;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.confirmTblCls {
+  overflow: hidden auto;
+  height: 270px;
+}
+.editDetails {
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}
+.suggestCourseTbl span {
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+.userAccessTbl .mat-checkbox-layout .mat-checkbox-label {
+  font-size: 0.875rem;
+}
+.dateFromToCls {
+  height: 30px;
+  /* padding-left: 25px; */
+  padding: 10px 0px 0px;
+}
+.deleteBtn {
+  background: #e20512;
+  border: 1px solid #e20512 !important;
+  height: 30px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+}
+.profitCenterCls {
+  /* padding: 0px 10px 18px 0px; */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.createUserModal {
+  overflow: hidden;
+}
+.addProfitEmp {
+  margin-left: 16px;
+}
+.addProfitEmp .newCourseBtn {
+  margin-top: 24px;
+  border-color: #000;
+  padding: 10px 15px 11px;
+  gap: 8px;
+  width: auto;
+  background: #000000;
+  border-radius: 6px;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profitDate {
+  top: 5px;
+}
+/* .profitToDate {
+  left: 5px;
+} */
+.empLink .linkTblFormCls {
+  max-height: calc(100vh - 320px);
+  overflow: hidden auto;
+}
+/* .empInfo {
+  padding: 16px 15px 16px !important;
+} */
+.addProfitEmp .newCourseBtn.btn-primary:not(:disabled):not(.disabled):active,
+.addProfitEmp .newCourseBtn.btn-primary:not(:disabled):not(.disabled).active,
+.addProfitEmp .newCourseBtn.show > .btn-primary.dropdown-toggle {
+  background: #000000 !important;
+  border-color: #000 !important;
+}
+.secondaryProfit .col-sm-4,
+.otherInfoCls .col-sm-4 {
+  max-width: 150px !important;
+  margin-right: 15px;
+}
+.secondaryProfit .row:first-child,
+.otherInfoCls .row:first-child {
+  margin-top: 0 !important;
+}
+.otherContent {
+  margin-right: 10px;
+}
+.linkedEmployee .form-inline .form-group {
+  /* display: block; */
+  flex-wrap: nowrap;
+}
+.suggestRoleName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 550px;
+}
+
+.confirmTblCls .courseConfirmSpan {
+  max-width: 270px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.confirmTblCls .courseConfirmSpan span {
+  display: contents !important;
+}
+.employeeTable td:nth-child(1),
+.employeeTable td:nth-child(2),
+.employeeTable td:nth-child(3),
+.employeeTable th:nth-child(1),
+.employeeTable th:nth-child(2),
+.employeeTable th:nth-child(3) {
+  width: 40px;
+}
+.table-responsive {
+  min-height: 300px;
+  height: calc(100vh - 170px);
+  overflow: auto;
+}
+.employeeTable th,
+.employeeTable td {
+  width: 130px;
+}
+.employeeTable td span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  overflow: hidden;
+  display: block;
+}
+.employeeTable {
+  display: table;
+}
+.confirmTblCls th,
+.confirmTblCls td {
+  width: 300px;
+}
+.confirmTblCls th:nth-child(1),
+.confirmTblCls td:nth-child(1) {
+  width: 40px;
+}
+.suggestedPopupTable {
+  max-height: calc(100vh - 360px);
+  overflow: auto;
+}
+.suggPopupCoursename {
+  min-width: 200px;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.linkedEmployeeHeight {
+  height: 562px;
+}
+/* .linkEmployeeTableDiv{
+  top:25px;
+  position: inherit;
+} */
+.linkEmployeeTable {
+  width: 100%;
+}
+.linkEmployeeTableRow {
+  height: 31px;
+}
+.linkEmployeeTableHeaderBorder {
+  border-bottom: 1px solid #e8e8e8;
+  height: 35px;
+}
+.linkEmpClm {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.linkEmpBtn {
+  height: 40px;
+  line-height: 16px;
+  font-size: 16px;
+  background-color: #1f96f4;
+  border-color: #1f96f4;
+  font-weight: 600;
+  width: 145px;
+  padding: 10px 15px 11px;
+  gap: 8px;
+}
+.linkEmpCancelBtn {
+  line-height: 15px;
+  font-size: 16px;
+  height: 40px;
+  background: #000000;
+  border-radius: 6px;
+  color: #fff;
+  margin-right: 5px;
+  border-color: #000;
+  font-weight: 600;
+  padding: 10px 15px 11px;
+  gap: 8px;
+  width: 84px;
+}
+.linkEmpTitle {
+  font-weight: 600;
+  font-size: 18px;
+}
+.linkEmpFooter {
+  justify-content: flex-start;
+  height: 65px !important;
+  padding-left: 15px !important;
+  align-items: flex-start;
+}
+.emp-overlay {
+  /*Edit by Anwar*/
+  //  pointer-events: none;
+}
+.linkedEmployee .linkEmployeeTable th {
+  font-weight: 600 !important;
+}
+.createUserModal .modal-body {
+  overflow: hidden auto;
+  max-height: calc(100vh - 240px);
+}
+.suggestCourseTbl{
+  position: relative;
+  width: 100%;
+}
+.absmodelshimmer{
+  position: absolute;
+  z-index: 10;
+  width: calc(100% - 32px);
+  height: calc(100% - 90px);
+  top: 96px;
+  overflow-y: hidden;
+  /* border: 2px solid red; */
+  left: 16px;
+  background-color: #fff;
+}
+.widthtable{
+  width: 572px;
+}
+.dummyth{
+  width: 572px;
+  height: 25px;
+  background-color: #f2f2f2;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  border-bottom: 1px solid #e8e8e8 !important;
+}
+.dummyth .th{
+  padding: 0px 10px;
+}
+.dummyth .th1{
+  width: 80px;
+}
+.dummyth .th2{
+  width: 264px;
+}
+.dummyth .th3{
+  width: 156px;
+}
+.absmodelshimmer1{
+  top: 135px;
+  height: calc(100% - 135px);
+
+}
+.mat-menu-item-pr{
+  padding-right: 10px !important;
+}
+.suggestedPopupUsersTable {
+  max-height: 150px;
+  overflow: auto;
+}
+.tablePanel{
+  display: flex;
+  align-items: center;
+}
+.tablePanel .tablePanel_left{
+  width: 130px;
+}
+.tablePanel .tablePanel_right{
+  width: 180px;
+}
+.example-tree-invisible {
+  display: none;
+}
+.flowover{
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-right: 20px;
+}
+/* .searchInputemp{
+  width: 100px;
+} */
+.formwidth1{
+  width: 355px;
+
+}
+.linkedEmployeeAssignrole .modal-dialog {
+  max-width: 500px;
+}
+.sCountryData{
+  margin-top: -20px;
+}
+.adjustshimmertable{
+  background-color: #fff;
+  position: relative;
+  z-index: 2;
+}
+.hideheader{
+ margin-top: -53px;
+}
+.showheader{
+  margin-top: -16px;
+}
+.hiddenXflow{
+  overflow-x: hidden;
+}
+.modal-auto-dd .ng-dropdown-panel{
+  margin-top: 10px;
+}
+.newCourseBtn1{
+  margin-right: 5px !important;
+}

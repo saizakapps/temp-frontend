@@ -1,0 +1,234 @@
+<section>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex auditHeaderFields">
+            <!--Find Store Input box-->
+            <div class="searchby-dd auditNgselect">
+                <label class="list-filter-title">Search by</label>
+                <ng-select [items]="searchEmployee" name="searchBy" bindLabel="name" bindValue="key" [clearable]=false
+                  [searchable]="false" (change)="clearSearchText()" [(ngModel)]="searchBy" class="mt-1"></ng-select>
+              </div>
+
+                   <div class="form-group mb-0 d-flex flex-column findStoreField">
+                <label class="list-filter-title">Find store</label>
+                <input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
+                    (keyup.enter)="getDataByFindStoreChange($event)" pattern="[A-Za-z0-9 ]+" maxlength="60"
+                    [(ngModel)]="ngxservice.filterStore" (keypress)="this.common.RestrictSpaceSpecial($event)" #uname="ngModel">
+                <div *ngIf="uname['errors']?.['pattern']" class="redcolor">
+                    Please Enter Valid Store name
+                </div>
+            </div>
+
+            <!-- <div class="form-group mb-0 d-flex flex-column findStoreField">
+                <label class="list-filter-title">Find store</label>
+                <input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
+                    (keyup.enter)="getDataByFindStoreChange($event)" pattern="[A-Za-z0-9 ]+" maxlength="60"
+                    [(ngModel)]="filterStore" (keypress)="this.common.RestrictSpaceSpecial($event)" #uname="ngModel">
+                <div *ngIf="uname['errors']?.['pattern']" class="redcolor">
+                    Please Enter Valid Store name
+                </div>
+            </div> -->
+
+            <!--Country/Region MulticheckBox-->
+            <div *ngIf="(ngxservice.userName == 'AD' || ngxservice.userName == 'HR') && countryRegionData.length > 1">
+                <div class="form-group mb-0 marginminus auditFormsLbl auditCountry auditFormsLbl-new">
+                    <label class="list-filter-title">
+                        Country
+                    </label>
+                    <div class="">
+                        <mat-form-field>
+                           
+                            <input type="text" placeholder="{{getSelectedItems()}}" aria-label="Number" matInput
+                                (input)="filterChanged($event)" [matAutocomplete]="auto" class="multselecticon multselecticonwithgray  border-0">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+
+                                <mat-option class="d-none">
+
+                                </mat-option>
+                                <mat-tree [dataSource]="countryRegionData" [treeControl]="treeControl"
+                                    class="example-tree example-tree-audit ">
+                                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                                        <mat-checkbox class="checklist-leaf-node" [checked]="node.checked"
+                                            (change)="getSelectedCR(node)"></mat-checkbox><span style="font-size: 12px;padding-top: 5px;">{{node.countryDescription}}</span>
+                                    </mat-tree-node>
+                                </mat-tree>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="ngxservice.userName == 'OM' && countryRegionData.length > 1">
+                <div class="form-group mb-0 marginminus auditFormsLbl auditCountry auditFormsLbl-new">
+                    <label class="list-filter-title">
+                        <span>Region</span>
+                    </label>
+                    <div class="multselectbox">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" placeholder="{{getSelectedItems()}}" aria-label="Number" matInput
+                                (input)="filterChanged($event)" [matAutocomplete]="auto" class="multselecticon multselecticonwithgray">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+
+                                <mat-option class="d-none">
+
+                                </mat-option>
+
+                                <mat-tree [dataSource]="countryRegionData" [treeControl]="treeControl"
+                                    class="example-tree example-tree-audit">
+                                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                                        <mat-checkbox class="checklist-leaf-node" [checked]="node.checked"
+                                            (change)="getSelectedCR(node)">{{node.regionDescription}}</mat-checkbox>
+                                    </mat-tree-node>
+                                </mat-tree>
+
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <!--Year MulticheckBox-->
+
+
+
+            <div class="form-group marginminus auditFormsLbl auditYear width-input-100">
+                <div class="searchby-dd mr-2 auditNgselectYear" [ngClass]="{'nodropdownNgselectYear' : yearData.length == 1}">
+                    <label class="list-filter-title">Year</label>
+                    <ng-select [items]="yearData" name="selectedYear" bindLabel="year" bindValue="year" [clearable]=false
+                      [searchable]="false" (change)="selectedyearvalue()" [(ngModel)]="ngxservice.selectedYear" class="mt-1" [readonly]="yearData.length == 1"></ng-select>
+                  </div>
+                <!-- <label class="list-filter-title">Year</label>
+                <div class=""> -->
+                    <!-- <mat-form-field class="example-full-width topmargin width-100">
+                        <input type="text" placeholder="2023" value="2023" matInput 
+                            [(ngModel)]="selectedYear" [matAutocomplete]="auto1" class="form-control yearblackcolor" >
+                        <mat-autocomplete #auto1="matAutocomplete" class="auditYearselectpanel"
+                            (optionSelected)="yearChange($event)">
+                            <mat-option *ngFor="let option of yearData;" [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field> -->
+                    <!-- <mat-form-field class="example-full-width topmargin width-100 AuditselectDropdown">
+                        <mat-select [(ngModel)]="selectedYear">
+                            <mat-option *ngFor="let option of yearData" [value]="option">{{ option }}</mat-option>
+                          </mat-select>
+                        <input type="text" placeholder="2023" value="2023" matInput
+                            [(ngModel)]="selectedYear" [matAutocomplete]="auto1" class="form-control yearblackcolor"
+                            readonly="">
+                        <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete"
+                            (optionSelected)="yearChange($event)" style="pointer-events: none;">
+                            <mat-option *ngFor="let option of yearData;" [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field> -->
+                </div>
+          
+
+            <!--Inspected/Only new CheckBox-->
+            <div class="mtop-18">
+                <mat-checkbox
+                    *ngIf="ngxservice.userName == 'AD' || ngxservice.userName == 'HR' || ngxservice.userName == ''"
+                    class="topcheckbox unsetcheckboxWidth" (change)="inspectedvalue()" [checked]="this.ngxservice.inspected">
+                    <span class="no-wrap mleft-12 inspecttext">
+                        Not inspected
+                    </span>
+                    <div class="dummyborder"></div>
+                </mat-checkbox>
+                <mat-checkbox
+                    *ngIf="ngxservice.userName == 'SM' || ngxservice.userName == 'OM' || this.ngxservice.userName == 'DM'"
+                    class="topcheckbox unsetcheckboxWidth" [checked]="this.ngxservice.onlyNew" (change)="inspectedvalue1()">
+                    <span class="no-wrap mleft-12 inspecttext">
+                        Only new
+                    </span>
+                    <div class="dummyborder"></div>
+                </mat-checkbox>
+
+            </div>
+
+            <!--Clear Filter Text-->
+            <div class="">
+                <div class="clearfilterText" (click)="clearFilter()"
+                    [ngClass]="{'clearfilterText_disabled' : this.ngxservice.inspected == false && this.ngxservice.selectedCountryRegionData.length == 0 && disableFilter == false && this.ngxservice.onlyNew == false}">
+                    Clear all filters</div>
+            </div>
+        </div>
+        <div>
+            <div (click)="getMailStatus()" [matMenuTriggerFor]="courseSummary"
+                class="d-flex align-items-center tableSummary">Export status</div>
+            <mat-menu class="statusMenuPanelAudit" #courseSummary="matMenu" xPosition="before">
+                <table class="statusTbl" id="dynamic-table">
+                    <thead>
+                        <tr>
+                            <th>Exported Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="this.statusList">
+                        <tr *ngFor="let item of statusList; let i = index">
+                            <td>{{ (item.updatedAt) || '-'}}</td>
+                            <td class="statusCamel"
+                                [ngClass]="{'greenStatus' : item.emailStatus === 'success', 'redStatus': item.emailStatus === 'fail', 'yellowStatus': item.emailStatus === 'inprogress' }">
+                                {{ item.emailStatus }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex no-record-found-bg">
+                    <div *ngIf="statusList && statusList.length == 0" class="no-record-found-status">No record found
+                    </div>
+                </div>
+            </mat-menu>
+        </div>
+    </div>
+    <app-audit-custom-table [tableData]="tableData" *ngIf="this.auditList.length > 0"
+        (allListEvent)="getTableListEvent($event)" class="p-0"></app-audit-custom-table>
+    <app-audit-custom-table [tableData]="tableData" *ngIf="this.auditList.length == 0"
+        class="p-0"></app-audit-custom-table>
+</section>
+<div class="bottomfooter">
+    <div class="newCourseBtn" data-toggle="modal" data-target="#exampleModal" (click)="getdownloadRow()"
+        [ngClass]="{'disabledDownloadBUtton' : this.ngxservice.donwloadHide == true || tableData.data.length == 0 || this.ngxservice.recordButton == true}">
+        Send to Email <span
+            *ngIf="this.ngxservice.selectedRowLength || this.ngxservice.selectedRowLength !== 0">({{this.ngxservice.selectedRowLength}})</span>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="exampleModal" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                Download Files - Mail
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <div class="mailbodyCss">
+                        <div class="mb-2 d-flex align-items-center">
+                            <label class="form-label mb-0 fw-600 emailtext">Email</label>
+                            <input type="text" formControlName="email" class="form-control mailInput"
+                                (change)="getMail($event)" [(ngModel)]="mailId" maxlength="60"
+                                [ngClass]="{'invalid' : f['email'].errors && mailId !== ''}" />
+                            <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()" type="button"
+                                class="btn btn-primary btn-sm mailAddbtn">Add</button>
+                        </div>
+                        <div class="mailCls pl-0 d-flex flex-wrap">
+                            <div *ngFor="let mailId of Emails, let m = index"
+                                class="d-flex align-items-center mr-2 mailTag mb-2">
+                                <span>{{ mailId }}</span><span class="removeimage" (click)="removeEmail(m)">
+                                    <mat-icon class="mailCloseIcon">close</mat-icon>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mail-footer p-0 border-0">
+                <button type="button" class="btn userDlgBtn cancelBtn saveDraft addBtn" data-dismiss="modal"
+                    (click)="cancelMail()">Cancel</button>
+                <button type="button" class="btn userDlgBtn cancelBtn saveDraft" data-dismiss="modal"
+                    [ngClass]="{'disabledmailbtn' : Emails.length == 0}" (click)="sendMail()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

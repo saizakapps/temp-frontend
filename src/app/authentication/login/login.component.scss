@@ -1,0 +1,225 @@
+/*------------------------------- Header Css Start ---------------------------------*/
+:host {
+  --login-blue-color: #0066c4;
+}
+/*------------------------------- Header Css End ----------------------------------*/
+
+/*--------------------------------Body Css Start----------------------------------*/
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  /* background-color: var(--app-primary-color); */
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.login-fun-background {
+  background-color: #1f96f4;
+}
+
+.login-portion {
+  align-self: center;
+}
+
+.login-label {
+  font-weight: 550;
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+.lblHeading {
+  font-size: 22px;
+  color: #fff;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  text-decoration: underline;
+}
+.reset-form {
+  margin-top: 35px;
+}
+.loginDetails {
+  background-color: #0064b2;
+  padding: 36px 45px;
+  border-radius: 0px 0px 18px 18px;
+}
+.login-form .form-control,
+.reset-form .form-control {
+  height: 35px;
+  width: 400px;
+  border-radius: 2px;
+  background-color: #ffffff !important;
+  border: 1px solid #ffffff;
+  background-clip: unset !important;
+  margin-bottom: 20px !important;
+}
+.mobilewrap-flex{
+  gap: 10px;
+}
+@media screen and (max-width:500px){
+  .login-form .form-control,
+.reset-form .form-control{
+  width: 100% !important;
+}
+.loginDetails{
+  padding: 25px;
+}
+.mobilewrap-flex{
+  flex-wrap: wrap;
+  justify-content: center !important;
+}
+}
+.forgot-form .form-control {
+  height: 30px;
+  width: 240px;
+  border-radius: 0px;
+  background-color: #ffffff !important;
+  border: 1px solid #ffffff;
+  background-clip: unset !important;
+}
+
+.login-form .form-control:focus,
+.forgot-form .form-control:focus {
+  /* border-color: #0066C4 !important; */
+  border: 1px solid !important;
+  border-color: var(--login-blue-color) !important;
+  box-shadow: none !important;
+}
+
+.email-alert {
+  position: absolute;
+  top: 7px;
+  left: 236px;
+  width: 160px;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.password-alert {
+  width: 300px;
+}
+
+.login-submit {
+  background: #1f96f4;
+  border-radius: 100px;
+  border-color: #fff;
+  width: 139px;
+  height: 56px;
+  padding: 16px 40px;
+  border: 3px solid #fff;
+  font-size: 20px;
+  white-space: nowrap;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.reset-form {
+  background-color: var(--login-blue-color);
+  padding: 30px;
+  width: 300px;
+  margin-top: 28px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+}
+
+.forgot-submit {
+  background: var(--white);
+  box-shadow: none;
+  color: #0d0d0d !important;
+  border: none !important;
+  font-weight: 500;
+  width: 120px;
+  height: 40px;
+}
+
+.forgot-submit:active {
+  background-color: var(--white) !important;
+}
+
+.forgot-input {
+  display: flex;
+  justify-content: center;
+}
+
+.forgot-password {
+  color: white !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
+.close-icon {
+  position: absolute;
+  left: 120px;
+  bottom: 29px;
+  cursor: pointer;
+}
+
+.login_card {
+  width: 491px;
+  /* height: 360px; */
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+  background: rgba(31, 150, 244, 0.9);
+  border-radius: 14px;
+}
+.brand_logo_container {
+  height: 191px;
+  background-color: #0579d3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  border-radius: 18px 18px 0px 0px;
+}
+/* .form_container {
+    margin-top: 90px;
+  } */
+
+.arrow_box {
+  position: relative;
+  background: #07090a;
+  color: white;
+  padding: 8px;
+}
+.arrow_box:after {
+  right: 100%;
+  top: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(7, 9, 10, 0);
+  border-right-color: #07090a;
+  border-width: 15px;
+  margin-top: -15px;
+}
+.warning-ico {
+  margin-top: -3px;
+}
+.viewPassword {
+  height: 35px;
+  cursor: pointer;
+  border: 0;
+  width: 40px;
+  background:transparent;
+  position: absolute;
+  right: 3px;
+  top: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/*--------------------------------Body Css End----------------------------------*/
+@media screen and (max-width: 500px) {
+  .login_card {
+    width: auto;
+  }
+}

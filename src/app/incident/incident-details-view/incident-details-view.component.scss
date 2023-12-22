@@ -1,0 +1,88 @@
+.edit-personal-info{
+	font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 32px;
+color: #1F96F4;
+}
+
+.label-name{
+	font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+width: 160px;
+min-width: 160px;
+padding: 0 !important;
+margin-bottom: 0px !important;
+}
+
+.incidentDetailView {
+	gap: 15px;
+    white-space: nowrap;
+}
+.labelView {
+	gap: 10px;
+    width: 100%;
+
+}
+.data-view {
+	padding: 0 !important;
+	line-height: 17px;
+	max-width: 390px;
+	white-space: normal;
+    word-break: break-all;
+}
+.view-box .data-view {
+    margin-bottom: 10px;
+}
+.view-box label {
+    font-weight: 500;
+    padding: 0;
+}
+.view-box {
+	width: 402px;
+    border: 2px solid #c5c5c540;
+    padding: 20px;
+    border-radius: 5px;
+    // gap: 5px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+	margin-bottom: 10px;
+    padding-bottom: 10px;
+    margin-left: 8px;
+}
+.view-box-history{
+    width: 370px !important;
+}
+.witnessBoxFields {
+	width: 131px !important;
+}
+.mbottomxTitle{
+    margin-bottom: 15px;
+}
+.view-box-data:last-child{
+    .view-box{
+        margin-bottom: 0px !important;
+    }
+}
+.redacted-background{
+  background: yellow;
+}
+.gap-10px{
+    gap: 10px;
+}
+.leftmargin-7{
+    margin-left: -6px;
+}
+.witness-title-wrap{
+white-space: break-spaces;
+    word-break: break-all;
+}
+.row{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }

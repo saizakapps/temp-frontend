@@ -1,0 +1,88 @@
+<div class="row">
+	<div class="col-md-6 pt-3" *ngFor="let wt of witnessList;index as i;">
+		<div class="view-box">
+			  <div class="row">
+			 <label  class="col-md-6" class="witness-title">{{wt.witnessName}}</label>
+			 <div class="col-md-6"></div> 			 
+		</div>
+		<div class="row">
+			 <label  class="col-md-12 not-involve" *ngIf="!wt.witnessUnwillingToInvolve">Not to be involved</label>
+			 <div class="col-md-12 involve" *ngIf="wt.witnessUnwillingToInvolve">To be involved</div> 			 
+		</div>
+		<div class="row">
+			 <label  class="col-md-6" class="witness-title">Phone:</label>		 
+		</div>
+		<div class="row">
+			 <div class="col-md-6">{{wt.witnessContactNumber}}</div> 	
+		</div>
+	
+		<div class="row">
+			 <label  class="col-md-6" class="witness-title">Address:</label>
+					 
+		</div>
+		<div class="row">
+				 <div class="col-md-6">{{wt.witnessAddress}}</div> 
+		</div>
+		<div class="row">
+			 <label  class="col-md-6" class="witness-title">Statement:</label>
+					 
+		</div>
+		<div class="row">
+				 <div class="col-md-6">{{wt.witnessStatement}}</div> 
+		</div>
+
+
+		<div class="row">
+			<div class="col-md-2 witness-edit" (click)="editWitness(witnessbox,i)">Edit</div>
+			<div class="col-md-2 witness-edit" (click)="deleteConfirmBox(conformbox,i)">Delete</div>
+
+		</div>
+		</div>
+		
+	</div>
+</div>
+
+<ng-template #conformbox>
+		 	<div class="container">
+		 		<div class=" ps-2 pe-2 pb-2 pt-2">
+		 			  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-inline list-unstyled text-left title-modal">
+	      <li>
+	      	  <div class="title-modal">
+	      	  	<div class="d-flex item-align-left text-uppercase">
+	      			Delete Confirmation
+	      		</div>
+	      	  </div>
+	      </li>
+      </ul>
+    </div>
+  </div>
+  	<form #confirm="ngForm"   class="example-form">
+	    <div class="row pb-3">
+	    	<div class="row">
+	    	<div class="col-lg-12 col-md-12  col-sm-12 ">
+	    	   Are you sure want to delete? 
+	    </div>
+	    
+	</div>
+	    </div>  
+	  	<div class="row">
+	  	  <div class="d-flex justify-content-end ">
+	  	  	<div class="col-md-4 pe-2">
+	  	  		<button mat-button class="btn btn-sm btn-outline-secondary mb-2 close-btn"mat-dialog-close (click)="deleteWitness()">conform</button>		
+	  	  	</div>
+			  	<div class="col-md-4">	 
+			<button mat-button class="btn btn-sm btn-outline-secondary mb-2 close-btn"mat-dialog-close>Cancel</button>
+		</div>
+		  </div>
+		</div>
+   </form>
+		 		</div>
+  
+</div>
+
+		 </ng-template>
+		 	<ng-template #witnessbox>
+				 <app-witness-form [witnessData]="witnessInputData" (witnessSaveEvent)="saveWitness($event)"></app-witness-form>
+			</ng-template>

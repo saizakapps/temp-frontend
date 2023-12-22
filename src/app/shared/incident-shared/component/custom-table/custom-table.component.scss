@@ -1,0 +1,389 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  min-width: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+th.mat-header-cell {
+  background-color: white !important;
+  color: white !important;
+}
+
+.mdc-data-table__header-cell {
+  background-color: white !important;
+}
+.mdc-data-table__header-cell {
+  color: grey !important;
+}
+.mat-mdc-table .mdc-data-table__row {
+  background: white !important;
+}
+.mdc-data-table__pagination-total,
+.mdc-data-table__pagination-rows-per-page-label,
+.mdc-data-table__cell {
+  color: grey !important;
+}
+
+.new-box {
+  padding: 8px 7px 7px;
+  gap: 10px;
+  width: 38px;
+  height: 22px;
+  background: #FFD82D;
+  border-radius: 3px;
+  color: #000;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  text-align: center;
+}
+.table-responsiveTop{
+  background-color: #fff;
+  padding: 20px;
+  padding-right: 10px;
+  padding-bottom: 0px;
+  width: calc(100vw - 240px);
+}
+.table-responsive {
+  background-color: #fff;
+  padding-top: 0px;
+  // padding: 20px;
+  overflow: auto;
+  width: calc(100vw - 270px);
+  display: block;
+  height: calc(100vh - 132px);
+  max-height: calc(100vh - 132px);
+  position: relative;
+}
+.incidentListTblView {
+  // display: block;
+  background-color: #fff;
+  padding: 20px;
+  width: calc(100vw - 280px);
+}
+
+.incidentListTblView tr {
+  display: table;
+  height: 32px !important;
+  width: 100%;
+}
+.incidentListTblView th{
+  font-weight:600;
+}
+.incidentListTblView td, .incidentListTblView th {
+  height: 32px;
+  border-bottom: 1px solid #C5C5C5;
+  padding: 0 3px 0px 3px;
+  color: #0d0d0d !important;
+  font-family: "Inter" !important;
+}
+.incidentListTblView td{
+ cursor: pointer;
+}
+.incidentListTblView td span, .incidentListTblView th span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+.incidentListTblView th:nth-child(1),.incidentListTblView td:nth-child(1) {
+  width: 119px;
+  max-width: 119px;
+  min-width: 119px;
+}
+
+.incidentListTblView th:nth-child(2),.incidentListTblView td:nth-child(2){
+  width: 103px;
+  max-width: 103px;
+  min-width: 103px;
+}
+// .incidentListTblView th:nth-child(2) span,.incidentListTblView td:nth-child(2) span{
+//   width: 126px;
+//   max-width: 126px;
+//   min-width: 126px;
+// }
+/*.incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
+  width: 126px;
+  min-width: 126px;
+  max-width: 126px;
+}
+// .incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
+//   max-width: 114px;
+// }
+
+.incidentListTblView th:nth-child(4),.incidentListTblView td:nth-child(4) {
+  width: 125px;
+  min-width: 125px;
+  max-width: 125px;
+}
+// .incidentListTblView th:nth-child(4) span,.incidentListTblView td:nth-child(4) span{
+//   max-width: 109px;
+// }
+*/
+.incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+}
+// .incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
+//   max-width: 79px;
+// }
+
+.incidentListTblView th:nth-child(4),.incidentListTblView td:nth-child(4) {
+  width: 85px;
+  min-width: 85px;
+  max-width: 85px;
+}
+// .incidentListTblView th:nth-child(4) span,.incidentListTblView td:nth-child(4) span {
+//   max-width: 70px;
+// }
+
+.incidentListTblView th:nth-child(5),.incidentListTblView td:nth-child(5) {
+  width: 79px;
+  min-width: 79px;
+  max-width: 79px;
+}
+// .incidentListTblView th:nth-child(5) span,.incidentListTblView td:nth-child(5) span {
+//   max-width: 69px;
+// }
+
+.incidentListTblView th:nth-child(6),.incidentListTblView td:nth-child(6) {
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
+}
+// .incidentListTblView th:nth-child(6) span,.incidentListTblView td:nth-child(6) span {
+//   max-width: 130px;
+// }
+
+// .table-responsive {
+//   min-height: 300px;
+//   height: calc(100vh - 145px);
+//   overflow: auto;
+// }
+// .courseListTblView tr:hover {
+//   cursor: pointer;
+// }
+
+// .courseListTblView thead tr:first-child {
+//   position: sticky;
+//     top: 0;
+//     z-index: 2;
+//     background: #fff;
+//     height: 35px;
+//     display: table-caption;
+//     width: 100%;
+// }
+// .courseListTblView tr {
+//   z-index: 1;
+//     height: 36px;
+//     width: 100%;
+//     border-bottom: 1px solid #C5C5C5!important;
+//     display: flex;
+//     align-items: center;
+// }
+
+// .courseListTblView th {
+//   width: 155px;
+// }
+
+// .courseListTblView {
+//   min-height: 300px;
+//   height: calc(100vh - 190px);
+//   padding: 0px 10px;
+//   display: table;
+//   overflow: auto;
+//   width: 100%;
+// }
+// .courseListTblView tr th:nth-child(1){
+//   width: 40px;
+// }
+// .courseListTblView:nth-child(2) tr th:nth-child(2),.courseListTblView:nth-child(2) tr td:nth-child(2) {
+//   width: 155px !important;
+// }
+// .courseListTblView td {
+//   /* border-bottom: 1px solid #C5C5C5!important; */
+//   font-size: 14px!important;
+//   vertical-align: middle!important;
+//   width: 155px;
+// }
+
+// .courseTblView span {
+//   max-width: 150px;
+//   overflow: hidden;
+//   white-space: nowrap;
+//   text-overflow: ellipsis;
+// }
+
+// .courseListTblView th,.courseListTblView td {
+//   padding: 0px 10px;
+// }
+
+// .courseListTblView td {
+//   /* border-bottom: 1px solid #C5C5C5!important; */
+//   font-size: 14px!important;
+//   vertical-align: middle!important;
+//   width: 155px;
+//   background-color: #fff !important;
+// }
+
+// .courseListTblView .courseViewLst td:nth-child(2),.courseView tr th:nth-child(2) {
+//   width: 500px !important;
+// }
+// .courseListTblView .tableIcons  {
+//   position: relative;
+//   left: 0px;
+//   color: #818181;
+// }
+// .courseListTblView tr th:nth-child(1),.courseListTblView tr td:nth-child(1){
+//   width: 40px;
+// }
+// .courseListTblView tr th:nth-child(2),.courseListTblView tr td:nth-child(2){
+//   width: 103px;
+// }
+// .courseListTblView tr th:nth-child(3),.courseListTblView tr td:nth-child(3){
+//   width: 126px;
+// }
+.no-data-found{
+  text-align:center;
+}
+.textcase{
+  text-transform:capitalize;
+  cursor:pointer;
+}
+.app-no-record-found-health {
+ display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: 50px;
+    background: #f2f2f2;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 100px;
+    position: unset !important;
+}
+.cursor-pointer{
+  cursor:pointer;
+}
+.allCheckboxhidden{
+opacity : 0;
+/*pointer-events:none;*/
+display: none;
+}
+.draftid{
+      margin-left: 37px;
+
+}
+.text-camel{
+  text-transform: capitalize;
+}
+.row-blue{
+  background:#1f96f4 !important;
+}
+.incidentListTblView td:nth-child(1) .emptyContentDiv {
+  width: 185px;
+}
+.incidentListTblView td:nth-child(1) .lockVisible {
+  width: 16px;
+  height: 21px;
+}
+.lockVisible .mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+// .padleft{
+//   padding-left: 12px;
+// }
+.lockedRow{
+  opacity: 0.4;
+  cursor: auto !important;
+  .textcase{
+    // cursor: a !important;
+    cursor: default !important;
+  }
+}
+
+.incidentListTblView tr:hover{
+  td{
+    background-color: #f2f2f257 !important;
+  }
+}
+.activeFilterName{
+  background-color: #1f96f4 !important;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: #fff !important;
+}
+.activeFiltericon{
+  background-color: #1f96f4;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: #fff !important;
+
+}
+.showNamepad{
+  padding-left: 5px;
+}
+.showIconpad{
+padding-right: 5px;
+}
+.showNamepadtbody{
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  // z-index: 10;
+  background-color: inherit;
+  z-index: 2;
+}
+.incidentListTblView .tableCleartext{
+  color: #1f96f4 !important;
+}
+.tableCleartext{
+  .disabledClear{
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
+  }
+}
+.draftcolor{
+  color:#f8a102 !important;
+}
+
+.nooverflow{
+  overflow-x: hidden;
+}
+.counttext{
+  font-weight: 550;
+}
+.counttextwidth{
+  padding-right: 3px;
+}
+.pipe{
+  font-size: 11px;
+  color: #1f96f4;
+  font-weight: bolder;
+  padding-top: 3px;
+}
+.row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}

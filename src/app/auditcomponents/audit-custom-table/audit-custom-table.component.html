@@ -1,0 +1,603 @@
+<div class="table-responsiveTop">
+    <!-- <div (click)="clearTablefilter()" class="tableClear" [ngClass]="{'disabledClear' : (this.selectedassignedManagerType.length == 0 && this.ngxservice.selectedviewedNameBy.length == 0) && dateSortValue == ''}">Clear</div> -->
+    <div class="table-responsive" [ngClass]="{'hiddenFlow' : ngxservice.shimmerTable == true}">
+        <table id="listTable" mat-table [dataSource]="tableData.data" class="auditListTblView" [ngClass]="{'auditListTblViewRemovetr' : this.ngxservice.hideTable == true}">
+            <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container *ngFor="let x of tableData.showColumn; index as i;" matColumnDef="{{x.indexName}}">
+
+                <th mat-header-cell *matHeaderCellDef class="auditcheckboxth"
+                    [ngClass]="{'store_name_width' : x.indexName == 'storeDescription' , 'document_width' : x.indexName == 'fileName' ||  x.indexName == 'scoreCardFileName', 'rm_width' : x.indexName == 'assignedManager', 'uploaddate_width' : x.indexName == 'updatedAt', 'uploadname_width' : x.indexName == 'updateByName', 'viewname_width' : x.indexName == 'reviewByName', 'viewdate_width' : x.indexName == 'reviewAt', 'status_width' : x.indexName == 'storeAuditStatus', 'storeId_width' : x.indexName == 'storeCode', 'newbutton_width' : x.indexName == 'isViewed'}">
+                    <div class="d-flex"
+                        [ngClass]="{'active-th' : (x.indexName == 'storeDescription' && (this.acivesort == 1 || this.acivesort == 2 || this.acivesort == 3)) || (x.indexName == 'updatedAt' && (this.acivesort == 4 || this.acivesort == 5 || this.acivesort == 6)) || (x.indexName == 'reviewAt' && (this.acivesort == 7 || this.acivesort == 8 || this.acivesort == 9))}">
+                        <mat-checkbox *ngIf="i==0" id="all" class="w-100 allCheckbox mt-0 topcheckbox auditaligncheckbox"
+                            name="allselect" (change)="selectAll($event)" [checked]="ngxservice.isAllselect" [indeterminate]="ngxservice.indeterminate">
+                            <div class="dummyborder1"></div>
+                        </mat-checkbox><span *ngIf="i==0">{{x.showName}}</span>
+
+                        <span *ngIf="i>0 && x.indexName !== 'isClear'" class="showNamepad" [ngClass]="{'activeFilterName' : (x.indexName == 'storeDescription' && (this.acivesort == 2 || this.acivesort == 3)) || (x.indexName == 'updatedAt' && (this.acivesort == 5 || this.acivesort == 6)) || (x.indexName == 'reviewAt' && (this.acivesort == 8 || this.acivesort == 9)) || (x.indexName == 'assignedManager' && ngxservice.selectedassignedManagerType.length > 0) || (x.indexName == 'reviewByName' && ngxservice.selectedviewedNameBy.length > 0)}">{{x.showName}}</span>
+                        <span *ngIf="i>0 && x.indexName == 'isClear'"  class="tableClear d-flex justify-content-end"><span (click)="clearTablefilter()" class="tableCleartext" [ngClass]="{'disabledClear' : this.ngxservice.selectedassignedManagerType.length > 0 || this.ngxservice.selectedviewedNameBy.length > 0 || dateSortValue !== '' || this.ngxservice.selectedRowLength > 0}">{{x.showName}}</span></span>
+                        <!--Sort Icon for Store name-->
+                        <span *ngIf="x.isSort && x.indexName == 'storeDescription'"
+                            [ngClass]="{'d-none' : storenameData.length == 0, 'activeFiltericon' : this.acivesort == 2 || this.acivesort == 3}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" (click)="getFilterData(x.indexName)"
+                            [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
+                            <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
+                        </span>
+
+                        <!--dummy Sort Icon for Store name When length = 0-->
+                        <span *ngIf="x.isSort && x.indexName == 'storeDescription'"
+                            [ngClass]="{'d-none' : storenameData.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
+                            <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
+                        </span>
+
+                        <!--Sort Icon for Upload date-->
+                        <span *ngIf="x.isSort && x.indexName == 'updatedAt'"
+                            [ngClass]="{'d-none' : updatepdfData.length == 0, 'activeFiltericon' : this.acivesort == 5 || this.acivesort == 6}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" (click)="getFilterData(x.indexName)"
+                            [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
+                            <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
+                        </span>
+                        <!--dummy Sort Icon for Upload date When length = 0-->
+                        <span *ngIf="x.isSort && x.indexName == 'updatedAt'"
+                            [ngClass]="{'d-none' : updatepdfData.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
+                            <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
+                        </span>
+
+                        <!--Sort Icon for Review date-->
+                        <span *ngIf="x.isSort && x.indexName == 'reviewAt'"
+                            [ngClass]="{'d-none' : reviewpdfData.length == 0, 'activeFiltericon' : this.acivesort == 8 || this.acivesort == 9}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" (click)="getFilterData(x.indexName)"
+                            [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
+                            <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
+                        </span>
+                        <!--dummy Sort Icon for Review date When length = 0-->
+                        <span *ngIf="x.isSort && x.indexName == 'reviewAt'"
+                            [ngClass]="{'d-none' : reviewpdfData.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
+                            <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
+                        </span>
+
+                        <!-- assignedManager Filter Icon -->
+                        <span *ngIf="x.isFilter && x.indexName == 'assignedManager'"
+                            [ngClass]="{'d-none' : ngxservice.assignedManagerData.length == 0, 'activeFiltericon' : ngxservice.selectedassignedManagerType.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" [ngbPopover]="menu" placement="bottom"
+                            [autoClose]="'outside'" #statusPopover1="ngbPopover">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                    stroke="#818181" />
+                                    <path *ngIf="this.ngxservice.selectedassignedManagerType.length> 0"
+                                        d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                        stroke="#fff" />
+                            </svg>
+                        </span>
+
+                        <!--dummy Icon-->
+                        <span *ngIf="x.isFilter && x.indexName == 'assignedManager'"
+                            [ngClass]="{'d-none' : ngxservice.assignedManagerData.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path 
+                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                stroke="#818181" />
+                            </svg>
+                        </span>
+
+                        <!-- reviewByName Filter Icon -->
+                        <span *ngIf="x.isFilter && x.indexName == 'reviewByName'"
+                            [ngClass]="{'d-none' : ngxservice.viewednameData.length == 0, 'activeFiltericon' : ngxservice.selectedviewedNameBy.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" [ngbPopover]="menu" placement="bottom"
+                            [autoClose]="'outside'" #statusPopover2="ngbPopover">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                stroke="#818181" />
+                                <path *ngIf="this.ngxservice.selectedviewedNameBy.length > 0"
+                                    d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                    stroke="#fff" />
+                            </svg>
+                        </span>
+
+                        <!--dummy Icon-->
+                        <span *ngIf="x.isFilter && x.indexName == 'reviewByName'"
+                            [ngClass]="{'d-none' : ngxservice.viewednameData.length > 0}"
+                            class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                stroke="#818181" />
+                              
+                                   
+                            </svg>
+                        </span>
+
+                        <ng-template #menu>
+                            <!-- select filter section -->
+                            <div *ngIf="x.isFilter" class="filter-popover">
+                                <!-- assignedManager Filter Menu -->
+                                <ng-container *ngIf="x.indexName=='assignedManager'">
+                                    <div class="cursor p-2 d-flex flex-column">
+                                        <mat-checkbox *ngFor="let item of this.ngxservice.assignedManagerData"
+                                            [(ngModel)]="item.checked" (change)="managerFilter($event, 'assign')" required>
+                                            <span class="camelCase" title="{{item.name | titlecase}}">{{item.name}}</span>
+                                        </mat-checkbox>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Reviewed Filter Menu -->
+                                <ng-container *ngIf="x.indexName=='reviewByName'">
+                                    <div class="cursor p-2 d-flex flex-column">
+                                        <mat-checkbox *ngFor="let item of ngxservice.viewednameData" [(ngModel)]="item.checked"
+                                        (change)="managerFilter($event, 'review')" required>
+                                            <span class="camelCase" title="{{item.name | titlecase}}">{{item.name}}</span>
+                                        </mat-checkbox>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <!-- select sort section for Pallet Updated at column -->
+                            <!--sort section for Store name-->
+                            <div *ngIf="x.isSort && x.indexName == 'storeDescription'" class="filter-popover">
+                                <div class="cursor p-2" (click)="dateSort(1);selectSort(1)"
+                                    [ngClass]="{'active-status' : this.acivesort == 1}">
+                                    <span class="f-400">Reset</span>
+                                </div>
+                                <div class="cursor p-2" (click)="dateSort(2);selectSort(2)"
+                                    [ngClass]="{'active-status' : this.acivesort == 2}">
+                                    <span class="f-400">Sort by Asc</span>
+                                </div>
+                                <div class="cursor p-2" (click)="dateSort(3);selectSort(3)"
+                                    [ngClass]="{'active-status' : this.acivesort == 3}">
+                                    <span class="f-400">Sort by Desc</span>
+                                </div>
+                            </div>
+                            <!--sort section for Upload date-->
+                            <div *ngIf="x.isSort && x.indexName == 'updatedAt'" class="filter-popover">
+                                <div class="cursor p-2" (click)="dateSort(1);selectSort(4)"
+                                    [ngClass]="{'active-status' : this.acivesort == 4}">
+                                    <span class="f-400">Reset</span>
+                                </div>
+                                <div class="cursor p-2" (click)="dateSort(2);selectSort(5)"
+                                    [ngClass]="{'active-status' : this.acivesort == 5}">
+                                    <span class="f-400">Sort by Asc</span>
+                                </div>
+                                <div class="cursor p-2" (click)="dateSort(3);selectSort(6)"
+                                    [ngClass]="{'active-status' : this.acivesort == 6}">
+                                    <span class="f-400">Sort by Desc</span>
+                                </div>
+                            </div>
+                            <!--sort section for Review name-->
+                            <div *ngIf="x.isSort && x.indexName == 'reviewAt'" class="filter-popover">
+                                <div class="cursor p-2" (click)="dateSort(1);selectSort(7)"
+                                    [ngClass]="{'active-status' : this.acivesort == 7}">
+                                    <span class="f-400">Reset</span>
+                                </div>
+                                <div class="cursor p-2" (click)="dateSort(2);selectSort(8)"
+                                    [ngClass]="{'active-status' : this.acivesort == 8}">
+                                    <span class="f-400">Sort by Asc</span>
+                                </div>
+                                <div class="cursor p-2" (click)="dateSort(3);selectSort(9)"
+                                    [ngClass]="{'active-status' : this.acivesort == 9}">
+                                    <span class="f-400">Sort by Desc</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </th>
+
+                <td mat-cell *matCellDef="let element; index as k" class="auditcheckboxtd"
+                    [ngClass]="{'row-blue' : element.checked, 'store_name_width' : x.indexName == 'storeDescription' , 'document_width' : x.indexName == 'fileName' ||  x.indexName == 'scoreCardFileName' , 'rm_width' : x.indexName == 'assignedManager', 'uploaddate_width' : x.indexName == 'updatedAt', 'uploadname_width' : x.indexName == 'updateByName', 'viewname_width' : x.indexName == 'reviewByName', 'viewdate_width' : x.indexName == 'reviewAt', 'status_width' : x.indexName == 'storeAuditStatus', 'newbutton_width' : x.indexName == 'isViewed'}">
+                    <mat-checkbox *ngIf="i==0" id="audit{{k}}" class="w-100 allCheckbox td_matbox mt-0 auditaligncheckbox"
+                        name="{{x.indexName}}" checked="{{(element.checked)?true:false}}"
+                        (change)="selectParticular($event,k,element)">
+                    </mat-checkbox>
+
+                    <!--Names of Elements Value-->
+                    <span *ngIf="i==0" title="{{element[x.indexName] | titlecase}}">{{element[x.indexName]}}</span>
+                    <span *ngIf="i>0 && x.indexName!='isViewed' && x.indexName !== 'fileName' && x.indexName !== 'scoreCardFileName'" class="table_text showNamepadtbody camelCase"
+                        title="{{element[x.indexName] | titlecase}}">
+                        {{(element[x.indexName]!='' && element[x.indexName]!=null)?element[x.indexName]:''}}
+
+                    </span>
+
+                    <!--Split File Name Element for Functionalities-->
+                    <!--Name of File name after Upload Completed-->
+                    <span
+                        *ngIf="x.indexName=='fileName' && element[x.indexName] !== null && element[x.indexName] !== 'Retry'"
+                        (click)="showFile(element)" title="{{element[x.indexName] | titlecase}}" class="blue_text showNamepadtbody"
+                        [ngClass]="{'black_text' : element[x.indexName] == 'Uploading...', 'red_text' : element[x.indexName] == 'Retry'}">
+                        {{splitNameurl(element[x.indexName])}}
+                    </span>
+                    <!-- <span *ngIf="this.ngxservice.selectedYear == '2023'"> -->
+                    <!--Name of value before Upload Completed-->
+                    <span
+                        *ngIf="x.indexName=='fileName' && element[x.indexName] == null && (ngxservice.userName == 'AD' || ngxservice.userName == 'HR')"
+                        class="blue_text showNamepadtbody" [ngClass]="{'disablebuttoncommon' : AuditaccessData.update == false && AuditaccessData.create == false}" (click)="eventUpload.click()">
+                        <input type="file" #eventUpload class="d-none" id="files{{x.index}}"
+                            (change)="upload($event, element, this.utils.API.UPLOAD_FILE)" (click)="nullement($event)" name="files{{x.index}}"
+                            accept="application/pdf">
+                        Upload
+                    </span>
+                    <!--Name of value When Upload Failed-->
+                    <span
+                        *ngIf="x.indexName=='fileName' && element[x.indexName] == 'Retry' && (ngxservice.userName == 'AD' || ngxservice.userName == 'HR')"
+                        class="red_text showNamepadtbody" (click)="eventUpload.click()">
+                        <input type="file" #eventUpload id="files{{x.index}}" class="d-none"
+                            (change)="upload($event, element, this.utils.API.UPLOAD_FILE)" (click)="nullement($event)" name="files{{x.index}}"
+                            accept="application/pdf">
+                        Retry
+                    </span>
+                    <!-- </span> -->
+
+                    <span 
+                    *ngIf="x.indexName=='scoreCardFileName' && element[x.indexName] !== null && element[x.indexName] !== 'Retry'"
+                    (click)="showscorecardFile(element)" title="{{element[x.indexName] | titlecase}}" class="blue_text showNamepadtbody"
+                    [ngClass]="{'black_text' : element[x.indexName] == 'Uploading...', 'red_text' : element[x.indexName] == 'Retry'}">
+                    {{(element[x.indexName])}}
+                </span>
+                <!--(ngxservice.userName == 'AD' || ngxservice.userName == 'HR')-->
+                <span
+                    *ngIf="x.indexName=='scoreCardFileName' && element[x.indexName] == null && (ngxservice.userName == 'AD' || ngxservice.userName == 'HR')"
+                    class="blue_text showNamepadtbody" [ngClass]="{'disablebuttoncommon' : AuditaccessData.update == false && AuditaccessData.create == false}" (click)="eventUploadscorecard.click()">
+                    <input type="file" #eventUploadscorecard class="d-none" id="files{{x.index}}"
+                        (change)="uploadscorecard($event, element, this.utils.API.UPLOAD_SCORECARD_FILE)" (click)="nullement($event)" name="files{{x.index}}"
+                        accept="application/pdf">
+                    Upload
+                </span>
+                <!--(ngxservice.userName == 'AD' || ngxservice.userName == 'HR')-->
+                <span
+                    *ngIf="x.indexName=='scoreCardFileName' && element[x.indexName] == 'Retry' && (ngxservice.userName == 'AD' || ngxservice.userName == 'HR')"
+                    class="red_text showNamepadtbody" (click)="eventUploadscorecard.click()">
+                    <input type="file" #eventUploadscorecard id="files{{x.index}}" class="d-none"
+                        (change)="upload($event, element, this.utils.API.UPLOAD_SCORECARD_FILE)" (click)="nullement($event)" name="files{{x.index}}"
+                        accept="application/pdf">
+                    Retry
+                </span>
+
+                    <!--Name of Value New Button-->
+                    <div *ngIf="x.indexName=='isViewed'" class="d-flex">
+                        <div class="newbutton showNamepadtbody"
+                            *ngIf="element.storeAuditStatus == 'open' && (ngxservice.userName == 'SM' || ngxservice.userName == 'OM' || this.ngxservice.userName == 'DM')">
+                            NEW</div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tableData.colums;"></tr>
+            <tr mat-row *matRowDef="let row; columns: tableData.colums;"></tr>
+        </table>
+        <app-audit-shimmertable *ngIf="ngxservice.shimmerTable" class="absshimmerTable"></app-audit-shimmertable>
+        <div *ngIf="ngxservice.recordButton" class="no-data-found app-no-record-found"> No Record found</div>
+    </div>
+    <!-- <div class="absthline"></div> -->
+</div>
+
+<!--History Table and Pdf Viewer Popup-->
+<div class="pdfView" *ngIf="pdfView">
+    <div class="d-flex align-items-end justify-content-center heightData">
+        <div class="historyLeft">
+            <div class="dummyHeight" (click)="outsideClick()"></div>
+        <div class="historyBox">
+            <div class="d-flex justify-content-between align-items-center historybox_title_alignment">
+                <div class="historybox_title">
+                    {{selectedData.storeDescription}} ({{selectedData.storeCode}})
+                </div>
+                <div> <img src="../../../assets/healthsafetyimages/history_close.svg" alt="" class="cursor"
+                        (click)="pdfView = false; activehistory = 0"></div>
+            </div>
+            <div class="historyTableresponse">
+                <table mat-table [dataSource]="historyData.data" class="auditListTblView historyListTblView"
+                    [ngClass]="{'historyListTblView_New' : this.smallShimmer}">
+                    <ng-container *ngFor="let history of historyData.showColumn; index as j;"
+                        matColumnDef="{{history.indexName}}">
+
+                        <th mat-header-cell *matHeaderCellDef>
+                            <div class="d-flex alignPopover">
+                                <!--Names of table header Value-->
+                                <span>{{history.showName}}</span>
+
+                                <!-- assignedManager Filter Icon -->
+                                <span [ngClass]="{'d-none' : updateByNameDataHistory.length == 0}">
+                                    <span *ngIf="history.historyFilter && history.indexName == 'updateByName'"
+                                        class="fw-600 cursor ut-filter-status-pointer ms-1" [ngbPopover]="menu"
+                                        placement="bottom" [autoClose]="'outside'" #statusPopover3="ngbPopover">
+                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                                stroke="#818181" />
+                                        </svg>
+                                    </span>
+                                </span>
+
+                                <!-- dummy Filter Icon for assignedManager-->
+                                <span [ngClass]="{'d-none' : updateByNameDataHistory.length > 0}">
+                                    <span *ngIf="history.historyFilter && history.indexName == 'updateByName'"
+                                        class="fw-600 cursor ut-filter-status-pointer ms-1">
+                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                                stroke="#818181" />
+                                        </svg>
+                                    </span>
+                                </span>
+
+                                <!-- reviewByName Filter Icon History Table-->
+                                <span [ngClass]="{'d-none' : viewednameDataHistory.length == 0}">
+                                    <span *ngIf="history.historyFilter && history.indexName == 'reviewByName'"
+                                        class="fw-600 cursor ut-filter-status-pointer ms-1 bottompopover"
+                                        [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'"
+                                        #statusPopover3="ngbPopover">
+                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                                stroke="#818181" />
+                                        </svg>
+                                    </span>
+                                </span>
+                                <!--Dummy reviewByName Filter Icon History Table-->
+                                <span [ngClass]="{'d-none' : viewednameDataHistory.length > 0}">
+                                    <span *ngIf="history.historyFilter && history.indexName == 'reviewByName'"
+                                        class="fw-600 cursor ut-filter-status-pointer ms-1">
+                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                                stroke="#818181" />
+                                        </svg>
+                                    </span>
+                                </span>
+
+                                <ng-template #menu>
+                                    <!-- select filter section -->
+                                    <div *ngIf="history.historyFilter"
+                                        class="filter-popover roleFilterPop historyFilterPop"
+                                        [ngClass]="{'filter-popover1' : historyData.data.length == 1, 'filter-popover2' : historyData.data.length == 2, 'filter-popover3' : historyData.data.length == 3,  'filter-popover4' : historyData.data.length == 4}">
+                                        <ng-container *ngIf="history.indexName=='updateByName'">
+                                            <div class="cursor filterpad d-flex flex-column camelCase">
+                                                <mat-checkbox *ngFor="let item of updateByNameDataHistory"
+                                                    [(ngModel)]="item.checked" (change)="typeChange1($event)" required>
+                                                    <span title="{{item.name | titlecase}}" class="camelCase">{{item.name}}</span>
+                                                </mat-checkbox>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="history.indexName=='reviewByName'">
+                                            <div class="cursor filterpad d-flex flex-column">
+                                                <mat-checkbox *ngFor="let item of viewednameDataHistory"
+                                                    [(ngModel)]="item.checked" (change)="viewChange1($event)" required>
+                                                    <span title="{{item.name | titlecase}}" class="camelCase">{{item.name}}</span>
+                                                </mat-checkbox>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element1; index as l"
+                            [ngClass]="{'activehistoryData' : activehistory == l}"
+                            (click)="getHistoryelement(element1, l)">
+                            <span class="camelCase" *ngIf="history.indexName !=='fileName'"
+                                title="{{element1[history.indexName] | titlecase}}">{{(element1[history.indexName]!='' &&
+                                element1[history.indexName]!=null)?element1[history.indexName]:''}}</span>
+                            <span *ngIf="history.indexName=='fileName'" title="{{element1[history.indexName] | titlecase}}">
+                                {{element1[history.indexName]}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="historyData.colums;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: historyData.colums;"></tr>
+                </table>
+                <div class="absShimmerTable" *ngIf="smallShimmer">
+                    <app-audit-shimmertable [type]="2"></app-audit-shimmertable>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="bottombutton cursor" data-toggle="modal" data-target="#exampleModal2" (click)="Emails = []">Send to Email
+                </div>
+                <input type="file" #eventUpload1 class="d-none" id="file"
+                    (change)="uploadNew($event, this.selectedData, this.utils.API.EDIT_FILE)" (click)="nullement($event)" name="file"
+                    accept="application/pdf">
+                <div class="bottombutton cursor" [ngClass]="{'disablebuttoncommon' : AuditaccessData.update == false && AuditaccessData.create == false}" (click)="eventUpload1.click()"
+                    *ngIf="(ngxservice.userName == 'AD' || ngxservice.userName == 'HR')">
+                    Upload new
+                    <span class="retryText" *ngIf="retryText == true">Retry</span>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="box-125" (click)="outsideClick();
+        "></div>
+        <div class="viewer">
+            <ngx-extended-pdf-viewer [useBrowserLocale]="true" [(src)]="pdfUrl" backgroundColor="#ffffff"
+                [showBorders]="false" [showDownloadButton]="true" [showPrintButton]="false" [showOpenFileButton]="false"
+                [textLayer]="true" [showSpreadButton]="false" [showScrollingButton]="false"
+                [showPropertiesButton]="false" (pdfLoadingStarts)="pdfStart()" (pagesLoaded)="pdfStop()"
+                [showToolbar]="false" [httpHeaders]="pdfHttpHeader" class="pdfViewImg">
+            </ngx-extended-pdf-viewer>
+            <!-- <iframe src="http://192.168.68.107:8098/uploads/SM_1685697169819.pdf" frameborder="0"></iframe> -->
+            <div class="pdfLoader" *ngIf="pdfLoader == true">
+            <div class="loader"></div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!--ScoreCard Table and Pdf Viewer Popup-->
+<div class="pdfView" *ngIf="scorecardView">
+    <div class="d-flex align-items-end justify-content-center heightData">
+        <div class="historyLeft">
+            <div class="dummyHeight" (click)="outsideClick()"></div>
+        <div class="historyBox">
+            <div class="d-flex justify-content-between align-items-center historybox_title_alignment">
+                <div class="historybox_title">
+                    {{selectedscrecardData.storeDescription}} ({{selectedscrecardData.storeCode}})
+                </div>
+                <div> <img src="../../../assets/healthsafetyimages/history_close.svg" alt="" class="cursor"
+                        (click)="scorecardView = false; activescorecard = 0"></div>
+            </div>
+            <div class="historyTableresponse">
+                <table mat-table [dataSource]="scorecardData.data" class="auditListTblView historyListTblView"
+                    [ngClass]="{'historyListTblView_New' : this.smallShimmer}">
+                    <ng-container *ngFor="let score of scorecardData.showColumn; index as j;"
+                        matColumnDef="{{score.indexName}}">
+
+                        <th mat-header-cell *matHeaderCellDef>
+                            <div class="d-flex alignPopover">
+                                <!--Names of table header Value-->
+                                <span>{{score.showName}}</span>
+
+                                <!-- assignedManager Filter Icon -->
+                                <span [ngClass]="{'d-none' : updateByNameDatascorecard.length == 0}">
+                                    <span *ngIf="score.historyFilter && score.indexName == 'scoreCardUpdateByName'"
+                                        class="fw-600 cursor ut-filter-status-pointer ms-1" [ngbPopover]="menu"
+                                        placement="bottom" [autoClose]="'outside'" #statusPopover3="ngbPopover">
+                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                                stroke="#818181" />
+                                        </svg>
+                                    </span>
+                                </span>
+
+                                <!-- dummy Filter Icon for assignedManager-->
+                                <span [ngClass]="{'d-none' : updateByNameDatascorecard.length > 0}">
+                                    <span *ngIf="score.historyFilter && score.indexName == 'scoreCardUpdateByName'"
+                                        class="fw-600 cursor ut-filter-status-pointer ms-1">
+                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                                                stroke="#818181" />
+                                        </svg>
+                                    </span>
+                                </span>
+
+                                <ng-template #menu>
+                                    <!-- select filter section -->
+                                    <div *ngIf="score.historyFilter"
+                                        class="filter-popover roleFilterPop historyFilterPop"
+                                        [ngClass]="{'filter-popover1' : scorecardData.data.length == 1, 'filter-popover2' : scorecardData.data.length == 2, 'filter-popover3' : scorecardData.data.length == 3,  'filter-popover4' : scorecardData.data.length == 4}">
+                                        <ng-container *ngIf="score.indexName=='scoreCardUpdateByName'">
+                                            <div class="cursor filterpad d-flex flex-column camelCase">
+                                                <mat-checkbox *ngFor="let item of updateByNameDatascorecard"
+                                                    [(ngModel)]="item.checked" (change)="typeChangescorecard1($event)" required>
+                                                    <span title="{{item.name | titlecase}}" class="camelCase">{{item.name}}</span>
+                                                </mat-checkbox>
+                                            </div>
+                                        </ng-container>
+                                  
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </th>
+                        <td mat-cell *matCellDef="let element2; index as m"
+                            [ngClass]="{'activehistoryData' : activescorecard == m}"
+                            (click)="getscorecardelement(element2, m)">
+                            <span class="camelCase" *ngIf="score.indexName !=='scoreCardFileName'"
+                                title="{{element2[score.indexName] | titlecase}}">{{(element2[score.indexName]!='' &&
+                                element2[score.indexName]!=null)?element2[score.indexName]:''}}</span>
+                            <span *ngIf="score.indexName=='scoreCardFileName'" title="{{element2[score.indexName] | titlecase}}">
+                                {{element2[score.indexName]}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="scorecardData.colums;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: scorecardData.colums;"></tr>
+                </table>
+                <div class="absShimmerTable" *ngIf="smallShimmer">
+                    <app-audit-shimmertable [type]="2"></app-audit-shimmertable>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="bottombutton cursor" data-toggle="modal" data-target="#exampleModal2" (click)="Emails = []">Send to Email
+                </div>
+                <input type="file" #eventscorecardUpload1 class="d-none" id="file"
+                    (change)="uploadscorecardNew($event, this.selectedscrecardData, this.utils.API.UPLOAD_SCORECARD_FILE)" (click)="nullement($event)" name="file"
+                    accept="application/pdf">
+                <div class="bottombutton cursor" [ngClass]="{'disablebuttoncommon' : AuditaccessData.update == false && AuditaccessData.create == false}" (click)="eventscorecardUpload1.click()"
+                    *ngIf="(ngxservice.userName == 'AD' || ngxservice.userName == 'HR')">
+                    Upload new
+                    <span class="retryText" *ngIf="retryText == true">Retry</span>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="box-125" (click)="outsideClick();
+        "></div>
+        <div class="viewer">
+            <ngx-extended-pdf-viewer [useBrowserLocale]="true" [(src)]="scorecardpdfUrl" backgroundColor="#ffffff"
+                [showBorders]="false" [showDownloadButton]="true" [showPrintButton]="false" [showOpenFileButton]="false"
+                [textLayer]="true" [showSpreadButton]="false" [showScrollingButton]="false"
+                [showPropertiesButton]="false" (pdfLoadingStarts)="pdfStart()" (pagesLoaded)="pdfStop()"
+                [showToolbar]="false" [httpHeaders]="pdfHttpHeader" class="pdfViewImg">
+            </ngx-extended-pdf-viewer>
+            <!-- <iframe src="http://192.168.68.107:8098/uploads/SM_1685697169819.pdf" frameborder="0"></iframe> -->
+            <div class="pdfLoader" *ngIf="pdfLoader == true">
+            <div class="loader"></div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="exampleModal2" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            Download Files - Mail
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <div class="mailbodyCss">
+                        <div class="mb-2 d-flex align-items-center">
+                            <label class="form-label mb-0 fw-600 emailtext">Email</label>
+                            <input type="text" formControlName="email" class="form-control mailInput"
+                                (change)="getMail($event)" [(ngModel)]="mailId" maxlength="60"
+                                [ngClass]="{'invalid' : f['email']?.errors && mailId !== ''}" />
+                            <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()" type="button"
+                                class="btn btn-primary btn-sm mailAddbtn">Add</button>
+                        </div>
+                        <div class="mailCls pl-0 d-flex flex-wrap">
+                            <div *ngFor="let mailId of Emails, let m = index"
+                                class="d-flex align-items-center mr-2 mailTag mb-2">
+                                <span>{{ mailId }}</span><span class="removeimage" (click)="removeEmail(m)">
+                                    <mat-icon class="mailCloseIcon">close</mat-icon>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer mail-footer p-0 border-0">
+                <button type="button" class="btn userDlgBtn cancelBtn saveDraft addBtn" data-dismiss="modal"
+                    (click)="cancelMail()">Cancel</button>
+                <button type="button" class="btn userDlgBtn cancelBtn saveDraft"  data-dismiss="modal"
+                    [ngClass]="{'disabledmailbtn' : Emails.length == 0}" (click)="sendMail()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="alertBoxFixed" *ngIf="alertBox">
+    <div class="alertBox">
+      <div class="alert_text">File already exist. Please upload file with different file name</div>
+      <div class="d-flex justify-content-end">
+      <div class="okbutton" (click)="alertBox = false">OK</div>
+      </div>
+    </div>
+  </div> -->

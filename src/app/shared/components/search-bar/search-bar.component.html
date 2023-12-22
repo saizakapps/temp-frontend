@@ -1,0 +1,16 @@
+<!-- <div>
+  <input type="text" placeholder="Search" [(ngModel)]="searchText" (input)="filterSuggestions()">
+  <ul *ngIf="filteredSuggestions.length > 0" class="suggestion-list">
+    <li *ngFor="let suggestion of filteredSuggestions" (click)="selectSuggestion(suggestion)">{{ suggestion }}</li>
+  </ul>
+</div> -->
+<div class="relativeinput">
+  <input id="searchbar-input" type="search" class="searchbar" placeholder="Search" maxlength="60" [(ngModel)]="searchText" (input)="filterSuggestions()"
+    (keydown)="onKeyDown($event)">
+  <ul *ngIf="filteredSuggestions.length > 0" class="suggestion-list">
+    <li *ngFor="let suggestion of filteredSuggestions; let i = index" [class.selected]="i === selectedIndex"
+      (click)="selectSuggestion(suggestion)">
+      {{ suggestion }}
+    </li>
+  </ul>
+</div>

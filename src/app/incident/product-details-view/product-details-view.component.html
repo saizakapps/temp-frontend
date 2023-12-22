@@ -1,0 +1,88 @@
+
+	<div class="incidentDetailView d-flex flex-column">
+		<div class="labelView d-flex" *ngIf="productDetailsData.formFieldAccess.complainant.view">
+			<label class="label-name ">Complainant:</label>
+			<div class="data-view" [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
+				{{(!isRedacted)?productDetailsData.showData.productComplaint:'REDACTED'}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name">Product ID:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.productId}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">Product Description:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.productDescription}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">Recommended age:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.recommendedAge}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">Batch number/Serial number:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.batchNo}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">When returned to store:</label>
+			<div class="data-view ">
+				{{productDetailsData.showData.productReturnToStore | date: 'dd-MM-yyyy'}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name">When returned to Head Office:</label>
+			<div class="data-view ">
+				{{productDetailsData.showData.productReturnToHeadOffice | date: 'dd-MM-yyyy'}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">Product age:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.productAge}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">Proof of purchase attached:</label>
+			<div class="data-view ">
+				<div class="mleft-7">
+					<app-evidence-view *ngIf="productDetailsData.showData.evidences.length>0" [files]="productDetailsData.showData.evidences" [isEvidence]="false"></app-evidence-view>
+				</div>
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name ">Has the problem been reported before:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.problemReportedBefore}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name">Circumstances:</label>
+			<div class="data-view">
+				{{productDetailsData.showData.circumstances}}
+			</div>
+		</div>
+		<div class="labelView d-flex">
+			<label class="label-name">Nature of product fault:</label>
+			<div class="data-view">
+				<!-- {{(productDetailsData.showData.faultCodesInfo!=null)?productDetailsData.showData.faultCodesInfo.faultDescription:''}} -->
+				{{productDetailsData.showData.faultCode}}
+			</div>
+		</div>
+	<!-- 	<div class="labelView d-flex">
+			<label class="label-name">Priority:</label>
+			<div class="data-view">
+				{{(productDetailsData.showData.priorityInfo!=null)?productDetailsData.showData.priorityInfo.colorCode:''}}
+			</div>
+		</div> -->
+		<!-- <div class="labelView d-flex">
+			<span class="edit-personal-info" (click)="editProductDetails()">Edit product
+				details</span>
+		</div> -->
+	</div>

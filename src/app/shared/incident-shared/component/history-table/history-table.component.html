@@ -1,0 +1,37 @@
+
+
+<div class="table-responsive">
+  <table mat-table [dataSource]="tableData.data" class="incidentListTblView historyincidentListTblView">
+    <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container *ngFor="let x of tableData.showColumn; index as i;" matColumnDef="{{x.indexName}}">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="d-flex">
+           <span >{{x.showName}}</span>
+         
+          
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let element;index as k;"  >
+         <div class="emptyContentDiv d-flex">
+         
+          
+        <!-- placement="top" ngbTooltip  (click)="onTableRowDataClick(element)"-->
+        <span >
+           <span class="textcase" *ngIf="x.indexName!='createdBy'" title="{{element[x.indexName]}}" >{{(element[x.indexName]!='' && element[x.indexName]!=null)?element[x.indexName]:'-'}}</span>
+           <button class="restoreBtn" *ngIf="x.indexName=='createdBy'" (click)="restoreClick(element)">View</button>
+        </span>
+
+       
+      </div>
+      </td>
+
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="tableData.colums"></tr>
+    <tr mat-row *matRowDef="let row; columns: tableData.colums;"></tr>
+  </table>
+<div *ngIf="tableData.data.length==0" class="no-data-found app-no-record-found-health"> No Record found</div>
+</div>

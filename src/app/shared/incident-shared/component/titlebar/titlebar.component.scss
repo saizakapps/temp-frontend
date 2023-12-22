@@ -1,0 +1,18 @@
+a:hover {
+     color:red !important; 
+     text-decoration:none !important;
+}
+.mat-ink-bar{
+    background-color:#00ADEE !important;
+}
+.mat-tab-label-active{
+     color:red !important;
+ } 
+
+ .mat-tab-link{
+ 	font-size: 12px;
+ 	text-transform:uppercase;
+ }
+ .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
+    color: #625e5f !important;
+}

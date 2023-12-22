@@ -1,0 +1,92 @@
+ .file-show-box{
+  display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 40px;
+gap: 40px;
+background: #FFFFFF;
+border-radius: 7px;
+img.incidentimage{
+width: 60px;
+height: 60px;
+border-radius: 4px;
+  }
+  .filename{
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 125%;
+color: #1F96F4;
+  }
+  .edit-label{
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 10px;
+line-height: 32px;
+color: #1F96F4;
+  }
+  .delete-label{
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 10px;
+line-height: 32px;
+color: #1F96F4;
+  }
+
+  }
+
+
+  
+.group-1,
+.group-2 {
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap:10px;
+    margin-left: 7px;
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)*/
+    .delete-label{
+  font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 10px;
+line-height: 32px;
+color: #1F96F4;
+  }
+}
+
+.group-1 img,
+.group-2 img {
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    // padding: 5px;
+    border-radius: 10px;
+    // background-color: red;
+}
+
+.popup-view-pdf{
+  height: 100vh;
+}
+.align-right{
+  text-align:right;
+  cursor:pointer;
+}
+.download-label {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    padding-top: 10px;
+    color: #1f96f4;
+    cursor: pointer;
+    text-decoration:underline;
+  }
+  .row{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }

@@ -1,0 +1,121 @@
+
+<div class="incidentDetailView d-flex flex-column">
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.eventDateTime.view">
+		<label class="label-name">Incident Date:</label>
+		<div class="data-view ">
+			<span>{{incidentDetailsData.showData.eventActualDate | date:'dd-MM-yyyy, h:mm '}}</span>
+			<span>{{(incidentDetailsData.showData.IsAprroximate)?'; Approximate':''}}</span>
+		</div>
+	</div>
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.reportedDateTime.view">
+		<label class="label-name ">Reported Date:</label>
+		<div class="data-view">
+			<span>{{incidentDetailsData.showData.eventReportedDate | date:'dd-MM-yyyy, h:mm '}}</span>
+		</div>
+	</div>
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.whereInStore.view">
+		<label class="label-name ">Store:</label>
+		<div class="data-view">
+			{{incidentDetailsData.showData.storeComments}}
+		</div>
+	</div>
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.injurySustained.view">
+		<label class="label-name">Description:</label>
+		<div class="data-view">
+			{{incidentDetailsData.showData.injurySustained}}
+		</div>
+	</div>
+	<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.circumstances.view">
+		<label class="label-name">Circumstance:</label>
+		<div class="data-view">
+			{{incidentDetailsData.showData.circumstances}}
+		</div>
+
+	</div>
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.witnessAvailable.view && !incidentDetailsData.showData.witnessAvailable && incidentDetailsData.showData.incidentTypeName!='Product'">
+		<label class="label-name">Witnesses:</label>
+		<div class="data-view">
+			{{(incidentDetailsData.showData.witnessAvailable==true)?"Available":"Not Available"}}
+		</div>
+	</div>
+	<div class="d-flex align-items-start" *ngIf="incidentDetailsData.showData.witnessAvailable==true">
+		<div>
+		<label class="label-name witnessBoxFields">Witnesses:
+			<span class="ps-2 redacted-background" *ngIf="isRedacted">REDACTED</span>
+		</label>
+        </div>
+		<div>
+		<div class="view-box-data" *ngFor="let wt of incidentDetailsData.showData.witnessList;index as i;">
+			<div class="view-box" [ngClass]="{'view-box-history' : router.url == '/incident-history'}" *ngIf="!isRedacted">
+				<div class="labelView d-flex mbottomxTitle" *ngIf="incidentDetailsData.formFieldAccess.witnessName.view">
+					<label class="label-name" class="witness-title witness-title-wrap">{{(!isRedacted)?wt.witnessName:'REDACTED'}}</label>
+					<div class="data-view"></div>
+				</div>
+				<!-- <div class="labelView d-flex">
+					<label class="label-name not-involve" *ngIf="wt.witnessUnwillingToInvolve">Not to be involved</label>
+					<div class="data-view involve" *ngIf="!wt.witnessUnwillingToInvolve">To be involved</div>
+				</div> -->
+				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnesscontactNumber.view">
+					<label class="label-name" class="witness-title">Phone:</label>
+				</div>
+				<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.witnesscontactNumber.view">
+					<div class="data-view">{{(!isRedacted)?wt.witnessContactNumber:'REDACTED'}}</div>
+				</div>
+
+				<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.witnessAddress.view">
+					<label class="label-name" class="witness-title">Address:</label>
+
+				</div>
+				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnessAddress.view">
+					<div class="data-view">{{wt.witnessAddress}}</div>
+				</div>
+				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnessStatement.view">
+					<label class="label-name" class="witness-title">Statement:</label>
+
+				</div>
+				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnessStatement.view">
+					<div class="data-view">{{(!isRedacted)?wt.witnessStatement:'REDACTED'}}</div>
+
+				</div>
+              <div class="labelView" >
+               <div class="data-view" *ngIf="!isRedacted">
+						   <app-witness-statement-preview [witnessFiles]="wt.witnessFiles" [isHistory]="isHistory" *ngIf="wt.witnessFiles.length>0"></app-witness-statement-preview>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		</div>
+	</div>
+
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.evidenceAvailable.view && !incidentDetailsData.showData.evidenceAvailable">
+		<label class="label-name ">CCTV/Photos:</label>
+		<div class="data-view ">
+
+			{{(incidentDetailsData.showData.evidenceAvailable==true)?'Available':'Not Available'}}
+
+		</div>
+	</div>
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.showData.evidenceAvailable==true && incidentDetailsData.formFieldAccess.evidenceTakenBy.view">
+		<label class="label-name ">CCTV/Photos Taken By:</label>
+		<div class="data-view">
+			{{incidentDetailsData.showData.evidenceTakenBy}}
+		</div>
+	</div>
+	<div class="d-flex gap-10px" *ngIf="incidentDetailsData.showData.evidenceAvailable==true && incidentDetailsData.showData.evidences">
+		<label class="label-name ">CCTV/Photos:</label>
+		<app-evidence-view class="leftmargin-7" *ngIf="incidentDetailsData.showData.evidences  && !isRedacted" [files]="incidentDetailsData.showData.evidences" [isEvidence]="true"></app-evidence-view>
+		<span *ngIf="isRedacted" class="redacted-background">REDACTED</span>
+	</div>
+	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.otherComments.view">
+		<label class="label-name">Comments:</label>
+		<div class="data-view">
+			{{incidentDetailsData.showData.otherComments}}
+		</div>
+	</div>
+	<!-- <div class="row">
+		<span class="edit-personal-info" (click)="editIncidentDetails()">Edit Incident details</span>
+	</div> -->
+</div>
+

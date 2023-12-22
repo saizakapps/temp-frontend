@@ -1,0 +1,51 @@
+
+<div class="incidentDetailView d-flex flex-column">
+				<div class="labelView d-flex">
+					<label class="label-name">CSD Tracking No:</label>
+				<div class="data-view">
+				{{issuesHandlingData.showData.csdNumber}}
+			</div>
+				</div>
+				<!-- <div class="labelView d-flex" *ngIf="ispriorityShow">
+					<label class="label-name">Priority:</label>
+				<div class="data-view">
+				{{(issuesHandlingData.showData.priorityInfo!=null)?issuesHandlingData.showData.priorityInfo.colorCode:''}}
+			</div>
+				</div> -->
+				
+				<div class="labelView">
+					<label class="label-name">Handlers:</label>
+				<div class="data-view">
+					<div class="box-assign-row issueList handling-mrg-top10">
+						<table *ngIf="issuesHandlingData.showData.handlingTeams.length>0" class="border-table">
+										<thead>
+											<tr>
+												<!-- <th>S.No</th> -->
+												<th>Email Id</th>
+												<th >Notified On</th>
+												<th class="border-none"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let asn of issuesHandlingData.showData.handlingTeams;">
+												<!-- <td class="text-center">{{k+1}}</td> -->
+												<td> {{asn.emailId}}</td>
+												<td class="noleftborder">{{((asn.createdOn!='' && asn.createdOn!=null)?asn.createdOn+'(UTC)':'-')}}</td>
+												
+											</tr>
+										</tbody>
+									</table>
+							<!-- <p class="assign-handler-list" *ngFor="let asn of issuesHandlingData.showData.handlingTeams;">
+								<span>{{asn.employeeRole}} : </span>
+								<span class="username"> {{asn.employeeName}}</span>
+								<span> {{asn.emailId+'  '+((asn.createdOn!='' && asn.createdOn!=null)?' -  Notified On: '+asn.createdOn+'(UTC)':'')}} </span>
+								
+							</p> -->
+						</div>
+
+			</div>
+				</div>
+</div>
+<!-- <div class="labelView d-flex">
+			<span class="edit-personal-info" (click)="editIssuesHandlingDetails()">Edit Handling issues</span>
+		</div> -->

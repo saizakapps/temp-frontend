@@ -1,0 +1,270 @@
+/*.paddTop{
+     padding-top:25px;
+}
+ .mat-mdc-menu-panel.mat-mdc-menu-panel {
+     width:200px !important;
+     max-width:unset !important;
+}
+ .listview{
+     width:100%;
+     over-flow:auto;
+     max-height:600px;
+}
+*/
+.container-fluid {
+  background: #f2f2f2;
+  font-family: "Inter";
+}
+.paddTop {
+  padding-top: 0px;
+}
+.mat-mdc-menu-panel.mat-mdc-menu-panel {
+  width: 200px !important;
+  max-width: unset !important;
+}
+.listview {
+  width: 100%;
+  max-height: calc(100vh - 90px);
+  height: calc(100vh - 135px);
+  margin: 10px 0px 0px;
+  background-color: #fff;
+}
+.newCourseBtn {
+  white-space: nowrap;
+  padding: 9px 12px 10px;
+  margin-top: 10px;
+  gap: 8px;
+  width: 149px;
+  height: 38px;
+  background: #1f96f4;
+  border: 1px solid #dbd4d4;
+  border-radius: 4px;
+  color: #ffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-shadow: none;
+}
+.incidentListDiv {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+  background: #ffffff;
+  /* Gray 600 */
+  border: 1px solid #818181;
+  border-radius: 2px;
+}
+.nowrap {
+  white-space: nowrap;
+}
+input,
+select {
+  height: 35px !important;
+  font-size: 14px;
+}
+.findInput {
+  width: 200px;
+}
+.fromToDate {
+  width: 130px;
+  cursor: pointer;
+}
+
+.statusBtn:after {
+  margin-top: 1px !important;
+  border-top: 0.35em solid;
+  border-right: 0.35em solid transparent;
+  border-bottom: 0;
+  border-left: 0.35em solid transparent;
+}
+.incidentListForm {
+  margin-top: -15px;
+}
+@media screen and (max-width: 632px) {
+  .incidentListForm {
+    flex-wrap: wrap;
+  }
+}
+@media screen and (max-width: 472px) {
+  .no-flex {
+    display: block !important;
+  }
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+@media screen and (max-width: 400px) {
+  .listview {
+    overflow: unset;
+  }
+}
+.clear-filter-text {
+  white-space: nowrap;
+  width: 97px;
+  height: 10px;
+  margin-left: 20px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #1f96f4;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  position: relative;
+  top: 13px;
+  cursor: pointer;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: rgba(0, 0, 0, 0);
+  opacity: 1;
+  display: block;
+  background: url("/assets/healthsafetyimages/field-icon.svg") no-repeat;
+  width: 16px;
+  height: 16px;
+  border-width: thin;
+  left: 10px;
+  position: relative;
+  top: 2px;
+}
+.statusSelect {
+  /*color: #bdbdbd;*/
+  width: 115px;
+  cursor: pointer;
+}
+.statusLbl {
+  height: 26px;
+}
+.mat-icon {
+  color: #000000 !important;
+}
+.mat-tree {
+  background: #ffffff !important;
+}
+.marginminus1 {
+  position: relative;
+  top: 14px;
+  min-width: 320px;
+}
+.mat-mdc-icon-button.mat-mdc-button-base {
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  padding-top: 3px;
+}
+
+/* date input place holder remove*/
+/*
+input[type=date]::-webkit-datetime-edit-text {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]::-webkit-datetime-edit-month-field{
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]::-webkit-datetime-edit-day-field {
+    -webkit-appearance: none;
+    display: none;
+}
+input[type=date]::-webkit-datetime-edit-year-field {
+    -webkit-appearance: none;
+    display: none;
+}*/
+
+input[type="date"]:required:invalid::-webkit-datetime-edit {
+  color: #fff;
+}
+input[type="date"]:focus::-webkit-datetime-edit {
+  color: black !important;
+}
+
+.incidentListContainer {
+  background: #f2f2f2;
+  padding-left: 20px;
+}
+.multselectbox {
+  display: flex;
+
+  position: relative;
+    bottom: 2px;
+}
+
+.list-filter-title {
+  color: #373737;
+  font-weight: 500;
+}
+
+.multselecticon {
+  background-color: white !important;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23424242%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0-4.2-1.6-7.9-4.8-11.2-3.2-3.2-6.9-4.8-11.2-4.8H16c-4.2%200-7.9%201.6-11.2%204.8S0%20163.8%200%20168c0%204.4%201.6%208.2%204.8%2011.4l112%20112c3.1%203.1%206.8%204.6%2011.2%204.6%204.4%200%208.2-1.5%2011.4-4.6l112-112c3-3.2%204.5-7%204.5-11.4z%22%2F%3E%3C%2Fsvg%3E%0A") !important;
+  background-position: right 7px center !important;
+  background-repeat: no-repeat !important;
+  background-size: auto 38% !important;
+  //border-radius:2px;
+  // border:none;
+  //color: #ffffff;
+  // padding: 8px 20px 8px 10px !important;
+  // disable default appearance
+  // outline: none;
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  &::-ms-expand {
+    display: none;
+  }
+}
+.node2 .mat-icon {
+  color: #1f96f4 !important;
+  font-weight: 600;
+}
+.node2 label {
+  color: #1f96f4 !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+.mat-tree-node:hover {
+  background: #1f96f4;
+}
+.mat-tree-node:hover label,
+.mat-tree-node:hover .mat-icon {
+  color: #fff !important;
+}
+.incidentListView {
+  padding: 20px;
+}
+.incidentListTblView tbody {
+    display: grid;
+    overflow: auto;
+    max-height: calc(100vh - 202px);
+}
+.dataiconrel{
+ position: relative;
+
+ .data-icon{
+      position: absolute;
+      right: 5px;
+      top: 33px
+    }
+
+}
+
+.marginminus1 .mat-mdc-text-field-wrapper {
+    width: 319px !important;
+}
+.mat-mdc-text-field-wrapper {
+    width: 319px !important;
+}
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    color: rgb(16 15 15 / 87%) !important;
+}
+.selectedtree{
+  background:#1f96f4;
+}
+textarea{
+  resize: none;
+}

@@ -1,0 +1,168 @@
+<div class="table-responsiveTop">
+   <div class="table-responsive" (scroll)="onScrolling($event)">
+      <table mat-table [dataSource]="tableData.data" class="incidentListTblView" [ngClass]="{'nooverflow' : tableData.data.length==0}">
+      <!--- Note that these columns can be defined in any order.
+         The actual rendered columns are set as a property on the row definition" -->
+      <!-- Position Column -->
+      <ng-container *ngFor="let x of tableData.showColumn; index as i;" matColumnDef="{{x.indexName}}">
+         <th mat-header-cell *matHeaderCellDef>
+            <div class="d-flex" [ngClass]="{'justify-content-end' : x.indexName == 'isClearincident'}">
+               <!-- <mat-checkbox *ngIf="i==0" id="all" class="w-100 allCheckbox pl-3 mt-0 padleft" name="allselect"
+                  (change)="selectAll($event)" > -->
+               <span *ngIf="i==0" class="padleft showNamepadtbody">{{x.showName}}</span>
+               <!--  </mat-checkbox> -->
+               <span *ngIf="i>0 && x.indexName !== 'isClearincident'" class="showNamepad" [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover"
+               (click)="getDropdownData(x.indexName)" [ngClass]="{'activeFilterName' : x.indexName == 'createdBy' && createdBySelected.length > 0 ||  x.indexName == 'roleNameDescription' && selectedRole.length > 0 || x.indexName == 'incidentType' && selectedType.length > 0 || x.indexName == 'priorityCode' && selectedPriority.length > 0 || x.indexName == 'incidentStatus' && selectedStatus.length > 0 || x.indexName == 'store' && selectedStore.length > 0 || x.indexName == 'convertedCreatedDate' && (dateSortValue=='Ascending' || dateSortValue=='descending')}">{{x.showName}}</span>
+               <span *ngIf="i>0 && x.indexName == 'isClearincident'" class="showNamepad tableCleartext"><span class="cursor" [ngClass]="{'disabledClear' : createdBySelected.length == 0 && selectedRole.length == 0 && selectedType.length == 0 && selectedPriority.length == 0 && selectedStatus.length == 0 && selectedStore.length == 0 && dateSortValue == '' }" (click)="clearTablefilter()">{{x.showName}}</span>
+                  </span>
+                  <span *ngIf="i>0 && x.indexName == 'isClearincident'" class="showNamepad pipe">|</span>
+               <span *ngIf="i>0 && x.indexName == 'isClearincident'" class="showNamepad tableCleartext cursor mr-2" [matMenuTriggerFor]="courseSummary">Count&nbsp;{{'('+(incidentCountData.draftIncidentCount+incidentCountData.openIncidentCount+incidentCountData.closedIncidentCount)+')'}}
+               <span>
+                  <mat-menu class="statusMenuPanelAudit" #courseSummary="matMenu" xPosition="before">
+                     <span class="counttext">
+                     <span class="counttextwidth">Draft</span> - {{ incidentCountData.draftIncidentCount }}
+                     <br>
+                     <span class="">Open</span> - {{ incidentCountData.openIncidentCount }}
+                      <br>
+                     <span class="">Closed</span> - {{ incidentCountData.closedIncidentCount }}
+                     </span>
+
+                     <!-- <span class="d-flex no-record-found-bg">
+                        <span *ngIf="statusList && statusList.length == 0" class="no-record-found-status">No record found
+                        </span>
+                        </span> -->
+                  </mat-menu>
+               </span>
+               </span>
+               <span *ngIf="x.isSort" class="fw-600 cursor-pointer ut-filter-status-pointer ps-1 showIconpad"
+               (click)="getFilterData(x.indexName)" [ngbPopover]="menu" [ngClass]="{'activeFiltericon' : x.indexName == 'convertedCreatedDate' && (dateSortValue=='Ascending' || dateSortValue=='descending')}"
+               placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
+               <span  class="fw-600 cursor-pointer ut-filter-status-pointer"> &#8645; </span>
+               </span>
+               <span *ngIf="x.isFilter" class="fw-600 cursor-pointer ut-filter-status-pointer ps-1 showIconpad" [ngbPopover]="menu"
+               placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover" [ngClass]="{'activeFiltericon' : x.indexName == 'createdBy' && createdBySelected.length > 0 ||  x.indexName == 'roleNameDescription' && selectedRole.length > 0 || x.indexName == 'incidentType' && selectedType.length > 0 || x.indexName == 'priorityCode' && selectedPriority.length > 0 || x.indexName == 'incidentStatus' && selectedStatus.length > 0 || x.indexName == 'store' && selectedStore.length > 0}">
+               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                     d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                     stroke="#818181" />
+                  <path *ngIf="x.indexName == 'createdBy' && createdBySelected.length > 0 ||  x.indexName == 'roleNameDescription' && selectedRole.length > 0 || x.indexName == 'incidentType' && selectedType.length > 0 || x.indexName == 'priorityCode' && selectedPriority.length > 0 || x.indexName == 'incidentStatus' && selectedStatus.length > 0 || x.indexName == 'store' && selectedStore.length > 0 || x.indexName == 'convertedCreatedDate'"
+                     d="M1.04031 0.5H8.95969L5.60957 4.68765L5.5 4.82461V5V8.69098L4.5 9.19098V5V4.82461L4.39043 4.68765L1.04031 0.5Z"
+                     stroke="#fff" />
+               </svg>
+               </span>
+               <ng-template #menu>
+                  <!-- select filter section -->
+                  <div *ngIf="x.isFilter" class="filter-popover filter-popover-incident roleFilterPop">
+                     <ng-container
+                        *ngIf="x.indexName=='createdBy'">
+                        <div class="cursor-pointer d-flex flex-column text-camel">
+                           <mat-checkbox *ngFor="let item of createdByData" [(ngModel)]="item.checked" title="{{item.employeeName | titlecase}}" (change)="createdByChange($event)"  required>
+                           {{item.employeeName | titlecase}}
+                           <!-- employeeId -->
+                           </mat-checkbox>
+                        </div>
+                     </ng-container>
+                     <ng-container
+                        *ngIf="x.indexName=='roleNameDescription'">
+                        <div class="cursor-pointer d-flex flex-column text-camel">
+                           <mat-checkbox *ngFor="let item of roleData" [(ngModel)]="item.checked" (change)="roleChange($event,item)" title="{{item.nameDescription | titlecase}}"  required>
+                           {{item.nameDescription | titlecase}}
+                           </mat-checkbox>
+                        </div>
+                     </ng-container>
+                     <!--   -->
+                     <ng-container
+                        *ngIf="x.indexName=='incidentType'">
+                        <div class="cursor-pointer d-flex flex-column text-camel">
+                           <mat-checkbox *ngFor="let item of incidentTypeShowData" [(ngModel)]="item.checked"  title="{{((item.name!='product')?item.name:'Injury') | titlecase}}" (change)="typeChange($event,item.name)" [ngClass] = "{'d-none' : !item.isShow}"  required>
+                           {{((item.name!='product')?item.name:'Product') | titlecase}}
+                           </mat-checkbox>
+                        </div>
+                     </ng-container>
+                     <ng-container
+                        *ngIf="x.indexName=='priorityCode'">
+                        <div class="cursor-pointer d-flex flex-column text-camel">
+                           <mat-checkbox *ngFor="let item of priorityCodeData" [(ngModel)]="item.checked" (change)="priorityChange($event)" title="{{item.colorCode | titlecase}}"  required>
+                           {{item.colorCode | titlecase}}
+                           </mat-checkbox>
+                        </div>
+                     </ng-container>
+                     <ng-container
+                        *ngIf="x.indexName=='incidentStatus'">
+                        <div class="cursor-pointer d-flex flex-column text-camel">
+                           <mat-checkbox *ngFor="let item of incidentStatusData" [(ngModel)]="item.checked" (change)="statusChange($event,item)"  title="{{item.name | titlecase}}" required>
+                           {{item.name | titlecase}}
+                           </mat-checkbox>
+                        </div>
+                     </ng-container>
+                     <ng-container
+                        *ngIf="x.indexName=='store'">
+                        <div class="cursor-pointer d-flex flex-column text-camel">
+                           <mat-checkbox *ngFor="let item of storeData" [(ngModel)]="item.checked" (change)="storeChange($event)" title="{{item.storeDescription | titlecase}}"  required>
+                           {{item.storeDescription | titlecase}}
+                           </mat-checkbox>
+                        </div>
+                     </ng-container>
+                     <!-- <div class="cursor-pointer p-2">
+                        <span>aa</span>
+                        </div>
+                        <div class="cursor-pointer p-2">
+                        <span>aa1</span>
+                        </div>
+                        <div class="cursor-pointer p-2">
+                        <span>aa2</span>
+                        </div> -->
+                     <!--   <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                        </div> -->
+                  </div>
+                  <!-- select sort section for Pallet Updated at column -->
+                  <div *ngIf="x.isSort" class="filter-popover">
+                     <div class="cursor-pointer pt-1 pb-1" (click)="dateSort(1)">
+                        <span>Reset</span>
+                     </div>
+                     <div class="cursor-pointer pt-1 pb-1" (click)="dateSort(2)">
+                        <span>Sort by Asc</span>
+                     </div>
+                     <div class="cursor-pointer pt-1 pb-1" (click)="dateSort(3)">
+                        <span>Sort by Desc</span>
+                     </div>
+                     <!-- <div *ngIf="(sortOption).length === 0">{{'No sorting found'}}.</div> -->
+                  </div>
+               </ng-template>
+            </div>
+         </th>
+         <td mat-cell *matCellDef="let element;index as k;" (click)="onTableRowDataClick(element)" [ngClass]="{'lockedRow' : element.isIncidentLocked==true}" title="{{element.isIncidentLocked == true?'This Incident was editing by '+element.lockedUserName: ''}}">
+         <div class="emptyContentDiv d-flex">
+            <!-- <div class="lockVisible d-flex align-items-center">
+               <mat-icon *ngIf="element.isIncidentLocked==true && i==0" >lock</mat-icon>
+               </div> -->
+            <div class="d-flex">
+               <!-- <mat-checkbox *ngIf="i==0 && element['incidentStatus']!='Draft'" id="incident{{k}}" class="w-100 allCheckbox pl-3 mt-0" name="{{x.indexName+''+k}}" [checked]="element['checked']" (change)="selectParticular($event,k,element)"> -->
+               <span class="showNamepadtbody" title="{{element.isIncidentLocked == true?'This Incident was editing by '+element.lockedUserName: element[x.indexName]}}"  *ngIf="i==0 && element['incidentStatus']!='Draft'" (click)="onTableRowDataClick(element)"> 
+               {{(element['incidentStatus']!='Draft')?element[x.indexName]:' '}}</span>
+            </div>
+            <div *ngIf="i==0 && element['incidentStatus']=='Draft'" id="incident{{i}}" class="w-100 allCheckboxhidden pl-3 mt-0" >
+            </div>
+            <span class="showNamepadtbody" title="{{element.isIncidentLocked == true?'This Incident was editing by '+element.lockedUserName: element[x.indexName]}}" *ngIf="i==0 && element['incidentStatus']=='Draft'" class="draftid" (click)="onTableRowDataClick(element)"> 
+            {{(element['incidentStatus']!='Draft')?element[x.indexName]:''}}</span>
+            <span *ngIf="i>0 && x.indexName!='isViewed' && x.indexName!='isClearincident'" class="showNamepadtbody">
+            <span class="textcase" title="{{element.isIncidentLocked == true?'This Incident was editing by '+element.lockedUserName: element[x.indexName]}}">
+            <span *ngIf="x.indexName=='incidentStatus' && element[x.indexName]=='Draft'" class="draftcolor">
+            {{(element[x.indexName]!='' && element[x.indexName]!=null)?((element['incidentType']=='product' && x.indexName=='incidentType')?'Product':element[x.indexName]):'-'}}
+            </span>
+            <span *ngIf="element[x.indexName]!='Draft'" >
+            {{(element[x.indexName]!='' && element[x.indexName]!=null)?((element['incidentType']=='product' && x.indexName=='incidentType')?'Product':element[x.indexName]):'-'}}
+            </span> </span> </span>
+            <span *ngIf="i>0 && x.indexName =='isClearincident'" class="showNamepadtbody">
+            <span class="textcase" title="{{element.isIncidentLocked == true?'This Incident was editing by '+element.lockedUserName: element[x.indexName]}}"></span>
+            </span>
+            <div *ngIf="x.indexName=='isViewed' && !element[x.indexName] && element['createdById']!=username" class="new-box">New</div>
+         </div>
+         </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="tableData.colums"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableData.colums;"></tr>
+      </table>
+      <div *ngIf="tableData.data.length==0" class="no-data-found app-no-record-found-health"> No Record found</div>
+   </div>
+</div>

@@ -1,0 +1,162 @@
+<form [formGroup]="insuranceVerificationForm" class="example-form">	
+                      <div class="personal-info-title legalInfoTitle">Legal Info</div>
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.deletionDate.create || formFieldAccess.deletionDate.write || formFieldAccess.deletionDate.view">
+							<div class="">
+								<label class="label-name">Deletion date</label>
+								<div class="data-view d-flex dataiconrel align-items-center">
+									<input type="text" class="form-control dateInput boxdate" autocomplete="off"
+											maxlength="10"     placeholder="DD/MM/YYYY" (bsValueChange)="deleteDateChange($event)" autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig" formControlName="deleteDate" #deleteDate>
+
+                                             <div class="data-icon" (click)="deleteDate.click()">
+                                             <img src="assets/healthsafetyimages/field-icon.svg">
+                                             </div>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.deletionDate}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.initials.create || formFieldAccess.initials.write || formFieldAccess.initials.view">
+							<div class="">
+								<label class="label-name">Initials</label>
+								<div class="data-view d-flex dataiconrel  align-items-center">
+									<input type="text" class="form-control field-width-height" autocomplete="off"
+											maxlength="3"   formControlName="initials" (change)="initialChange($event)">
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.initial}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.incidentCode.create || formFieldAccess.incidentCode.write || formFieldAccess.incidentCode.view">
+							<div class="">
+								<label class="label-name">Incident code</label>
+								<div class="data-view d-flex  align-items-center height-35">
+					<app-multi-select-dropdown [dataDropDown]="insuranceVerificationData" [scrollCount]="scrollCount" (incidentCodeSelectEvent)="selectedIncidentCode($event)"></app-multi-select-dropdown>
+									
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.incidentCode}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.severity.create || formFieldAccess.severity.write || formFieldAccess.severity.view">
+							<div class="">
+								<label class="label-name">Injury severity</label>
+								<div class="data-view d-flex  align-items-center">
+
+									<select class="form-control field-width-height" formControlName="severity" (change)="severityChange($event)">
+										<option value="" class="d-none"></option>
+										<option *ngFor="let isd of injurySeverityData;" value="{{isd.id}}">
+											{{isd.severity}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.injurySeverity}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.preventability.create || formFieldAccess.preventability.write || formFieldAccess.preventability.view">
+							<div class="">
+								<label class="label-name">Preventability</label>
+								<div class="data-view d-flex  align-items-center">
+
+									<select class="form-control field-width-height" formControlName="preventability" (change)="preventabilityChange($event)">
+										<option value=""  class="d-none"></option>
+										<option *ngFor="let pd of preventabilityData;" value="{{pd.id}}">
+											{{pd.description}}
+										</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.preventability}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.claimDate.create || formFieldAccess.claimDate.write || formFieldAccess.claimDate.view">
+							<div class="">
+								<label class="label-name">Date of claim</label>
+								<div class="data-view d-flex dataiconrel  align-items-center">
+									<input type="text" class="form-control dateInput boxdate" autocomplete="off"
+											maxlength="10"     placeholder="DD/MM/YYYY" (bsValueChange)="claimDateChange($event)" autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig" formControlName="claimDate" #cliamDate>
+
+                                             <div class="data-icon" (click)="cliamDate.click()">
+                                             <img src="assets/healthsafetyimages/field-icon.svg">
+                                             </div>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.dateOfClaim}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.legalStatus.create || formFieldAccess.legalStatus.write || formFieldAccess.legalStatus.view">
+							<div class="">
+								<label class="label-name">Legal status</label>
+								<div class="data-view d-flex  align-items-center">
+
+									<select class="form-control field-width-height" formControlName="legalStatus" (change)="legalStatus($event)">
+										<option value=""  class="d-none"></option>
+										<option *ngFor="let lsd of legalStatusData;" value="{{lsd.id}}">
+											{{lsd.statusDescription}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.legalStatus}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail" *ngIf="formFieldAccess.claimReference.create || formFieldAccess.claimReference.write || formFieldAccess.claimReference.view">
+							<div class="">
+								<label class="label-name">Claim reference</label>
+								<div class="data-view d-flex  align-items-center">
+
+									<input type="text" class="form-control field-width-height" autocomplete="off"
+										maxlength="250" formControlName="claimReference" (change)="cliamReferenceChange($event)">
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.claimReference}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+					
+
+						<div class="d-flex productDetail insuranceDetail" *ngIf="(formFieldAccess.photoStatus.create || formFieldAccess.photoStatus.write || formFieldAccess.photoStatus.view) &&  (insuranceVerificationData.incidentForm.value.evidenceAvailable=='true' || insuranceVerificationData.incidentForm.value.evidenceAvailable==true)">
+							<div class="">
+								<label class="label-name">Photo Status</label>
+								<div class="data-view d-flex  align-items-center">
+									<select class="form-control field-width-height" formControlName="photoStatusCode" (change)="photoStatusChange($event)">
+										<option *ngFor="let ps of photoStatusData;" value="{{ps.id}}">{{ps.statusCode+'
+											- '+ps.statusDescription}}
+										</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.photoStatus}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+							</div>
+								<div class="d-flex productDetail insuranceDetail"  *ngIf="(formFieldAccess.cctvStatus.create || formFieldAccess.cctvStatus.write || formFieldAccess.cctvStatus.view) && (insuranceVerificationData.incidentForm.value.evidenceAvailable=='true' || insuranceVerificationData.incidentForm.value.evidenceAvailable==true)">
+									<div class="">
+								<label class="label-name">CCTV status</label>
+								<div class="data-view  d-flex  align-items-center">
+									<select class="form-control field-width-height" formControlName="cctvStatusCode" (change)="cctvStatusChange($event)">
+										<option *ngFor="let cctvFS of cctvFootageStatus;" value="{{cctvFS.id}}">
+											{{cctvFS.statusCode+'
+											- '+cctvFS.footageDescription}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.cctvStatus}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+								</div>
+							<!-- 	<div class="d-flex productDetail insuranceDetail">
+									  <button class="insuranceSave-btn saveDraft " (click)="saveInsuranceVerfication()">Save</button>
+								</div> -->
+								
+							
+					
+</form>			

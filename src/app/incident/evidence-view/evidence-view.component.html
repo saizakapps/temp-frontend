@@ -1,0 +1,56 @@
+
+<!-- <div class="row" *ngFor="let fl of files;index as i;">
+		 	<div class="file-show-box">
+		 		<div class="row col-md-6">
+		 		<div class="col-md-4">
+		 			 <img class="incidentimage" src="../assets/images/smyths-360-logo.png" alt="image" >
+		 			
+		 		</div>
+		 		<div class="col-md-8">
+		 			 <div><span class="filename">{{getFileNameBYPath(fl.evidenceFilePath)}}</span></div>
+		 			
+		 		</div>
+		 	</div>
+		 		
+		 	</div>
+</div>
+ -->
+<div class="group-2" *ngIf="isEvidence">
+    <div class="thumnail text-center" *ngFor="let img of items; let i = index">
+      <!--   <img  [src]="img.thumbImage || img.posterImage" (click)="showLightbox(i)" /> -->
+       <img 
+         [lightbox]="i"
+         [src]="img.data.thumb" [gallery]="'anotherLightbox'"   >
+    </div>
+
+		 	  
+</div>
+<div class="row align-right"  *ngIf="items.length>0" title="Download All">
+             <span class="download-label" (click)="downloadEvidence()">
+                 Download CCTV/Photos files
+             </span>
+         </div>
+<div class="group-2" *ngIf="!isEvidence">
+    <div class="thumnail text-center" *ngFor="let img of proofItems; let i = index">
+      <!--   <img  [src]="img.thumbImage || img.posterImage" (click)="showLightbox(i)" /> -->
+       <img 
+         [lightbox]="i"
+         [src]="img.data.thumb" [gallery]="'unitLightbox'"  *ngIf="img.data.type=='Photo'"  >
+          <img 
+         [src]="img.data.thumb"  *ngIf="img.data.type=='pdf'" (click)="openPdfPopup(pdfContent)" >
+    </div>
+     
+    <ng-template #pdfContent>
+        <div class="popup-view popup-view-pdf">
+            <app-pdf-viewer [pdfURL]="pdfURL"></app-pdf-viewer>
+        </div>
+    </ng-template>
+  
+		 	  
+</div>
+
+<div class="row align-right"  *ngIf="proofItems.length>0" title="Download All">
+             <span class="download-label" (click)="downloadProof()">
+                Download proof files
+             </span>
+         </div>

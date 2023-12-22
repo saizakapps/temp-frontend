@@ -1,0 +1,49 @@
+.witness-title{
+	font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 32px;
+color: #0D0D0D;
+
+}
+.witness-edit{
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 32px;
+color: #1F96F4;
+cursor:pointer;
+}
+.view-box{
+	border:1px solid grey;
+	border-radius: 7px;
+	padding: 10px;
+}
+
+.not-involve{
+	font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+color: #E20512
+}
+.involve{
+		font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+color: green;
+}
+.mat-mdc-button:not(:disabled) {
+    color: var(--mdc-text-button-label-text-color, inherit);
+    background: #1F96F4 !important;
+}
+.row{
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+  }

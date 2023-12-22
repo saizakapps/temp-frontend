@@ -1,0 +1,159 @@
+.messageSection {
+  background-color: #f2f2f2;
+  padding: 20px;
+  /* overflow: hidden auto; */
+}
+.courseCreateText {
+  height: 30px;
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
+  border-radius: 2px;
+  padding: 10px;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+}
+.submitCourse {
+  height: 37px;
+  border-radius: 6px;
+  color: #fff;
+  border: 0;
+  padding: 10px 15px 11px;
+  font-size: 16px;
+  background: #1f96f4;
+  border-color: #1f96f4;
+  line-height: 10px;
+}
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.example-tree ul li .mat-tree-node,
+.node1 {
+  color: #1f96f4;
+  margin-left: 0px;
+}
+.example-tree ul li .mat-tree-node .mat-checkbox-frame {
+  border-color: #1f96f4 !important;
+}
+.example-tree ul li ul li,
+.node2,
+.example-tree ul ul li .mat-tree-node {
+  font-weight: 600;
+  color: #000;
+  margin-left: 5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 11px;
+}
+.example-tree ul li ul li .mat-tree-node .mat-checkbox-frame,
+.example-tree ul ul li .mat-tree-node .mat-checkbox-frame {
+  border-color: #000 !important;
+}
+.example-tree ul li ul li ul li,
+.node3 {
+  color: #000;
+  font-weight: 500;
+  margin-left: 15px;
+}
+.example-tree ul li ul li ul li .mat-checkbox-frame {
+  border-color: #000 !important;
+}
+
+.createRoleCls {
+  height: 100% !important;
+  padding: 0 16px 0px 10px !important;
+}
+.matIconCls {
+  line-height: 5px !important;
+}
+.policiesSelect {
+  margin-left: 37px !important;
+}
+.messageTo {
+  height: 28px;
+}
+.rolesLevelCls {
+  margin: 8px 0px 0px;
+    padding: 10px 16px 0px;
+    height: 100%;
+    background: #e1e1e1;
+    border-radius: 6px;
+}
+.messageLbl {
+  font-weight: 500;
+}
+/* .subContent {
+  width: 50px;
+}
+
+.subInput input {
+  height: calc(100vh - 370px);
+} */
+.msgContent {
+  font-weight: 600;
+}
+.subInput {
+  margin-left: 58px;
+}
+.submitCourse:disabled {
+  opacity: 0.5;
+}
+.courseCreateText:disabled {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.5;
+}
+.modalPopup .saveDraft {
+  width: fit-content;
+  height: 30px;
+  background: #000000;
+  border-radius: 6px;
+  color: #fff;
+  margin-right: 5px;
+  font-size: 14px;
+  padding: 10px 15px 11px;
+  line-height: 10px;
+}.modalPopup {
+  background: rgba(0, 0, 0, 0.5);
+}
+.modalPopup .modal-content {
+  height: 200px;
+  border: 0;
+}
+.newCourseBtn {
+  height: 30px;
+  line-height: 16px;
+  font-size: 14px;
+  background-color: #1f96f4;
+  border-color: #1f96f4;
+}
+
+.confirmHeader {
+  font-size: 16px;
+}
+
+.pb-0{
+  padding-bottom: 0px !important;
+}
+
+.completionName {
+  font-size: 12px;
+  color: #e5332a;
+}
+.completeInput {
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #bdbdbd;
+  margin-right: 8px;
+  outline: none;
+}

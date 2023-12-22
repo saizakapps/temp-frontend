@@ -1,0 +1,130 @@
+						<form [formGroup]="legalInfoForm" class="example-form">	
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Incident code</label>
+								<div class="data-view d-flex align-items-center">
+									<!-- 	<app-multi-select-dropdown></app-multi-select-dropdown> -->
+									<select class="form-control field-width-height">
+										<option value="" class="d-none"></option>
+										<option *ngFor="let isd of incidentCodeData;" value="{{isd.id}}">
+											{{isd.primaryCode}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{legalInfoData.toolTipData.priority}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Customer severity</label>
+								<div class="data-view d-flex align-items-center">
+
+									<select class="form-control field-width-height" formControlName="severity">
+										<option value=""  class="d-none"></option>
+										<option *ngFor="let isd of injurySeverityData;" value="{{isd.id}}">
+											{{isd.severity}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{legalInfoData.toolTipData.priority}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Preventability</label>
+								<div class="data-view d-flex align-items-center">
+
+									<select class="form-control field-width-height" formControlName="preventability">
+										<option value=""  class="d-none"></option>
+										<option *ngFor="let pd of preventabilityData;" value="{{pd.id}}">
+											{{pd.description}}
+										</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{legalInfoData.toolTipData.priority}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Legal status</label>
+								<div class="data-view d-flex align-items-center">
+
+									<select class="form-control field-width-height" formControlName="legalStatus">
+										<option value=""  class="d-none"></option>
+										<option *ngFor="let lsd of legalStatusData;" value="{{lsd.id}}">
+											{{lsd.statusDescription}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{legalInfoData.toolTipData.priority}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Claim reference</label>
+								<div class="data-view d-flex align-items-center">
+
+									<input type="text" class="form-control field-width-height" autocomplete="off"
+										maxlength="500" formControlName="claimReference">
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{legalInfoData.toolTipData.priority}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Date of claim</label>
+								<div class="data-view d-flex dataiconrel  align-items-center">
+									<input type="text" class="form-control dateInput boxdate" autocomplete="off"
+											maxlength="10"     placeholder="DD/MM/YYYY" (bsValueChange)="claimDateChange($event)" autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig" formControlName="claimDate" #cliamDate>
+
+                                             <div class="data-icon" (click)="cliamDate.click()">
+                                             <img src="assets/healthsafetyimages/field-icon.svg">
+                                             </div>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.deletionDate}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+							<div class="">
+								<label class="label-name">Photo Status</label>
+								<div class="data-view d-flex align-items-center">
+									<select class="form-control field-width-height" formControlName="photoStatusCode">
+										<option *ngFor="let ps of photoStatusData;" value="{{ps.id}}">{{ps.statusCode+'
+											- '+ps.statusDescription}}
+										</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.deletionDate}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						
+						</div>
+						<div class="d-flex productDetail insuranceDetail">
+								<div class="">
+								<label class="label-name">CCTV Footage Status</label>
+								<div class="data-view  d-flex align-items-center">
+									<select class="form-control field-width-height" formControlName="cctvStatusCode">
+										<option *ngFor="let cctvFS of cctvFootageStatus;" value="{{cctvFS.id}}">
+											{{cctvFS.statusCode+'
+											- '+cctvFS.footageDescription}}</option>
+									</select>
+									<span class="ps-1">
+										<mat-icon placement="top"
+											ngbTooltip="{{toolTipData.deletionDate}}">help_outline</mat-icon></span>
+								</div>
+							</div>
+						</div>
+							<!-- <div class="d-flex productDetail insuranceDetail">
+									  <button class="insuranceSave-btn saveDraft " (click)="saveLegalInfo()">Save</button>
+								</div>
+ --></form>

@@ -1,0 +1,60 @@
+  <div class="form-group marginminus1 mb-0 incidentformfield incidentformfield-319 auditFormsLbl auditFormsLbl1 auditFormsLbl1-msd">
+          <!--   <label class="list-filter-title">Country/Region</label>
+
+ -->
+<div class="multselectbox" >
+
+  <!-- <form class="example-form"> -->
+    <mat-form-field class="example-full-width" >
+      <input type="text"
+           placeholder="{{getSelectedItems()}}"
+           aria-label="Number"
+           value="{{this.selectedValue}}"
+           matInput
+           (input)="filterChanged($event)" (click)="textClick()"  class="multselecticon" [matAutocomplete]="auto"
+                          id="autoCompleteTrigger" #autoCompleteTrigger="matAutocompleteTrigger">
+      <mat-autocomplete autoActiveFirstOption  #auto="matAutocomplete">
+
+        <mat-option  class="d-none" >
+
+        </mat-option>
+        <!--  *ngIf="countryRegionData.length>0" -->
+        <div>
+          <!-- <mat-checkbox class="checklist-leaf-node" [checked]="isAllSelected"
+              (change)="allSelecteChange($event)">All</mat-checkbox> -->
+            </div>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl"  >
+
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding [ngClass]="(selectedValue==node.name)?'selectedtree':''">
+            <!-- <button mat-icon-button disabled></button> -->
+
+            <!-- <mat-checkbox class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)"
+              (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox> -->
+              <div (click)="selectedItem(node)">{{node.name}}</div>
+          </mat-tree-node>
+
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding (click)="selectedItem(node)" [ngClass]="(selectedValue==node.name)?'selectedtree':''" class="commontreebuttonstyle commontreebuttonstyle1">
+            <button mat-icon-button matTreeNodeToggle
+            [attr.aria-label]="'toggle ' + node.filename" >
+           <!--  {{node | json}} -->
+      <mat-icon class="mat-icon-rtl-mirror" *ngIf="hasChild">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+      <!-- <mat-icon class="mat-icon-rtl-mirror" *ngIf="node.hasChildren">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon> -->
+       
+    </button>
+            <!-- <mat-checkbox [checked]="descendantsAllSelected(node)"
+              [indeterminate]="descendantsPartiallySelected(node)"
+              (change)="todoItemSelectionToggle(node)">
+              {{node.item}}</mat-checkbox> -->
+              <div (click)="selectedItem(node)">
+              {{node.name}}</div>
+          </mat-tree-node>
+        </mat-tree>
+      </mat-autocomplete>
+    </mat-form-field>
+  <!-- </form> -->
+</div>
+          </div>

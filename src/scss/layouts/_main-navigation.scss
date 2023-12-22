@@ -1,0 +1,165 @@
+.sidenav-container {
+  border-right: 1px solid #e0e0e0;
+  height: 100%;
+  background-color: #ffffff;
+}
+.sideNavList {
+  white-space: nowrap;
+}
+.sidenav-container .mat-nav-list .mat-list-item:focus {
+  background: unset;
+}
+
+.sidenav-container .mat-list-base .mat-list-item {
+  color: #000000;
+}
+
+.side-menu-list {
+  overflow: auto;
+  height: calc(
+    100vh - 180px
+  ); /* 180 -> 40px - side menu footer height, 140 - sidemenu nav bar height */
+}
+
+.mat-list-base {
+  padding-top: 1px !important;
+}
+
+.logo-container {
+  background: $app-primary-color;
+  text-align: center;
+  height: 135px;
+}
+
+.logo {
+  position: relative;
+  top: 32px;
+  right: 2px;
+  width: 130px;
+  height: 70px;
+}
+
+.user-detail-container {
+  position: relative;
+  top: 55px;
+  display: inline-block;
+}
+
+.side-nav-item {
+  border-bottom: 1px solid #e0e0e0;
+  height: 40px !important;
+  font-size: 13px !important;
+}
+
+.side-nav-item.active-route {
+  background: $app-primary-color !important;
+  color: white !important;
+  border-bottom: 0px !important;
+}
+
+.user-name-label {
+  background: white;
+  padding: 2px 4px 2px 3px;
+  border-radius: 2px;
+  align-items: center;
+}
+
+.user-name {
+  display: inline;
+  min-width: 25px;
+  max-width: 108px;
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* margin-top: 14px; */
+}
+.user-icon {
+  font-size: 16px;
+  height: 17px;
+  width: 17px;
+}
+.logout-img {
+  position: relative;
+  /* top: 13px; */
+}
+
+ .saveDraft {
+  height:40px  !important;
+  width:110px !important;
+  /*line-height: 15px !important;*/
+  font-size: 13px !important;
+  /*height: 30px !important;*/
+  background: #000000 !important;
+  border-radius: 6px !important;
+  color: #fff !important;
+  margin-right: 10px !important;
+  border: 1px solid #000 !important;
+   /*   padding: 10px 15px 11px !important;*/
+    gap: 8px;
+    font-weight: 600;
+    text-shadow: none !important;
+    font-size: 16px !important;
+    white-space: nowrap !important;
+  &:hover{
+    border: none !important;
+  }
+}
+
+.newCourseBtn {
+  height: 30px;
+  line-height: 16px;
+  font-size: 14px;
+  background-color: #1f96f4;
+  border-color: #1f96f4;
+}
+
+.confirmModal {
+  background: rgba(0, 0, 0, 0.5);
+}
+.confirmModal .modal-content {
+  height: 200px;
+  border: 0;
+}
+.confirmModal .modal-dialog {
+  width: 380px;
+}
+
+.confirmHeader {
+  font-size: 16px;
+}
+.empCount {
+  background: #e20512;
+  border-radius: 12px;
+}
+.empCount span {
+  width: 31px;
+  height: 23px;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  justify-content: center;
+  font-style: normal;
+}
+.empPopover span {
+  color: #000 !important;
+  white-space: nowrap;
+}
+.countofEmp {
+  float: right;
+  height: 30px;
+  position: relative;
+  left: 5px;
+}
+.managerOverdue {
+  float: left;
+  margin-bottom: 10px;
+}
+
+.logoutClose {
+  opacity: 1;
+  color: #fff;
+}

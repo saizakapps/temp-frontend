@@ -1,0 +1,8 @@
+<div class="relativePDF">
+<ngx-extended-pdf-viewer *ngIf="pdfURL"  [src]="pdfURL" [useBrowserLocale]="true" backgroundColor="#ffffff"  [showBorders]="false" [showDownloadButton]="true" [showPrintButton]="false" [showOpenFileButton]="false"  [textLayer]="true" [showSpreadButton]="false" [showScrollingButton]="false" [showPropertiesButton]="false" 
+ [showToolbar]="false" [httpHeaders]="pdfHttpHeader" (pdfLoadingStarts)="pdfStarts()" (pagesLoaded)="pdfStop()" class="pdfViewImg"></ngx-extended-pdf-viewer>
+<!-- (pdfLoadingStarts)="pdfStarts()" (pdfLoaded)="pdfStop()" -->
+<div class="pdfLoader" *ngIf="common.pdfLoader == true">
+    <div class="loader"></div>
+</div>
+</div>

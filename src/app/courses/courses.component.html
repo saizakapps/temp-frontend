@@ -1,0 +1,562 @@
+<section class="courseListSection" (window:resize)=onResize()>
+  <!-- <mat-checkbox disabled [checked]="view">View</mat-checkbox>
+  <mat-checkbox (change)="create = !create">Create</mat-checkbox>
+  <mat-checkbox (change)="update = !update">Update</mat-checkbox> -->
+  <nav class="navbar navbar-light justify-content-between navbar-container">
+    <div class="d-flex flex-row col-12 flex-wrap  pr-0 courseTblCnt">
+      <form class="form-inline pl-0 courseForm">
+        <div class="form-group mr-0 d-block">
+          <label for="search" class="pb-2 mr-2 justify-content-start">Course Name</label>
+          <div>
+            <input (keyup)="viewType === 'roleGroup' ? applyClmFilter() : applyPlainClmFilter()" type="text"
+              id="SearchInputText" class="search-input input-Search mb-3" name="search" [(ngModel)]="searchTextValue">
+            <img src="/assets/images/search-icon.svg" width="13px" height="13px"
+              class="position-relative courseSearchImg">
+          </div>
+        </div>
+
+        <span class="coursesPipeCls marginTop">|</span>
+        <mat-form-field appearance="fill" class="courseRoleCls marginTop"
+          [ngClass]="{appliedFilter : selectedRoleGroupDropDown?.length > 0}">
+          <mat-label *ngIf="selectedRoleGroupDropDown?.length < 1">Select role group, role, level</mat-label>
+          <mat-label *ngIf="selectedRoleGroupDropDown?.length > 0" class="levelSelected"> Filter applied </mat-label>
+          <mat-select>
+            <mat-checkbox [checked]="levelCount === selectedLevelCount" [indeterminate]="levelCount !== selectedLevelCount && selectedLevelCount > 0" *ngIf="roleGroupList.length > 0" id="all" class="w-100 allCheckbox pl-3 mt-0"
+              name="allRoleGroups" (change)="selectAll($event, roleGroupList, 'roleGroup')">
+              All</mat-checkbox>
+            <mat-tree [dataSource]="roleGroupList" [treeControl]="roleTreeControl" class="example-tree">
+              <mat-option>
+                <!-- This is the tree node template for leaf nodes -->
+                <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                  <li class="mat-tree-node storeList">
+                    <!-- use a disabled button to provide padding for tree leaf -->
+                    <button mat-icon-button disabled></button>
+                    <mat-checkbox (change)="selectionToggleLeaf($event.checked, node, 'roleGroup')"
+                      [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                  </li>
+                </mat-nested-tree-node>
+                <!-- This is the tree node template for expandable nodes -->
+                <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                  <li>
+                    <div class="mat-tree-node">
+                      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc"
+                        [ngClass]="{'invisible': node.code === 'LAS'}">
+                        <mat-icon class=" mat-icon-rtl-mirror mt-2">
+                          {{roleTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                        </mat-icon>
+                      </button>
+                      <mat-checkbox (change)="selectionToggle($event.checked, node, 'roleGroup')"
+                        [indeterminate]="node.selectStatus === 'mixed'" [checked]="node.selectStatus === 'checked'">
+                        {{node.desc}}</mat-checkbox>
+                    </div>
+                    <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)">
+                      <ng-container matTreeNodeOutlet></ng-container>
+                    </ul>
+                  </li>
+                </mat-nested-tree-node>
+              </mat-option>
+            </mat-tree>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" [ngClass]="{appliedFilter : selectedCountryDropDown?.length > 0}"
+          class="countryList courseRoleCls marginTop">
+          <mat-label *ngIf="selectedCountryDropDown?.length < 1"> Select Countries, Regions, Stores </mat-label>
+          <mat-label *ngIf="selectedCountryDropDown?.length > 0" class="levelSelected"> Filter applied </mat-label>
+          <mat-select>
+            <mat-checkbox [checked]="storeCount === selectedStoreCount" [indeterminate]="storeCount !== selectedStoreCount && selectedStoreCount > 0" *ngIf="countryList?.length > 0" id="all" class="w-100 allCheckbox pl-3 mt-0"
+              name="allCountries" (change)="selectAll($event, countryList, 'country')">
+              All</mat-checkbox>
+            <mat-tree [dataSource]="countryList" [treeControl]="roleTreeControl" class="example-tree countryList">
+              <mat-option>
+                <!-- This is the tree node template for leaf nodes -->
+                <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                  <li class="mat-tree-node storeList">
+                    <!-- use a disabled button to provide padding for tree leaf -->
+                    <button mat-icon-button disabled class="d-none"></button>
+                    <mat-checkbox (change)="selectionToggleLeaf($event.checked, node, 'country')"
+                      [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                  </li>
+                </mat-nested-tree-node>
+                <!-- This is the tree node template for expandable nodes -->
+                <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                  <li>
+                    <div class="mat-tree-node">
+                      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
+                        <mat-icon class="mat-icon-rtl-mirror mt-2">
+                          {{roleTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                        </mat-icon>
+                      </button>
+                      <mat-checkbox (change)="selectionToggle($event.checked, node, 'country')"
+                        [indeterminate]="node.selectStatus === 'mixed'" [checked]="node.selectStatus === 'checked'">
+                        {{node.desc}}</mat-checkbox>
+                    </div>
+                    <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)">
+                      <ng-container matTreeNodeOutlet></ng-container>
+                    </ul>
+                  </li>
+                </mat-nested-tree-node>
+              </mat-option>
+            </mat-tree>
+          </mat-select>
+        </mat-form-field>
+        <div>
+          <label for="search" class="pb-2 mr-2 justify-content-start">Filters</label>
+          <div>
+            <ng-select [items]="dateFilterOptions" name="dateFilter" bindValue="key" [clearable]=false [searchable]=false [(ngModel)]="filteredDate.key"
+              (change)="changeDateFilter($event)">
+              <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                <span data-toggle="tooltip" [title]="item.name">{{ item.name }}</span>
+             </ng-template>
+            </ng-select>
+          </div>
+        </div>
+
+
+
+      </form>
+
+
+      <div class="ml-auto d-flex flex-row align-items-center marginBottom">
+        <div *ngIf="false" class="pb-2 mr-2 d-flex align-items-center courseSummary hidden">Course Summary</div>
+        <!-- [matMenuTriggerFor]="courseSummary" -->
+        <!-- <div>
+          <form class="form-inline pl-0 mt-0 mb-2 mr-1">
+            <div class="form-group">
+              <div class="searchby-dd pl-1">
+                <ng-select [disabled]="statusDdDisabled" placeholder="Action" [items]="statusList"
+                  (click)="selectedStatus = undefined" (change)="changeStatusAction($event)" bindLabel="name"
+                  name="status" [clearable]=false [(ngModel)]="selectedStatus" [closeOnSelect]="false" data-target="#statusModal" data-toggle="modal">
+                </ng-select>
+              </div>
+            </div>
+          </form>
+        </div> -->
+
+        <!-- View commented as per client Req.(02/03/2023) -->
+        <!-- <div class="form-group mr-2 d-block align-items-center mb-0">
+          <label for="search" class="pb-1 mr-2 mb-0 justify-content-start viewTxtCls">View</label>
+          <div>
+            <ng-select class="viewGrpCls" [items]="viewTypes" name="view" [clearable]="false" bindLabel="name"
+              bindValue="key" [searchable]="false" [(ngModel)]="viewType" (change)="toggleView()">
+            </ng-select>
+          </div>
+        </div> -->
+
+
+        <div class="pl-1 mt-2 courseRoleCls">
+          <button [disabled]="actionButtionDisable() || (view && !create && !update)" [matMenuTriggerFor]="statusButton" type="button"
+            class="btn btn-primary newCourseBtn statusBtn">Status</button>
+        </div>
+        <mat-menu #statusButton="matMenu" class="newCoursePopup statusPopup">
+          <div class=" p-0 coursePopup">
+            <!-- <div class="arrow1"></div> -->
+            <div>
+              <div *ngFor="let status of statusList" class="d-flex justify-content-start align-items-center courseMenu"
+                mat-menu-item>
+                <button (click)="changeStatusAction(status)" class="mb-2 d-flex justify-content-start" mat-menu-item
+                  data-target="#statusModal" data-toggle="modal">{{status.name}}</button>
+              </div>
+            </div>
+          </div>
+        </mat-menu>
+        <div class="mt-2">
+          <button [disabled]="view && !create && !update" [matMenuTriggerFor]="newCourse" type="button" class="btn btn-primary newCourseBtn statusBtn">New
+            course</button>
+        </div>
+        <mat-menu #newCourse="matMenu" class="newCoursePopup">
+
+          <div class=" p-0 coursePopup">
+            <!-- <div class="arrow1"></div> -->
+            <div>
+              <div *ngFor="let category of courseCategory"
+                class=" d-flex justify-content-start  align-items-center courseMenu" mat-menu-item>
+                <button (click)="createOrEditCourse('create', category.code)" class="mb-2 d-flex justify-content-start"
+                  mat-menu-item>{{category.courseTypeDesc}}</button>
+              </div>
+            </div>
+          </div>
+        </mat-menu>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Body -->
+  <div class="page-container course-list-page-container">
+    <app-shimmertable *ngIf="showShimmer == true"></app-shimmertable>
+    <div class="course-list-container" *ngIf="showShimmer == false">
+
+      <ng-container *ngIf="viewType === 'roleGroup'">
+        <div class="table-responsive">
+          <table class="courseListTblView" cdkDropList (cdkDropListDropped)="drop($event)"
+            [cdkDropListDisabled]="searchTextValue || selectedCountryDropDown?.length > 0 || clmFilterApplied()">
+            <tr>
+              <th *ngFor="let column of courseListColumns">
+                <span *ngIf="column.property === 'drag'"
+                  (click)="this.changeObjProperty(this.theImp, 'isExpanded', this.notAllExpanded())">
+                  <!-- <button class="expandCollapseCLs" [title]="notAllExpanded() ? 'Expand All' : 'Collapse all'"
+                    (click)="this.changeObjProperty(this.theImp, 'isExpanded', this.notAllExpanded())">
+                    {{notAllExpanded() ? '+' : '-'}}
+                  </button> -->
+                  <img [src]="notAllExpanded() ? '/assets/images/collapsed.png' : '/assets/images/multi-expand.png'" />
+                </span>
+                <span *ngIf="!column.filter && !column.sort && !['drag'].includes(column.property)">
+                  {{column.name}}
+                </span>
+                <span *ngIf="(column.filter || column.sort) && !['drag'].includes(column.property)" [ngbPopover]="menu"
+                  placement="bottom" [autoClose]="true" #statusPopover="ngbPopover"
+                  [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property) || (currentFilters[column.property] !== 'All' && column.filter)}">
+                  {{column.name}}
+                  <ng-container *ngTemplateOutlet="filter_icon">
+                  </ng-container>
+                </span>
+                <!-- Column filter & sort template -->
+                <ng-template #filter_icon>
+                  <span *ngIf="column.filter" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
+                      viewBox="0 0 225.000000 225.000000" preserveAspectRatio="xMidYMid meet">
+
+                      <g transform="translate(0.000000,225.000000) scale(0.100000,-0.100000)" fill="#000000"
+                        stroke="none">
+                        <path d="M371 1894 c-12 -15 -21 -34 -21 -44 0 -9 117 -176 260 -371 l259
+-354 1 -377 c0 -364 1 -379 20 -398 19 -19 33 -20 235 -20 202 0 216 1 235 20
+19 19 20 33 20 396 l0 376 257 352 c141 193 258 360 261 371 2 11 -6 33 -18
+48 l-21 27 -734 0 -734 0 -20 -26z" />
+                      </g>
+                    </svg>
+                  </span>
+                  <span *ngIf="column.sort" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                    &#8645;
+                  </span>
+                </ng-template>
+                <ng-template #menu>
+                  <!-- select filter section -->
+                  <div *ngIf="column.filter" class="filter-popover roleFilterPop">
+                    <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
+                      [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
+                      (click)="updateClmFilter(item, column)" (keyup)="updateClmFilter(item, column)">
+                      <span>{{item.name }}</span>
+                    </div>
+                    <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                    </div>
+                  </div>
+                  <!-- select sort section for Pallet Updated at column -->
+                  <div *ngIf="column.sort" class="filter-popover">
+                    <div *ngFor="let item of sortOption" class="cursor-pointer p-2"
+                      [ngClass]="sortByField === column.property && sortBy === item ?'active-status' : 'active-filter-Options'"
+                      (click)="updateClmSort(item, column.property)" (keyup)="updateClmSort(item, column.property)">
+                      <span>{{(item) | titlecase}}</span>
+                    </div>
+                    <div *ngIf="(sortOption).length === 0">{{'No sorting found'}}.</div>
+                  </div>
+                </ng-template>
+              </th>
+            </tr>
+            <ng-container *ngFor="let parentElement of theImp">
+              <tr *ngIf="parentElement.child?.length > 0" class="parentElementCls">
+                <td>
+                  <mat-icon class=" mat-icon-rtl-mirror mt-2"
+                    (click)="parentElement.isExpanded = !parentElement.isExpanded">
+                    {{parentElement.isExpanded ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </td>
+                <td>
+                  <mat-checkbox (change)="roleCourseSelect(parentElement)"
+                    [indeterminate]="parentElement.state === 'mixed'" [checked]="parentElement.state === 'checked'">
+                  </mat-checkbox>
+                </td>
+                <!-- <td></td> -->
+                <td [attr.colspan]="courseListColumns.length - 2"> {{parentElement.label}} </td>
+              </tr>
+              <ng-container *ngIf="parentElement.child && parentElement.isExpanded">
+                <!-- <tr>
+                <td [attr.colspan]="courseListColumns.length">
+                  <table class="w-100" cdkDropList (cdkDropListDropped)="drop($event, parentElement.child)"
+                    [cdkDropListDisabled]="searchTextValue || selectedCountryDropDown?.length > 0"> -->
+
+                <tr *ngFor="let element of parentElement.child" cdkDrag [cdkDragData]="element"
+                  [ngClass]="{'active-row': element.state === 'checked'}" class="childElement"
+                  (click)="createOrEditCourse('edit', element.courseTypeCode, element)">
+                  <td *ngFor="let column of courseListColumns" [ngClass]="{InactiveRow: !element.active}">
+                    <ng-container *ngIf="column.property === 'drag'">
+                      <span
+                        [ngClass]="{'invisible': element.courseTypeCode === courseCode.Policies || searchTextValue || selectedCountryDropDown?.length || (!element.roleName && !element.levelName) || clmFilterApplied()}">
+                        <!-- || (element.roleName && element.levelName && suggestedRoleGroup.id === element.roleGroupId) -->
+                        <mat-icon class="m-0 tableIcons">unfold_more</mat-icon>
+                      </span>
+                    </ng-container>
+                    <ng-container *ngIf="column.property === 'select'">
+                      <mat-checkbox class=""
+                        [name]="element.roleGroupId + element.roleId + element.levelId + element.courseId"
+                        [checked]="element.state === 'checked'" (click)="$event.stopPropagation()"
+                        (change)="courseSelect(element, parentElement)">
+                      </mat-checkbox>
+                    </ng-container>
+                    <ng-container *ngIf="column.property === 'icon'">
+                      <img
+                        (click)="createOrEditCourse('copy', element.courseTypeCode, element);$event.stopPropagation() "
+                        alt="copy" title="copy" src="/assets/images/copyIcon.png" width="13px" height="13px"
+                        class="position-relative courseCopyImg">
+                    </ng-container>
+                    <span class="coursTblDate">
+                      <ng-container *ngIf="!['drag', 'select', 'icon', 'updatedTime'].includes(column.property)">
+                        {{element[column.property] || '-'}} </ng-container>
+                      <ng-container *ngIf="column.property === 'updatedTime'">
+                        {{element[column.property] | dateUtcToLocal :utils.FORMAT.DATEM}} </ng-container>
+                    </span>
+                  </td>
+                </tr>
+                <!-- </table>
+                </td>
+              </tr> -->
+              </ng-container>
+            </ng-container>
+          </table>
+        </div>
+        <div *ngIf="theImp?.length === 0" class="text-center app-no-record-found">
+          No record found
+        </div>
+      </ng-container>
+      <ng-container *ngIf="viewType === 'course'">
+        <div class="table-responsive">
+          <table class="w-100 courseListTblView courseView">
+            <tr>
+              <ng-container *ngFor="let column of courseListColumns; let colIndex = index">
+                <th *ngIf="!['roleName', 'drag'].includes(column.property)">
+                  <span *ngIf="column.property === 'select'">
+                  </span>
+                  <span *ngIf="!column.filter && !column.sort && !['select'].includes(column.property)"
+                    class="coursTblDate">
+                    {{column.name}}
+                  </span>
+                  <span *ngIf="(column.filter || column.sort) && !['select'].includes(column.property)"
+                    [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover"
+                    [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property) || (currentFilters[column.property] !== 'All' && column.filter)}">
+                    {{column.name}}
+                    <ng-container *ngTemplateOutlet="filter_icon">
+                    </ng-container>
+                  </span>
+                  <!-- Column filter & sort template -->
+                  <ng-template #filter_icon>
+                    <span *ngIf="column.filter" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                      <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="10px" height="10px" viewBox="0 0 512.000000 512.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M181 5106 c-49 -18 -106 -70 -130 -119 -26 -54 -28 -153 -4 -204 9
+-20 447 -503 974 -1075 651 -706 965 -1054 981 -1086 l23 -47 5 -1230 c5
+-1212 5 -1231 25 -1265 23 -39 93 -80 138 -80 65 0 94 28 430 414 415 476 398
+455 433 518 l29 53 5 795 5 795 27 51 c18 34 338 389 970 1074 519 563 954
+1039 968 1059 36 52 41 162 10 226 -26 54 -86 108 -139 123 -57 18 -4702 16
+-4750 -2z"/>
+</g>
+</svg>
+                    </span>
+                    <span *ngIf="column.sort" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                      &#8645;
+                    </span>
+                  </ng-template>
+                  <ng-template #menu>
+                    <!-- select filter section -->
+                    <div *ngIf="column.filter" class="filter-popover roleFilterPop">
+                      <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
+                        [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
+                        (click)="updatePlainClmFilter(item, column); closePopover(colIndex)" (keyup)="updatePlainClmFilter(item, column)">
+                        <span>{{item.name }}</span>
+                      </div>
+                      <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                      </div>
+                    </div>
+                    <!-- select sort section for Pallet Updated at column -->
+                    <div *ngIf="column.sort" class="filter-popover">
+                      <div *ngFor="let item of sortOption" class="cursor-pointer p-2"
+                        [ngClass]="sortByField === column.property && sortBy === item ?'active-status' : 'active-filter-Options'"
+                        (click)="updatePlainClmSort(item, column.property); closePopover(colIndex)"
+                        (keyup)="updatePlainClmSort(item, column.property)">
+                        <span>{{(item) | titlecase}}</span>
+                      </div>
+                      <div *ngIf="(sortOption).length === 0">{{'No sorting found'}}.</div>
+                    </div>
+                  </ng-template>
+                </th>
+              </ng-container>
+            </tr>
+            <tr *ngFor="let element of thatImp" class="courseViewLst"
+              [ngClass]="{'active-row': element.state === 'checked'}"
+              (click)="createOrEditCourse('edit', element.courseTypeCode, element)">
+              <ng-container *ngFor="let column of courseListColumns">
+                <td *ngIf="!['roleName', 'drag'].includes(column.property)" [ngClass]="{InactiveRow: !element.active}">
+                  <span *ngIf="column.property === 'select'">
+                    <mat-checkbox class=""
+                      [name]="element.roleGroupId + element.roleId + element.levelId + element.courseId"
+                      [checked]="element.state === 'checked'" (click)="$event.stopPropagation()"
+                      (change)="element.state  = element.state  === 'checked' ? 'unchecked' :  'checked'">
+                    </mat-checkbox>
+                  </span>
+                  <span *ngIf="column.property === 'icon'">
+                    <img (click)="createOrEditCourse('copy', element.courseTypeCode, element);$event.stopPropagation() "
+                      alt="copy" title="copy" src="/assets/images/copyIcon.png" width="13px" height="13px"
+                      class="position-relative courseCopyImg">
+                  </span>
+                  <span *ngIf="!['drag','roleName', 'select', 'icon', 'updatedTime', 'courseStatus'].includes(column.property)"
+                  class="coursTblDate">
+                  <span *ngIf="column.property === 'internalCourseName'" data-toggle="tooltip" title="{{element[column.property]}}">{{element[column.property] || '-'}}</span>
+                  <span *ngIf="column.property !== 'internalCourseName'">{{element[column.property] || '-'}}</span>
+                </span>
+                  <span *ngIf="column.property === 'courseStatus'" class="coursTblDate">
+                    {{element.active === false ? "Disabled" : element[column.property] || '-'}}
+                  </span>
+                  <span *ngIf="column.property === 'updatedTime'" class="coursTblDate">
+                    {{element[column.property] | dateUtcToLocal :utils.FORMAT.DATEM}}
+                  </span>
+                </td>
+              </ng-container>
+            </tr>
+          </table>
+        </div>
+        <div *ngIf="thatImp?.length === 0 && recordFound == true" class="text-center app-no-record-found">
+          No record found
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="" *ngIf="false">
+    <nav class="navbar navbar-expand-md page-footer">
+      <form class="float-right form-inline pr-2">
+        <!-- <pagination-controls (pageChange)="courseTable = $event;" previousLabel="" nextLabel="" id="course-table"
+          [maxSize]="noOfPageInPagination" class="navigationCls">
+        </pagination-controls> -->
+      </form>
+    </nav>
+  </div>
+
+  <button #statusModal class="d-none" data-toggle="modal" data-target="#statusModal"></button>
+  <div class="modal fade linkedEmployee" id="statusModal" tabindex="-1" role="dialog"
+    aria-labelledby="courseStatusModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>{{statusAction.name}} Action</span>
+        </div>
+        <div class="modal-body">
+          <div class="setupOption">
+            <span class="fontBold selectedItems">Selected Items</span>
+            <div class="publishCls m-3">
+              <div class="row">
+                <div class="col-sm-3">
+                  <span class="fontBold">Published </span>
+                </div>
+                <div class="col-sm-1">
+                  <span>-</span>
+                </div>
+                <div class="col-sm-4">
+                  <span>{{actionModalObj.published}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <span class="fontBold">Draft</span>
+                </div>
+                <div class="col-sm-1">
+                  <span>-</span>
+                </div>
+                <div class="col-sm-4">
+                  <span>{{actionModalObj.draft}}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <span class="ml-3">
+                <span>{{actionModalObj.actionCount}}/{{actionModalObj.total}}</span> items will be
+                <span>{{statusAction.name}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer p-0 border-0">
+          <div class="m-0 w-100 d-flex justify-content-end">
+            <button class="btn userDlgBtn cancelBtn float-right mr-2 saveDraft" data-dismiss="modal">Cancel</button>
+            <button (click)="statusActionConfirm()"
+              class="btn btn-primary newCourseBtn float-left mr-2">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mr-3 course-info cursor-pointer d-flex align-item-center" *ngIf="false">
+    Course Summary
+
+    <mat-menu #courseSummary="matMenu" xPosition="before">
+      <div class="arrow"></div>
+      <div class="summaryData">
+        <div class="d-flex">
+          <div>
+            <div class="mb-2 d-flex justify-content-between" mat-menu-item [matMenuTriggerFor]="levels">
+              <span class="menuText p-0">Level</span>
+              <span class="menuColon">:</span>
+              <u class="menuData red-color">10</u>
+            </div>
+            <div class="mb-2 d-flex justify-content-between" mat-menu-item [matMenuTriggerFor]="courses">
+              <span class="menuText p-0">Course</span>
+              <span class="menuColon">:</span>
+              <u class="menuData red-color">100</u>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="summaryData">
+        <mat-menu #levels="matMenu">
+          <div class="arrow1"></div>
+          <div class="d-flex px-3">
+            <div>
+              <div class="mb-2 d-flex justify-content-between" mat-menu-item>
+                <span class="smallMenuText">Store</span>
+                <span class="menuColon">:</span>
+                <span class="menuData">4</span>
+              </div>
+              <div class="mb-2 d-flex justify-content-between" mat-menu-item>
+                <span class="smallMenuText">Head Office</span>
+                <span class="menuColon">:</span>
+                <span class="menuData">3</span>
+              </div>
+              <div class="mb-2 d-flex justify-content-between" mat-menu-item>
+                <span class="smallMenuText">Ware House</span>
+                <span class="menuColon">:</span>
+                <span class="menuData">3</span>
+              </div>
+            </div>
+          </div>
+        </mat-menu>
+      </div>
+      <div class="summaryData">
+        <mat-menu #courses="matMenu">
+          <div class="arrow1"></div>
+          <div class="d-flex px-3">
+            <div>
+              <div class="mb-2 d-flex justify-content-between" mat-menu-item>
+                <span class="smallMenuText">Store</span>
+                <span class="menuColon">:</span>
+                <span class="menuData">35</span>
+              </div>
+              <div class="mb-2 d-flex justify-content-between" mat-menu-item>
+                <span class="smallMenuText">Head Office</span>
+                <span class="menuColon">:</span>
+                <span class="menuData">35</span>
+              </div>
+              <div class="mb-2 d-flex justify-content-between" mat-menu-item>
+                <span class="smallMenuText">Ware House</span>
+                <span class="menuColon">:</span>
+                <span class="menuData">30</span>
+              </div>
+            </div>
+          </div>
+        </mat-menu>
+      </div>
+    </mat-menu>
+  </div>
+</section>

@@ -1,0 +1,201 @@
+<div class="container-fluid h-100 incidentListContainer">
+	<!-- 	<div class="row">
+		<app-titlebar [titleData]="titleData"></app-titlebar>
+	</div> -->
+
+	<div class="row paddTop" *ngIf="isList">
+
+
+
+			<div class="d-flex align-items-center justify-content-between flex-wrap w-100">
+           <form class="d-flex incidentListForm" *ngIf=" ( 
+	this.incidentService.isIncidentWriteAccess() ||
+	this.incidentService.isIncidentViewAccess())">
+				<div class="d-flex align-items-center incidentListDiv mt-3">
+					<div class="form-group">
+						<label class="list-filter-title d-flex align-items-center"><span>Find Case</span>
+ <span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1"	 	
+ ngbTooltip="Search by Incident ID/ CSD no./ Article ID">		
+	                                        <mat-icon >help_outline</mat-icon>		
+                                   </span>
+
+						</label>
+						<input type="text" class="form-control findInput" id="pwd" placeholder="" name="name" (change)="getDataByFindCaseChange($event)" [(ngModel)]="filterParam.findCase" [ngModelOptions]="{standalone: true}">
+					</div>
+						<div class="form-group" *ngIf="isStoreFilterShow()">
+						<label class="list-filter-title d-flex align-items-center"><span>Store Id</span>
+ <span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1"	 	
+ ngbTooltip="Search by Store Id">		
+	                                        <mat-icon >help_outline</mat-icon>		
+                                   </span>
+
+						</label>
+						<input type="text" class="form-control findInput" id="pwd" placeholder="" name="name" (change)="getDataByStoreIdChange($event)" [(ngModel)]="filterParam.storeId" [ngModelOptions]="{standalone: true}">
+					</div>
+					<div class="form-group marginminus auditFormsLbl auditCountry auditFormsLbl-new" *ngIf="totalRegionCount>1">
+						<label class="list-filter-title">Country/Region</label>
+
+
+<div class="multselectbox">
+
+	<!-- <form class="example-form"> -->
+		<mat-form-field class="example-full-width">
+			<input type="text"
+           placeholder="{{filterAppliadText}}"
+           aria-label="Number"
+           matInput
+           (input)="filterChanged($event)"
+           [matAutocomplete]="auto" id="filtertext"  class="multselecticon" #filtertext>
+			<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+
+				<mat-option  class="d-none" >
+
+				</mat-option>
+				<div class="alldata"><mat-checkbox class="checklist-leaf-node" [checked]="isAllSelected"
+							(change)="allSelecteChange($event)" *ngIf="totalRegionCount>0">All</mat-checkbox>
+						</div>
+				<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree commontreebuttonstyle1">
+
+					<mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+						<!-- <button mat-icon-button disabled></button> -->
+
+						<mat-checkbox class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)"
+							(change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+					</mat-tree-node>
+
+					<mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding class="mat-tree-node1">
+						<button mat-icon-button matTreeNodeToggle
+            [attr.aria-label]="'toggle ' + node.filename">
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+						<mat-checkbox [checked]="descendantsAllSelected(node)"
+							[indeterminate]="descendantsPartiallySelected(node)"
+							(change)="todoItemSelectionToggle(node)">
+							{{node.item}}</mat-checkbox>
+					</mat-tree-node>
+				</mat-tree>
+			</mat-autocomplete>
+		</mat-form-field>
+	<!-- </form> -->
+</div>
+					</div>
+
+
+						<div class="form-group fromDate dataiconrel">
+							<label class="list-filter-title">From</label>
+							<input type="text" class="form-control fromToDate " id="fromDate" maxlength="10" placeholder=" " name="fromDate" [(ngModel)]="filterParam.fromDate" [ngModelOptions]="{standalone: true}" (bsValueChange)="fromDateChange($event)"   autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"   [maxDate]="fromMaxDate" [minDate]="fromMinDate" #fromDate required>
+							<div class="data-icon" (click)="fromDate.click()">
+                                             <img src="assets/healthsafetyimages/field-icon.svg">
+                                             </div>
+						</div>
+						<div class="form-group dataiconrel">
+							<label class="list-filter-title">To</label>
+							<input type="text" maxlength="10" class="form-control fromToDate" id="todate" placeholder=" " name="toDate" [(ngModel)]="filterParam.toDate" [ngModelOptions]="{standalone: true}" (bsValueChange)="toDateChange($event)"  autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"  [maxDate]="toMaxDate" [minDate]="toMinDate"  #toDate required>
+							<div class="data-icon" (click)="toDate.click()">
+                                             <img src="assets/healthsafetyimages/field-icon.svg">
+                                             </div>
+						</div>
+
+
+
+						<div class="form-group">
+							<label class="list-filter-title">Status</label>
+							<select class="form-control statusSelect" [ngClass]="{'graycolottext' : filterParam.status == 'All'}" [(ngModel)]="filterParam.status" [ngModelOptions]="{standalone: true}" (change)="statusSelectionChange($event)">
+								<option value="All" class="optionColor">All</option>
+								<option value="Draft" class="optionColor">Draft</option>
+								<option value="Open" class="optionColor">Open</option>
+								<option value="Closed" class="optionColor">Closed</option>
+								<option value="Minor" class="optionColor">Minor Incident</option>
+							</select>
+						<!-- 	<mat-form-field>
+   <mat-label>Toppings</mat-label> 
+  <mat-select [formControl]="selectedAllstatus" multiple>
+    <mat-select-trigger>
+      {{selectedAllstatus.value?.[0] || ''}}
+      <span *ngIf="(selectedAllstatus.value?.length || 0) > 1" class="example-additional-selection">
+        (+{{(selectedAllstatus.value?.length || 0) - 1}} {{selectedAllstatus.value?.length === 2 ? 'other' : 'others'}})
+      </span>
+    </mat-select-trigger>
+    <mat-option *ngFor="let dt of allStatusData" [value]="dt">{{dt.name}}</mat-option>
+  </mat-select>
+</mat-form-field> -->
+						</div>
+
+
+					<div class="clear-filter-text" *ngIf="filterParam.status">
+
+						<span class="" [ngClass]="{'disableClear' : filterParam.findCase == '' && filterParam.countryRegion == '' && filterParam.fromDate == undefined && filterParam.toDate == undefined && filterParam.status == 'All' && filterAppliadText==''}" (click)="clearFilter()">Clear all filters</span>
+					</div>
+				</div>
+
+				</form>
+				<div class="d-flex align-items-center">
+				<div class="d-flex mt-1 align-items-end newIncidentBtn" *ngIf="!isCreateBtnHidden && this.incidentService.isIncidentcreateAccess()">
+					<button [matMenuTriggerFor]="menu"
+						class="btn btn-primary incidentnewCourseBtn statusBtn d-flex justify-content-center align-items-center"
+						*ngIf="isList"><span class="textpadnew">New Incident</span> <span class="minitriangle"></span></button>
+					<mat-menu #menu="matMenu" class="incidentCoursePopup mat-menu-header">
+						<div class=" p-0 coursePopup " [ngClass]="{'courseMenu' : it.isShow}" *ngFor="let it of incidentTypeData;">
+							<!-- <div class="arrow1"></div> -->
+							<div (click)="incidentTypeClick($event,it)" *ngIf="it.isShow">
+								<div
+									class=" d-flex justify-content-start  align-items-center" [ngClass]="{'courseMenu' : it.isShow}" mat-menu-item>
+									<button mat-menu-item >{{it.name}}</button>
+								</div>
+							</div>
+						</div>
+					</mat-menu>
+				</div>
+
+				<!-- 
+				<div>
+					<div (click)="getIncidentCount()" [matMenuTriggerFor]="courseSummary"
+						   class="d-flex align-items-center tableSummary">Incident status</div>
+					   <mat-menu class="statusMenuPanelAudit" #courseSummary="matMenu" xPosition="before">
+						   <table class="statusTbl" id="dynamic-table">
+							   <thead>
+								   <tr>
+									   <th>Title</th>
+									   <th>Count</th>
+								   </tr>
+							   </thead>
+							   <tbody *ngIf="this.incidentCountData">
+								   <tr >
+									   <td>Draft</td>
+									   <td class="statusCamel"
+										   >
+										   {{ incidentCountData.draftIncidentCount }}</td>
+								   </tr>
+									<tr >
+									   <td>Open</td>
+									   <td class="statusCamel"
+										   >
+										   {{ incidentCountData.openIncidentCount }}</td>
+								   </tr>
+							   </tbody>
+						   </table>
+						   <div class="d-flex no-record-found-bg">
+							   <div *ngIf="statusList && statusList.length == 0" class="no-record-found-status">No record found
+							   </div>
+						   </div>
+					   </mat-menu>
+				</div> -->
+				</div>
+			</div>
+
+</div>
+
+	<div class="row listview" *ngIf="isList && ( 
+	this.incidentService.isIncidentWriteAccess() ||
+	this.incidentService.isIncidentViewAccess())">
+		<app-custom-table [tableData]="tableData" [isStopScroll]="isStopScroll" [incidentCountData]="incidentCountData" (allListEvent)="getTableListEvent($event)" *ngIf="isShowTable" class="p-0"></app-custom-table>
+		<app-incident-shimmer-table style="width: 100%; padding: 10px;" *ngIf="!isShowTable"></app-incident-shimmer-table>
+	</div>
+	<div class="row" *ngIf="!isList">
+		<!-- <app-incident-create [incidentSelectedTypeData]="incidentSelectedTypeData"></app-incident-create> -->
+	</div>
+
+</div>
+

@@ -1,0 +1,148 @@
+<section style="overflow: auto;" class="appAuthSection h-100">
+  <div class="appAuthSecCls">
+    <!-- Body -->
+    <div class="d-flex tabDiv">
+      <div *ngFor="let app of appList; let i = index" class="float-left tabGroup" role="group" aria-label="First group">
+        <button type="button" [ngClass]="{'activeTabbutton': selectedApp === app.name}" class="btn tabDetails"
+          (click)="selectedAppIndex = i; tableData[tableData.length - 1].app.name = app.name; selectedApp = app.name; clearInput(); updateFilter('app'); updateList(tableData[tableData.length - 1], tableData.length - 1)">
+          {{app.name}} </button>
+      </div>
+    </div>
+    <div class="app-auth-page-container-top">
+      <div id="table" class="app-auth-page-container">
+        <table>
+          <thead>
+            <tr class="borderTr">
+              <th *ngFor="let column of appAuthListColumns">
+                <tr>
+                  <div class="d-flex">
+                    <span *ngIf="column.property !== 'disableIcon'">{{column.name}}</span>
+                    <span [ngClass]="{'active': filterValue !== 'all'}" *ngIf="column.property === 'disableIcon'" [ngbPopover]="menu" placement="bottom" [autoClose]="'auto'" #statusPopover1="ngbPopover">
+                      {{column.name}}
+                      <ng-container [ngTemplateOutlet]="filter_icon"></ng-container>
+                    </span>
+                    <span>
+                      <mat-icon (click)="showSearch = !showSearch" class="roleSearch"
+                        *ngIf="column.property === 'roleName'">search</mat-icon>
+                    </span>
+
+                    <ng-template #filter_icon>
+                      <span *ngIf="column.property === 'disableIcon'" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                        <svg style="width: 20px !important;" version="1.0" xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 512.000000 512.000000"
+                          preserveAspectRatio="xMidYMid meet">
+
+                          <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                            <path d="M181 5106 c-49 -18 -106 -70 -130 -119 -26 -54 -28 -153 -4 -204 9
+                        -20 447 -503 974 -1075 651 -706 965 -1054 981 -1086 l23 -47 5 -1230 c5
+                        -1212 5 -1231 25 -1265 23 -39 93 -80 138 -80 65 0 94 28 430 414 415 476 398
+                        455 433 518 l29 53 5 795 5 795 27 51 c18 34 338 389 970 1074 519 563 954
+                        1039 968 1059 36 52 41 162 10 226 -26 54 -86 108 -139 123 -57 18 -4702 16
+                        -4750 -2z" />
+                          </g>
+                        </svg>
+                      </span>
+                    </ng-template>
+
+
+                    <ng-template #menu>
+                      <!-- select filter section -->
+                      <div *ngIf="column.property == 'disableIcon'" class="filter-popover">
+                          <!-- Reviewed Filter Menu -->
+                          <ng-container>
+                            <div *ngFor="let filter of columnFilters" class="cursor-pointer p-2 pl-4 pr-4"
+                            [ngClass]="filterValue === filter.key ? 'active-status' : 'active-filter-Options'"
+                            (click)="filterValue = filter.key; updateFilter()" (keyup)="filterValue = filter.key; updateFilter()">
+                              <span class="camelCase" title="Active">{{filter.name}}</span>
+                            </div>
+                          </ng-container>
+                      </div>
+                  </ng-template>
+                  </div>
+                </tr>
+                <tr *ngIf="showSearch" style="height: 35px;">
+                  <div *ngIf="column.property === 'roleName'" class="d-flex align-items-center">
+                    <!-- <label class="mr-2 label">360 Role</label> -->
+                    <app-search-bar [suggestions]="roleNameList"
+                      (selectionChange)="handleSelectedRole($event, 'role')"></app-search-bar>
+                  </div>
+                </tr>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td><input placeholder="Enter role name..." maxlength="45" class="textinput" type="text" [(ngModel)]="tableData[tableData.length - 1].roleName"></td>
+              <td class="tdWidth">
+                <div>
+                  <app-multi-select-dropdown [items]="tableData[tableData.length - 1].app.modules" bindLabel="name"
+                  (selectionChange)="updateList(tableData[tableData.length - 1], tableData.length - 1); tableData[tableData.length - 1].app.modules = $event"></app-multi-select-dropdown>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            <tr [ngClass]="{'disabled': roleList[i]?.active === false}" *ngFor="let row of tableData; let i = index">
+              <ng-container *ngIf="row.show && i !== tableData.length - 1">
+                <td>
+                  <mat-icon [ngClass]="{'opacity1' : roleList[i]?.edit === true}" class="m-0 editIcon" alt="edit" title="edit">edit</mat-icon>
+                </td>
+                <td><input [disabled]="roleList[i]?.active === false" maxlength="45" [ngClass]="{'roleNameInputAlert': roleList[i]?.emptyAlert && row.roleName === ''}" class="textinput" type="text" [(ngModel)]="row.roleName"></td>
+                <!-- <td class="tdWidth">
+                  <div class="appAccessNgselect">
+                    <ng-select placeholder="Select apps..." [disabled]="row.roleName === ''" [id]="i" [items]="appList"
+                      bindLabel="name" [searchable]="false" [ngModel]="row.app.name !== '' ? row.app.name : undefined"
+                      (change)="updateList($event, row, i)"></ng-select>
+                  </div>
+                </td> -->
+                <td class="tdWidth">
+                  <div [ngClass]="{'modulesDD': roleList[i]?.emptyAlert && checkModule(row)}">
+                    <app-multi-select-dropdown [items]="row.app.modules" bindLabel="name"
+                    (selectionChange)="updateList(row, i); row.app.modules = $event" [isDisabled] = "roleList[i]?.active === false"></app-multi-select-dropdown>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <div class="fitwidth"
+                      [ngClass]="{'disableButton' : checkRoleData(row, 'delete') || roleList[i]?.emptyAlert}" (click)="deleteRole(row, i)">
+                      <svg *ngIf="roleList[i]?.active === true" xmlns="http://www.w3.org/2000/svg" version="1.1"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="90"
+                        height="35" x="0" y="0" viewBox="0 0 32 32" style="enable-background:new 0 0 512 512"
+                        xml:space="preserve" class="">
+                        <g>
+                          <path fill="#1F96F4"
+                            d="M23 8.5H9c-4.136 0-7.5 3.364-7.5 7.5s3.364 7.5 7.5 7.5h14c4.136 0 7.5-3.364 7.5-7.5S27.136 8.5 23 8.5z"
+                            data-original="#3498db" class=""></path>
+                          <circle cx="23" cy="16" r="5" fill="#ecf0f1" data-original="#ecf0f1"></circle>
+                        </g>
+                      </svg>
+                      <div *ngIf="roleList[i]?.active === false" style="pointer-events: all !important; opacity: 1 !important;">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                          xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="90" height="35" x="0" y="0"
+                          viewBox="0 0 32 32" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
+                          <g>
+                            <path fill="#bdc3c7"
+                              d="M23 8.5H9c-4.136 0-7.5 3.364-7.5 7.5s3.364 7.5 7.5 7.5h14c4.136 0 7.5-3.364 7.5-7.5S27.136 8.5 23 8.5z"
+                              data-original="#bdc3c7" class=""></path>
+                            <circle cx="9" cy="16" r="5" fill="#ecf0f1" data-original="#ecf0f1"></circle>
+                          </g>
+                        </svg>
+                      </div>
+                      <!-- <i *ngIf="roleList[i]?.active == undefined" class="fa fa-undo"></i> -->
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button [ngClass]="{'disablebutton' : checkTableDataChange() && checkRoleData(tableData[tableData.length - 1], 'add')}" class="addRoleButton mr-2"
+        (click)="saveRole()">Save</button>
+      <button [ngClass]="{'disablebutton' : checkRoleData(tableData[tableData.length - 1], 'add')}"
+        class="addRoleButton" (click)="addRole()">Add Role</button>
+      <!--[disabled]="checkRoleData(tableData[tableData.length - 1], 'add')"-->
+    </div>
+  </div>
+</section>

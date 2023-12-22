@@ -1,0 +1,181 @@
+<div class="container popup-view">
+   <form [formGroup]="witnessForm" class="example-form">
+      <div class="mb-2">
+         <div class=" witness-box">
+            <div class="field">
+               <label class="label-name">Witnesses name<span class="manditory" >*</span></label>
+               <div class="data-view">
+                  <!--(keyup)="validateNameExist($event)" <input type="text" class="form-control" autocomplete="off" maxlength="250" [(ngModel)]="witnessData.witnessName" [ngModelOptions]="{standalone: true}" (keypress)="common.textBoxAllowAplpabetsSpaceOnly($event)"> -->
+                  <div class="d-flex align-items-center">
+                     <input type="text" class="form-control input-540" autocomplete="off" maxlength="60" formControlName="witnessName" (keypress)="common.textBoxAllowAplpabetsSpaceOnly($event)"
+                     [ngClass]="isFieldValid('witnessName')?'focus-border-error ':''">
+                     <mat-icon placement="left" ngbTooltip="{{witnessData.toolTipData.witnessName}}">help_outline</mat-icon>
+                  </div>
+                  <span *ngIf="isFieldValid('witnessName')"
+                     class="error">{{(formWitnessControls.witnessName.errors!=null)?formWitnessControls.witnessName.errors.message:''}}</span>
+               </div>
+            </div>
+            <div class="contactDiv d-flex">
+               <div class="field">
+                  <label class="label-name">Contact number<span class="manditory" >*</span></label>
+                  <div class="data-view">
+                     <!-- <input type="text" class="form-control" autocomplete="off" maxlength="15"  [(ngModel)]="witnessData.witnessContactNumber" (keypress)="common.allowNumberOnly($event)" [ngModelOptions]="{standalone: true}" > -->
+                     <div class="d-flex align-items-center">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="15"
+                        formControlName="witnessContactNumber" (keypress)="common.allowNumberOnly($event)"
+                        [ngClass]="isFieldValid('witnessContactNumber')?'focus-border-error ':''">
+                        <mat-icon placement="left" ngbTooltip="{{witnessData.toolTipData.witnesscontactNumber}}">help_outline</mat-icon>
+                     </div>
+                     <span *ngIf="isFieldValid('witnessContactNumber')"
+                        class="error">{{(formWitnessControls.witnessContactNumber.errors!=null)?formWitnessControls.witnessContactNumber.errors.message:''}}</span>
+                  </div>
+               </div>
+               <div class="field">
+                  <label class="label-name">Contact email</label>
+                  <div class="data-view">
+                     <!-- <input type="text" class="form-control" autocomplete="off" maxlength="15"  [(ngModel)]="witnessData.witnessContactNumber" (keypress)="common.allowNumberOnly($event)" [ngModelOptions]="{standalone: true}" > -->
+                     <div class="d-flex align-items-center">
+                        <input type="text" class="form-control" autocomplete="off" maxlength="60" formControlName="witnessContactEmail" 
+                           [ngClass]="isFieldValidEmail('witnessContactEmail')?'focus-border-error ':''">
+                        <mat-icon placement="left"  ngbTooltip="{{witnessData.toolTipData.witnessContactEmail}}">help_outline</mat-icon>
+                     </div>
+                     <span *ngIf="isFieldValidEmail('witnessContactEmail')"
+                        class="error">{{(formWitnessControls.witnessContactEmail.errors!=null)?formWitnessControls.witnessContactEmail.errors.message:''}}</span>
+                  </div>
+               </div>
+            </div>
+            <div class="field addField">
+               <label class="label-name">Address</label>
+               <div class="data-view">
+                  <!-- <textarea class="form-control textarea" autocomplete="off" maxlength="250"  [(ngModel)]="witnessData.witnessAddress" [ngModelOptions]="{standalone: true}"></textarea>
+
+                        [ngClass]="isFieldValid('witnessAddress')?'focus-border-error ':''"
+                   -->
+                  <div class="d-flex align-items-center">
+                     <textarea class="form-control textarea" autocomplete="off" maxlength="250"
+                        formControlName="witnessAddress"></textarea>
+                     <mat-icon placement="left"  ngbTooltip="{{witnessData.toolTipData.witnessAddress}}">help_outline</mat-icon>
+                  </div>
+                  <!-- <span *ngIf="isFieldValid('witnessAddress')" class="error">Please enter witness
+                  address</span> -->
+               </div>
+            </div>
+            <div class="field addField">
+               <label class="label-name">Witness statement<span class="manditory" >*</span></label>
+               <div class="data-view">
+                  <!-- <textarea class="form-control textarea" autocomplete="off" maxlength="250"  [(ngModel)]="witnessData.witnessStatement" [ngModelOptions]="{standalone: true}"></textarea> -->
+                  <div class="d-flex align-items-center">
+                     <textarea class="form-control textarea" autocomplete="off" maxlength="250"
+                        formControlName="witnessStatement"
+                        [ngClass]="isFieldValidStatement('witnessStatement','witnessFiles')?'focus-border-error ':''"></textarea>
+                     <mat-icon placement="left"  ngbTooltip="{{witnessData.toolTipData.witnessStatement}}">help_outline</mat-icon>
+                  </div>
+                 <span *ngIf="isFieldValidStatement('witnessStatement','witnessFiles')" class="error">Please enter witness statement or upload witness files</span>
+               </div>
+            </div>
+
+               <div class=" incidentFileUpload">
+                  <div class="">
+                     <div class="">
+                        <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)" class="d-none" />
+                        <div class="container dragbox align-items-center justify-content-center" appFileDragDrop (fileDropped)="onFileDropped($event)" (click)="fileDropRef.click()">
+                           
+                           <h3 for="fileDropRef" [ngClass]="{'d-none' : router.url === '/incident/mobile/create'}">Drag & drop, or click to add witness statement files</h3>
+                           <h3 class="improtent-message justify-content-center drop-box-head2" ><span class="font-weight-bold">Important!</span><span> You must remove the files from your mobile device after uploading.</span></h3>
+                        </div>
+                        <div class="error">{{fileErrorMessage}}</div>
+                     </div>
+                  </div>
+                  <div class="pt-3" *ngIf="progressCount>0">
+                     <app-progress-bar type="2" [progress]="progressCount" *ngIf="progressCount<100"></app-progress-bar>
+                  </div>
+                  <div class="" >
+                     <div class="group-2">
+                        <div class="assignwidth text-center" *ngFor="let img of imageObjectWitnessStatement; let i = index" [ngClass]="{'d-none':img.deleted!==0}">
+                           <img 
+                           [lightbox]="0"
+                           [src]="img.thumbImage || img.posterImage" [gallery]="'unitLightbox'"   *ngIf="img.type=='Photo'">
+                           <img 
+                           [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent,'pdf',i)"  *ngIf="img.type=='pdf'">
+                           <img 
+                           [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent,'word',i)"  *ngIf="img.type=='word'">
+                           <div>
+                              <span class="delete-label" (click)="deleteFilePopup(i,'Proof',conformbox)" title="Delete">Delete</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+   </div>
+   
+   <!-- 	<div class="col-md-12 field" >
+      <div class="data-view">
+      <input type="checkbox"  autocomplete="off"  [(ngModel)]="witnessData.witnessUnwillingToInvolve" [ngModelOptions]="{standalone: true}"> Witness is unwilling to be involved
+      </div>
+      </div> -->
+   </div>
+   </div>
+   <div class="justify-content-end download-label pt-0 pb-3"  *ngIf="imageObjectWitnessStatement.length>0 && ngxservice.mobileView == true" title="Download All">
+      <div  class="" (click)="downloadWitnessFiles()"> 
+    <!-- <mat-icon>cloud_download</mat-icon> -->
+    Download Witness files</div>
+
+</div>
+<div class="">
+      <div class="d-flex justify-content-between align-items-center">
+         <div class="d-flex align-items-center">
+         <div class="">
+            <button mat-button class="btn btn-sm btn-outline-secondary close-btn addBtn"
+               (click)="addWitness()">Add Witness</button>
+         </div>
+         <div class="">
+            <button mat-button class="btn btn-sm btn-outline-secondary close-btn cancelBtn"
+               (click)="CancelClick()">Cancel</button>
+         </div>
+      </div>
+          <div class="justify-content-end download-label"  *ngIf="imageObjectWitnessStatement.length>0 && ngxservice.mobileView == false" title="Download All">
+             <div  class="" (click)="downloadWitnessFiles()"> 
+           <!-- <mat-icon>cloud_download</mat-icon> -->
+           Download Witness files</div>
+      
+   </div>
+      </div>
+   </div>
+   </form>
+</div>
+
+<ng-template #conformbox>
+                     <div class="popup-view popup-view-delete">
+   <form #confirm="ngForm"   class="example-form popupform">
+   <div class="header-popup">
+   Delete Witness Statement
+   </div>
+   <div class="whitepopupbox">
+   <div class="confirmText">
+   Are you sure want to delete?
+   </div>  
+   <div class="d-flex justify-content-end ">
+   <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft"(click)="closeDelete()" mat-dialog-close>Cancel</button>
+   <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft  cform" mat-dialog-close (click)="deleteFile()">Confirm</button>        
+   </div>
+   </div>
+   </form>
+   </div>
+   </ng-template>
+   <ng-template #pdfContent>
+   <div class="popup-view-pdf">
+   <app-pdf-viewer [pdfURL]="pdfURL" *ngIf="pdfURL!='' && pdfURL!=null"></app-pdf-viewer>
+ 
+   <!-- <ngx-doc-viewer [url]="docURL" viewer="mammoth" class="docfile ngx-doc-viewer" *ngIf="docURL!='' && docURL!=null" ></ngx-doc-viewer> -->
+   <app-document-viewer [docURL]="docURL" *ngIf="docURL!='' && docURL!=null" ></app-document-viewer>
+   
+   <!-- <ngx-doc-viewer [url]="pdfURL" viewer="pdf" class="docfile" *ngIf="pdfURL!='' && pdfURL!=null"></ngx-doc-viewer> -->
+   <mat-icon class="close-doc-viewer" (click)="closeDailog()" mat-dialog-close>close</mat-icon>
+   <!-- 
+   [viewerUrl]="'https://docs.google.com/gview?url=%URL%&embedded=true'"  [googleCheckContentLoaded]="'true'"
+   [googleCheckInterval]="'3000'" 
+https://github.com/Marcelh1983/angular-document-viewer/blob/master/demo/assets/file-sample_100kB.docx
+http://smyths360-dev-admin.smythsuat.com/api/web/incident/Witness_8008ee3b-1e91-4e9e-961e-82314bbf5757.docx
+-->
+   </div>
+   </ng-template>

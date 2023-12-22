@@ -1,0 +1,167 @@
+<!--
+
+ <section class="incidentHomeSection">
+
+	<div class="row logoHeader justify-content-center align-items-end">
+		<div class="d-flex justify-content-end userLogin align-items-center">
+			<img src="/assets/images/incident-user.svg" width="39px" height="39px">
+			<button class="userButton d-flex justify-content-center align-items-center">
+				{{displayName}}
+				<img src="/assets/images/logout_dropdown.png" width="8px" height="7px">
+			</button>
+		</div>
+		<div _ngcontent-pic-c6="" class="login_card d-flex justify-content-center align-items-center">
+			<div _ngcontent-pic-c6="" class="justify-content-center d-flex flex-column mx-auto">
+				<div _ngcontent-pic-c6="" class="brand_logo_container">
+					<img src="/assets/images/smyths-360-logo.png" height="137" width="254" alt="logo">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-pad cardColumns d-flex justify-content-center">
+		<div class="" *ngFor="let p of productData;index as i;">
+
+			<a (click)="productClick(p.name)" class="card-link">
+				<div class="card">
+					<div class="card-body d-flex align-items-center justify-content-center">
+
+						<div class="d-flex align-items-center justify-content-center flex-column">
+							<img src="/assets/images/learning-tracker.svg" width="47px" height="50px">
+							<h5 class="card-title">{{p.name}}</h5>
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</a>
+		</div>
+	</div>
+</section> -->
+
+<!-- <div class="row" style="height:50%;background-color: #1f96f4;">
+	<div _ngcontent-pic-c6="" class="login_card">
+		<div _ngcontent-pic-c6="" class="justify-content-center">
+	<div _ngcontent-pic-c6="" class="brand_logo_container">
+		<img src="/assets/images/smyths-360-logo.png" height="137" width="254" alt="logo">
+	</div>
+</div></div>
+</div>
+<div class="row col-pad" style="height:50%;">
+	 <div class="col-lg-3 col-md-3 col-sm-3" *ngFor="let p of productData;index as i;" >
+
+			<a (click)="productClick(p.name)" class="card-link">
+		<div class="card" >
+		<div class="card-body">
+
+			<h5 class="card-title">{{p.name}}</h5>
+
+		</div>
+
+		</div>
+		</a>
+	</div>
+</div>
+ -->
+
+<section class="incidentHomeSection">
+  <div class="userName" mat-button [matMenuTriggerFor]="aboveMenu">
+		<img src="/assets/healthsafetyimages/incident-user.svg" width="14px" height="14px">
+		<span class="name">{{displayName}}</span>
+		 <mat-menu #aboveMenu="matMenu" yPosition="above" class="loginMenu">
+   <!--    <button mat-menu-item data-bs-toggle="modal" data-bs-target="#policyModal">Privacy policy</button> -->
+      <button mat-menu-item (click)="logoutConfirm(logoutconformbox)">Log out</button>
+    </mat-menu>
+	</div>
+
+  <div class="d-flex justify-content-center mainLogo">
+    <img src="/assets/images/smyths-360-logo.png" alt="logo">
+  </div>
+  <div class="d-flex tile-box">
+    <div *ngFor="let data of this.productData; let i = index" class="box-grid box-grid{{i}}" [ngClass]="{'d-none' : !data.isShow}">
+      <div *ngIf="data.isShow">
+        <div class="main-title">{{data.product_title}}</div>
+        <div *ngFor="let item of this.data.modules">
+          <a href="{{item.url}}" (click)="productClick(item)" class="d-flex align-items-center whitebox" *ngIf="item.isShow">
+            <div class="whitebox-icon">
+              <img src="{{item.icon}}" alt="">
+            </div>
+            <div class="whitebox-title">{{item.title}}</div>
+            <div class="abscircle"></div>
+
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <div class="copyright">
+    2023 © Smyths Toys All right reserved
+  </div>
+  <!-- <div class="bottomrole d-flex align-items-center">
+  <div class="roleactive rolename">Super admin</div>
+  <div class="roleactive rolename">Human Resources</div>
+  <div class="rolename">Managers</div>
+  <div class="rolename">Managers</div>
+  <div class="rolename">Customer service</div>
+  <div class="rolename">Product compliance</div>
+  <div class="rolename">Privacy team</div>
+  <div class="rolename greentext">Insurance team</div>
+  <div class="rolename greentext">External auditor</div>
+	</div> -->
+  <!-- <div class="row logoHeader justify-content-center align-items-end">
+		<div class="d-flex justify-content-end userLogin align-items-center">
+			<img src="/assets/images/incident-user.svg" width="39px" height="39px">
+			<button class="userButton d-flex justify-content-center align-items-center">
+				{{displayName}}
+				<img src="/assets/images/logout_dropdown.png" width="8px" height="7px">
+			</button>
+		</div>
+		<div _ngcontent-pic-c6="" class="login_card d-flex justify-content-center align-items-center">
+			<div _ngcontent-pic-c6="" class="justify-content-center d-flex flex-column mx-auto">
+				<div _ngcontent-pic-c6="" class="brand_logo_container">
+					<img src="/assets/images/smyths-360-logo.png" height="137" width="254" alt="logo">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-pad cardColumns d-flex justify-content-center">
+		<div class="" *ngFor="let p of productData;index as i;">
+			<a (click)="productClick(p.name)" class="card-link">
+				<div class="card">
+					<div class="card-body d-flex align-items-center justify-content-center">
+						<div class="d-flex align-items-center justify-content-center flex-column">
+							<img src="/assets/images/learning-tracker.svg" width="47px" height="50px">
+							<h5 class="card-title">{{p.name}}</h5>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div> -->
+</section>
+
+
+<ng-template #logoutconformbox>
+  <div class="popup-view">
+    <form #confirm="ngForm" class="example-form popupform">
+      <div class="header-popup">
+       Logout confirmation
+      </div>
+      <div class="whitepopupbox">
+        <div class="confirmText">
+          Are you sure want to logout?
+        </div>
+        <div class="d-flex justify-content-end confirmBtnDiv">
+          <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft"
+            mat-dialog-close>Cancel</button>
+          <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft  cform"
+            mat-dialog-close (click)="logOut()">Confirm</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+</ng-template>

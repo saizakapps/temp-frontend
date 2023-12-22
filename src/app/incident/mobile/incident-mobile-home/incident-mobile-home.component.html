@@ -1,0 +1,42 @@
+<div class="container-fluid h-100 incidentListContainer">
+	<!-- 	<div class="row">
+		<app-titlebar [titleData]="titleData"></app-titlebar>
+	</div> -->
+
+	<div class="paddTop" *ngIf="isList">
+		<div *ngFor="let it of incidentTypeData;">
+			<div class="formtile" *ngIf="it.isShow">
+			<div (click)="incidentTypeClick($event,it)">
+				<div class=" d-flex justify-content-center align-items-center">
+					<div>{{it.name}}</div>
+				</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- <div class="d-flex align-items-center justify-content-center flex-wrap w-100">
+           
+				<div class="d-flex align-items-end newIncidentBtn" *ngIf="!isCreateBtnHidden">
+					<button [matMenuTriggerFor]="menu"
+						class="btn btn-primary newCourseBtn statusBtn d-flex justify-content-center align-items-center"
+						*ngIf="isList">New Incident</button>
+					<mat-menu #menu="matMenu" class="newCoursePopup mat-menu-header">
+						<div class=" p-0 coursePopup " [ngClass]="{'courseMenu' : it.isShow}" *ngFor="let it of incidentTypeData;">
+							<div (click)="incidentTypeClick($event,it)" *ngIf="it.isShow">
+								<div
+									class=" d-flex justify-content-start  align-items-center" [ngClass]="{'courseMenu' : it.isShow}" mat-menu-item>
+									<button mat-menu-item >{{it.name}}</button>
+								</div>
+							</div>
+						</div>
+					</mat-menu>
+				</div>
+			</div> -->
+
+
+	</div>
+
+
+
+</div>

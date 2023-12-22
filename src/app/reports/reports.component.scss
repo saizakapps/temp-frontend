@@ -1,0 +1,840 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Inter" !important;
+  overflow: hidden auto;
+  position: relative;
+}
+
+/* employee portal css starts */
+.portalContentDiv li {
+  list-style-type: none;
+}
+.portalDetails {
+  background-color: #f2f2f2;
+  padding: 30px 30px 30px 20px;
+}
+.productId {
+  width: 68px;
+}
+.productNames {
+  width: 235px;
+}
+.addedDate {
+  width: 100px;
+}
+.productStatus {
+  width: 85px;
+}
+.newProductsTable tr {
+  height: 33px;
+  border-bottom: 1px solid #dadada;
+}
+.productsTableContent {
+  overflow: hidden auto;
+  height: 250px;
+  display: block;
+}
+.portalDetails label {
+  font-size: 13px;
+}
+.portalDetails .form-group {
+  padding-right: 10px;
+}
+.dropdownCls .btn {
+  background-image: url(http://localhost/learner-app/images/pointer.png) !important;
+  background-size: 7px 5px !important;
+  background-color: #fff !important;
+  box-sizing: border-box;
+  margin: 0px 10px;
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  width: 150px;
+  height: 30px;
+  border: 1px solid #bdbdbd !important;
+  color: #000 !important;
+  border-radius: 0 !important;
+  padding: 0 10px !important;
+  text-align: left !important;
+  font-size: 13px !important;
+}
+.dropdownCls .dropdown-toggle::after {
+  display: none;
+}
+.courseCompletionRate {
+  font-weight: 500;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.completedList {
+  line-height: 2;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.completedGraph {
+  width: 100px;
+}
+.averageTimeCompletion {
+  align-items: baseline;
+  justify-content: center;
+  width: 170px;
+  height: 81px;
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 14px 27px 15px 26px;
+  display: flex;
+}
+.averageTime {
+  font-weight: 900;
+  font-size: 43px;
+  line-height: 52px;
+}
+.averageHours {
+  font-weight: 500;
+}
+.courseCompletionTime {
+  margin-right: 30px;
+  width: 170px;
+}
+.completionListRate {
+  width: 277px;
+  height: 105px;
+}
+.completedHours {
+  background: #fff;
+  width: 170px;
+  height: 81px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+.timeSeparation {
+  width: 150px;
+}
+.completedPercentage {
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 31px;
+}
+/* .averageCompletedTime {
+  font-size: 30px;
+  font-weight: 600;
+} */
+.circle {
+  margin-top: 7px;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.green-circle {
+  background-color: #00a224;
+}
+.yellow-circle {
+  background-color: #ffd82d;
+}
+.red-circle {
+  background-color: #e5332a;
+}
+.black-circle {
+  background-color: #000000;
+}
+.completedTime {
+  font-size: 26px;
+  line-height: 31px;
+  font-weight: 900;
+}
+.courseDropdown .btn {
+  border-radius: 6px !important;
+  width: 169px;
+  height: 40px;
+  background-color: #e6e6e6 !important;
+  opacity: 0.5;
+  border: 0 !important;
+  font-weight: 600;
+}
+.newProductsTable {
+  /* margin-top: 45px; */
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 5px;
+}
+.newProductsTable th,
+.newProductsTable td {
+  /* width: 160px; */
+  font-size: 14px;
+  white-space: nowrap;
+}
+.newProductsTable th:nth-child(1),
+.newProductsTable td:nth-child(1) {
+  width: 30px;
+  padding-right: 20px;
+}
+.sendMessage {
+  width: 144px;
+  height: 40px;
+  background: #e6e6e6;
+  border-radius: 6px;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  line-height: 19px;
+  opacity: 0.5;
+}
+.selectionBox {
+  width: 20px !important;
+}
+section {
+  background: #f2f2f2;
+  width: 100%;
+}
+.faqCls {
+  width: 800px;
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: #ffffff;
+  border-radius: 5px;
+}
+.faqInput {
+  width: 740px;
+  height: 30px;
+}
+.faqAnswer {
+  width: 740px;
+  height: 120px;
+}
+
+.questionAnswerText .form-group {
+  display: grid;
+  line-height: 19px;
+}
+.questionAnswerText .form-group label {
+  font-weight: 600;
+}
+.newQACls {
+  width: 93px;
+  height: 40px;
+}
+.deleteQuestion {
+  font-weight: 600;
+  line-height: 19px;
+  color: #e5332a;
+}
+.editQuestion {
+  font-weight: 600;
+  line-height: 19px;
+  color: #1f96f4;
+}
+.reportsCls {
+  width: 300px;
+}
+
+.reportsCls {
+  background-color: #f2f2f2;
+  padding: 30px 20px;
+  height: calc(100vh - 151px);
+}
+.reportsCls .btn {
+  width: 200px !important;
+  height: 30px !important;
+  border: 1px solid #bdbdbd !important;
+  margin: 5px 0px 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reportsCls label {
+  font-size: 13px;
+}
+.reportName {
+  font-weight: 600;
+}
+.scheduledReport {
+  margin-bottom: 30px;
+}
+.scheduledReport label {
+  font-size: 13px;
+  color: #1f96f4;
+  font-weight: 500;
+}
+.completionDates {
+  margin-bottom: 15px;
+}
+.completionDates input {
+  width: 85px;
+  height: 30px;
+}
+.completionDates span {
+  font-size: 13px;
+}
+.completionDates label {
+  margin-bottom: 5px;
+}
+.generateReport {
+  width: 102px;
+  height: 40px;
+  background: #1f96f4;
+  border-radius: 6px;
+  border: 0;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 30px;
+}
+.exportBtn {
+  color: #818181;
+  width: 82px;
+  height: 40px;
+  background: #e6e6e6;
+  border-radius: 6px;
+  border: 0;
+  font-weight: 600;
+  margin-top: 30px;
+}
+.reportsTable {
+  font-size: 14px;
+  background: #ffffff;
+  border-radius: 5px;
+  height: 100%;
+  padding: 10px 20px;
+}
+.courseReport {
+  width: 365px;
+  white-space: nowrap;
+}
+.courseReport span {
+  width: 340px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.courseCompletion {
+  width: 138px;
+  white-space: nowrap;
+}
+.courseEmployee {
+  width: 126px;
+  white-space: nowrap;
+}
+.courseEmployee span {
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.courseId {
+  width: 89px;
+  white-space: nowrap;
+}
+.coursePositon {
+  width: 81px;
+  white-space: nowrap;
+}
+.courseProgress {
+  width: 94px;
+  white-space: nowrap;
+}
+.courseStore {
+  width: 134px;
+  white-space: nowrap;
+}
+.courseStore span {
+  width: 125px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.courseStatus {
+  width: 70px;
+  white-space: nowrap;
+}
+.courseUpcoming {
+  width: 190px;
+  white-space: nowrap;
+}
+.courseUpcoming span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 185px;
+  display: block;
+}
+.reportsTable tr {
+  border-bottom: 1px solid #e8e8e8;
+  height: 33px;
+}
+.reportDetails {
+  margin-right: 10px;
+  padding: 30px 0px;
+}
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul li .mat-tree-node,
+.node1 {
+  color: #000;
+  padding-left: 21px;
+  font-weight: 600;
+}
+.example-tree ul li ul li {
+  font-weight: 500 !important;
+  padding-left: 45px;
+}
+.example-tree ul li .mat-tree-node .mat-checkbox-frame {
+  border-color: #bdbdbd !important;
+}
+.countryCheckbox.mat-checkbox {
+  margin-left: 0px !important;
+}
+.reportsCls input {
+  border: 1px solid #bdbdbd;
+  border-radius: 2px;
+  height: 30px;
+  outline: none;
+}
+.reports-container {
+  position: relative;
+  z-index: 0;
+  height: 100%;
+  /* padding: 16px; */
+}
+/* employee portal css ends */
+
+.weeklyReportName {
+  margin-top: 27px;
+}
+.reports-page-container {
+  height: calc(100vh - 140px);
+  background: #fff;
+  width: 100%;
+  border-radius: 5px;
+  margin: 0px 20px 0px;
+  width: auto;
+  padding: 20px 20px 10px;
+  position: relative;
+}
+.reportsSecCls {
+  height: calc(100vh - 115px);
+}
+.weekLbl {
+  padding-top: 11px;
+}
+.customizeBtn {
+  width: 150px;
+}
+.filterReport,
+.filterReport:hover,
+.filterReport:not(:disabled):not(.disabled):active {
+  background-color: transparent !important;
+  border: 1px solid #bdbdbd !important;
+  display: flex;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+}
+.filterReport:active g {
+  fill: #000;
+}
+.filterReport:active {
+  background: #000;
+  color: #fff;
+}
+.filterCls {
+  /* border: 1px solid #bdbdbd; */
+  border-radius: 5px;
+  background: #f2f2f2;
+  padding: 15px;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 10px 15px;
+}
+.empFilters {
+  height: 30px;
+}
+.empFilters label {
+  width: 170px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-right: 15px;
+}
+.empFilters input,
+.empFiltersInput {
+  border-radius: 2px;
+  border: 1px solid #bdbdbd;
+  width: 100%;
+  outline: none;
+  height: 30px;
+}
+.roleSelect {
+  position: relative;
+  top: 9px;
+}
+.roleFilters {
+  gap: 15px;
+}
+.courseContentDetails {
+  background: #ffffff;
+  border: 1px solid #818181 !important;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 16px;
+}
+.courseContentDetails.active {
+  background: #1f96f4;
+  color: #fff;
+  border-color: #1f96f4 !important;
+}
+.weekReportCheck {
+  margin-left: 10px;
+}
+.newExistingFilter {
+  margin-right: 10px;
+}
+.lblCls {
+  white-space: nowrap;
+  min-width: 140px;
+  font-size: 12px;
+}
+.frequencyDD {
+  width: 200px;
+}
+
+.weeklyReportFilter .modal-title {
+  line-height: 0.5 !important;
+}
+.saveDraft {
+  line-height: 15px;
+  font-size: 14px;
+  height: 30px;
+  background: #000000;
+  border-radius: 6px;
+  color: #fff;
+  margin-right: 5px;
+  border-color: #000;
+}
+.newCourseBtn {
+  height: 30px;
+  line-height: 16px;
+  font-size: 14px;
+  background-color: #1f96f4;
+  border-color: #1f96f4;
+}
+.scheduleBtn {
+  background-color: #00A224 !important;
+  border-color: #00A224 !important;
+}
+.weeklyReportFilter .modal-footer {
+  padding-bottom: 14px !important;
+  height: 50px;
+  padding-right: 18px !important;
+}
+.frequencyData {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+.modal {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.closeIcon {
+  font-size: 14px;
+}
+.fontBold {
+  font-weight: 600;
+}
+.calendarIcon {
+  font-size: 20px;
+  margin-left: 10px;
+}
+.emailInput {
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+.weeklyReportFilter {
+  z-index: 5 !important;
+}
+.date-input {
+  height: 30px;
+  border: 1px solid #d2cfcf;
+  border-radius: 2px;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  outline: none !important;
+}
+.dateJoining {
+  border-right: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.dateJoinInput .input-group-text {
+  padding: 5px;
+  line-height: 1;
+  height: 30px;
+}
+.mailCloseIcon {
+  height: 20px !important;
+  font-size: 12px;
+  margin-top: 6px;
+  margin-left: 5px;
+  width: 20px !important;
+}
+.roleFilters input {
+  height: 30px;
+  font-size: 13px;
+  color: rgba(0,0,0,.6) !important;
+  font-weight: 600;
+  background-color: #fff !important;
+  padding: 0px 10px;
+}
+.roleFilters input:focus {
+  outline: none !important;
+}
+.filterBtnCls {
+  position: relative;
+  bottom: 27px;
+}
+.reportsListTbl {
+  /* min-height: 300px; */
+  max-height: calc(100vh - 155px);
+}
+.roleSection {
+  height: 30px;
+}
+.filter-popover {
+  max-height: 200px;
+  overflow: hidden auto;
+}
+.countryRegionList {
+  padding-top: 10px;
+}
+.resetBtn {
+  height: 30px;
+}
+.excelBtnCls {
+  visibility: hidden;
+  height: 100%;
+}
+.reportsRoleFilter {
+  height: 40px;
+}
+.mailCls span {
+  font-size: 12px;
+}
+.allCheckbox:hover {
+  background: #1f96f4;
+  color: #fff;
+}
+.filterCheckbox {
+  margin-left: 24px !important;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.scheduleImg {
+  width: 30px !important;
+  height: 30px !important;
+}
+.scheduleBtnImg,
+.scheduleBtnImg:hover,
+.scheduleBtnImg.btn-primary:not(:disabled):not(.disabled):active {
+  border: 0 !important;
+}
+.addEmailCls {
+  position: relative;
+  right: 31px;
+}
+.reportEmailInput {
+  width: 335px;
+}
+.mailTag {
+  border: 1px solid #bdbdbd;
+  background: #fff;
+  border-radius: 5px;
+  padding: 0px 0px 0px 8px;
+  margin-left: 3px;
+}
+.mailAddBox {
+  margin-left: 17px;
+}
+.weeklyReportFilter .modal-dialog {
+  max-width: 640px !important;
+}
+.resetImg {
+  cursor: pointer;
+}
+.empSearchInput {
+  height: 30px;
+    border-radius: 2px;
+    border: 1px solid #bdbdbd;
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 0px 10px;
+    width: 150px;
+}
+.empSearchInput:focus {
+  outline: none !important;
+}
+.resetIcon {
+  border: 0 !important;
+
+}
+.resetFilterDiv {
+  height: 30px;
+  width: 30px;
+}
+.addBtn {
+  height: 30px;
+}
+.scheduleRptBtn {
+  position: absolute;
+    right: 40px;
+    border: 1px solid #ced4da;
+    margin-top: 1px;
+    padding: 1px;
+    background: #ffffff;
+    height: 30px;
+    width: 30px;
+    font-size: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (min-width: 900px) and (max-width: 1300px) {
+
+  .empSearchInput {
+    width: 80px;
+  }
+
+}
+.reportsListTbl th,.reportsListTbl td {
+  width: 130px;
+}
+.reportsListTbl td span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  overflow: hidden;
+  display: block
+}
+.reportViewTxt {
+  top: 5px;
+  position: relative;
+}
+.typeDD {
+  top: 12px;
+  position: relative;
+}
+.tableRefresh {
+  color: #1f96f4;
+  text-decoration: none;
+  cursor: pointer;
+}
+.greyText {
+  color:#616060
+}
+
+.adjustshimmertable{
+  background-color: #fff;
+  position: relative;
+  z-index: 2;
+}
+.hideheader{
+ margin-top: -53px;
+}
+.showheader{
+  margin-top: -16px;
+}
+
+/* ::ng-deep.mat-menu-panel {
+  max-width: none !important;
+  width: 310px;
+  padding: 10px;
+  background-color: #f2f2f2;
+} */
+
+.statusTbl {
+  width: 100%;
+  margin: 0px;
+}
+
+tr {
+  height: 40px;
+}
+
+td {
+  border-bottom: 1px solid #c1bdbda0 !important;
+}
+
+thead {
+  border-bottom: 1px solid #c1bdbda0 !important;
+}
+.no-record-found {
+  background: #d8d6d6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: 41px;
+  position: relative;
+  border-radius: 5px;
+  margin: 10px auto;
+  padding: 0px 20px;
+}
+.greenStatus {
+  color: #00A124 !important;
+}
+
+.yellowStatus {
+  color: #e8a703 !important;
+}
+
+.redStatus {
+  color: #E20512 !important;
+}
+
+.statusTbl td:nth-child(1) {
+  max-width: 80px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.statusTbl td,
+.statusTbl th {
+  padding: 0px 5px 0px 10px;
+}
+
+.statusTbl tbody tr:first-child td {
+  font-weight: 600
+}
+
+.statusTbl tbody tr:last-child td {
+  color: #000000;
+}
+.statusText {
+  cursor: pointer;
+  color: #1F96F4;
+  font-size: 14px;
+}
+@media screen and (max-width: 1500px) {
+  .reports-page-container{
+    height: calc(100vh - 190px);
+  }
+}
+.hiddenXflow{
+  overflow-x: hidden;
+}

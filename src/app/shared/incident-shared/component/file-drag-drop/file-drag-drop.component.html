@@ -1,0 +1,102 @@
+<div class=" incidentFileUpload">
+    <div class="col-md-12">
+        
+         
+    </div>
+    <div class="">
+         
+    <div class="">
+        <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)"class="d-none" />
+		<div class="container dragbox align-items-center justify-content-center cursor" appFileDragDrop (click)="fileDropRef.click()"  (fileDropped)="onFileDropped($event)" *ngIf="data.isEvidence">
+		<h3 for="fileDropRef" *ngIf="data.isEvidence==true" class="cursor"  [ngClass]="{'d-none' : router.url === '/incident/mobile/create'}">Drag & drop, or click to add evidence files</h3>
+		<h3 class="improtent-message justify-content-center drop-box-head2 cursor" *ngIf="data.isEvidence==true" ><span class="font-weight-bold">Important!</span><span> You must remove the files from your mobile device after uploading.</span></h3>
+		</div>
+        <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)" class="d-none" />
+		<div class="container dragbox productDragBox d-flex align-items-center justify-content-center cursor" (click)="fileDropRef.click()" appFileDragDrop (fileDropped)="onFileDropped($event)"  *ngIf="!data.isEvidence">
+		
+		<h3  class="product-reciept justify-content-center cursor" *ngIf="data.isEvidence==false">Attach a product receipt</h3>
+
+		<!-- <h3>or</h3> -->
+		<!-- <label for="fileDropRef">Browse for file</label> -->
+		</div>
+		<div class="error">{{fileErrorMessage}}</div>
+    </div>
+    </div>
+    
+         <div class=" pt-3" *ngIf="progressCount>0">
+            <app-progress-bar [progress]="progressCount" *ngIf="progressCount<100"></app-progress-bar>
+         </div>
+         <div class=" mr-15" *ngIf="data.isEvidence==true">
+            <div class="group-2 d-flex wrapflex">
+    <div class="flex-gap" *ngFor="let img of imageObject; let i = index">
+       <!--  <img  [src]="img.thumbImage || img.posterImage" (click)="showLightbox(i)" /> -->
+         <img 
+         [lightbox]="i"
+         [src]="img.thumbImage || img.posterImage" [gallery]="'anotherLightbox'"   >
+        <div class="delete-label-margin">
+        <span class="delete-label" (click)="deleteFilePopup(i,'evidence',conformbox)" title="Delete">Delete</span>
+        </div>
+    </div>
+</div>
+<div class=" align-right"  *ngIf="imageObject.length>0" title="Download All">
+             <span class="download-label" (click)="downloadEvidence()">
+                Download CCTV/Photos files
+             </span>
+         </div>
+         </div>
+         <div class="" *ngIf="data.isEvidence==false">
+                <div class="group-2 d-flex wrapflex">
+    <div class="text-center" *ngFor="let img of imageObjectProof; let i = index">
+        <!-- <img  [src]="img.thumbImage || img.posterImage" (click)="showLightbox(i)" /> -->
+         <img 
+         [lightbox]="i"
+         [src]="img.thumbImage || img.posterImage" [gallery]="'unitLightbox'"   *ngIf="img.type=='Photo'">
+          <img 
+         [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent)"  *ngIf="img.type=='pdf'">
+        <div class="delete-label-margin">
+        <span class="delete-label" (click)="deleteFilePopup(i,'Proof',conformbox)" title="Delete">Delete</span>
+        </div>
+    </div>
+   
+</div>
+  <div class=" align-right"  *ngIf="imageObjectProof.length>0" title="Download All">
+             <span class="download-label" (click)="downloadProof()">
+                Download Proof files
+             </span>
+         </div>
+
+         </div>
+<ng-template #conformbox>
+
+    <div class="popup-view">
+
+    <form #confirm="ngForm"   class="example-form popupform">
+        <div class="header-popup">
+          Delete {{(data.isEvidence)?'Evidence':'Product Receipt'}}
+        </div>
+        <div class="whitepopupbox">
+        <div class="confirmText">
+                 Are you sure want to delete?
+        </div>  
+          <div class="d-flex justify-content-end ">
+                <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft" mat-dialog-close >Cancel</button>
+                <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft  cform" mat-dialog-close (click)="deleteFile()">Confirm</button>        
+        </div>
+        </div>
+   </form>
+</div>
+
+       
+         </ng-template>
+
+
+    <ng-template #pdfContent>
+        <div class="popup-view-pdf">
+            <app-pdf-viewer [pdfURL]="pdfURL"></app-pdf-viewer>
+            <mat-icon class="close-doc-viewer" (click)="closeDailog()" mat-dialog-close>close</mat-icon>
+        </div>
+    </ng-template>
+  
+    </div>
+
+

@@ -1,0 +1,347 @@
+<section class="reportsSection h-100">
+  <!-- <mat-checkbox disabled [checked]="view">View</mat-checkbox>
+  <mat-checkbox (change)="create = !create">Create</mat-checkbox>
+  <mat-checkbox (change)="update = !update">Update</mat-checkbox> -->
+  <div class="d-flex justify-content-between">
+    <nav class="navbar navbar-light navbar-container employeeSection pb-0">
+      <div>
+        <div class="d-flex align-items-center flex-wrap">
+          <div class="d-flex p-0 mr-2">
+            <mat-form-field appearance="fill" class=""
+              [ngClass]="{appliedFilter : selectedRoleGroupDropDown.length > 0}">
+              <mat-label *ngIf="selectedRoleGroupDropDown.length < 1"> Select Roles / Levels
+              </mat-label>
+              <mat-label *ngIf="selectedRoleGroupDropDown.length > 0" class="levelSelected"> Filter applied
+              </mat-label>
+              <mat-select (openedChange)="callGetFilteredList('rolelevel',$event)">
+                <mat-checkbox [checked]="levelCount === selectedLevelCount" [indeterminate]="levelCount !== selectedLevelCount && selectedLevelCount > 0" *ngIf="roleLevelList.length > 0" id="all"
+                  class="w-100 allCheckbox reportsCheckbox countryCheckbox pl-3 mt-0" name="allRoleGroups"
+                  (change)="selectAll($event, roleLevelList, 'roleGroup')">
+                  All</mat-checkbox>
+                <mat-tree [dataSource]="roleLevelList" [treeControl]="roleTreeControl" class="example-tree">
+                  <mat-option>
+                    <!-- This is the tree node template for leaf nodes -->
+                    <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                      <li class="mat-tree-node storeList node1 reportsRole">
+                        <!-- use a disabled button to provide padding for tree leaf -->
+                        <button mat-icon-button disabled></button>
+                        <mat-checkbox (change)="selectionToggleLeaf($event.checked, node, 'roleGroup')"
+                          [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                      </li>
+                    </mat-nested-tree-node>
+                    <!-- This is the tree node template for expandable nodes -->
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                      <li>
+                        <div class="mat-tree-node node2">
+                          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
+                            <mat-icon class="mat-icon-rtl-mirror mt-2">
+                              {{roleTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                          </button>
+                          <mat-checkbox (change)="selectionToggle($event.checked, node, 'roleGroup')"
+                            [indeterminate]="node.selectStatus === 'mixed'" [checked]="node.selectStatus === 'checked'">
+                            {{node.desc}}</mat-checkbox>
+                        </div>
+                        <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)" class="mb-0">
+                          <ng-container matTreeNodeOutlet></ng-container>
+                        </ul>
+                      </li>
+                    </mat-nested-tree-node>
+                  </mat-option>
+                </mat-tree>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="d-flex p-0 mr-2">
+            <mat-form-field appearance="fill" [ngClass]="{appliedFilter : selectedCountryDropDown.length > 0}"
+              class="countryList countryRegion">
+              <mat-label *ngIf="selectedCountryDropDown.length < 1"> Select Countries / Regions / Stores
+              </mat-label>
+              <mat-label *ngIf="selectedCountryDropDown.length > 0" class="levelSelected"> Filter
+                applied
+              </mat-label>
+              <mat-select (openedChange)="callGetFilteredList('countries',$event)">
+                <mat-checkbox [checked]="storeCount === selectedStoreCount" [indeterminate]="storeCount !== selectedStoreCount && selectedStoreCount > 0" *ngIf="countryList?.length > 0" id="all"
+                  class="w-100 allCheckbox countryCheckbox  reportsCheckbox pl-3 mt-0" name="allCountries"
+                  (change)="selectAll($event, countryList, 'country')">
+                  All</mat-checkbox>
+                <mat-tree [dataSource]="countryList" [treeControl]="roleTreeControl" class="example-tree countryList">
+                  <mat-option>
+                    <!-- This is the tree node template for leaf nodes -->
+                    <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                      <li class="mat-tree-node storeList node1 reportsRole">
+                        <!-- use a disabled button to provide padding for tree leaf -->
+                        <button mat-icon-button disabled class="d-none"></button>
+                        <mat-checkbox (change)="selectionToggleLeaf($event.checked, node, 'country')"
+                          [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                      </li>
+                    </mat-nested-tree-node>
+                    <!-- This is the tree node template for expandable nodes -->
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                      <li>
+                        <div class="mat-tree-node ">
+                          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
+                            <mat-icon class="mat-icon-rtl-mirror mt-2">
+                              {{roleTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                          </button>
+                          <mat-checkbox (change)="selectionToggle($event.checked, node, 'country')"
+                            [indeterminate]="node.selectStatus === 'mixed'" [checked]="node.selectStatus === 'checked'">
+                            {{node.desc}}</mat-checkbox>
+                        </div>
+                        <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)">
+                          <ng-container matTreeNodeOutlet></ng-container>
+                        </ul>
+                      </li>
+                    </mat-nested-tree-node>
+                  </mat-option>
+                </mat-tree>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="d-flex p-0 mt-2">
+            <div class="searchby-dd ">
+              <ng-select class="employeeDetail" [items]="searchLabels" name="searchBy" bindLabel="name" bindValue="key"
+                [clearable]=false [searchable]="false" (change)="searchTextModal = ''" [(ngModel)]="searchBy">
+              </ng-select>
+            </div>
+          </div>
+          <div class="d-flex p-0 mr-2 mb-2">
+            <input type='text' id="SearchInputText" [(ngModel)]="searchTextModal" name="search"
+              (change)="callGetFilteredList('search')" class="empSearchInput" />
+          </div>
+          <div class="d-flex p-0 mt-2 mr-2" *ngIf="!filterRequest.searchText">
+            <div class="searchby-dd">
+              <ng-select [items]="searchDateList" name="searchDateBy" bindLabel="name" bindValue="key" [clearable]=false
+                [searchable]="false" [(ngModel)]="searchDateBy" class="dateJoining">
+              </ng-select>
+            </div>
+            <div class="input-group-append dateJoinInput" name="dateOfJoiningRangeInput" daterangepicker
+              [options]="filterDateOption" (selected)="dateRangeChange($event, false)">
+              <input name="dateOfJoining" [ngModel]="selectedDateLabel" class="date-input pl-2 d-none" readonly>
+              <span class="input-group-text"><i
+                  class="fa fa-calendar calendarIcon d-flex align-items-center ml-0"></i></span>
+            </div>
+            <mat-icon *ngIf="this.filterRequest.searchDateBy" (click)="clearDateField()" class="matCloseIcon">close
+            </mat-icon>
+          </div>
+          <!-- <mat-form-field appearance="fill" [ngClass]="{appliedFilter : filter.length > 0}"
+            class="d-flex p-0 mr-2 mt-2 filterPopoverCls">
+            <mat-label *ngIf="filter.length < 1">Filters
+            </mat-label>
+            <mat-label *ngIf="filter.length > 0" class="levelSelected"> Filter applied
+            </mat-label>
+            <mat-select (openedChange)="callGetFilteredList('filters',$event)">
+              <mat-option (click)="filter.open()" class=" p-0 coursePopup courseFilterPopup">
+                <div>
+                  <div *ngIf="viewType === 'reportView'"
+                    class=" d-flex justify-content-start  align-items-center courseMenu">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? masterToggle($event) : null"
+                      [checked]="filterCheckedAll()" [indeterminate]="filter.length > 0 && !filterCheckedAll()"
+                      class=" filterCheckbox">
+                    </mat-checkbox>
+                    <button class=" d-flex justify-content-start" mat-menu-item><span
+                        class="columnCategory ">All</span></button>
+                  </div>
+                  <div *ngFor="let filter of filters"
+                    class=" d-flex justify-content-start  align-items-center courseMenu filterPopoverCls" mat-menu-item>
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="singleToggle($event, filter)"
+                      [checked]="filter.checked"></mat-checkbox>
+                    <button class="mb-2 d-flex justify-content-start" mat-menu-item><span
+                        class="columnCategory">{{filter.name}}</span></button>
+                  </div>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+          <div class="d-flex p-0 mb-2 resetFilterDiv align-items-center mr-2">
+            <a [ngClass]="{'greyText': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal}"
+              (click)="clearFilters()" class="tableRefresh">Clear</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Header 2-->
+    <nav class="navbar navbar-light justify-content-between employee-navbar-container mt-3 roleSection">
+      <div class="d-flex flex-row col-12 pl-1">
+        <div class="ml-auto d-flex flex-row">
+          <div class="pl-1">
+            <button [disabled]="view && !create && !update" (click)="import()" type="button"
+              class="mat-menu-trigger btn btn-primary btn-sm statusBtn importBtn">Import
+            </button>
+            <input type="file" class="fileInputCls" (change)="onFileBrowse($event, xlsContent)" hidden #uploadFileInput
+              id="file" name="file" [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" />
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+
+
+
+
+  <div class=" reportsSecCls">
+    <!-- Body -->
+    <div class="reports-page-container">
+      <div (scroll)="containerScrollCheck($event)" id="reports-container" *ngIf="viewType === 'reportView'"
+        class="reports-container table-responsive" [ngClass]="{'hiddenXflow' : showShimmer && paginationIndex == 0}">
+        <table mat-table (contentChanged)="stopLoader()" #table [dataSource]="generalReportList"
+          class="mat-elevation-z8 reportsListTbl overflow-auto table">
+          <ng-container *ngFor="let column of reportsColumns; let colIndex = index">
+            <ng-container [matColumnDef]="column.name">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="d-flex flex-row justify-content-between">
+                  <span *ngIf="!column.filter && !column.sort && !['select'].includes(column.property)"
+                    class="coursTblDate">
+                    {{column.name}}
+                  </span>
+                  <span *ngIf="(column.filter || column.sort) && !['select'].includes(column.property)"
+                    [ngbPopover]="menu" [placement]="column.property === 'courseName' ? 'bottom-start' : 'bottom'"
+                    [autoClose]="'outside'" #statusPopover="ngbPopover"
+                    [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property) || (currentFilters[column.property] !== 'All' && column.filter)}">
+                    {{column.name}}
+                    <ng-container *ngTemplateOutlet="filter_icon">
+                    </ng-container>
+                  </span>
+                  <!-- showing 3 dots for filter column -->
+                  <ng-template #filter_icon>
+                    <span *ngIf="column.filter" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
+                        viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+
+                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000"
+                          stroke="none">
+                          <path d="M181 5106 c-49 -18 -106 -70 -130 -119 -26 -54 -28 -153 -4 -204 9
+-20 447 -503 974 -1075 651 -706 965 -1054 981 -1086 l23 -47 5 -1230 c5
+-1212 5 -1231 25 -1265 23 -39 93 -80 138 -80 65 0 94 28 430 414 415 476 398
+455 433 518 l29 53 5 795 5 795 27 51 c18 34 338 389 970 1074 519 563 954
+1039 968 1059 36 52 41 162 10 226 -26 54 -86 108 -139 123 -57 18 -4702 16
+-4750 -2z" />
+                        </g>
+                      </svg>
+                    </span>
+                    <span *ngIf="column.sort" class="fw-600 cursor-pointer ut-filter-status-pointer"> &#8645; </span>
+                  </ng-template>
+                  <ng-template #menu>
+                    <!-- select filter section -->
+                    <div *ngIf="column.filter" class="filter-popover">
+                      <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
+                        [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
+                        (click)="updateFilter(item, column); closePopover(colIndex)" (keyup)="updateFilter(item, column)">
+                        <span>{{item.name }}</span>
+                      </div>
+                      <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                      </div>
+                    </div>
+                    <!-- select sort section for column -->
+                    <div *ngIf="column.sort" class="filter-popover">
+                      <div *ngFor="let item of sortOption" class="cursor-pointer p-2"
+                        [ngClass]="sortByField === column.property && sortBy === item ?'active-status' : 'active-filter-Options'"
+                        (click)="updateSort(item, column.property); closePopover(colIndex)" (keyup)="updateSort(item, column.property)">
+                        <span>{{(item) | titlecase}}</span>
+                      </div>
+                      <div *ngIf="(sortOption).length === 0">{{'No sorting found'}}.</div>
+                    </div>
+                  </ng-template>
+                </div>
+              </th>
+              <td mat-cell [ngClass]="{InactiveRow: !element.active}" *matCellDef="let element">
+                <span *ngIf="column.property === 'employeeId'">
+                  <a (click)="openEmployee(element)">{{element[column.property] || '-'}}</a>
+                </span>
+                <span *ngIf="column.property === 'firstName'" data-toggle="tooltip"
+                  title="{{element[column.property]}}">
+                  {{element[column.property] || '-'}}
+                </span>
+                <span *ngIf="column.property === 'lastName'" data-toggle="tooltip" title="{{element[column.property]}}">
+                  {{element[column.property] || '-'}}
+                </span>
+                <span *ngIf="column.property === 'courseName'" data-toggle="tooltip"
+                  title="{{element[column.property]}}">
+                  {{element[column.property] || '-'}}
+                </span>
+                <span *ngIf="column.property === 'trainerName'" data-toggle="tooltip"
+                  title="{{element[column.property]}}">
+                  {{element[column.property] || '-'}}
+                </span>
+                <span *ngIf="column.property === 'completionDate'">
+                  {{(element[column.property] | dateUtcToLocal :utils.FORMAT.DATEM) || '-'}}
+                </span>
+                <span *ngIf="column.property === 'expiredDate'">
+                  {{(element[column.property] | dateUtcToLocal :utils.FORMAT.DATEM) || '-'}}
+                </span>
+                <div class="suggestedEmpName">
+                  <span *ngIf="column.property === 'store'" data-toggle="tooltip" title="{{element[column.property]}}">
+                    {{element[column.property] || '-'}}
+                  </span>
+                </div>
+                <span *ngIf="column.property === 'storeCode'">
+                  {{element[column.property] || '-'}}
+                </span>
+                <span *ngIf="column.property === 'employeeStatus'">
+                  {{element[column.property] || '-'}}
+                </span>
+              </td>
+            </ng-container>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="reportsColumnsToDisplay"></tr>
+          <tr mat-row *matRowDef="let row; columns: reportsColumnsToDisplay;"></tr>
+        </table>
+        <div *ngIf="showShimmer" class="adjustshimmertable"
+          [ngClass]="{'hideheader' : paginationIndex == 0 , 'showheader' : paginationIndex > 0}">
+          <app-shimmertable></app-shimmertable>
+        </div>
+        <div *ngIf="generalReportList.length === 0 && recordFound == true" class="text-center app-no-record-found">
+          No record found
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <div class="excelBtnCls">
+    <nav class="navbar navbar-expand-md page-footer">
+      <div class="spreedsheet-icon cursor-pointer">
+        <img src="/assets/images/spreadsheet.svg" alt="spreed sheet icon" height="26" width="26" title="Excel" />
+      </div>
+    </nav>
+  </div>
+
+  <button style="display: none;" #importProgress data-toggle="modal" data-target="#importProgressModal"></button>
+  <div class="modal fade linkedEmployee suggestCourseModal f2fModal" id="importProgressModal" tabindex="-1"
+    role="dialog" aria-labelledby="importProgressModalModalLongTitle" data-keyboard="false" data-backdrop='static'
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header employee-header">
+          <span class="modal-title" id="suggestCourseModalLongTitle">
+            {{headerSuggestCourseObj?.employeeId}} -> Suggested Course
+          </span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> -->
+        <div class="modal-body">
+          <div class="progress" *ngIf="progress < 100">
+            <div class="progress-bar progress-bar-striped" [style.width]="progress + '%'">{{progress}}%</div>
+          </div>
+          <div *ngIf="progress === 100">
+            <div>
+              <span class="successMsg">File imported successfully</span>
+            </div>
+            <div class="successData">
+              <div><b>Note:</b></div>
+              <div class="successContent pt-2">The data will be verified in the background and will send the import status success or fail to your email address.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer employee-footer px-3 border-0 w-100 justify-content-end align-items-center">
+          <div class="">
+            <button (click)="progressDoneClick()" [disabled]="progress !== 100 && progress !== null" type="button" #progressDone
+              class="btn doneBtn" data-dismiss="modal">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

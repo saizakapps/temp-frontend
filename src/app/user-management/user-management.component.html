@@ -1,0 +1,332 @@
+<section class="reportsSection">
+  <!-- <mat-checkbox disabled [checked]="view">View</mat-checkbox>
+  <mat-checkbox (change)="create = !create">Create</mat-checkbox>
+  <mat-checkbox (change)="update = !update">Update</mat-checkbox> -->
+  <div class="d-flex justify-content-between userAccessCls">
+    <nav class="navbar navbar-light justify-content-between navbar-container employeeSection">
+      <div class="d-flex flex-row col-12 p-0">
+        <form class="form-inline pl-0 mt-2 pb-1">
+          <div class="form-group">
+            <!-- drop down portion -->
+            <div class="searchby-dd pl-1 mr-2 d-flex">
+              <form class="form-inline pl-0 mt-2 pb-1">
+                <div class="form-group">
+                  <!-- drop down portion -->
+                  <div class="searchby-dd pl-1 mr-2">
+                    <ng-select [items]="searchEmployee" name="searchBy" bindLabel="name" bindValue="key"
+                      [clearable]=false [searchable]="false" (change)="clearSearchText()" [(ngModel)]="searchBy"
+                      class="mt-1 userCls"></ng-select>
+                  </div>
+                  <!-- input portion -->
+                  <div>
+                    <input type="text" id="SearchInputText" class="search-input input-Search employeeInput"
+                      [(ngModel)]="searchTextValue" (change)="applySearchByLabel()" name="search" />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </form>
+      </div>
+    </nav>
+    <!-- Header 2-->
+    <nav class="navbar navbar-light justify-content-between employee-navbar-container  roleSection">
+      <div class="d-flex flex-row col-12 pl-1">
+        <div class="ml-auto d-flex flex-row">
+          <div class="mr-2">
+            <button type="button" [disabled]="getSelectedTableRow().length === 0" (click)="openPopup('invite')"
+              class="btn btn-primary btn-sm filterReport" data-target="#inviteRevokePopup"
+              data-toggle="modal">Invite</button>
+          </div>
+          <div class="mr-2">
+            <button type="button" [disabled]="getSelectedTableRow().length === 0" (click)="openPopup('revoke')"
+              class="btn btn-primary btn-sm customizeBtn" data-target="#inviteRevokePopup"
+              data-toggle="modal">Revoke</button>
+          </div>
+          <!-- <div class="mr-2">
+                <button type="button" class="btn btn-primary btn-sm customizeBtn" data-target="#editUSer" data-toggle="modal">Edit</button>
+            </div> -->
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div>
+    <div class=" reportsSecCls">
+
+      <!-- Body -->
+      <div class="reports-page-container">
+        <div class="reports-container">
+          <app-shimmertable *ngIf="showShimmer == true"></app-shimmertable>
+          <div class="example-container mat-elevation-z8 table-responsive"  *ngIf="showShimmer == false">
+
+            <mat-table #table [dataSource]="userListData" (scroll)="onTableScroll($event)"
+              class="mat-elevation-z8 userAccessTbl overflow-auto  table">
+
+              <ng-container *ngFor="let column of userMgmtColumns; let colIndex = index">
+
+                <!-- Checkbox Column -->
+                <ng-container *ngIf="column.property === 'select'" [matColumnDef]="column.name">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)"></mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container *ngIf="column.property !== 'select'" [matColumnDef]="column.name">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="d-flex flex-row justify-content-between">
+                      <span [ngbPopover]="menu" placement="bottom" (hidden)="callGetUsersList(column.property)" [autoClose]="'outside'" #statusPopover="ngbPopover">
+                        {{column.name}}
+                        <ng-container [ngTemplateOutlet]="filter_icon"></ng-container>
+                      </span>
+                      <!-- showing 3 dots for filter column -->
+                      <ng-template #filter_icon>
+                        <span *ngIf="column.filter" class="fw-600 cursor-pointer ut-filter-status-pointer">
+                          <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="10px" height="10px" viewBox="0 0 512.000000 512.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M181 5106 c-49 -18 -106 -70 -130 -119 -26 -54 -28 -153 -4 -204 9
+-20 447 -503 974 -1075 651 -706 965 -1054 981 -1086 l23 -47 5 -1230 c5
+-1212 5 -1231 25 -1265 23 -39 93 -80 138 -80 65 0 94 28 430 414 415 476 398
+455 433 518 l29 53 5 795 5 795 27 51 c18 34 338 389 970 1074 519 563 954
+1039 968 1059 36 52 41 162 10 226 -26 54 -86 108 -139 123 -57 18 -4702 16
+-4750 -2z"/>
+</g>
+</svg>
+                        </span>
+                        <span *ngIf="column.sort" class="fw-600 cursor-pointer ut-filter-status-pointer"> &#8645;
+                        </span>
+                      </ng-template>
+                      <ng-template #menu>
+                        <!-- select filter section -->
+                        <div *ngIf="column.filter" class="filter-popover">
+                          <ng-container *ngIf="column.property === 'sfStatus' || column.property === 'portalStatus'">
+                            <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
+                              [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
+                              (click)="updateFilter(item, column)" (keyup)="updateFilter(item, column)">
+                              <span>{{item.name }}</span>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngIf="column.property !== 'sfStatus' && column.property !== 'portalStatus'">
+                            <div class="cursor-pointer p-2 d-flex flex-column">
+                              <mat-checkbox [indeterminate]="indeterminate" (change)="selectAll($event, column.property)"
+                                name="All" required>
+                                All
+                              </mat-checkbox>
+                              <mat-checkbox *ngFor="let item of availableFilter[column.property]"
+                                [(ngModel)]="item.checked" (change)="updateFilter(item, column, true); selectionToggle(column.property)"
+                                [name]="column.property + '-' +item" required>
+                                {{item.name }}
+                              </mat-checkbox>
+                            </div>
+                          </ng-container>
+                          <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}. </div>
+                        </div>
+                        <!-- select sort section for column -->
+                        <div *ngIf="column.sort" class="filter-popover">
+                          <div *ngFor="let item of sortOption" class="cursor-pointer p-2"
+                            [ngClass]="sortByField === column.property && sortBy === item ?'active-status' : 'active-filter-Options'"
+                            (click)="updateSort(item, column.property)" (keyup)="updateSort(item, column.property)">
+                            <span>{{(item) | titlecase}}</span>
+                          </div>
+                          <div *ngIf="(sortOption).length === 0">{{'No sorting found'}}.</div>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </th>
+                  <td mat-cell [ngClass]="{InactiveRow: !element.active}" *matCellDef="let element">
+                    <span *ngIf="column.property === 'edit'">
+                      <a (click)="updateUser(element)" data-target="#editUserModal" data-toggle="modal">
+                        <mat-icon class="m-0 tableIcons" data-target="#editUSer" data-toggle="modal" alt="edit"
+                          title="edit">edit</mat-icon>
+                      </a>
+                    </span>
+                    <span *ngIf="column.property === 'employeeName'" data-toggle="tooltip" title="{{element[column.property]}}">
+                      {{element[column.property] || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'employeeId'">
+                      {{element[column.property] || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'sfRole'">
+                      {{element[column.property] || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'sfStatus'">
+                      {{element[column.property] === true ? 'Active' : 'Inactive' || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'portalRole'">
+                      {{element[column.property] || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'portalStatus'">
+                      {{element[column.property] === true ? 'Invited' : '-' || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'lastLogin'">
+                      {{(element[column.property] | dateUtcToLocal :utils.FORMAT.DATEM) || '-'}}
+                    </span>
+                    <span *ngIf="column.property === 'email'">
+                      {{element[column.property] || '-'}}
+                    </span>
+
+                  </td>
+                </ng-container>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="userMgmtColumnsToDisplay"></tr>
+              <tr mat-row *matRowDef="let row; columns: userMgmtColumnsToDisplay;"></tr>
+            </mat-table>
+
+          </div>
+
+          <div *ngIf="userListData.length === 0 && recordFound == true" class="text-center app-no-record-found">
+            No Records Found
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade linkedEmployee inviteModal" id="inviteRevokePopup" tabindex="-1" role="dialog"
+    aria-labelledby="suggestCourseModalLongTitle" data-keyboard="false" data-backdrop='static' aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header employee-header">
+          <span class="modal-title" id="suggestCourseModalLongTitle">{{modalLabel}}</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <div *ngIf="modalButton === 'Invite'" class="roleFilters d-flex align-items-center w-100">
+            <label class="mb-3 mr-3 fontBold roleLbl">360 &#176; Role</label>
+            <ng-select [items]="portalRoles" name="searchBy" bindLabel="portalRole" bindValue="id" [clearable]=false
+              [(ngModel)]="portalRoleId" (change)="roleChange()" class="mt-1"></ng-select>
+          </div>
+          <hr class="table-line">
+          <div class="form-group tblScrollCss">
+            <mat-table #table1 [dataSource]="inviteUserList" class="mat-elevation-z8 inviteTbl">
+
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> # </th>
+                <td *matCellDef="let element; let i = index"> {{i + 1}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="empName">
+                <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.empName}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cel class="removeText" *matCellDef="let element">
+                  <a (click)="removeInvite(element)">Remove</a>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="inviteColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: inviteColumns;"></tr>
+
+            </mat-table>
+          </div>
+
+        </div>
+
+        <div class="modal-footer employee-footer p-0 border-0">
+          <button type="button" #closeInviteModal (click)="closeUserRole()" class="btn userDlgBtn cancelBtn saveDraft"
+            data-dismiss="modal">Cancel</button>
+          <button type="button" [disabled]="(modalButton === 'Invite' && !roleSelected) || (view && !create && !update)" (click)="modalOkClick()"
+            class="btn btn-primary newCourseBtn mr-2">{{modalButton}}</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="modal fade linkedEmployee editModal" id="editUSer" tabindex="-1" role="dialog"
+    aria-labelledby="suggestCourseModalLongTitle" data-keyboard="false" data-backdrop='static' aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header employee-header">
+          <span class="modal-title" id="suggestCourseModalLongTitle">Edit User</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <div class="row">
+              <div class="col-12">
+
+                <div class=" filterCls frequencyData">
+                  <form #form="ngForm" novalidate>
+
+                    <div class="userViewEdit">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="roleFilters d-flex align-items-center w-100 mb-2">
+                            <label class="mb-0 lblCls fontBold ">Employee ID</label>
+                            <div class="col-sm-10 pl-0 pr-0">
+                              <span>{{empEditObj.empId}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="roleFilters d-flex align-items-center w-100 mb-2">
+                            <label for="inputName" class="lblCls fontBold mb-0">User Name</label>
+
+                            <div class="col-sm-10 pl-0 pr-0">
+                              <span>{{empEditObj.empName}}</span>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="roleFilters d-flex align-items-center w-100 mb-2">
+                            <label for="email" class="lblCls fontBold mb-0">Email Id</label>
+                            <div class="col-sm-10 pl-0 pr-0">
+                              <span>{{empEditObj.empEmail}}</span>
+                            </div>
+
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="roleFilters d-flex align-items-center w-100 mb-2">
+                            <label for="employeeId" class="lblCls fontBold mb-0">SF Role</label>
+                            <div class="col-sm-10 pl-0 pr-0">
+                              <span>{{empEditObj.empRole || '-'}}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="roleFilters d-flex align-items-center w-100 roleSelect">
+                      <label class="mb-3 lblCls fontBold">360&#176; Role</label>
+                      <ng-select [items]="portalRoles" name="searchBy" bindLabel="portalRole" bindValue="id"
+                        [clearable]=false [(ngModel)]="portalRoleId" (change)="roleChange()" class="mt-1"></ng-select>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer employee-footer p-0 border-0">
+          <button type="button" #closeUserEditModal class="btn userDlgBtn cancelBtn saveDraft" (click)="closeUserRole()"
+            data-dismiss="modal">Cancel</button>
+          <button type="button" [disabled]="!roleSelected || (view && !create && !update)" (click)="updateUserRole()"
+            class="btn btn-primary newCourseBtn mr-2">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,53 @@
+.shimmerTable table{
+    width: 100%;
+  }
+  .shimmerTable table tr{
+    border-bottom: 1px solid #C5C5C570!important;
+  
+  }
+  .shimmerTable table tr th, .shimmerTable table tr td{
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  .shimmerTable table .opac6{
+    opacity: 0.6;
+    border-bottom: 1px solid #c5c5c560!important;
+  }
+  .shimmerTable table .opac4{
+    opacity: 0.4;
+    border-bottom: 1px solid #C5C5C540!important;
+  }
+  .shimmerTable table .opac2{
+    opacity: 0.2;
+    border-bottom: 1px solid #C5C5C520!important;
+  }
+  .shimmerTable table tr th:nth-child(1){
+    width: 13%;
+  }
+  .shimmerTable table tr th:nth-child(2){
+    width: 7%;
+  }
+  .shimmerTable table tr th:nth-child(3){
+    width: 13%;
+  }
+  .shimmerTable table tr td:nth-child(4){
+    width: 7%;
+  }
+  .shimmerTable table tr td:nth-child(5){
+    width: 18%;
+  }
+  .shimmerTable table tr td:nth-child(1){
+    width: 15%;
+  }
+  .shimmerTable table tr td:nth-child(2){
+    width: 5%;
+  }
+  .shimmerTable table tr td:nth-child(3){
+    width: 15%;
+  }
+  .shimmerTable table tr th:nth-child(4){
+    width: 5%;
+  }
+  .shimmerTable table tr th:nth-child(5){
+    width: 10%;
+  }

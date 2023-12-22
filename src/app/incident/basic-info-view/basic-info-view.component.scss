@@ -1,0 +1,68 @@
+.basicInfo {
+  gap: 2px;
+  margin-bottom: 15px;
+}
+.versionSaved {
+  color: #818181;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 12px;
+
+  .saveDatebold{
+    font-weight: 500 !important;
+  }
+}
+.currentView {
+  color: rgba(31, 150, 244, 1);
+  cursor: pointer;
+  font-weight: 500;
+}
+.createdDetailsView {
+  gap: 50px;
+}
+.createdDetailsView label {
+    padding: 0px !important;
+    width: 74px;
+    min-width: 74px;
+    white-space: nowrap;
+    color: rgba(13, 13, 13, 1);
+    margin-bottom: 0px;
+}
+.createdDetails {
+  color: rgba(13, 13, 13, 1);
+  font-weight: 500;
+}
+.createdDetailsView .label1{
+  width: 50px;
+  min-width: 50px;
+}
+.createBy {
+    gap: 10px;
+    width: 220px;
+}
+.status {
+    width: 46px !important;
+}
+.createdText {
+    /*overflow: hidden;
+    text-overflow: ellipsis;*/
+    white-space: nowrap;
+    display: block;
+    text-transform: capitalize !important;
+}
+.redacted-background{
+  background: yellow;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.saveDateboldcapital{
+  text-transform: capitalize;
+}
+.region-width{
+  min-width:49px !important;
+  width:35px !important;
+}
+.row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}

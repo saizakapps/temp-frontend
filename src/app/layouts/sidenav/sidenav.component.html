@@ -1,0 +1,172 @@
+<!-- row start -->
+<div class="d-flex align-items-start flex-column sidenav-container">
+
+  <!-- logo -->
+  <a class="w-100 logo-container" routerLink="/view">
+    <img src="/assets/images/logo.png" class="logo" alt="logo">
+  </a>
+
+
+
+
+  <!-- side menu code  -->
+  <div *ngFor="let app of fillerNav; let i = index">
+    <div *ngIf="app.access" class="d-flex align-items-center sidenavView">
+      <div class="svg_width">
+        <img src="{{app.images}}" alt="">
+      </div>
+      <span class="ml-2 sidenavContent f-500">{{app.groupName}}</span>
+      <div (click)="app.isCollapsed = !app.isCollapsed" [attr.data-target]="'#collapseLearners' + i" aria-expanded="false"
+        aria-controls="collapseLearners" class="expandImg">
+        <div class="svg_width">
+          <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1.5 1.5L5 5L8.5 1.5" stroke="black" stroke-width="1.5" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="{'show': showMenu(app), 'collapse': app.isCollapsed}" *ngFor="let nav of app.modules" [attr.id]="'collapseLearners' + i">
+      <div *ngIf="nav.access" [ngClass]="{'routerActive' : nav.isActive}" class="sidenavLinkContent d-flex align-items-center">
+        <a  (click)="sidenav(nav.routeUrl)" class="sidenavContent">{{nav.name}}</a>
+      </div>
+     
+    </div>
+  </div>
+
+  <!-- <div class="d-flex align-items-center sidenavView">
+    <div class="svg_width">
+      <img src="assets/layoutImages/IncidentApp-icon.svg" alt="">
+    </div>
+
+    <span class="ml-2 sidenavContent addpadding f-500">Health & Safety</span>
+    <div data-toggle="collapse" data-target="#collapseHealthSafty" aria-expanded="false"
+      aria-controls="collapseHealthSafty" class="expandImg">
+      <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 1.5L5 5L8.5 1.5" stroke="black" stroke-width="1.5" />
+      </svg>
+    </div>
+  </div>
+
+  <div [ngClass]="{'show': showHS}" class="collapse show" id="collapseHealthSafty">
+    <div class="sidenavLinkContent d-flex align-items-center" [ngClass]="{'routerActive' :this.router.url == '/incident-list'}">
+      <a class="sidenavContent" (click)="setLocalStorage('Incident tracker')" routerLink="/incident-list">Incident tracker</a>
+    </div>
+    <div class="sidenavLinkContent d-flex align-items-center" [ngClass]="{'routerActive' :this.router.url == '/audit-list'}">
+      <a class="sidenavContent" (click)="setLocalStorage('Store audits')" routerLink="/audit-list">Store audits</a>
+    </div>
+  </div> -->
+
+
+
+
+
+  <!-- Side nav menu's start -->
+  <!-- <mat-nav-list class="w-100 side-menu-list">
+    <ng-container *ngFor="let nav of fillerNav">
+      <a *ngIf="nav.access" mat-list-item [routerLink]="nav.routeUrl"
+        [ngClass]="{'active-route': nav.routeUrl === '/courses' ? ['/courses', '/create-course'].includes(router.url) : nav.routeUrl === router.url}"
+        class="side-nav-item">
+        <div class="d-flex flex-row justify-content-between w-100">
+          <div class="sideNavList d-flex w-100 align-item-center ">
+            <span class="float-left w-100 ">{{nav.name}}</span>
+            <div *ngIf="nav.key === 'employees' && dashboardCount.totalCount" class="empCount float-right">
+              <span [ngbPopover]="menu" placement="right" [autoClose]="'outside'" #statusPopover="ngbPopover"
+                container="body" triggers="mouseenter:mouseleave">
+                {{dashboardCount.totalCount}}
+              </span>
+            </div>
+            <div>
+              <ng-template #menu>
+                <div class="empPopover">
+                  <div class="countofEmp">
+                    <span class="fontBold">Employee Count</span>
+                  </div>
+                  <div class="managerOverdue">
+                    <div class="row">
+                      <div class="col-sm-8"><span class="fontBold">Manager Confirmation</span></div>
+                      <div class="col-sm-1 pr-0"><span>:</span></div>
+                      <div class="col-sm-3"><span>{{dashboardCount.managerConfirmationCount}}</span></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-8"><span class="fontBold">Overdue Courses</span></div>
+                      <div class="col-sm-1 pr-0"><span>:</span></div>
+                      <div class="col-sm-3"><span>{{dashboardCount.expiryCount}}</span></div>
+                    </div>
+
+                  </div>
+                </div>
+
+
+              </ng-template>
+            </div>
+
+          </div>
+        </div>
+
+
+      </a>
+    </ng-container>
+
+  </mat-nav-list> -->
+
+  <!-- footer -->
+  <div class="mt-auto w-100">
+    <!-- <div class="d-flex flex-row justify-content-between p-2 fs-13 ">
+      <div class="d-flex flex-row">
+        <div class="d-flex flex-row align-items-center">
+          <mat-icon class="user-icon">face</mat-icon>
+          <div class="user-name ml-2" [title]="userDetails.username"> {{userDetails.username}} </div>
+        </div>
+      </div>
+      <div class="d-flex flex-row align-items-center">
+        <div class="cursor-pointer" data-toggle="modal" data-target="#logoutModal">
+          <img class="logout-img" src="/assets/images/logout.png" alt="logout" height="22" width="22" title="Logout" />
+        </div>
+      </div>
+    </div> -->
+    <div class="loginDivDetail" mat-button [matMenuTriggerFor]="aboveMenu">
+      <img src="/assets/images/user_details.png" height="14px" width="14px" alt="user" />
+      <span class="loginDetailsBtn" data-toggle="tooltip"
+        title="{{displayName}}">{{displayName}}</span>
+      <img src="/assets/images/logout_dropdown.png" height="10px" width="10px" alt="userDD" />
+
+    </div>
+
+    <mat-menu #aboveMenu="matMenu" yPosition="above" class="loginMenu loginMenusidenav">
+      <button mat-menu-item data-toggle="modal" data-target="#policyModal">Privacy policy</button>
+      <button mat-menu-item data-toggle="modal" data-target="#logoutModal">Log out</button>
+    </mat-menu>
+  </div>
+</div>
+
+
+
+<!-- Confirm popup -->
+<button #logoutModal class="d-none" data-toggle="modal" data-target="#logoutModal"></button>
+
+
+
+<!-- Privacy policy popup -->
+<button #policyModal class="d-none" data-toggle="modal" data-target="#policyModal"></button>
+
+<ng-template #leavepagepopup>
+	<div class="popup-view">
+		<form class="example-form popupform">
+			<div class="header-popup">
+				Alert
+			</div>
+			<div class="whitepopupbox">
+				<div class="confirmText">
+					Do you Want to leave page
+				</div>
+				<div class="d-flex justify-content-end confirmBtnDiv">
+					<button mat-button class="btn btn-sm laevepagebutton"
+						mat-dialog-close>Cancel</button>
+					<button mat-button class="btn btn-sm laevepagebutton laevepagebuttonconfirm"
+						mat-dialog-close (click)="confirmnavigate()">Confirm</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
