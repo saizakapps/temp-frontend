@@ -253,7 +253,8 @@ color: #fff;
     padding: 0px 15px;
     display: flex;
     align-items: center;
-    font-weight: 600
+    font-weight: 600;
+    font-size: 18px;
   }
   .whitepopupbox{
     padding: 18px 16px;
@@ -262,6 +263,8 @@ color: #fff;
     .confirmText{
       min-height: 56px;
       margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: 500;
     }
   }
 .next-btn-disable{
@@ -325,19 +328,20 @@ border-color:#E6E6E6;
   height:40px  !important;
   width:90px !important;
   line-height: 15px !important;
-  font-size: 13px Im !important;
-  height: 30px !important;
+  font-size: 13px !important;
+  height: 32px !important;
   background: #000000 !important;
   border-radius: 5px !important;
   border: none !important;
   color: #fff !important;
   margin-right: 0px !important;
-      padding: 10px 15px 11px !important;
+      padding: 5px 15px 5px !important;
     gap: 8px;
     font-weight: 600;
     text-shadow: none !important;
     font-size: 14px !important;
     white-space: nowrap !important;
+    font-family: "Inter";
   &:hover{
     border: none !important;
   }

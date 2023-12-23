@@ -13,12 +13,11 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router, private snackBar: MatSnackBar, private utils: Utils) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
+    // console.log(localStorage.getItem('isLoggedIn'));
+    const accessApps: any = JSON.parse(localStorage.getItem('accessApps'));
+    if (localStorage.getItem('isLoggedIn') === 'true' && accessApps && accessApps.length > 0) {
       let userDetails:any = JSON.parse(localStorage.getItem("userDetails") || '{}');
       const url = route.routeConfig.data['key'];
-      console.log(url,"url");
-      console.log(userDetails.access,"userDetails.access");
-      console.log(userDetails.access[url],"userDetails.access[url]");
       if (userDetails.access[url] || url === 'view') {
         return true;
       } else {

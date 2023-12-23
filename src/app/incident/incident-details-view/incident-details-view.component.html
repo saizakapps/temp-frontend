@@ -10,25 +10,26 @@
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.reportedDateTime.view">
 		<label class="label-name ">Reported Date:</label>
 		<div class="data-view">
-			<span>{{incidentDetailsData.showData.eventReportedDate | date:'dd-MM-yyyy, h:mm '}}</span>
+			<span *ngIf="incidentDetailsData.showData.eventReportedDate !== null && incidentDetailsData.showData.eventReportedDate !== ''">{{incidentDetailsData.showData.eventReportedDate | date:'dd-MM-yyyy, h:mm '}}</span>
+			<span *ngIf="incidentDetailsData.showData.eventReportedDate == null || incidentDetailsData.showData.eventReportedDate == ''">-</span>
 		</div>
 	</div>
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.whereInStore.view">
 		<label class="label-name ">Store:</label>
 		<div class="data-view">
-			{{incidentDetailsData.showData.storeComments}}
+			{{(incidentDetailsData.showData.storeComments !== null && incidentDetailsData.showData.storeComments !== '')?incidentDetailsData.showData.storeComments:'-'}}
 		</div>
 	</div>
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.injurySustained.view">
 		<label class="label-name">Description:</label>
 		<div class="data-view">
-			{{incidentDetailsData.showData.injurySustained}}
+			{{(incidentDetailsData.showData.injurySustained !== null && incidentDetailsData.showData.injurySustained !== '')?incidentDetailsData.showData.injurySustained:'-'}}
 		</div>
 	</div>
 	<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.circumstances.view">
 		<label class="label-name">Circumstance:</label>
 		<div class="data-view">
-			{{incidentDetailsData.showData.circumstances}}
+			{{(incidentDetailsData.showData.circumstances !== null && incidentDetailsData.showData.circumstances !== '')?incidentDetailsData.showData.circumstances:'-'}}
 		</div>
 
 	</div>
@@ -39,10 +40,14 @@
 		</div>
 	</div>
 	<div class="d-flex align-items-start" *ngIf="incidentDetailsData.showData.witnessAvailable==true">
-		<div>
+		<div class="gap-10-new">
+			<div>
 		<label class="label-name witnessBoxFields">Witnesses:
-			<span class="ps-2 redacted-background" *ngIf="isRedacted">REDACTED</span>
 		</label>
+		</div>
+		<div>
+			<span class="redacted-background" *ngIf="isRedacted">REDACTED</span>
+		</div>
         </div>
 		<div>
 		<div class="view-box-data" *ngFor="let wt of incidentDetailsData.showData.witnessList;index as i;">
@@ -59,23 +64,33 @@
 					<label class="label-name" class="witness-title">Phone:</label>
 				</div>
 				<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.witnesscontactNumber.view">
-					<div class="data-view">{{(!isRedacted)?wt.witnessContactNumber:'REDACTED'}}</div>
+					<div class="data-view">
+						<span *ngIf="wt.witnessContactNumber !== null && wt.witnessContactNumber !== ''">{{(!isRedacted)?wt.witnessContactNumber:'REDACTED'}}</span>
+						<span *ngIf="wt.witnessContactNumber == null || wt.witnessContactNumber == ''">{{(!isRedacted)?'-':'REDACTED'}}</span>
+					</div>
 				</div>
-
+                
+				<div [ngClass]="{'d-flex w-flex' : wt.witnessAddress == null || wt.witnessAddress == ''}">
 				<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.witnessAddress.view">
 					<label class="label-name" class="witness-title">Address:</label>
 
 				</div>
 				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnessAddress.view">
-					<div class="data-view">{{wt.witnessAddress}}</div>
+					<div class="data-view">{{(wt.witnessAddress !== null && wt.witnessAddress !== '')?wt.witnessAddress:' -'}}</div>
 				</div>
+				</div>
+				<div>
 				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnessStatement.view">
 					<label class="label-name" class="witness-title">Statement:</label>
 
 				</div>
 				<div class="labelView d-flex"  *ngIf="incidentDetailsData.formFieldAccess.witnessStatement.view">
-					<div class="data-view">{{(!isRedacted)?wt.witnessStatement:'REDACTED'}}</div>
+					<div class="data-view">
+						<span *ngIf="wt.witnessStatement !== null && wt.witnessStatement !== ''">{{(!isRedacted)?wt.witnessStatement:'REDACTED'}}</span>
+						<span *ngIf="wt.witnessStatement == null || wt.witnessStatement == ''">{{(!isRedacted)?'-':'REDACTED'}}</span>
+					</div>
 
+				</div>
 				</div>
               <div class="labelView" >
                <div class="data-view" *ngIf="!isRedacted">
@@ -99,19 +114,22 @@
 	</div>
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.showData.evidenceAvailable==true && incidentDetailsData.formFieldAccess.evidenceTakenBy.view">
 		<label class="label-name ">CCTV/Photos Taken By:</label>
-		<div class="data-view">
-			{{incidentDetailsData.showData.evidenceTakenBy}}
+		<div class="data-view" *ngIf="!isRedacted">
+			{{(incidentDetailsData.showData.evidenceTakenBy !== null && incidentDetailsData.showData.evidenceTakenBy !== '')?incidentDetailsData.showData.evidenceTakenBy:'-'}}
+		</div>
+		<div class="data-view" *ngIf="isRedacted">
+			<span class="redacted-background">REDACTED</span>
 		</div>
 	</div>
 	<div class="d-flex gap-10px" *ngIf="incidentDetailsData.showData.evidenceAvailable==true && incidentDetailsData.showData.evidences">
 		<label class="label-name ">CCTV/Photos:</label>
-		<app-evidence-view class="leftmargin-7" *ngIf="incidentDetailsData.showData.evidences  && !isRedacted" [files]="incidentDetailsData.showData.evidences" [isEvidence]="true"></app-evidence-view>
-		<span *ngIf="isRedacted" class="redacted-background">REDACTED</span>
+		<app-evidence-view class="leftmargin-7" *ngIf="(incidentDetailsData.showData.evidences  && !isRedacted) || (loginEmployeeRoleCode == 'PC')" [files]="incidentDetailsData.showData.evidences" [isEvidence]="true"></app-evidence-view>
+		<span *ngIf="(isRedacted && loginEmployeeRoleCode !== 'PC')" class="redacted-background">REDACTED</span>
 	</div>
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.otherComments.view">
 		<label class="label-name">Comments:</label>
 		<div class="data-view">
-			{{incidentDetailsData.showData.otherComments}}
+			{{(incidentDetailsData.showData.otherComments !== null && incidentDetailsData.showData.otherComments !== '')?incidentDetailsData.showData.otherComments:'-'}}
 		</div>
 	</div>
 	<!-- <div class="row">

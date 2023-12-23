@@ -33,16 +33,41 @@ export class EvidenceViewComponent implements OnInit{
   }
   showFlag:any = false;
   currentIndex:any = -1;
+  imageShowObject:any = [];
+  evidenceLenth:any = 0;
   ngOnInit():void{
+    this.evidenceLenth = this.files.filter((item:any) => {return item.isEvidence == true})
+    // console.log(this.files, "'FILES'")
     if(this.isEvidence){
+      
       this.withCustomGalleryConfig();
       for (let x of this.files) {
         if(x.isEvidence && x.evidenceType=='Photo'){
           this.items.push(new ImageItem({ src: this.utils.API.IMAGE_URL+(x.evidenceFilePath.replaceAll('\\','/')), thumb: this.utils.API.IMAGE_URL+(x.evidenceFilePath.replaceAll('\\','/')) }));
-        }else if(x.isEvidence && x.evidenceType=='Video'){
-           let thumnailImage = (x.thumbnailImageName)?this.utils.API.IMAGE_URL+x.thumbnailImageName:'assets/images/play-youtube-icon-7.jpg';
-    
-           this.items.push(new VideoItem({ src: this.utils.API.IMAGE_URL+(x.evidenceFilePath.replaceAll('\\','/')), thumb: thumnailImage }));
+          this.imageShowObject.push({ image: this.utils.API.IMAGE_URL + (x.evidenceFilePath.replaceAll('\\','/')), thumbImage: this.utils.API.IMAGE_URL+(x.evidenceFilePath.replaceAll('\\','/')) });
+
+        } 
+        else if (x.evidenceType == 'Video') {
+          let fileType = x.evidenceFilePath.substr(x.evidenceFilePath.lastIndexOf('.') + 1);
+          let thumnailImage:any
+          if(fileType == 'avi'){
+          thumnailImage = (x.thumbnailImageName !== '') ? this.utils.API.IMAGE_URL + x.thumbnailImageName : 'assets/healthsafetyimages/avi_icon.png';
+          }
+          else if(fileType == 'wmv' || fileType == 'x-ms-wmv'){
+            thumnailImage = (x.thumbnailImageName !== '') ? this.utils.API.IMAGE_URL + x.thumbnailImageName : 'assets/healthsafetyimages/wmv_icon1.png';
+          }
+          else if(fileType !== 'wmv' && fileType !== 'x-ms-wmv' && fileType !== 'avi'){
+            thumnailImage = (x.thumbnailImageName) ? this.utils.API.IMAGE_URL + x.thumbnailImageName : 'assets/healthsafetyimages/play-youtube-icon-7.jpg';
+        }
+        if(fileType !== 'x-ms-wmv' && fileType !== 'wmv' && fileType !== 'avi'){
+               this.items.push(new VideoItem({ src: this.utils.API.IMAGE_URL + (x.evidenceFilePath.replaceAll('\\', '/')), thumb: thumnailImage }));
+       }
+        this.imageShowObject.push({ image: this.utils.API.IMAGE_URL + (x.evidenceFilePath.replaceAll('\\', '/')), thumbImage: thumnailImage, type : x.evidenceType })
+
+        }
+        else if(x.evidenceType=='WordDocument' || x.evidenceType == 'proofWordDocument'){
+         // this.items.push(new ImageItem({ src: this.utils.API.IMAGE_URL+(x.evidenceFilePath.replaceAll('\\','/')), thumb: 'assets/healthsafetyimages/word_icon.png' }));
+          this.imageShowObject.push({ image: this.utils.API.IMAGE_URL + (x.evidenceFilePath.replaceAll('\\','/')), thumbImage: 'assets/healthsafetyimages/word_icon.png', type : x.evidenceType,  });
         }
       }
       this.basicLightboxExample();
@@ -57,6 +82,7 @@ export class EvidenceViewComponent implements OnInit{
         }
       }
       this.basicLightboxExampleProof();
+
     }
   }
   ngAfterViewInit(){
@@ -137,6 +163,7 @@ openPdfPopup(content:any){
 
 }
 downloadProof(){
+  this.common.openSnackBar('Preparing the files; downloading will begin shortly.',2,'Download');
      let fileURLs=[];
     if(this.isEvidence==false){
       fileURLs = this.proofItems.map((item:any)=>item.data.src);
@@ -145,16 +172,36 @@ downloadProof(){
       this.common.downloadAll(fileURLs);
     }
   }
-  
+  isfileevidenceLength:number = 0;
+  downloadEvidenceLoader = false
   downloadEvidence(){
+    this.downloadEvidenceLoader = true;
+    this.common.openSnackBar('Preparing the files; downloading will begin shortly.',2,'Download');
     let fileURLs=[];
     if(this.isEvidence==true){
-fileURLs = this.items.map((item:any)=>item.data.src);
+    fileURLs = this.files.filter((item:any) => {
+     return item.isEvidence == true}).map((item:any)=>this.utils.API.IMAGE_URL + item.evidenceFilePath);
     }
     if(fileURLs.length>0){
-      this.common.downloadAll(fileURLs);
+      // this.common.downloadAll(fileURLs);
+       this.common.downloadAllwithloader(fileURLs, () => {
+      this.downloadEvidenceLoader = false
+    });
     }
   }
- 
-  
+ public wordURL:any;
+ public wordDailog: any;
+
+  openWordViewer(content: any, filetype:any, img:any) {
+    this.common.pdfLoader = true;
+    this.wordURL = img.image
+    this.wordDailog = this.dialog.open(content, {
+      width: '600px',
+      // enterAnimationDuration:'100ms',
+      // exitAnimationDuration:'1500ms'
+    })
+  }
+  closeDailog() {
+    this.wordDailog.close();
+  }
 }

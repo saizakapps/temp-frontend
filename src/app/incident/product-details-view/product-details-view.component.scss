@@ -23,8 +23,9 @@ padding: 0 !important;
 	line-height: 17px;
 	max-width: 270px;
 	 white-space: normal;
-	 word-break: break-all;
+	//  word-break: break-all;
 }
+
 .edit-personal-info{
 	font-family: 'Inter';
 font-style: normal;
@@ -38,6 +39,7 @@ color: #1F96F4;
 }
 .redacted-background{
   background: yellow;
+  margin-bottom: 0.35rem;
 }
 .row{
 	margin-left: 0px !important;

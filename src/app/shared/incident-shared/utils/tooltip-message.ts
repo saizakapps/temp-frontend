@@ -56,6 +56,10 @@ evidences:"If you have evidance name or photo or video add below details",
 evidenceTakenByName:"please enter name whom taken evidance ",
 otherComments:"please provide if any ther comments you have",
 handlingTeam:"if you have any other team handle this incident please search name and select it ",
-deletionDate:"date of incident deletion"
+deletionDate:"date of incident deletion",
+otherInfoDropdown1 : "Incident Injury",
+otherInfoDropdown2 : "Incident Cause",
+openWithBuyerVendor : "Incident Cause"
+
 };
 }

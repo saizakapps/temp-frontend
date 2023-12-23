@@ -186,7 +186,7 @@
     <div class="reports-page-container">
       <div (scroll)="containerScrollCheck($event)" id="reports-container" *ngIf="viewType === 'reportView'"
         class="reports-container table-responsive" [ngClass]="{'hiddenXflow' : showShimmer && paginationIndex == 0}">
-        <table mat-table (contentChanged)="stopLoader()" #table [dataSource]="generalReportList"
+        <table mat-table (contentChanged)="stopLoader()" #table [dataSource]="generalReportList" id="reports-container-table"
           class="mat-elevation-z8 reportsListTbl overflow-auto table">
           <ng-container *ngFor="let column of reportsColumns; let colIndex = index">
             <ng-container [matColumnDef]="column.name">
@@ -289,7 +289,7 @@
           <tr mat-header-row *matHeaderRowDef="reportsColumnsToDisplay"></tr>
           <tr mat-row *matRowDef="let row; columns: reportsColumnsToDisplay;"></tr>
         </table>
-        <div *ngIf="showShimmer" class="adjustshimmertable"
+        <div *ngIf="showShimmer" class="adjustshimmertable" [style.width.px]="shimmerWidth"
           [ngClass]="{'hideheader' : paginationIndex == 0 , 'showheader' : paginationIndex > 0}">
           <app-shimmertable></app-shimmertable>
         </div>

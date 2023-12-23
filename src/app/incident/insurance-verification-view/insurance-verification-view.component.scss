@@ -221,8 +221,8 @@ form {
     font-size: 16px;
     line-height: 19px;
     color: #000000;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    // margin-top: 30px;
+    margin-bottom: 20px;
 }
 .dateInput {
   width: 180px;
@@ -258,13 +258,17 @@ form {
   font-size: 14px;
   line-height: 17px;
   min-width: 134px;
+  margin-bottom: 0px;
+}
+.label-name-fitwidth{
+  min-width: 95px;
 }
 }
 .insuranceDetail {
   margin-bottom: 10px;
 }
 .legalInfoTitle {
-  margin: 10px 0px 20px !important;
+  margin: 10px 0px 10px !important;
 }
 textarea{
   resize: none;

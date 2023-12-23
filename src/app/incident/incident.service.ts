@@ -2,14 +2,25 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from "rxjs";
 import { CommonService } from '../shared/services/incident-services/common.service';
 import { DatePipe } from "@angular/common";
+import { RequestApiService } from '../shared/services/incident-services/request-api.service';
+import { Utils } from '../shared/incident-shared/module/utils';
+
 @Injectable({
   providedIn: 'root'
 })
 export class IncidentService {
   subject$ = new ReplaySubject(1);
   historyIncidentsubject$ = new ReplaySubject(1);
+  compareIncidentsubject$ = new ReplaySubject(1);
+  compareIncidentSubscript:any;
   public titleData: any[] = [{id:1,name:'Incident',url:'incident-list',isActive:true}]
-  constructor(private common:CommonService,private datepipe:DatePipe) { }
+  public commonusername:any;
+
+  constructor(private common:CommonService,private datepipe:DatePipe, private requestapi:RequestApiService, private utils:Utils) {
+    let userDetails = JSON.parse(localStorage.getItem('userDetails'));
+    this.commonusername = userDetails.username;
+    // this.loginEmployeeId = userDetails.employeeId;
+   }
 
 validatePersonalInfo(incidentForm:any,incidentSelectedTypeData:any){
   let isValid = true;
@@ -211,9 +222,76 @@ isLegalBoxShow(formAccess:any,roleCode:string,evidenceAvailable:any){
        isShow= true;
        break;
      }
+    // else if(x=='openWithBuyerVendor' && (formAccess[x].create || formAccess[x].write)){
+    //   isShow= true;
+    //   break;
+    // }else if(x=='incidentInjury' && (formAccess[x].create || formAccess[x].write)){
+    //   isShow= true;
+
+    //   break;
+    // }else if(x=='incidentCause' && (formAccess[x].create || formAccess[x].write)){
+    //   isShow= true;
+
+    //   break;
+    // }
   }
   return isShow;
 }
+
+isLegalBoxViewShow(formAccess:any,roleCode:string,evidenceAvailable:any){
+  let  isShow=false;
+  for(let x in formAccess){
+
+     if(x=='deletionDate' && (formAccess[x].view)){
+       isShow= true;
+       break;
+     }else if(x=='initials' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='incidentCode' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='severity' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='preventability' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='claimDate' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='claimReference' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if( (evidenceAvailable==true || evidenceAvailable =='true') && x=='photoStatus' && (formAccess[x].view)){
+       isShow= true;
+       break;
+     }else if((evidenceAvailable==true || evidenceAvailable =='true') && x=='cctvStatus' && (formAccess[x].view)){
+       isShow= true;
+       break;
+     }
+    //  else if(x=='openWithBuyerVendor' && (formAccess[x].view)){
+    //   isShow= true;
+    //   break;
+    // }else if(x=='incidentInjury' && (formAccess[x].view)){
+    //   isShow= true;
+
+    //   break;
+    // }else if(x=='incidentCause' && (formAccess[x].view)){
+    //   isShow= true;
+
+    //   break;
+    // }
+  }
+  return isShow;
+}
+
 isPersonalInfoEdit(formAccess:any){
      let  isShow=false;
   for(let x in formAccess){
@@ -354,7 +432,6 @@ isProductDetailsEdit(formAccess:any){
   return isShow;
 }
 isHandlingEdit(formAccess:any){
-  console.log(formAccess,"formAccess");
   let isShow=false;
   for(let x in formAccess){
     if(x=='csdNumber' && (formAccess[x].create || formAccess[x].write)){
@@ -375,10 +452,9 @@ isHandlingEdit(formAccess:any){
   }
 
 
-  isLegalInfoViewAccess(formAccess:any){
+  isLegalInfoViewAccess(formAccess:any, incidentForm:any){
   let  isShow=false;
   for(let x in formAccess){
-
      if(x=='deletionDate' && (formAccess[x].view)){
        isShow= true;
        break;
@@ -406,13 +482,25 @@ isHandlingEdit(formAccess:any){
        isShow= true;
 
        break;
-     }else if(x=='photoStatus' && (formAccess[x].view)){
+     }else if((incidentForm.value.evidenceAvailable==true || incidentForm.value.evidenceAvailable =='true') && (x=='photoStatus' && formAccess[x].view)){
        isShow= true;
        break;
-     }else if(x=='cctvStatus' && (formAccess[x].view)){
+     }else if((incidentForm.value.evidenceAvailable==true || incidentForm.value.evidenceAvailable =='true') && (x=='cctvStatus' && formAccess[x].view)){
        isShow= true;
        break;
      }
+    //  else if(x=='openWithBuyerVendor' && (formAccess[x].view)){
+    //   isShow= true;
+    //   break;
+    // }else if(x=='incidentInjury' && (formAccess[x].view)){
+    //   isShow= true;
+
+    //   break;
+    // }else if(x=='incidentCause' && (formAccess[x].view)){
+    //   isShow= true;
+
+    //   break;
+    // }
   }
   return isShow;
 }
@@ -437,7 +525,6 @@ isValid = false;
 return isValid;
 }
 public isShowHandlingTeam(formAccess:any){
-  console.log(formAccess,"formAccess isShowHandling");
   let isShow=false;
   for(let x in formAccess){
     if(x=='csdNumber' && (formAccess[x].create || formAccess[x].write ||  formAccess[x].view)){
@@ -558,6 +645,7 @@ return form;
       ageType:incidentEditData.ageType,
       ageValue:incidentEditData.ageValue,
       calculatedAge:incidentEditData.calculatedAge,
+      genderType:incidentEditData.genderType,
       appropriateAge:incidentEditData.appropriateAge,
       injuredPersonContactNumber:incidentEditData.injuredPersonContactNumber,
       injuredPersonEmail:incidentEditData.injuredPersonEmail,
@@ -668,12 +756,21 @@ setFormJson(data:any,incidentEditData:any,productReturnToStore:any,
 productReturnToHeadOffice:any,
 username:any,eventDate:any,
 reportedDate:any){
+  let finalEvidence = [];
+  data.evidences.forEach((item:any)=>{
+    let data={id:item.id,uniqueId:item.id,incidentId:item.incidentId,isEvidence:item.isEvidence,evidenceFilePath:item.evidenceFilePath,thumbnailImageName:item.thumbNailFileName,evidenceDeleted:item.evidenceDeleted, evidenceType:item.evidenceType}
+    finalEvidence.push(data);
+  })
+  let productIdView = (data.articleId != null && data.articleId != '' && data.productDescription!='' && data.productDescription!=null && data.productDescription.trim().length!=0)
+      ? data.articleId + "-" + data.productDescription
+      : data.articleId;
   let incidentFormData={
       id: data.id,
       incidentId:incidentEditData.incidentId,
       injuredPersonFullName: data.injuredPersonFullName,
       ageType: data.ageType,
       ageValue: data.ageValue.toString(),
+      genderType:data.genderType,
       calculatedAge: data.calculatedAge,
       appropriateAge: data.appropriateAge,
       injuredPersonContactNumber: data.injuredPersonContactNumber.toString(),
@@ -705,17 +802,14 @@ reportedDate:any){
       injurySustained: data.injurySustained,
       injuryCircumstances: data.injuryCircumstances,
       witnessAvailable: (data.witnessSelected=='No')?"":data.witnessAvailable.toString(),
-      productIDView:
-      data.articleId != null && data.articleId != ''
-      ? data.articleId + "-" + data.productDescription
-      : "",
+      productIDView:productIdView,
       productDescriptionView:
       data.articleId != null && data.articleId != '' ? data.productDescription : "",
       productREcommentedAgeView:
       data.articleId != null && data.articleId != '' ? data.childRecommendedAge : "",
       evidenceAvailable:(data.evidenceSelected=='No')?"": data.evidenceAvailable.toString(),
       evidenceTakenBy: data.evidenceTakenBy,
-      evidences: data.evidences,
+      evidences: finalEvidence,
       otherComments: data.otherComments,
       priorityCode: data.priorityCode,
       csdNumber: data.csdNumber,
@@ -766,7 +860,146 @@ reportedDate:any){
       deleteDate: incidentEditData.deleteDate,
        productAgeType:(incidentEditData.productAgeType!=undefined && incidentEditData.productAgeType!=null)?incidentEditData.productAgeType:'',
       noFootageAvailable:incidentEditData.noFootageAvailable,
+      openWithBuyerVendor: incidentEditData.openWithBuyerVendor,
+      incidentInjury: incidentEditData.incidentInjury,
+      incidentCause: incidentEditData.incidentCause
       };
       return incidentFormData;
+}
+
+  deepJsonDataCompare(oldData: any, newData: any) {
+    const entries1 = Object.entries(oldData);
+    const entries2 = Object.entries(newData);
+    if (entries1.length !== entries2.length) {
+        return false;
+    }
+    for (let i = 0; i < entries1.length; ++i) {
+        // // Keys
+        // if (entries1[i][0] !== entries2[i][0]) {
+        //   return false;
+        // }
+        // Values
+        if ((typeof entries1[i][1] == 'string' || typeof entries1[i][1] == 'number' || typeof entries1[i][1] == 'boolean') && entries1[i][1] !== entries2[i][1]) {
+            return false;
+        } else if ((typeof entries1[i][1] == 'object') && (entries1[i][1] != null && entries2[i][1] != null)) {
+            let a: any = entries1[i][1];
+            let b: any = entries2[i][1];
+            if (a.length !== b.length) {
+                return false;
+            } else if (entries1[i][0] == 'evidences') {
+                let oldevidence: any = entries1[i][1];
+                let newevidence: any = entries2[i][1];
+                newevidence = newevidence.filter((item: any) => {
+                    return item.evidenceDeleted == 0
+                })
+                if (oldevidence.length !== newevidence.length) {
+                    return false;
+                }
+            } else if (entries1[i][0] == 'witnessList') {
+                let oldWitness: any = entries1[i][1];
+                let newWitness: any = entries2[i][1];
+
+                newWitness = newWitness.filter((item: any) => {
+                    return item.witnessDeleted == 0
+                })
+                if (oldWitness.length !== newWitness.length) {
+                    return false;
+                } else if (oldWitness.length == newWitness.length) {
+                    for (let k = 0; k < newWitness.length; k++) {
+                      
+
+
+
+
+                        if (oldWitness[k].witnessName !== newWitness[k].witnessName) {
+                            return false;
+                        } else if (oldWitness[k].witnessContactNumber !== newWitness[k].witnessContactNumber) {
+                            return false;
+                        } else if (oldWitness[k].witnessContactEmail !== newWitness[k].witnessContactEmail) {
+                            return false;
+                        } else if (oldWitness[k].witnessAddress !== newWitness[k].witnessAddress) {
+                            return false;
+                        } else if (oldWitness[k].witnessStatement !== newWitness[k].witnessStatement) {
+                            return false;
+                        } else if (oldWitness[k].witnessFiles.length !== newWitness[k].witnessFiles.length) {
+                            return false;
+                        } else if (oldWitness[k].witnessFiles.length == newWitness[k].witnessFiles.length) {
+                            let oldFiles = oldWitness[k].witnessFiles;
+                            let newFiles = newWitness[k].witnessFiles;
+                            newFiles = newFiles.filter((item: any) => {
+                                return item.witnessFileDeleted == 0
+                            })
+                            if (oldFiles.length !== newFiles.length) {
+                                return false;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+    return true;
+
+}
+
+isOtherinfoboxshow(formAccess:any){
+  let  isShow=false;
+  for(let x in formAccess){
+
+     if(x=='openWithBuyerVendor' && (formAccess[x].create || formAccess[x].write || formAccess[x].view)){
+       isShow= true;
+       break;
+     }else if(x=='incidentInjury' && (formAccess[x].create || formAccess[x].write || formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='incidentCause' && (formAccess[x].create || formAccess[x].write || formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }
+  }
+  return isShow;
+}
+
+isOtherinfoformshow(formAccess:any){
+  let  isShow=false;
+  for(let x in formAccess){
+
+     if(x=='openWithBuyerVendor' && (formAccess[x].create || formAccess[x].write)){
+       isShow= true;
+       break;
+     }else if(x=='incidentInjury' && (formAccess[x].create || formAccess[x].write)){
+       isShow= true;
+
+       break;
+     }else if(x=='incidentCause' && (formAccess[x].create || formAccess[x].write)){
+       isShow= true;
+
+       break;
+     }
+  }
+  return isShow;
+}
+
+isOtherinfoviewshow(formAccess:any){
+  let  isShow=false;
+  for(let x in formAccess){
+
+     if(x=='openWithBuyerVendor' && (formAccess[x].view)){
+       isShow= true;
+       break;
+     }else if(x=='incidentInjury' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }else if(x=='incidentCause' && (formAccess[x].view)){
+       isShow= true;
+
+       break;
+     }
+  }
+  return isShow;
 }
 }

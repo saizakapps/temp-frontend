@@ -43,6 +43,7 @@ import { WitnessFormComponent } from 'src/app/incident/witness-form/witness-form
 import { WitnessViewComponent } from 'src/app/incident/witness-view/witness-view.component';
 import { InsuranceVerificationFormComponent } from 'src/app/incident/insurance-verification-form/insurance-verification-form.component';
 import { LegalInfoFormComponent } from 'src/app/incident/legal-info-form/legal-info-form.component';
+import { OtherInfoFormComponent } from 'src/app/incident/other-info-form/other-info-form.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsPosition: POSITION.bottomCenter,
@@ -83,7 +84,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     WitnessFormComponent,
     WitnessViewComponent,
     InsuranceVerificationFormComponent,
-    LegalInfoFormComponent
+    LegalInfoFormComponent,
+    OtherInfoFormComponent
   ],
   imports: [
     CommonModule,
@@ -139,7 +141,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     WitnessFormComponent,
     WitnessViewComponent,
     InsuranceVerificationFormComponent,
-    LegalInfoFormComponent
+    LegalInfoFormComponent,
+    OtherInfoFormComponent
   ],
   providers: [
     Utils,

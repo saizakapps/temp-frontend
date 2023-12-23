@@ -3,9 +3,9 @@
   <mat-checkbox (change)="create = !create">Create</mat-checkbox>
   <mat-checkbox (change)="update = !update">Update</mat-checkbox> -->
   <div class="d-flex justify-content-between">
-    <nav class="navbar navbar-light navbar-container employeeSection pb-0">
+    <nav class="navbar navbar-light navbar-container employeeSection pr-0 pb-0">
       <div>
-      <div class="form-group mr-2 d-block align-items-center mb-0 typeDD">
+      <!-- <div class="form-group mr-2 d-block align-items-center mb-0 typeDD">
           <div class="d-flex">
             <label for="search" class="pb-1 mr-2 mb-0 justify-content-start reportViewTxt">Report Name</label>
           <div>
@@ -14,8 +14,13 @@
             </ng-select>
           </div>
           </div>
-        </div>
+        </div> -->
       <div class="d-flex align-items-center flex-wrap">
+        <div class="d-flex p-0 mr-2" style="margin-top: 7px;">
+          <ng-select class="viewGrpCls" [items]="viewTypes" name="view" [clearable]="false" bindLabel="name" bindValue="key"
+            [searchable]="false" [(ngModel)]="viewType" (change)="toggleView()">
+          </ng-select>
+        </div>
         <div class="d-flex p-0 mr-2">
           <mat-form-field appearance="fill" class="" [ngClass]="{appliedFilter : selectedRoleGroupDropDown.length > 0}">
             <mat-label *ngIf="selectedRoleGroupDropDown.length < 1"> Select Roles / Levels
@@ -61,7 +66,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div *ngIf="!isManager" class="d-flex p-0 mr-2">
+        <div class="d-flex p-0 mr-2">
           <mat-form-field appearance="fill" [ngClass]="{appliedFilter : selectedCountryDropDown.length > 0}"
             class="countryList countryRegion">
             <mat-label *ngIf="selectedCountryDropDown.length < 1"> Select Countries / Regions / Stores
@@ -165,13 +170,15 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="d-flex p-0 mb-2 resetFilterDiv align-items-center mr-2">
+        <div class="d-flex p-0 mb-2 align-items-center mr-2">
           <!-- <button (click)="resetFilters()"
             [disabled]="selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal"
             type="button" class="customizeBtn w-100 resetIcon">
             <img class="resetImg p-0" src="/assets/images/reset.png" width="20px" height="20px">
           </button> -->
-          <a [ngClass]="{'greyText': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal}" (click)="clearFilters()" class="tableRefresh">Clear</a>
+          <button type="button" [ngClass]="{'disableClearBtn': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal}" (click)="clearFilters()" class="clearFilterButton">
+            <img height="20px" width="20px" src="assets/images/clear-filter.png" alt="clear-filter">
+          </button>
         </div>
         <!-- <div class="d-flex p-0 mb-2 w-auto ml-2 align-items-center">
           <img (click)="refreshReport()" class="resetImg p-0" src="/assets/images/table_refresh.svg" width="30px" height="30px">
@@ -180,16 +187,16 @@
     </div>
     </nav>
     <!-- Header 2-->
-    <nav class="navbar navbar-light justify-content-between employee-navbar-container mt-3 roleSection">
-      <div class="d-flex flex-row col-12 pl-1 align-items-center" style="top: 47px;">
+    <nav class="pl-0 navbar navbar-light justify-content-between employee-navbar-container mt-3 roleSection">
+      <div class="d-flex flex-row col-12 pl-1 align-items-center">
         <div class="ml-auto d-flex flex-row">
-          <div class="pl-1">
-            <div (click)="getMailStatus()" [matMenuTriggerFor]="courseSummary" class="mr-2 d-flex align-items-center courseSummary hidden statusText">Export status</div>
+          <div>
+            <button type="button" class="scheduleReportButton" (click)="getMailStatus()" [matMenuTriggerFor]="courseSummary"><img src="assets/images/export-status.svg"></button>
           </div>
         </div>
         <div class="ml-auto d-flex flex-row">
-          <div [ngClass]="{'viewOnly': view && !create && !update}" class="pl-1">
-            <button type="button" (click)="getExistingReportConfig()" class="btn btn-primary btn-sm filterReport mr-2 border-0 scheduleBtnImg"
+          <div [ngClass]="{'viewOnly': view && !create && !update}">
+            <button type="button" (click)="getExistingReportConfig()" class="scheduleReportButton"
               data-target="#reportsFilter" data-toggle="modal">
               <img class="scheduleImg" src="/assets/images/schedule.png">
             </button>
@@ -227,7 +234,7 @@
     <div class="reports-page-container">
       <div (scroll)="containerScrollCheck($event)" id="reports-container" *ngIf="viewType === 'reportView'" class="reports-container table-responsive" [ngClass]="{'hiddenXflow' : showShimmer && paginationIndex == 0}">
         <table mat-table (contentChanged)="stopLoader()" #table [dataSource]="generalReportList"
-          class="mat-elevation-z8 reportsListTbl overflow-auto table">
+          class="mat-elevation-z8 reportsListTbl overflow-auto table" id="reports-container-table">
           <ng-container *ngFor="let column of reportsColumns; let colIndex = index">
             <ng-container [matColumnDef]="column.name">
               <th mat-header-cell *matHeaderCellDef>
@@ -355,7 +362,7 @@ fill="#000000" stroke="none">
           <tr mat-header-row *matHeaderRowDef="reportsColumnsToDisplay"></tr>
           <tr mat-row *matRowDef="let row; columns: reportsColumnsToDisplay;"></tr>
         </table>
-        <div *ngIf="showShimmer" class="adjustshimmertable" [ngClass]="{'hideheader' : paginationIndex == 0 , 'showheader' : paginationIndex > 0}">
+        <div *ngIf="showShimmer" class="adjustshimmertable" [style.width.px]="shimmerWidth" [ngClass]="{'hideheader' : paginationIndex == 0 , 'showheader' : paginationIndex > 0}">
           <app-shimmertable></app-shimmertable>
           </div>
           <div *ngIf="generalReportList.length === 0 && recordFound == true" class="text-center app-no-record-found">
@@ -686,17 +693,17 @@ fill="#000000" stroke="none">
                     <div class="roleFilters d-flex align-items-center w-100">
                       <label for="email" class="lblCls fontBold">Email Id</label>
                       <div class="col-sm-8 pl-0 ">
-                        <input [disabled]="disabled" type="text" class="form-control error-input-box reportEmailInput"
-                          name="email" id="email" [(ngModel)]="mailId" placeholder="{{'Enter Email ID'}}"
-                          #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$">
-                        <!-- <div class="error" *ngIf="email.errors && email.errors?.['pattern']">
-                          {{'Email is invalid'}}
-                        </div> -->
+                        <input [disabled]="disabled" type="text" class="form-control error-input-box reportEmailInput" name="email" id="email"
+                          [(ngModel)]="mailId" placeholder="{{'Enter Email ID'}}" #email="ngModel"
+                          pattern="^\w+([\.-]?\w+)*@smythstoys\.com$">                       
                       </div>
                       <div class="col-sm-1 pl-0 addEmailCls">
                         <button [disabled]="!mailId || email.errors && email.errors?.['pattern']" (click)="addEmail()"
                           type="button" class="btn btn-primary btn-sm addBtn">Add</button>
                       </div>
+                    </div>
+                    <div class="error" *ngIf="email.errors && email.errors?.['pattern']">
+                      Please add only business email Id.
                     </div>
                     <div class="d-flex align-items-center  flex-wrap justify-content-end mailAddBox">
                       <label for="email" class="lblCls fontBold col-sm-1"></label>

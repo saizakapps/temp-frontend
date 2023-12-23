@@ -37,20 +37,28 @@ isCreateBtnHidden = true;
 constructor(private datepipe:DatePipe,private cdref:ChangeDetectorRef,public common:CommonService,private utils:Utils,private incidentService:IncidentService,private router:Router,private requestapi:RequestApiService){
 }
 username:any;
+loginMainRoleCode:any;
 ngOnInit():void{
   let userDetails = JSON.parse(localStorage.getItem('userDetails'));
   this.username = localStorage.getItem('username');
   this.loginEmployeeId = userDetails.employeeId;
   this.loginEmployeeCountry = userDetails.country;
-  this.loginEmployeeRoleCode = userDetails.roleCode;
+  this.loginEmployeeRoleCode = userDetails.incidentRole;
+  this.loginMainRoleCode = userDetails.roleCode;
   this.isIncharge = userDetails.incharge;
+  if(this.loginEmployeeRoleCode == 'SM' || this.loginEmployeeRoleCode == 'DM' || this.loginEmployeeRoleCode == 'OM' || this.loginEmployeeRoleCode == 'WM' || this.loginEmployeeRoleCode == 'WMO' || this.loginMainRoleCode == 'WEBM' || this.loginEmployeeRoleCode == 'WEBMO' || this.loginEmployeeRoleCode == 'SA'){
+    this.isList = true
+  }
+  else{
+    this.isList = false
+  }
   this.getRetectedRoleMapInfo();
 }
 
 
 
 incidentTypeClick(e:any,data:any){
-  this.isList = false;
+  this.isList = true;
   this.incidentSelectedTypeData = data;
   let incidentCreateData ={isAdd:true,idIncident:0,incidentSelectedTypeData:this.incidentSelectedTypeData,incidentRowData:{}};
   this.incidentService.subject$.next(incidentCreateData);

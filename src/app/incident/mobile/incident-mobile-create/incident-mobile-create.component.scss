@@ -27,7 +27,7 @@
   line-height: 19px;
   color: #000000;
   margin-top: 40px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .personal-info-title-reducted{
   margin-bottom: 15px !important;
@@ -138,6 +138,8 @@ form {
     color: #ffffff;
     font-size: 16px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
   }
 
   .draft-btn-enable {
@@ -219,8 +221,8 @@ form {
     background-repeat: no-repeat;
     display: inline-block;
     fill: currentColor;
-    height: 14px !important;
-    width: 14px !important;
+    height: 15px !important;
+    width: 15px !important;
     /* overflow: hidden; */
     vertical-align: middle;
   }
@@ -228,7 +230,7 @@ form {
     font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
-    font-size: 14px !important;
+    font-size: 15px !important;
     line-height: 1;
     letter-spacing: normal;
     text-transform: none;
@@ -391,9 +393,10 @@ padding: 5px 15px !important;
   display: block;
 }
 .personalInfoCls {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   font-weight: 600;
   margin-top: 40px !important;
+  margin-top: 15px !important;
 }
 .incidentCreateForm .form-control {
   border-color: #818181;
@@ -416,11 +419,11 @@ form label {
 
 
 .ageView {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .ageView .data-view {
   height: 33px;
-  width: 90px;
+  width: 110px;
 }
 .ageView .data-view-90{
   height: 33px;
@@ -434,7 +437,7 @@ form label {
 }
 .contactDetails {
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .addressArea {
   // width: 540px;
@@ -442,11 +445,15 @@ form label {
   height: 105px !important;
   width: 100%;
 }
+.addressArea-182{
+  height: 182px !important;
+}
 .incidentCreateView {
   // width: fit-content;
   // min-width: 640px;
   // max-width: 640px;
-  margin: 20px;
+  margin: 15px;
+  margin-bottom: 20px;
   background: #fff;
   padding: 25px 25px 16px !important;
   border-radius: 7px;
@@ -467,11 +474,11 @@ padding-bottom: 30px !important;
   width: 90px;
 }
 .ageInput1{
-  width: 90px;
+  width: 105px;
 }
 .confirmContent {
   gap: 5px;
-  margin-top: 20px;
+  // margin-top: 20px;
 }
 .customerName {
   // max-width: 540px;
@@ -526,7 +533,7 @@ padding-bottom: 30px !important;
   height: 10px;
 }
 .incident-details-form {
-  gap: 30px;
+  gap: 18px;
   display: flex;
   flex-direction: column;
 }
@@ -565,6 +572,8 @@ padding-bottom: 30px !important;
   text-shadow: none;
   font-size: 16px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 .submitBtn {
   width: fit-contents;
@@ -644,6 +653,7 @@ padding-bottom: 30px !important;
   order: 2;
   flex-grow: 0;
   color: #373737;
+  margin-top: -15px;
 }
 
 .product-age {
@@ -651,7 +661,7 @@ padding-bottom: 30px !important;
 }
 .productDetail {
   gap: 4px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .addCommentbox {
   background: #fff;
@@ -1161,7 +1171,7 @@ background-color: #fff;
 }
 .text-approximate-new{
   margin-top: -5px;
-  margin-left: 20px;
+  // margin-left: 20px;
 }
 .text-approximate-pad1{
   padding-top: 1px !important;
@@ -1237,7 +1247,7 @@ margin-bottom: 0px;
   padding-bottom: 3px !important;
 }
 .evidanceReport1{
-  margin-top: 30px;
+  margin-top: 20px;
 }
 .aligncheckbox{
   margin-top: -2px;
@@ -1255,18 +1265,20 @@ input#autoCompleteTrigger1::placeholder {
 .priorityBox{
   background-color: #fff;
   border-radius: 7px;
-  padding: 20px;
+  // padding: 20px;
   padding-bottom: 0px;
-  padding-right: 20px;
-  margin-top: 20px;
-  max-width: 369px;
-  width: 369px;
+  // padding-right: 20px;
+  // margin-top: 20px;
+  // margin-bottom: 60px;
+  // max-width: 369px;
+  // width: 369px;
   select{
     width: 319px;
   }
   .priorityBoxtitle{
     font-size: 16px;
     font-weight: 600;
+    margin-bottom: -10px;
     // padding-bottom: 18px;
   }
 }
@@ -1349,7 +1361,7 @@ input#autoCompleteTrigger1::placeholder {
  margin-top:-21px; 
 }
 .mg-top{
-  margin-top:-28px;
+  margin-top:-15px;
 }
 .mobilewrap-flex{
   flex-wrap: wrap;
@@ -1376,12 +1388,11 @@ input#autoCompleteTrigger1::placeholder {
   padding: 20px !important;
 }
 .mobilemarginRight{
-  margin-right: 22px;
+  margin-right: 20px;
 }
 .priorityBox {
-  width: calc(100% - 40px) !important; 
   max-width: unset !important;
-  margin: 20px;
+  margin-top: 20px;
 }
 .priority-form{
   width: 100%;
@@ -1616,4 +1627,67 @@ textarea{
 .row{
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+.customerName{
+  width: 100%;
+}
+.data-view-100{
+  width: 100%;
+}
+.store-mat-icon-top{
+  margin-top: -20px;
+}
+.store-width store-width-tf{
+  text-overflow: ellipsis !important;
+}
+.multselecticonnew{
+  background-color: white !important;
+  background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23424242%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0-4.2-1.6-7.9-4.8-11.2-3.2-3.2-6.9-4.8-11.2-4.8H16c-4.2%200-7.9%201.6-11.2%204.8S0%20163.8%200%20168c0%204.4%201.6%208.2%204.8%2011.4l112%20112c3.1%203.1%206.8%204.6%2011.2%204.6%204.4%200%208.2-1.5%2011.4-4.6l112-112c3-3.2%204.5-7%204.5-11.4z%22%2F%3E%3C%2Fsvg%3E%0A) !important;
+  background-position: right 12px center !important;
+  background-repeat: no-repeat !important;
+  background-size: auto 38% !important;
+  // padding: 8px 22px 8px 10px !important;
+  //border-radius:2px;
+  // border:none;
+  //color: #ffffff;
+  // disable default appearance
+  // outline: none;
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: flex;
+  align-items: center;
+  &::-ms-expand {
+    display: none;
+  }
+}
+.mg-top15{
+  margin-top: -15px;
+}
+.width-100{
+  width: 100%;
+}
+.data-view-relative{
+  position: relative;
+}
+.businessMail{
+  position: absolute;
+  bottom: -3px;
+  left: 0px;
+  color: red;
+    font-size: 13px;
+    margin-top: -6px;
+    font-weight: 600;
+}
+.mtop-20-approx{
+  margin-top: 20px;
+}
+.max-width-260{
+  max-width: 260px;
+}
+.agetypeSelectwidth{
+  width: 100px;
+}
+.incidentCreateForm {
+  padding-bottom: 150px;
 }

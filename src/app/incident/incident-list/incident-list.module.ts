@@ -6,6 +6,8 @@ import { IncidentListComponent } from './incident-list.component';
 import { SharedModule } from '../../shared/shared.module';
 //import { IncidentCreateComponent } from '../incident-create/incident-create.component';
 import { IncidentSharedModule } from '../../shared/incident-shared/module/incident-shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 
 @NgModule({
@@ -16,8 +18,11 @@ import { IncidentSharedModule } from '../../shared/incident-shared/module/incide
   imports: [
     CommonModule,
     IncidentListRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
-    IncidentSharedModule
+    IncidentSharedModule,
+    
   ]
 })
 export class IncidentListModule { }

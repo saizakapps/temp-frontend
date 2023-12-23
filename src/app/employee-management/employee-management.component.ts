@@ -265,6 +265,8 @@ export class EmployeeManagementComponent implements OnInit {
 
   currentModule: any;
 
+  inviteType: any;
+
   constructor(public utils: Utils, public ngxService: NgxUiLoaderService,
     private modalService: NgbModal, private emitService: CommonService, private router: Router,
     private apiHandler: ApiHandlerService, private errorHandler: ErrorHandlerService, private incidentApiHandler: RequestApiService) {
@@ -488,9 +490,13 @@ export class EmployeeManagementComponent implements OnInit {
       return true;
     }
   }
-
+  shimmerWidth:any;
   async getEmployeeList() {
     // this.ngxService.start();
+    if(document.getElementById("employee-container-table")){
+    const doc: any = document.getElementById("employee-container-table")?.clientWidth;
+    this.shimmerWidth = doc;
+    }
     this.showShimmer = true;
     this.recordFound = false
     // this.employeeList = [];
@@ -517,7 +523,7 @@ export class EmployeeManagementComponent implements OnInit {
       region: regionIds,
       store: storeIds,
       userId: this.userDetailValue?.id,
-      admin: !this.userDetailValue.manager, //[portalRole.superAdmin, portalRole.hr].includes(this.userDetailValue.portalRole),
+      admin: this.userDetailValue.learnerRole === 'SA', // !this.userDetailValue.manager, [portalRole.superAdmin, portalRole.hr].includes(this.userDetailValue.portalRole),
       page: this.paginationIndex,
       filter: {
         countries: this.buildSelectedDropDownHierarchy(this.countryList),
@@ -576,6 +582,7 @@ export class EmployeeManagementComponent implements OnInit {
     this.showShimmer = true;
     this.tempEmpList = [];
     this.paginationIndex = 0;
+    this.selection.clear();
   }
 
   tempEmpList: any = [];
@@ -608,6 +615,13 @@ export class EmployeeManagementComponent implements OnInit {
     console.log(this.filteredDate, 'this.filteredDate');
     this.resetEmployeeList();
     this.getEmployeeList()
+  }
+
+  onTableFilterPopupClose(multi) {
+    if (multi) {
+      this.resetEmployeeList();
+      this.getEmployeeList();
+    }
   }
 
   /* Table filter apply */
@@ -1318,8 +1332,11 @@ export class EmployeeManagementComponent implements OnInit {
   }
 
   clearSearchText() {
-    this.searchTextValue = '';
-    this.getEmployeeList();
+    if (this.searchTextValue !== '') {
+      this.searchTextValue = '';
+      this.resetEmployeeList();
+      this.getEmployeeList();
+    }
     // this.dateFilter();
   }
 
@@ -1441,14 +1458,16 @@ export class EmployeeManagementComponent implements OnInit {
   }
 
   changeStatusAction(event) {
-    this.statusAction = event.name;
+    this.statusAction = event;
     this.activeCount = _.filter(this.selectedRowDetail, (item) => item.active === true).length;
     this.inactiveCount = _.filter(this.selectedRowDetail, (item) => item.active === false).length;
     this.selectedCount = this.selectedRowDetail.length;
     this.employeeStatusId = [];
     this.selectedRowDetail.forEach(empList => {
       this.proEmpDetail = empList;
-      this.employeeStatusId.push(empList.id)
+      if (this.statusAction === 'Make active' || this.statusAction === 'Temporarily disable' || (this.statusAction === 'Delete' && empList.sfEmployee === false)) { //To avoid deleting the sf employee
+        this.employeeStatusId.push(empList.id)
+      }
     });
   }
 
@@ -1557,9 +1576,9 @@ export class EmployeeManagementComponent implements OnInit {
 
   async saveEmployeeStatus() {
     const action = this.statusAction == "Make active" ? true : false;
-    const employeeStatus = { "id": this.employeeStatusId, "status": action }
+    const employeeStatus = { "id": this.employeeStatusId, "status": action, 'delete': this.statusAction === "Delete" };
     const res: any = await this.apiHandler.postData(this.utils.API.POST_EMPLOYESS_STATUS, employeeStatus, this.destroyed$,
-      'Employee Status Changes Successfully');
+      this.statusAction ===  'Delete' ? 'Employee deleted Successfully' : 'Employee Status Changes Successfully');
     this.closeStatusPopup();
     this.resetEmployeeList();
     this.getEmployeeList();
@@ -1693,13 +1712,14 @@ export class EmployeeManagementComponent implements OnInit {
       const inviteEmpObj: any = {};
       inviteEmpObj.employeeId = select.employeeId;
       inviteEmpObj.email = select.email;
+      inviteEmpObj.type = this.inviteType;
       this.inviteEmpData.push(inviteEmpObj);
     });
 
     if (this.inviteEmpData.length > 0) {
       this.closeInviteMail();
       const res: any = await this.apiHandler.postData(this.utils.API.POST_INVITE_MAIL, this.inviteEmpData, this.destroyed$,
-        '360 Mobile Invite Sent');
+        `360 ${this.inviteType} Invite Sent`);
     }
 
   }
@@ -2120,10 +2140,10 @@ export class EmployeeManagementComponent implements OnInit {
   }
 
   constructRoleList() {
-    let learner: any = [];
-    let incident: any = [];
-    let audit: any = [];
-    let auth: any = [];
+    let learner: any = [{id: 0, roleName: 'None', app: {appCode: 'LA'}}];
+    let incident: any = [{id: 0, roleName: 'None', app: {appCode: 'IT'}}];
+    let audit: any = [{id: 0, roleName: 'None', app: {appCode: 'AT'}}];
+    let auth: any = [{id: 0, roleName: 'None', app: {appCode: 'AA'}}];
 
     this.masterRoleList.forEach(role => {
       if (role.app.appCode === 'LA') {
@@ -2143,9 +2163,18 @@ export class EmployeeManagementComponent implements OnInit {
     this.authRoleList = [...auth];
   }
 
-  roleChange() {
-    const ids = [this.learnerRoleId, this.incidentRoleId, this.auditRoleId, this.authRoleId];
-    this.roleIds = ids.filter(id => id !== undefined);
+  roleChange(appCode, app) {
+    if (app !== undefined) {
+      const roleObj = {
+        id: app.id,
+        appCode: app.app.appCode
+      }
+      this.roleIds.push(roleObj);
+    } else {
+      let tempRoleIds = this.roleIds.filter(role => role.appCode !== appCode);
+      this.roleIds = [];
+      this.roleIds = [...tempRoleIds];
+    }
   }
 
   async assignRole() {
@@ -2158,13 +2187,19 @@ export class EmployeeManagementComponent implements OnInit {
     const response: any = await this.incidentApiHandler.postData(this.utils.API.ASSIGN_USER_ROLE, params);
     console.log(params);
     this.ngxService.stop();
+    if (response) {
+      this.resetEmployeeList();
+      this.getEmployeeList();
+      this.assignRolePopupCancel();
+    }
   }
 
   assignRolePopupCancel() {
     this.selection.clear();
     this.learnerRoleId = undefined;
-    this.incidentRoleId = undefined
+    this.incidentRoleId = undefined;
     this.auditRoleId = undefined;
     this.authRoleId = undefined;
+    this.roleIds = [];
   }
 }

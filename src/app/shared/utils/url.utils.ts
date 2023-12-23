@@ -3,14 +3,14 @@ export class UrlUtils {
       window.location.hostname : 'smyths360-dev-admin.smythstoys.com'); */
 
     private browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
-     window.location.hostname : 'smyths360-admin-qa.smythsuat.com');
+     window.location.hostname : 'smyths360-dev-admin.smythstoys.com');
   //private browserHostName = 'smyths360-dev-admin.smythstoys.com';
   public AUTH_BASE_URL = `//${this.browserHostName}/`;
 
 
   // public browserHostName = this.tempHostName.replace('-admin', '');
-  public HOSTNAME: any = `http://${this.browserHostName}/`;
-  public WEB_URL = `${this.HOSTNAME}api/web/learners/`;
+  public HOSTNAME: any = `//${this.browserHostName}/`;
+  public WEB_URL = `${this.HOSTNAME}api/web/`;
   public AUTH_URL = `${this.HOSTNAME}api/auth/`;
   public USER_URL = `${this.WEB_URL}user/`;
   public COURSE_URL = `${this.WEB_URL}course/`;
@@ -30,6 +30,7 @@ export class UrlUtils {
     GET_CHAPTER_TYPES: `${this.COURSE_URL}get-chapter-types`,
     CREATE_UPDATE_COURSE: `${this.COURSE_URL}create-update-course`,
     GET_COURSE_DETAILS: `${this.COURSE_URL}get-course-chapters`,
+    GET_COMP_TEMPLATE_TYPES: `${this.USER_URL}get-completion-templates-types`,
     GET_COMP_TEMPLATES: `${this.USER_URL}get-completion-templates`,
     POST_COMP_TEMPLATES: `${this.USER_URL}create-completion-template`,
     // UPDATE_COURSE_LISTING: `${this.COURSE_URL}update-delete-course-status`,
@@ -37,6 +38,7 @@ export class UrlUtils {
     GET_ROLE_GROUPS: `${this.USER_URL}getallgroups`,
     GET_ALL_COUNTRIES: `${this.USER_URL}getallcountries`,
     GET_COURSE_LIST: `${this.USER_URL}getallcourses`,
+    GET_COURSE_MAPPING: `${this.USER_URL}getcoursemapping`,
     CHANGE_COURSE_STATUS: `${this.USER_URL}delete-course`,
     GET_MANAGER_LIST: `${this.USER_URL}getallmanagers`,
     UPLOAD_FILES: `${this.USER_URL}uploadimage`,
@@ -70,8 +72,8 @@ export class UrlUtils {
     GET_SF_ROLES: `${this.USER_URL}get-sf-roles`,
     POST_USER_BASED_ACTION: `${this.USER_URL}user-based-actions`,
 
-    CHANGE_PASSWORD: `${this.USER_URL}portal-change-password`,
-    FORGOT_PASSWORD: `${this.USER_URL}portal-forgot-password`,
+    CHANGE_PASSWORD: `${this.INCIDENT_USER}portal-change-password`,
+    FORGOT_PASSWORD: `${this.INCIDENT_USER}portal-forgot-password`,
 
     /* Reports APIs */
     GET_EXISTING_REPORTS_CONFIG: `${this.USER_URL}get-existing-reports-config`,

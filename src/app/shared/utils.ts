@@ -24,13 +24,14 @@ export class Utils {
 
   public API = this.urlUtils.API;
   public imagePath = `${this.urlUtils.HOSTNAME}api/web/user/files/`;
-  public mediaDownloadUrl = `${this.urlUtils.HOSTNAME}api/web/file/download/`;
+  public mediaDownloadUrl = `${this.urlUtils.WEB_URL}file/download/`;
   public adminUrl = `${this.urlUtils.HOSTNAME}#/video`;
   public FORMAT = {
     DATE_TIME: 'DD-MM-yyyy HH:mm:ss',
     DATE: 'DD-MM-yyyy',
     DATEM: 'DD-MM-yyyy',
-    TIME: 'HH:mm:ss'
+    TIME: 'HH:mm:ss',
+    DATEYMD: 'yyyy-MM-DD',
   };
 
   /* default route role mapping */
@@ -57,6 +58,26 @@ export class Utils {
       'Next 14 days': [moment(), moment().add(14, 'day')],
       'Next 1 Month': [moment(), moment().add(1, 'month')]
     }
+  };
+
+  public DateRangePickerConfigIncident = {
+    locale: {
+      format: 'DD/MM/YYYY',
+  },
+  autoUpdateInput: false,  
+    // alwaysShowCalendars: true,
+    "showDropdowns": true,
+    maxDate: moment(new Date()).set({ hours: 23, minutes: 59, seconds: 59 }),
+    // startDate: moment(this.currentDate).subtract(1, 'month').set({ hours: 0, minutes: 0, seconds: 0 }),
+    opens: 'center',
+    // ranges: {
+    //   'Last 7 days': [moment().subtract(7, 'day'), moment()],
+    //   'Last 14 days': [moment().subtract(14, 'day'), moment()],
+    //   'Last 1 Month': [moment().subtract(1, 'month'), moment()],
+    //   'Next 7 days': [moment(), moment().add(7, 'day')],
+    //   'Next 14 days': [moment(), moment().add(14, 'day')],
+    //   'Next 1 Month': [moment(), moment().add(1, 'month')]
+    // }
   };
 
   public DatePickerConfig = {

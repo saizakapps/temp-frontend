@@ -19,7 +19,6 @@ import { IncidentSharedModule } from './shared/incident-shared/module/incident-s
     AppComponent,
     LayoutComponent,
     SidenavComponent,
-    
   ],
   imports: [
     BrowserModule,

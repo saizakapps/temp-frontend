@@ -6,8 +6,10 @@
 							<div class="d-flex" *ngIf="insuranceVerificationData.formFieldAccess.deletionDate.view">
 								<label class="label-name">Deletion date:</label>
 								<div class="data-view d-flex dataiconrel align-items-center">
-									{{insuranceVerificationData.showData
-.deleteDate | date:'dd-MM-yyyy'}}
+									{{(insuranceVerificationData.showData
+.deleteDate!='' && insuranceVerificationData.showData
+.deleteDate!=null)?(insuranceVerificationData.showData
+.deleteDate | date:'dd-MM-yyyy'):' - '}}
 
 								</div>
 							</div>
@@ -17,8 +19,10 @@
 							<div class="d-flex">
 								<label class="label-name">Initials:</label>
 								<div class="data-view d-flex dataiconrel  align-items-center">
-									{{insuranceVerificationData.showData
-.initials}}
+									{{(insuranceVerificationData.showData
+									.initials!='-' && insuranceVerificationData.showData
+.initials!=null)?insuranceVerificationData.showData
+.initials:' - '}}
 								</div>
 							</div>
 						</div>
@@ -26,7 +30,7 @@
 							<div class="d-flex">
 								<label class="label-name">Incident code:</label>
 								<div class="data-view d-flex  align-items-center">
-					                {{selectedIncidentCode}}
+					                {{(selectedIncidentCode!='' && selectedIncidentCode!=null)?selectedIncidentCode:' - '}}
 								</div>
 							</div>
 						</div>
@@ -36,8 +40,9 @@
 								<div class="data-view d-flex  align-items-center">
 
 									{{(insuranceVerificationData.showData
-.severityInfo!=null)?insuranceVerificationData.showData
-.severityInfo.severity:''}}
+.severityInfo!=null && insuranceVerificationData.showData
+.severityInfo!='')?insuranceVerificationData.showData
+.severityInfo.severity:' - '}}
 								</div>
 							</div>
 						</div>
@@ -47,8 +52,9 @@
 								<div class="data-view d-flex  align-items-center">
 
 									{{(insuranceVerificationData.showData
-.preventabilityInfo!=null)?insuranceVerificationData.showData
-.preventabilityInfo.description:''}}
+.preventabilityInfo!=null && insuranceVerificationData.showData
+.preventabilityInfo!='')?insuranceVerificationData.showData
+.preventabilityInfo.description:' - '}}
 								</div>
 							</div>
 						</div>
@@ -57,8 +63,10 @@
 							<div class="d-flex">
 								<label class="label-name">Date of claim:</label>
 								<div class="data-view d-flex dataiconrel  align-items-center">
-									{{insuranceVerificationData.showData
-.claimDate | date:'dd-MM-yyyy'}}
+									{{(insuranceVerificationData.showData
+.claimDate!='' && insuranceVerificationData.showData
+.claimDate!=null)?(insuranceVerificationData.showData
+.claimDate | date:'dd-MM-yyyy'):' - '}}
 								</div>
 							</div>
 						</div>
@@ -68,8 +76,9 @@
 								<div class="data-view d-flex  align-items-center ">
 
 									{{(insuranceVerificationData.showData
-.legalStatusInfo!=null)?insuranceVerificationData.showData
-.legalStatusInfo.statusDescription:''}}
+.legalStatusInfo!=null && insuranceVerificationData.showData
+.legalStatusInfo!='')?insuranceVerificationData.showData
+.legalStatusInfo.statusDescription:' - '}}
 								</div>
 							</div>
 						</div>
@@ -78,29 +87,33 @@
 								<label class="label-name">Claim reference:</label>
 								<div class="data-view d-flex  align-items-center">
 
-								{{insuranceVerificationData.showData
-.claimReference}}
+								{{(insuranceVerificationData.showData
+.claimReference!='' && insuranceVerificationData.showData
+.claimReference!='')?insuranceVerificationData.showData
+.claimReference:' - '}}
 								</div>
 							</div>
 						</div>
 					
 						<div class="d-flex productDetail insuranceDetail" *ngIf="insuranceVerificationData.formFieldAccess.photoStatus.view">
 							<div class="d-flex">
-								<label class="label-name">Photo Status:</label>
+								<label class="label-name" [ngClass]="{'label-name-fitwidth' : loginEmployeeRoleCode == 'PC'}">Photo Status:</label>
 								<div class="data-view d-flex  align-items-center">
 									{{(insuranceVerificationData.showData
-.photoStatusInfo!=null)?insuranceVerificationData.showData.photoStatusInfo
-.statusDescription:''}}
+.photoStatusInfo!=null && insuranceVerificationData.showData
+.photoStatusInfo!='')?insuranceVerificationData.showData.photoStatusInfo
+.statusDescription:' - '}}
 								</div>
 							</div>
 							</div>
 								<div class="d-flex productDetail insuranceDetail" *ngIf="insuranceVerificationData.formFieldAccess.cctvStatus.view">
 									<div class="d-flex">
-								<label class="label-name">CCTV status:</label>
+								<label class="label-name" [ngClass]="{'label-name-fitwidth' : loginEmployeeRoleCode == 'PC'}">CCTV status:</label>
 								<div class="data-view  d-flex  align-items-center">
 									{{(insuranceVerificationData.showData
-.cctvStatusInfo!=null)?insuranceVerificationData.showData.cctvStatusInfo
-.footageDescription:''}}
+.cctvStatusInfo!=null && insuranceVerificationData.showData
+.cctvStatusInfo!='')?insuranceVerificationData.showData.cctvStatusInfo
+.footageDescription:' - '}}
 								</div>
 							</div>
 								</div>

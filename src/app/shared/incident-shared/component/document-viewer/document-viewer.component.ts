@@ -7,6 +7,8 @@ import { Component,Input,OnInit } from '@angular/core';
 })
 export class DocumentViewerComponent implements OnInit {
 	@Input() docURL:any;
+
+  viewerurl = "https://docs.google.com/gview?url=%URL%&embedded=true"
   constructor(){}
   ngOnInit():void{
 

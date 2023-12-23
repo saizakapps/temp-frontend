@@ -3,54 +3,67 @@
 		<div class="labelView d-flex" *ngIf="productDetailsData.formFieldAccess.complainant.view">
 			<label class="label-name ">Complainant:</label>
 			<div class="data-view" [ngClass]="(isRedacted)?'data-view redacted-background':'data-view'">
-				{{(!isRedacted)?productDetailsData.showData.productComplaint:'REDACTED'}}
+				<span *ngIf="productDetailsData.showData.productComplaint !== null && productDetailsData.showData.productComplaint !== ''">{{(!isRedacted)?productDetailsData.showData.productComplaint:'REDACTED'}}</span>
+				<span *ngIf="productDetailsData.showData.productComplaint == null || productDetailsData.showData.productComplaint == ''">{{(!isRedacted)?'-':'REDACTED'}}</span>
+				<!-- {{(!isRedacted)?productDetailsData.showData.productComplaint:'REDACTED'}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name">Product ID:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.productId}}
+				{{(productDetailsData.showData.productId !== null && productDetailsData.showData.productId !== '')?productDetailsData.showData.productId:'-'}}
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name ">Product Description:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.productDescription}}
+				{{(productDetailsData.showData.productDescription !== null && productDetailsData.showData.productDescription !== '')?productDetailsData.showData.productDescription:'-'}}
+
+				<!-- {{productDetailsData.showData.productDescription}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name ">Recommended age:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.recommendedAge}}
+				{{(productDetailsData.showData.recommendedAge !== null && productDetailsData.showData.recommendedAge !== '')?productDetailsData.showData.recommendedAge:'-'}}
+
+				<!-- {{productDetailsData.showData.recommendedAge}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name ">Batch number/Serial number:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.batchNo}}
+				{{(productDetailsData.showData.batchNo !== null && productDetailsData.showData.batchNo !== '')?productDetailsData.showData.batchNo:'-'}}
+				<!-- {{productDetailsData.showData.batchNo}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name ">When returned to store:</label>
 			<div class="data-view ">
-				{{productDetailsData.showData.productReturnToStore | date: 'dd-MM-yyyy'}}
+				<span *ngIf="productDetailsData.showData.productReturnToStore !== null && productDetailsData.showData.productReturnToStore !== ''">{{productDetailsData.showData.productReturnToStore | date: 'dd-MM-yyyy'}}</span>
+				<span *ngIf="productDetailsData.showData.productReturnToStore == null || productDetailsData.showData.productReturnToStore == ''">-</span>
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name">When returned to Head Office:</label>
 			<div class="data-view ">
-				{{productDetailsData.showData.productReturnToHeadOffice | date: 'dd-MM-yyyy'}}
+				<span *ngIf="productDetailsData.showData.productReturnToHeadOffice !== null && productDetailsData.showData.productReturnToHeadOffice !== ''">{{productDetailsData.showData.productReturnToHeadOffice | date: 'dd-MM-yyyy'}}</span>
+				<span *ngIf="productDetailsData.showData.productReturnToHeadOffice == null || productDetailsData.showData.productReturnToHeadOffice == ''">-</span>
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name ">Product age:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.productAge}}
+				<span *ngIf="productDetailsData.showData.productAge !== null && productDetailsData.showData.productAge !== ''">{{productDetailsData.showData.productAge}} {{productDetailsData.showData.productAgeType | titlecase}}</span>
+				<span *ngIf="productDetailsData.showData.productAge == null || productDetailsData.showData.productAge == ''">-</span>
+				<!-- {{(productDetailsData.showData.productAge !== null && productDetailsData.showData.productAge !== '')?productDetailsData.showData.productAge:'-'}} -->
+				<!-- {{productDetailsData.showData.productAge}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name ">Proof of purchase attached:</label>
 			<div class="data-view ">
+				<div *ngIf="productDetailsData.showData.evidences.length == 0">-</div>
 				<div class="mleft-7">
 					<app-evidence-view *ngIf="productDetailsData.showData.evidences.length>0" [files]="productDetailsData.showData.evidences" [isEvidence]="false"></app-evidence-view>
 				</div>
@@ -59,20 +72,25 @@
 		<div class="labelView d-flex">
 			<label class="label-name ">Has the problem been reported before:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.problemReportedBefore}}
+				{{(productDetailsData.showData.problemReportedBefore !== null && productDetailsData.showData.problemReportedBefore !== '')?productDetailsData.showData.problemReportedBefore:'-'}}
+				<!-- {{productDetailsData.showData.problemReportedBefore}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name">Circumstances:</label>
 			<div class="data-view">
-				{{productDetailsData.showData.circumstances}}
+				{{(productDetailsData.showData.circumstances !== null && productDetailsData.showData.circumstances !== '')?productDetailsData.showData.circumstances:'-'}}
+
+				<!-- {{productDetailsData.showData.circumstances}} -->
 			</div>
 		</div>
 		<div class="labelView d-flex">
 			<label class="label-name">Nature of product fault:</label>
 			<div class="data-view">
+				{{(productDetailsData.showData.faultCode !== null && productDetailsData.showData.faultCode !== '')?productDetailsData.showData.faultCode:'-'}}
+
 				<!-- {{(productDetailsData.showData.faultCodesInfo!=null)?productDetailsData.showData.faultCodesInfo.faultDescription:''}} -->
-				{{productDetailsData.showData.faultCode}}
+				<!-- {{productDetailsData.showData.faultCode}} -->
 			</div>
 		</div>
 	<!-- 	<div class="labelView d-flex">

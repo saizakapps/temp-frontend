@@ -135,6 +135,29 @@ export class DropdownOptions {
       }
     ],
 
+    questionTypes: [
+      {
+        name: 'Multiple choice',
+        key: 'multiAnswer',
+        disabled: false
+      },
+      {
+        name: 'Re-arrange the order',
+        key: 'reArrangeOrder',
+        disabled: false
+      },
+      {
+        name: 'Fill the right answer',
+        key: 'fillRightAnswer',
+        disabled: false
+      },
+      {
+        name: 'Free Text',
+        key: 'freeText',
+        disabled: false
+      }
+    ],
+
     courseStatus: [
       {
         name: 'All',

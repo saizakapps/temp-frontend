@@ -22,7 +22,7 @@
                      <!-- <input type="text" class="form-control" autocomplete="off" maxlength="15"  [(ngModel)]="witnessData.witnessContactNumber" (keypress)="common.allowNumberOnly($event)" [ngModelOptions]="{standalone: true}" > -->
                      <div class="d-flex align-items-center">
                         <input type="text" class="form-control" autocomplete="off" maxlength="15"
-                        formControlName="witnessContactNumber" (keypress)="common.allowNumberOnly($event)"
+                        formControlName="witnessContactNumber" (keypress)="common.allowNumberAndSpecialChars($event)"
                         [ngClass]="isFieldValid('witnessContactNumber')?'focus-border-error ':''">
                         <mat-icon placement="left" ngbTooltip="{{witnessData.toolTipData.witnesscontactNumber}}">help_outline</mat-icon>
                      </div>
@@ -90,7 +90,7 @@
                      <app-progress-bar type="2" [progress]="progressCount" *ngIf="progressCount<100"></app-progress-bar>
                   </div>
                   <div class="" >
-                     <div class="group-2">
+                     <div class="group-2 uploadfilesData">
                         <div class="assignwidth text-center" *ngFor="let img of imageObjectWitnessStatement; let i = index" [ngClass]="{'d-none':img.deleted!==0}">
                            <img 
                            [lightbox]="0"
@@ -103,6 +103,9 @@
                               <span class="delete-label" (click)="deleteFilePopup(i,'Proof',conformbox)" title="Delete">Delete</span>
                            </div>
                         </div>
+                        <div class="loaderwheel" *ngIf="witnessdownloadLoader">
+                           <div class="loader"></div>
+                       </div>
                      </div>
                   </div>
                   

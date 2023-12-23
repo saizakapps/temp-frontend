@@ -641,8 +641,8 @@ section {
   align-items: center;
 }
 .scheduleImg {
-  width: 30px !important;
-  height: 30px !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 .scheduleBtnImg,
 .scheduleBtnImg:hover,
@@ -690,8 +690,8 @@ section {
 
 }
 .resetFilterDiv {
-  height: 30px;
-  width: 30px;
+  height: 34px;
+  width: 34px;
 }
 .addBtn {
   height: 30px;
@@ -742,8 +742,9 @@ section {
   text-decoration: none;
   cursor: pointer;
 }
-.greyText {
-  color:#616060
+.disableClearBtn {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .adjustshimmertable{
@@ -837,4 +838,37 @@ thead {
 }
 .hiddenXflow{
   overflow-x: hidden;
+}
+.scheduleReportButton {
+  width: 34px;
+  height: 34px;
+  background: #ffffff;
+  border: 1px solid #818181;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-left: 10px;
+}
+
+.clearFilterButton {
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  border: 1px solid #818181;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.error {
+  color: rgb(216 4 4);
+  font-weight: 600;
+  font-size: 11px;
+  padding-left: 160px;
 }

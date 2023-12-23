@@ -19,10 +19,21 @@ export class ApiHandlerService {
     this.learnerUrls = ['/courses', '/create-course', '/employees', '/reports', '/f2f-reports', '/userAccess', '/message', '/user-roles']; */
   }
 
-  getData(url, param, subject) {
+  getData(url, param, subject, queryParam?) {
     return new Promise((resolve, reject) => {
       if (param) {
         url = `${url}/${param}`;
+      }
+      if (queryParam) {
+        let tempUrl = '';
+        const keys = Object.keys(queryParam);
+        keys.forEach((key, index) => {
+          tempUrl = `${tempUrl}${key}=${queryParam[key]}`;
+          if (index < keys.length - 1) {
+            tempUrl += '&';
+          }
+        });
+        url = `${url}?${tempUrl}`
       }
       this.http.get(url).pipe(takeUntil(subject)).subscribe(
         (response: any) => {

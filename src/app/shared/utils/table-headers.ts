@@ -228,7 +228,7 @@ export class TableHeaders {
         sort: false
       },
       {
-        name: 'AppAuth Role',
+        name: 'App Auth Role',
         property: 'appAuthRole',
         filter: false,
         sort: false
@@ -250,6 +250,12 @@ export class TableHeaders {
         property: 'auditRole',
         filter: false,
         sort: false
+      },
+      {
+        name: 'Last Login',
+        property: 'lastLogin',
+        filter: false,
+        sort: true
       },
       {
         name: 'Country',

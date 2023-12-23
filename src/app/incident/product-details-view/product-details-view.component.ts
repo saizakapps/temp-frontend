@@ -16,7 +16,7 @@ export class ProductDetailsViewComponent implements OnInit{
 let createdOn = this.productDetailsData.showData.createdOn;
 let redactedRule = this.productDetailsData.redactRuleData.redactRules;
       if(redactedRule=='Yes'){
-         this.isRedacted=this.common.compareDateTwoMonthCompleted(createdOn);
+         this.isRedacted=this.common.compareDateTwoMonthCompleted(createdOn, this.productDetailsData.redactRuleData.redactedDays);
       }
       this.isRedacted=this.productDetailsData.showData.isRedacted
    }

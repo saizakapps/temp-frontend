@@ -93,10 +93,16 @@ setWitnessFilesToPreview(){
         width: '1000px',
         })
     }
+    witnessviewLoader = false
     downloadWitnessFiles(){
+      this.witnessviewLoader = true;
+      this.common.openSnackBar('Preparing the files; downloading will begin shortly.',2,'Download');
        let filesUrL:any= this.imageObjectWitnessStatement.map((item:any)=>item.src);
   if(filesUrL.length>0){
-    this.common.downloadAll(filesUrL);
+    // this.common.downloadAll(filesUrL);
+       this.common.downloadAllwithloader(filesUrL, () => {
+      this.witnessviewLoader = false
+    });
   }
     }
 openImageViewerNotHistory(){

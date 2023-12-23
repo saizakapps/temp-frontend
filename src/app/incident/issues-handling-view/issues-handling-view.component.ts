@@ -1,4 +1,5 @@
 import { Component,OnInit,Input,Output,EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-issues-handling-view',
@@ -9,7 +10,7 @@ export class IssuesHandlingViewComponent implements OnInit{
 	@Input() issuesHandlingData:any;
 	@Output() issuesHandlingEdit = new EventEmitter<any>();
   ispriorityShow = false;
-   constructor(){
+   constructor(public router:Router){
 
    }
    ngOnInit():void{

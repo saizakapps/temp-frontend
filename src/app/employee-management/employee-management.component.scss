@@ -449,7 +449,7 @@ li.mat-tree-node.storeList,
 }
 .roleSection {
   margin-top: 12px !important;
-  padding: 0.5rem 0;
+  padding: 19px 0;
 }
 .createUserModal .modal-footer,
 .linkedEmployee .modal-footer,
@@ -815,8 +815,7 @@ input.noarrow::-webkit-inner-spin-button {
   align-items: flex-start;
 }
 .emp-overlay {
-  /*Edit by Anwar*/
-  //  pointer-events: none;
+   pointer-events: none;
 }
 .linkedEmployee .linkEmployeeTable th {
   font-weight: 600 !important;
@@ -899,7 +898,7 @@ input.noarrow::-webkit-inner-spin-button {
   width: 100px;
 } */
 .formwidth1{
-  width: 355px;
+  width: 330px;
 
 }
 .linkedEmployeeAssignrole .modal-dialog {
@@ -927,4 +926,7 @@ input.noarrow::-webkit-inner-spin-button {
 }
 .newCourseBtn1{
   margin-right: 5px !important;
+}
+.marginTop {
+  margin-bottom: 8px !important;
 }

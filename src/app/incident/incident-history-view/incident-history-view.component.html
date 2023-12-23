@@ -45,12 +45,13 @@
 						<div class="" [ngClass]="{'boxlist' : !boxList}">
 							<div *ngFor="let cmt of this.incidentForm.value.resolveActions;index as i;">
 								<div *ngIf="i<=showMoreCommentCount">
-									<div class="d-flex align-items-center color pb-10">
+									<div class="d-flex  color pb-10">
 										<div><img src="assets/healthsafetyimages/small_msg_icon.png" alt="" class="marginImg"></div>
-										<div class="wrapflex-form">
+										<div class="wrapflex-form" *ngIf="!isRedacted">
 										<div class="fw-600-bold  uname">{{cmt.createdByName}}</div>
 										<div class="fontset">{{cmt.addedDateTime+'(UTC)'}}</div>
 										</div>
+										<div *ngIf="isRedacted" class="redacted-background-history">REDACTED</div>
 									</div>
 									<div class="lh-17 pb-10 break-word"><span class="fw-500">Actions:</span>
 										{{(cmt.resolveAction!='')?cmt.resolveAction:'-'}}
@@ -77,10 +78,17 @@
 						<div class="priorityBoxtitle d-flex align-items-center">Priority<span class="selectPriority d-flex align-items-center" >:&nbsp;<span class="editminicircledot {{optionData}}1" [style.background-color]="optionData"></span>{{this.productDetailsView.showData.priority}}</span></div>
 						
 					</div>
-					<div class="legal-info" *ngIf="!incidentData.isAdd && isShowInsuranceVerification">
-						<div >
+					<div class="legal-info" *ngIf="!incidentData.isAdd && (isShowInsuranceVerification)">
+						<div>
 							<app-insurance-verification-view [insuranceVerificationData]="insuranceVerificationData" *ngIf="isShowInsuranceVerification"></app-insurance-verification-view>
 						</div>
+						
+					</div>
+
+					<div class="legal-info" *ngIf="!incidentData.isAdd && (isOtherInfoBoxShow)">
+						<div>
+							<app-other-info-form [otherinfoData] = "otherinfoData" (otherinfoevent) = "setotherInfovalue($event)"></app-other-info-form>
+							</div>
 					</div>
 				</div>
 			</div>

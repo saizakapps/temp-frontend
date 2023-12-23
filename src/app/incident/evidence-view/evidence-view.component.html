@@ -15,17 +15,21 @@
 		 	</div>
 </div>
  -->
-<div class="group-2" *ngIf="isEvidence">
-    <div class="thumnail text-center" *ngFor="let img of items; let i = index">
+<div class="group-2 uploadfilesData" *ngIf="isEvidence">
+    <div class="thumnail text-center" *ngFor="let img of imageShowObject; let i = index">
       <!--   <img  [src]="img.thumbImage || img.posterImage" (click)="showLightbox(i)" /> -->
-       <img 
-         [lightbox]="i"
-         [src]="img.data.thumb" [gallery]="'anotherLightbox'"   >
+         <img *ngIf = "img.type !== 'WordDocument' && img.type !== 'proofWordDocument'"
+         [lightbox]="0"
+         [src]="img.thumbImage || img.posterImage" [gallery]="'anotherLightbox'"   >
+         <img *ngIf = "img.type == 'WordDocument' || img.type == 'proofWordDocument'"
+         [src]="img.thumbImage || img.posterImage" (click)="openWordViewer(docxContent,'word',img)" > 
     </div>
-
+    <div class="loaderwheel" *ngIf="downloadEvidenceLoader">
+        <div class="loader"></div>
+    </div>
 		 	  
 </div>
-<div class="row align-right"  *ngIf="items.length>0" title="Download All">
+<div class="row align-right"  *ngIf="evidenceLenth.length>0 && this.isEvidence == true" title="Download All">
              <span class="download-label" (click)="downloadEvidence()">
                  Download CCTV/Photos files
              </span>
@@ -39,7 +43,7 @@
           <img 
          [src]="img.data.thumb"  *ngIf="img.data.type=='pdf'" (click)="openPdfPopup(pdfContent)" >
     </div>
-     
+       
     <ng-template #pdfContent>
         <div class="popup-view popup-view-pdf">
             <app-pdf-viewer [pdfURL]="pdfURL"></app-pdf-viewer>
@@ -54,3 +58,20 @@
                 Download proof files
              </span>
          </div>
+
+         <ng-template #docxContent>
+            <div class="popup-view-pdf">
+          
+            <!-- <ngx-doc-viewer [url]="docURL" viewer="mammoth" class="docfile ngx-doc-viewer" *ngIf="docURL!='' && docURL!=null" ></ngx-doc-viewer> -->
+            <app-document-viewer [docURL]="wordURL" *ngIf="wordURL!='' && wordURL!=null" ></app-document-viewer>
+            
+            <!-- <ngx-doc-viewer [url]="pdfURL" viewer="pdf" class="docfile" *ngIf="pdfURL!='' && pdfURL!=null"></ngx-doc-viewer> -->
+            <mat-icon class="close-doc-viewer" (click)="closeDailog()" mat-dialog-close>close</mat-icon>
+            <!-- 
+            [viewerUrl]="'https://docs.google.com/gview?url=%URL%&embedded=true'"  [googleCheckContentLoaded]="'true'"
+            [googleCheckInterval]="'3000'" 
+         https://github.com/Marcelh1983/angular-document-viewer/blob/master/demo/assets/file-sample_100kB.docx
+         http://smyths360-dev-admin.smythsuat.com/api/web/incident/Witness_8008ee3b-1e91-4e9e-961e-82314bbf5757.docx
+         -->
+            </div>
+            </ng-template>

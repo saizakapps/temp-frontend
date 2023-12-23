@@ -42,7 +42,7 @@ export class WitnessFormComponent implements OnInit{
 	public pdfURL:any = '';
 	public docURL:any = '';
   public deleteDailog:any;
-allowedFileType = ["image/jpg","image/jpeg",'application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+allowedFileType = ["image/jpg","image/jpeg","application/msword",'application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
 fileTypeMessage = 'jpg,jpeg,pdf,doc,docx';
 items: any=[];
 galleryOptions:any=[{  previewFullscreen:true,}];
@@ -138,7 +138,7 @@ isFieldValid(field: string) {
        	this.common.openSnackBar('Contact number already exist',2,'Required');
        	this.isFieldValid('witnessContactNumber');
        	this.witnessForm.get('witnessContactNumber').errors={message:'Contact number already exist'}
-       }else if(emailExistData.length>0){
+       }else if(email!='' && email!=null && emailExistData.length>0){
        		this.common.openSnackBar('Email already exist',2,'Required');
        		this.witnessForm.get('witnessContactEmail').errors={message:'Email already exist'}
        }else if(this.isValidWitnessForm(this.witnessForm.value)){
@@ -230,10 +230,12 @@ isFieldValid(field: string) {
 	{
 	isValid = false;
 	return { 'message': 'Contact number must not allow alphabets' };
-	}else if(!isSpecialCharValid){
-       return { 'message': 'Contact number must not allow special characters' };
+	}
+  // else if(!isSpecialCharValid){
+  //      return { 'message': 'Contact number must not allow special characters' };
 
-	}else{
+	// }
+  else{
 		return null;
 	}
 }
@@ -254,7 +256,7 @@ emailValidate(control:any){
     // 	 isValid = true;
     // 	 return  { 'message': 'Please enter contact email' };
     // }else
-     if ((control.value!=='' || control.value.trim().length!==0) && !re.test(control.value)) {
+     if ((control.value!=='' && control.value.trim().length!==0) && !re.test(control.value)) {
       isValid = true;
       return { 'message': 'Email is invalid' };
     } else {
@@ -397,7 +399,7 @@ async uploadNewMultiple(file:any){
           let uploadedFile = event.body.payLoad;
       
             let witnessFiles = this.witnessForm.value.witnessFiles;
-            let fileType = this.getFileTypeName(file.name);
+            let fileType = this.getFileTypeName(uploadedFile);
            let finalFile = {filePath:uploadedFile,fileType:fileType,id:0,witnessId:this.witnessData.id,witnessFileDeleted:0}
               witnessFiles.push(finalFile);
               this.witnessForm.patchValue({witnessFiles:witnessFiles});
@@ -521,7 +523,7 @@ isValidWitnessForm(witnessFormValue:any){
    // else  if(witnessFormValue.witnessContactEmail=='' || witnessFormValue.witnessContactEmail==null || witnessFormValue.witnessContactEmail.trim().length==0){
    //  isValid = false;
    // }
-   else  if((witnessFormValue.witnessContactEmail!=='' && witnessFormValue.witnessContactEmail!==null && witnessFormValue.witnessContactEmail.trim().length==0) && this.emailValidate(this.witnessForm.get('witnessContactEmail'))!=null){
+   else  if((witnessFormValue.witnessContactEmail!=='' && witnessFormValue.witnessContactEmail!==null && witnessFormValue.witnessContactEmail.trim().length!==0) && this.emailValidate(this.witnessForm.get('witnessContactEmail'))!=null){
     isValid = false;
    }
    else  if(witnessFormValue.witnessContactNumber=='' || witnessFormValue.witnessContactNumber==null || witnessFormValue.witnessContactNumber.trim().length==0){
@@ -538,20 +540,26 @@ isValidWitnessForm(witnessFormValue:any){
    }
    return isValid;
 }
+witnessdownloadLoader = false
 downloadWitnessFiles(){
+  this.witnessdownloadLoader = true;
+  this.common.openSnackBar('Preparing the files; downloading will begin shortly.',2,'Download');
   let filesUrL:any= this.imageObjectWitnessStatement.filter(function(item:any){
     return item.deleted==0
   }).map((item:any)=>item.src);
   if(filesUrL.length>0){
-    this.common.downloadAll(filesUrL);
+    // this.common.downloadAll(filesUrL);
+    this.common.downloadAllwithloader(filesUrL, () => {
+      this.witnessdownloadLoader = false
+    });
   }
-
 }
 
 isFieldValidEmail(field:any){
   let control =   this.witnessForm.get(field);
   let isValid:any =this.emailValidate(control);
-   return ((isValid!=null || isValid==false ) && this.formSubmitAttempt);
+   return ((isValid!=null || isValid==false || this.witnessForm.get(field).untouched ) && this.formSubmitAttempt);
+   
 }
 isFieldValidContactNumber(field:any){
   let control =   this.witnessForm.get(field);

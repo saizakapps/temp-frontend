@@ -1,9 +1,9 @@
 
-<div class="incidentDetailView d-flex flex-column">
+<div class="incidentDetailView d-flex flex-column" [ngClass]="{'no-gap': router.url == '/incident-history'}">
 				<div class="labelView d-flex">
 					<label class="label-name">CSD Tracking No:</label>
 				<div class="data-view">
-				{{issuesHandlingData.showData.csdNumber}}
+				{{(issuesHandlingData.showData.csdNumber !== null && issuesHandlingData.showData.csdNumber !== '')?issuesHandlingData.showData.csdNumber:'-'}}
 			</div>
 				</div>
 				<!-- <div class="labelView d-flex" *ngIf="ispriorityShow">
@@ -13,9 +13,10 @@
 			</div>
 				</div> -->
 				
-				<div class="labelView">
+				<div class="labelView" [ngClass]="{'d-flex' : issuesHandlingData.showData.handlingTeams.length == 0}">
 					<label class="label-name">Handlers:</label>
 				<div class="data-view">
+					<span *ngIf="issuesHandlingData.showData.handlingTeams.length == 0">-</span>
 					<div class="box-assign-row issueList handling-mrg-top10">
 						<table *ngIf="issuesHandlingData.showData.handlingTeams.length>0" class="border-table">
 										<thead>

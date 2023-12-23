@@ -69,12 +69,14 @@ export class LoginService {
 
   /* logout user */
   logout() {
+     this.router.navigate(['/login']);
+    localStorage.clear();
     // this.http.post(this.utils.API.LOGOUT, null).subscribe( (response) => {
     //     this.updateLocalStorage();
     // }, (error) => {
     //     console.log('error while logout');
     // });
-    this.updateLocalStorage();
+    //this.updateLocalStorage();
   }
 
   /* logout process */

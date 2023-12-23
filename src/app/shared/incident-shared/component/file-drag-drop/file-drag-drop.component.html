@@ -9,7 +9,8 @@
         <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)"class="d-none" />
 		<div class="container dragbox align-items-center justify-content-center cursor" appFileDragDrop (click)="fileDropRef.click()"  (fileDropped)="onFileDropped($event)" *ngIf="data.isEvidence">
 		<h3 for="fileDropRef" *ngIf="data.isEvidence==true" class="cursor"  [ngClass]="{'d-none' : router.url === '/incident/mobile/create'}">Drag & drop, or click to add evidence files</h3>
-		<h3 class="improtent-message justify-content-center drop-box-head2 cursor" *ngIf="data.isEvidence==true" ><span class="font-weight-bold">Important!</span><span> You must remove the files from your mobile device after uploading.</span></h3>
+		<h3 class="improtent-message justify-content-center drop-box-head2 cursor" [ngClass]="{'pt-0' : router.url === '/incident/mobile/create'}" *ngIf="data.isEvidence==true" ><span class="font-weight-bold">Important!</span><span> Do not upload photos containing a person's face. Once photos are uploaded, delete these from your mobile device. Do not record CCTV footage on your mobile device.</span></h3>
+        <!-- <h3 class="improtent-message justify-content-center drop-box-head2 cursor" *ngIf="data.isEvidence==true" ><span>Please avoid uploading photos/ CCTV that might expose someone's identity.</span></h3> -->
 		</div>
         <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)" class="d-none" />
 		<div class="container dragbox productDragBox d-flex align-items-center justify-content-center cursor" (click)="fileDropRef.click()" appFileDragDrop (fileDropped)="onFileDropped($event)"  *ngIf="!data.isEvidence">
@@ -27,15 +28,20 @@
             <app-progress-bar [progress]="progressCount" *ngIf="progressCount<100"></app-progress-bar>
          </div>
          <div class=" mr-15" *ngIf="data.isEvidence==true">
-            <div class="group-2 d-flex wrapflex">
+            <div class="group-2 d-flex wrapflex uploadfilesData">
     <div class="flex-gap" *ngFor="let img of imageObject; let i = index">
+
        <!--  <img  [src]="img.thumbImage || img.posterImage" (click)="showLightbox(i)" /> -->
-         <img 
-         [lightbox]="i"
-         [src]="img.thumbImage || img.posterImage" [gallery]="'anotherLightbox'"   >
+         <img *ngIf = "img.type !== 'WordDocument' && img.type !== 'proofWordDocument'" [ngClass]="{'none-click' :img.video?.includes('.avi') || img.video?.includes('.wmv')}"
+         [lightbox]="0" [src]="img.thumbImage || img.posterImage" [gallery]="'anotherLightbox'">
+         <img *ngIf = "img.type == 'WordDocument' || img.type == 'proofWordDocument'"
+         [src]="img.thumbImage || img.posterImage" (click)="openWordViewer(docxContent,'word',img)" >
         <div class="delete-label-margin">
-        <span class="delete-label" (click)="deleteFilePopup(i,'evidence',conformbox)" title="Delete">Delete</span>
+        <span class="delete-label" (click)="deleteFilePopup(i,'evidence',conformbox,img)" title="Delete">Delete</span>
         </div>
+    </div>
+    <div class="loaderwheel" *ngIf="downloadLoader">
+        <div class="loader"></div>
     </div>
 </div>
 <div class=" align-right"  *ngIf="imageObject.length>0" title="Download All">
@@ -54,7 +60,7 @@
           <img 
          [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent)"  *ngIf="img.type=='pdf'">
         <div class="delete-label-margin">
-        <span class="delete-label" (click)="deleteFilePopup(i,'Proof',conformbox)" title="Delete">Delete</span>
+        <span class="delete-label" (click)="deleteFilePopup(i,'Proof',conformbox,img)" title="Delete">Delete</span>
         </div>
     </div>
    
@@ -78,7 +84,7 @@
         <div class="confirmText">
                  Are you sure want to delete?
         </div>  
-          <div class="d-flex justify-content-end ">
+          <div class="d-flex justify-content-end gap-10">
                 <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft" mat-dialog-close >Cancel</button>
                 <button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft  cform" mat-dialog-close (click)="deleteFile()">Confirm</button>        
         </div>
@@ -100,3 +106,19 @@
     </div>
 
 
+    <ng-template #docxContent>
+        <div class="popup-view-pdf">
+      
+        <!-- <ngx-doc-viewer [url]="docURL" viewer="mammoth" class="docfile ngx-doc-viewer" *ngIf="docURL!='' && docURL!=null" ></ngx-doc-viewer> -->
+        <app-document-viewer [docURL]="wordURL" *ngIf="wordURL!='' && wordURL!=null" ></app-document-viewer>
+        
+        <!-- <ngx-doc-viewer [url]="pdfURL" viewer="pdf" class="docfile" *ngIf="pdfURL!='' && pdfURL!=null"></ngx-doc-viewer> -->
+        <mat-icon class="close-doc-viewer" (click)="closeDailog()" mat-dialog-close>close</mat-icon>
+        <!-- 
+        [viewerUrl]="'https://docs.google.com/gview?url=%URL%&embedded=true'"  [googleCheckContentLoaded]="'true'"
+        [googleCheckInterval]="'3000'" 
+     https://github.com/Marcelh1983/angular-document-viewer/blob/master/demo/assets/file-sample_100kB.docx
+     http://smyths360-dev-admin.smythsuat.com/api/web/incident/Witness_8008ee3b-1e91-4e9e-961e-82314bbf5757.docx
+     -->
+        </div>
+        </ng-template>

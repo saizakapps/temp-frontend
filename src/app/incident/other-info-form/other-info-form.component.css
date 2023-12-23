@@ -1,0 +1,125 @@
+.personal-info-title {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+  margin-bottom: 15px;
+  /* margin-top: 20px; */
+}
+
+.aligncheckbox {
+  margin-top: -3px;
+}
+
+.open {
+  margin-bottom: 10px;
+}
+
+.otherinfoselectbox {
+  position: relative;
+  width: 100%;
+}
+
+.multselecticonnew {
+  background-color: white !important;
+  background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23424242%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0-4.2-1.6-7.9-4.8-11.2-3.2-3.2-6.9-4.8-11.2-4.8H16c-4.2%200-7.9%201.6-11.2%204.8S0%20163.8%200%20168c0%204.4%201.6%208.2%204.8%2011.4l112%20112c3.1%203.1%206.8%204.6%2011.2%204.6%204.4%200%208.2-1.5%2011.4-4.6l112-112c3-3.2%204.5-7%204.5-11.4z%22%2F%3E%3C%2Fsvg%3E%0A) !important;
+  background-position: right 12px center !important;
+  background-repeat: no-repeat !important;
+  background-size: auto 38% !important;
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: flex;
+  align-items: center;
+
+}
+
+.priority-form {
+  width: 319px;
+  min-width: 319px;
+  max-width: 319px;
+  position: relative;
+  margin-top: -13px;
+  margin-right: -1px;
+  margin-left: -1px;
+}
+
+.form-control {
+  border-color: #818181;
+  border-radius: 2px;
+  height: 35px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.mat-icon {
+  -webkit-user-select: none;
+  user-select: none;
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: 14px !important;
+  width: 14px !important;
+  /* overflow: hidden; */
+  vertical-align: middle;
+}
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 14px !important;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  cursor: pointer;
+}
+
+.priorityMaticonadjust {
+  margin-bottom: 3px;
+}
+
+.label-name {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  margin-bottom: 3px;
+}
+
+.mbottomview {
+  margin-bottom: 10px;
+}
+.mbottom-10{
+  margin-bottom: 10px;
+}
+select{
+  appearance: none;
+}
+
+.multiselecticon {
+  background-color: white !important;
+   background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23424242%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0-4.2-1.6-7.9-4.8-11.2-3.2-3.2-6.9-4.8-11.2-4.8H16c-4.2%200-7.9%201.6-11.2%204.8S0%20163.8%200%20168c0%204.4%201.6%208.2%204.8%2011.4l112%20112c3.1%203.1%206.8%204.6%2011.2%204.6%204.4%200%208.2-1.5%2011.4-4.6l112-112c3-3.2%204.5-7%204.5-11.4z%22%2F%3E%3C%2Fsvg%3E%0A) !important;
+  background-position: right 10px center !important;
+  background-repeat: no-repeat !important;
+  background-size: auto 38% !important;
+   padding: 4px 20px 4px 10px !important;
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: flex;
+  align-items: center;
+  text-overflow: ellipsis;
+
+}
+option {
+  text-overflow: ellipsis;
+}

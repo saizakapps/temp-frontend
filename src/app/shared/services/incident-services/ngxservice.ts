@@ -22,7 +22,7 @@ import { Subject } from "rxjs";
    selectedRegionData:any[] = [];
    assignedManagerData:any[] = [];
    viewednameData:any[] = [];
-   selectedYear = new Date().getFullYear();
+   selectedYear:any;
    hideTable:boolean = false;
    isShowImagePreview:boolean = false;
    onlyNew:boolean = false;
@@ -36,4 +36,9 @@ import { Subject } from "rxjs";
    filterStore: string = '';
    mobileView:boolean = false;
    nextpathValue:any;
+   auditShimmerWidth:any
+   activesort:any;
+   auditReadonly:boolean = false
+   dateSortValue = '';
+   disableFilter = false 
 }

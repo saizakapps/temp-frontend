@@ -46,7 +46,7 @@
 								<label class="label-name">Injury severity</label>
 								<div class="data-view d-flex  align-items-center">
 
-									<select class="form-control field-width-height" formControlName="severity" (change)="severityChange($event)">
+									<select class="form-control field-width-height multiselecticon" formControlName="severity" (change)="severityChange($event)">
 										<option value="" class="d-none"></option>
 										<option *ngFor="let isd of injurySeverityData;" value="{{isd.id}}">
 											{{isd.severity}}</option>
@@ -63,7 +63,7 @@
 								<label class="label-name">Preventability</label>
 								<div class="data-view d-flex  align-items-center">
 
-									<select class="form-control field-width-height" formControlName="preventability" (change)="preventabilityChange($event)">
+									<select class="form-control field-width-height multiselecticon" formControlName="preventability" (change)="preventabilityChange($event)">
 										<option value=""  class="d-none"></option>
 										<option *ngFor="let pd of preventabilityData;" value="{{pd.id}}">
 											{{pd.description}}
@@ -97,7 +97,7 @@
 								<label class="label-name">Legal status</label>
 								<div class="data-view d-flex  align-items-center">
 
-									<select class="form-control field-width-height" formControlName="legalStatus" (change)="legalStatus($event)">
+									<select class="form-control field-width-height multiselecticon" formControlName="legalStatus" (change)="legalStatus($event)">
 										<option value=""  class="d-none"></option>
 										<option *ngFor="let lsd of legalStatusData;" value="{{lsd.id}}">
 											{{lsd.statusDescription}}</option>
@@ -127,7 +127,7 @@
 							<div class="">
 								<label class="label-name">Photo Status</label>
 								<div class="data-view d-flex  align-items-center">
-									<select class="form-control field-width-height" formControlName="photoStatusCode" (change)="photoStatusChange($event)">
+									<select class="form-control field-width-height multiselecticon" formControlName="photoStatusCode" (change)="photoStatusChange($event)">
 										<option *ngFor="let ps of photoStatusData;" value="{{ps.id}}">{{ps.statusCode+'
 											- '+ps.statusDescription}}
 										</option>
@@ -142,7 +142,7 @@
 									<div class="">
 								<label class="label-name">CCTV status</label>
 								<div class="data-view  d-flex  align-items-center">
-									<select class="form-control field-width-height" formControlName="cctvStatusCode" (change)="cctvStatusChange($event)">
+									<select class="form-control field-width-height multiselecticon" formControlName="cctvStatusCode" (change)="cctvStatusChange($event)">
 										<option *ngFor="let cctvFS of cctvFootageStatus;" value="{{cctvFS.id}}">
 											{{cctvFS.statusCode+'
 											- '+cctvFS.footageDescription}}</option>

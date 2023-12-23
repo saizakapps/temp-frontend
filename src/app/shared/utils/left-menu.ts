@@ -69,7 +69,7 @@ export class LeftMenus {
           access: false,
           isActive:false
         },
-        {
+        /* {
           id: 7,
           moduleCode: 'LA-UA',
           key: 'userAccess',
@@ -77,7 +77,7 @@ export class LeftMenus {
           routeUrl: '/userAccess',
           access: false,
           isActive:false
-        },
+        }, */
         {
           id: 8,
           moduleCode: 'LA-M',

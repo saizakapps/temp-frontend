@@ -4,7 +4,7 @@
   <mat-checkbox (change)="update = !update">Update</mat-checkbox> -->
   <nav class="navbar navbar-light justify-content-between navbar-container">
     <div class="d-flex flex-row col-12 flex-wrap  pr-0 courseTblCnt">
-      <form class="form-inline pl-0 courseForm">
+      <form [ngClass]="{'viewOnly': enableFilter}" class="form-inline pl-0 courseForm">
         <div class="form-group mr-0 d-block">
           <label for="search" class="pb-2 mr-2 justify-content-start">Course Name</label>
           <div>

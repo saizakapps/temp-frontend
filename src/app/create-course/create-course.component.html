@@ -55,6 +55,11 @@
                 </div>
               </div>
 
+              <!-- F2F course category (Available only for F2F) -->
+              <!-- <ng-select (click)="policyGroupOnClick()" [items]="periodItems" name="period" bindValue="key" bindLabel="name"
+                [clearable]=true [searchable]=false [(ngModel)]="course.category" placeholder="Category" class="periodSelectCls">
+              </ng-select> -->
+
               <div class="float-right  d-flex align-items-center w-100 mt-2 justify-content-end">
                 <!-- <div class="btn-group mr-2 publishDraftCls" role="group" aria-label="First group">
                   <div *ngIf="publishDraft.publish || publishDraft.draft">
@@ -148,7 +153,7 @@
                       <mat-label *ngIf="selectedLevelCount > 0" class="levelSelected">
                         {{selectedLevelCount + ' role selected'}}
                       </mat-label>
-                      <mat-select #selector1>
+                      <mat-select #selector1 (openedChange)="checkCountryAndRoleSelected($event, 'role1')">
                         <mat-option (click)="selector1.open()" class="createRoleCls">
                           <!-- <input mat-tree (keyup)="hierarchySearch($event, countryList)"> -->
                           <div [ngClass]="{'viewOnly': (view && !create && !update)}" class="node1 tree">
@@ -180,7 +185,7 @@
                       <mat-label *ngIf="selectedLevelCount > 0 && !isSuggestedCourse" class="levelSelected">
                         {{selectedLevelCount + ' level selected'}}
                       </mat-label>
-                      <mat-select #selector2>
+                      <mat-select #selector2 (openedChange)="checkCountryAndRoleSelected($event, 'role2')">
                         <mat-option (click)="selector2.open()" class="createRoleCls">
                           <!-- <input mat-tree (keyup)="hierarchySearch($event, countryList)"> -->
                           <div [ngClass]="{opacityCheck: isSuggestedCourse && node1.desc !== 'Suggested'}"
@@ -239,7 +244,7 @@
                       <mat-label *ngIf="selectedStoreCount < 1"> Select Countries / Regions / Stores </mat-label>
                       <mat-label *ngIf="selectedStoreCount > 0" class="levelSelected">
                         {{selectedStoreCount + ' stores selected'}} </mat-label>
-                      <mat-select class="roleSelectionCls">
+                      <mat-select #locationSelect class="roleSelectionCls" (openedChange)="checkCountryAndRoleSelected($event, 'location')">
                         <!-- [disabled]="courseConfig.code === courseCode.Policies ? roleNotSelected() : levelNotSelected()" -->
                         <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
                           (change)="selectAll($event, countryList, 'country'); calcSelectedStore();">
@@ -334,13 +339,17 @@
                     *ngIf="courseConfig.courseContent"> Course Content </button>
                   <button type="button" [ngClass]="{active: selectedForm === 'questionaire'}"
                     class="btn courseContentDetails" (click)="changeForm('questionaire')" *ngIf="courseConfig.quiz"
-                    [disabled]="courseConfig.courseContent && (course.chapters[0]?.activities[0].activityType === 'quiz' ? course.chapters[0]?.activities[0]?.questions[0]?.content?.length < 1 : course.chapters[0]?.activities[0]?.content?.length < 1)">
+                    [disabled]="courseConfig.courseContent && (course.chapters[0]?.activities[0].activityType === 'quiz' ? course.chapters[0]?.activities[0]?.questions[0]?.content?.length < 1 : course.chapters[0]?.activities[0]?.content?.length < 1) && courseConfig.code !== courseCode.F2F">
                     Questionnaire </button>
-                  <button type="button" [ngClass]="{active: selectedForm === 'completionMessage'}"
-                    class="btn courseContentDetails" (click)="changeForm('completionMessage')"
-                    *ngIf="courseConfig.completionMessage"
-                    [disabled]="(course.chapters[0]?.activities[0].activityType === 'quiz' ? course.chapters[0]?.activities[0]?.questions[0]?.content?.length < 1 : course.chapters[0]?.activities[0]?.content?.length < 1) || (courseConfig.quizOptional !== true && courseConfig.quiz === true && atleastSingleQuestion())">
+                  <button type="button" [ngClass]="{active: selectedForm === 'completionMessage'}" class="btn courseContentDetails"
+                    (click)="changeForm('completionMessage')" *ngIf="courseConfig.completionMessage"
+                    [disabled]="((course.chapters[0]?.activities[0].activityType === 'quiz' ? course.chapters[0]?.activities[0]?.questions[0]?.content?.length < 1 : course.chapters[0]?.activities[0]?.content?.length < 1) || (courseConfig.quizOptional !== true && courseConfig.quiz === true && atleastSingleQuestion()))  && courseConfig.code !== courseCode.F2F">
                     Completion Message</button>
+                  <ng-container *ngIf="courseConfig.code === courseCode.F2F">
+                    <button type="button" [ngClass]="{active: selectedForm === 'certification'}" class="btn courseContentDetails"
+                    (click)="changeForm('certification')" *ngIf="courseConfig.certification">
+                    Certification</button>
+                  </ng-container>
                 </div>
 
                 <div class="float-right w-100 d-flex align-items-center justify-content-end">
@@ -383,7 +392,7 @@
                     <span class="ml-1">History</span>
                   </button>
                   <button
-                  (click)="courseConfig.code === courseCode.SlideShow || !enableDownloadDropDown() ? mediaDownload() : print()"
+                  (click)="courseConfig.code === courseCode.SlideShow || getMediaUrlList().length > 0 ? mediaDownload() : print()"
                   [disabled]="!enablePdfButton() || (view && !create && !update)"
                   *ngIf="((courseConfig.code === courseCode.SlideShow && getMediaUrlList().length > 0 && (selectedForm === 'courseContent' || selectedForm === 'questionaire')) ||
                     (courseConfig.code === courseCode.Checklist && (selectedForm === 'courseContent' || selectedForm === 'checklist' || selectedForm === 'questionaire'))) ||
@@ -754,7 +763,7 @@
                 </div>
                 <div class="float-right d-flex justify-content-end w-100  align-items-center randomTxt">
                   <span class="quizAtDD d-flex align-items-center">
-                    <ng-container *ngIf="courseTypeDetail.courseTypeCode !== courseCode.SlideShow">
+                    <ng-container *ngIf="courseTypeDetail.courseTypeCode !== courseCode.SlideShow && courseConfig.code !== courseCode.F2F">
                       <label class="randomQuestion randomCls"> Quiz at</label>
                       <ng-select (click)="policyGroupOnClick()" class="" [items]="quizPositionItems" name="quizPosition" bindLabel="name" bindValue="key"
                         (change)="quizPositionChange()" [clearable]=false [searchable]="false" [(ngModel)]="quizPosition"> </ng-select>
@@ -780,20 +789,111 @@
             <div *ngIf="selectedForm === 'completionMessage' && courseConfig.completionMessage"
               class="completionMessageCls">
               <div class="d-flex align-items-center completionTemplate">
+                <!-- Comp category (Only for F2F) -->
+                <!-- <ng-select *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()" (click)="policyGroupOnClick()" [items]="completionCategories" name="compCategory" [searchable]=true [clearable]=false
+                                [(ngModel)]="selectedCompletionType.id" bindLabel="name" bindValue="id" (change)="compCategoryChange($event)"
+                                class="completionSelect mt-3 mr-2"></ng-select> -->
+              
+                <div *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()" (click)="policyGroupOnClick()" class="btn-group mr-2 float-left courseGroupCls" role="group" aria-label="First group">
+                  <ng-container *ngFor="let item of completionCategories">
+                    <button type="button" [ngClass]="{active: item.id === selectedCompletionType.id}" class="btn courseContentDetails"
+                    (click)="compCategoryChange(item)"> {{item.name}} </button>
+                  </ng-container>
+                </div>
+              
                 <label class="mb-0 mr-2"> Template name: </label>
-                <ng-select (click)="policyGroupOnClick()" [items]="compTemplates" name="templateName" [searchable]=true [clearable]=false
-                  [(ngModel)]="compTemplateObj.id" bindLabel="title" bindValue="id" (change)="templateChange($event)"
-                  class="completionSelect mt-3 mr-2"></ng-select>
-                <input [ngClass]="{'viewOnly': (view && !create && !update)}" class="completeInput p-1" [(ngModel)]="compTemplateObj.title" />
+                <ng-container
+                  *ngIf="courseConfig.code !== courseCode.F2F || !(courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues())">
+                  <ng-select (click)="policyGroupOnClick()" [items]="compTemplates" name="templateName" [searchable]=true
+                    [clearable]=false [(ngModel)]="compTemplateObj.id" bindLabel="title" bindValue="id"
+                    (change)="templateChange($event, 'normal')" class="completionSelect mt-3 mr-2"></ng-select>
+                  <input [ngClass]="{'viewOnly': (view && !create && !update)}" class="completeInput p-1"
+                    [(ngModel)]="compTemplateObj.title" />
+                </ng-container>
+                
+                <ng-container *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()">
+                  <ng-select [disabled]="disableTemplateDD" (click)="policyGroupOnClick()" [items]="compCategoryTemplates" name="templateName" [searchable]=true
+                    [clearable]=false [(ngModel)]="selectedCompletionType.templateId" bindLabel="title" bindValue="id"
+                    (change)="templateChange($event, 'freeText')" class="completionSelect mt-3 mr-2"></ng-select>
+                  <input [ngClass]="{'viewOnly': (view && !create && !update)}" class="completeInput p-1"
+                    [(ngModel)]="selectedCompletionType.title" />
+                </ng-container>
                 <span class="completionName"> *Please provide the name to save the completion message template. </span>
               </div>
+
               <div [ngClass]="{'viewOnly': (view && !create && !update)}">
-                <ckeditor [editor]="Editor" name="completionObject" [(ngModel)]="completionObject.content"
-                class="editorFormatCls">
-              </ckeditor>
+                <!-- Template content for normal flow -->
+                <ckeditor *ngIf="courseConfig.code !== courseCode.F2F || !(courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues())" [editor]="Editor" name="completionObject"
+                  [(ngModel)]="completionObject.content" class="editorFormatCls"></ckeditor>
+                <!-- Template content for F2F free text flow -->
+                <ckeditor *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()" [editor]="Editor"
+                  name="completionObject" [(ngModel)]="selectedCompletionType.content" class="editorFormatCls">
+                </ckeditor>
               </div>
             </div>
 
+            <ng-container *ngIf="selectedForm === 'certification'">
+              <div *ngFor="let certItem of certificationItems" class="d-flex">
+                <div *ngIf="true">
+                  <label>Locations</label>
+                  <mat-form-field appearance="fill" class="roleDropdown" [ngClass]="{appliedFilter: certItem.renderingData.selectedStoreCount > 0}">
+                    
+                    <mat-label *ngIf="certItem.renderingData.selectedStoreCount < 1"> Select Countries / Regions / Stores </mat-label>
+                    
+                    <mat-label *ngIf="certItem.renderingData.selectedStoreCount > 0" class="levelSelected">
+                      {{certItem.renderingData.selectedStoreCount + ' stores selected'}} </mat-label>
+
+                    <mat-select class="roleSelectionCls">
+
+                      <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
+                        (change)="selectAll($event, certItem.renderingData.countryList, 'certCountry'); calcSelectedStore();">
+                        All</mat-checkbox>
+
+                      <mat-tree [dataSource]="certItem.renderingData.countryList" [treeControl]="treeControl" class="example-tree">
+
+                        <mat-option class="disableRipple">
+                          <!-- This is the tree node template for leaf nodes -->
+                          <mat-nested-tree-node *matTreeNodeDef="let node">
+                            <li class="mat-tree-node">
+                              <!-- use a disabled button to provide padding for tree leaf -->
+                              <button mat-icon-button disabled></button>
+                              <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}" class="ml-3"
+                                (change)="selectionToggleLeaf($event.checked, node, 'certCountry'); calcSelectedStore();"
+                                [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                            </li>
+                          </mat-nested-tree-node>
+                          <!-- This is the tree node template for expandable nodes -->
+                          <mat-nested-tree-node *matTreeNodeDef="let node; when: treeHasChild">
+                            <ul>
+                              <li>
+                                <div class="mat-tree-node">
+                                  <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
+                                    <mat-icon class="mat-icon-rtl-mirror m-0 roleIcon">
+                                      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                    </mat-icon>
+                                  </button>
+                                  <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}"
+                                    (change)="selectionToggle($event.checked, node, 'certCountry'); calcSelectedStore();"
+                                    [indeterminate]="node.selectStatus === 'mixed'"
+                                    [checked]="node.selectStatus === 'checked'">
+                                    {{node.desc}}</mat-checkbox>
+                                </div>
+                                <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                                  <ng-container matTreeNodeOutlet></ng-container>
+                                </ul>
+                              </li>
+                            </ul>
+                          </mat-nested-tree-node>
+                        </mat-option>
+                      </mat-tree>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <ng-select></ng-select>
+                <a>Preview</a>
+              </div>
+              <button (click)="addCertItem()" class="btn btn-primary">Add</button>
+            </ng-container>
 
 
             <!-- Common buttons -->
@@ -808,7 +908,7 @@
           <button class="saveDraft float-left" [disabled]="!course.externalCourseName || (view && !create && !update)"
             (click)="alertBeforeSubmit(false)" [title]="!course.externalCourseName ? 'Please fill name' : ''">
             Save Draft </button>
-          <button class="submitCourse ml-2" [disabled]="!enableSubmitButton() || (view && !create && !update)" (click)="alertBeforeSubmit(true)"
+          <button class="submitCourse ml-2" [disabled]="submitButton() || (view && !create && !update)" (click)="alertBeforeSubmit(true)"
             [title]="enableSubmitButton() ? '' : 'Please fill all the mandatory fields'">
             Submit Course </button>
         </div>
@@ -978,8 +1078,9 @@
               <!-- Questionnaire -->
               <ng-container *ngIf="(course.quizPosition && currentPage === course.chapters.length - 1) || (!course.quizPosition && selectedForm === 'questionaire' && currentPage < course.chapters.length)">
                 <div class="quizHintCls">
-                  <h3 class="quizTimeHeading">Quiz time!</h3>
-                  <!-- <p class=" hintCls">Hint: You can always reference the course for clues!</p> -->
+                  <h3 *ngIf="!checkFreeTextQues()" class="quizTimeHeading">Quiz time!</h3>
+                  <h3 *ngIf="checkFreeTextQues()" class="quizTimeHeading">Write up assesment</h3>
+                  <p *ngIf="checkFreeTextQues()" class=" hintCls">Hint: you can always reference the course for clues!</p>
                 </div>{{setTotalQuestions()}}
                 <ng-container *ngIf="course.quizPosition">
                   <ng-container *ngFor="let chapter of course.chapters">
@@ -1001,7 +1102,7 @@
 
               <!-- Completion Message -->
               <ng-container *ngIf="currentPage === course.chapters.length + 1">
-                <ng-container *ngTemplateOutlet="textPreview; context: { config : completionObject}">
+                <ng-container *ngTemplateOutlet="textPreview; context: { config : courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues() ? selectedCompletionType : completionObject}">
                 </ng-container>
               </ng-container>
               <!-- certificate page -->
@@ -1075,7 +1176,15 @@
           </div>
 
           <div class="float-right d-flex align-items-center ">
-            <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz'">
+            <!-- Question Type DD(Available only for F2F) -->
+            <ng-select *ngIf="courseConfig.code === courseCode.F2F" (change)="quizTypeOnChange(question)" [items]="questionTypes"
+              [name]="'qType' + config.chapterData?.chapterId + question.questionId" bindValue="key" [clearable]=false
+              [searchable]="false" bindLabel="name" [(ngModel)]="question.questionType">
+            </ng-select>
+
+            <span>|</span>
+
+            <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
               <input (change)="updateQuestionLimit()"
                 [name]="'mandatory' + config.chapterData?.chapterId + question.questionId" class="form-check-input "
                 type="checkbox" [(ngModel)]="question.mandatory" required>
@@ -1115,8 +1224,7 @@
                 </mat-radio-group>
               </div>
             </div> -->
-            <div class="multiAnswer w-100">
-              <!--  *ngIf="question.questionType === 'multiAnswer'" -->
+            <div class="multiAnswer w-100" *ngIf="question.questionType === 'multiAnswer' || question.questionType === 'singleAnswer'">
               <!-- <span class="mb-3">Correct</span> -->
               <div class="row align-items-center mt-2 mb-3 flex-nowrap "
                 *ngFor="let option of question.options; let optionIndex = index">
@@ -1134,8 +1242,32 @@
                 </button>
               </div>
             </div>
+            <!-- Re arrange order -->
+            <div class="multiAnswer w-100" *ngIf="question.questionType === 'reArrangeOrder'">
+              <div class="row align-items-center mt-2 mb-3 flex-nowrap "
+                *ngFor="let option of question.options; let optionIndex = index">
+                <span>{{optionIndex + 1}}</span>
+                <input class="form-control calibri" type="text" [(ngModel)]="option.content"
+                  [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
+                <button *ngIf="question.options.length > 2" class="col-4" (click)="removeOption(question, optionIndex)"
+                  class="removeBtn">
+                  <img src="assets/images/delete-user.svg" height="13px" width="13px"
+                    class=" ml-2 m-0 closeActivity answerDeleteCls">
+                </button>
+              </div>
+            </div>
+            <!-- Fill in the blanks & Free text -->
+            <div class="multiAnswer w-100" *ngIf="question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'">
+              <div>
+                <mat-checkbox [name]="'charLimitCheckBox' + selectedActivity.activityId" [(ngModel)]="question.characterLimitCheck"
+                  class="pl-3"></mat-checkbox>
+                <label>Character Limit</label>
+                <input [disabled]="!question.characterLimitCheck" type="number" [(ngModel)]="question.characterLimit"
+                [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
+              </div>
+            </div>
             <div class="addDeleteQuestion w-100">
-              <button (click)="addOption(question)" class="addBtn float-left"
+              <button *ngIf="!(question.questionType === 'fillRightAnswer' || question.questionType === 'freeText')" (click)="addOption(question)" class="addBtn float-left"
                 [disabled]="disableAddOption(question)">ADD</button>
               <button class="mb-4 float-right btn-danger deleteQuestionBtn"
                 (click)="removeQuestion(config.activityData.questions, questionIndex)">
@@ -1253,8 +1385,8 @@
             <div [innerHTML]="(question.content || '') | safe: 'html'" class="fontBold questionContent calibri"></div>
           </div>
         </div>
-        <!-- Multi correct answers -->
-        <ng-container>
+        <!-- Single & Multi correct answers -->
+        <ng-container *ngIf="question?.questionType === 'multiAnswer' ||question?.questionType === 'singleAnswer'">
           <!--  *ngIf="question?.questionType === 'multiAnswer'" -->
           <div class="answerSection" *ngFor="let answer of question?.options || []">
             <div *ngIf="answer.content" class="answerDiv d-flex">
@@ -1265,6 +1397,29 @@
               </span>
             </div>
           </div>
+        </ng-container>
+        <!-- Re arrange order -->
+        <ng-container *ngIf="question?.questionType === 'reArrangeOrder'">
+          <label *ngIf="question.content">drag and down to re-arrange the order</label>
+          <div class="answerSection" *ngFor="let answer of question?.options || []">
+            <div *ngIf="answer.content" style="width: 100%; height: 100%; padding-left: 5px; padding-right: 5px; padding-top: 10px; padding-bottom: 10px; background: white; border-radius: 6px; border: 1px #808080 solid; justify-content: flex-start; align-items: center; gap: 5px; display: inline-flex">
+              <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <mask id="mask0_193_1986" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+                <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                </mask>
+                <g mask="url(#mask0_193_1986)">
+                <path d="M9.00012 20.1153C8.5559 20.1153 8.17562 19.9572 7.85927 19.6408C7.54293 19.3245 7.38477 18.9442 7.38477 18.5C7.38477 18.0558 7.54293 17.6755 7.85927 17.3591C8.17562 17.0428 8.5559 16.8846 9.00012 16.8846C9.44433 16.8846 9.82462 17.0428 10.141 17.3591C10.4573 17.6755 10.6155 18.0558 10.6155 18.5C10.6155 18.9442 10.4573 19.3245 10.141 19.6408C9.82462 19.9572 9.44433 20.1153 9.00012 20.1153ZM15.0001 20.1153C14.5559 20.1153 14.1756 19.9572 13.8593 19.6408C13.5429 19.3245 13.3848 18.9442 13.3848 18.5C13.3848 18.0558 13.5429 17.6755 13.8593 17.3591C14.1756 17.0428 14.5559 16.8846 15.0001 16.8846C15.4443 16.8846 15.8246 17.0428 16.141 17.3591C16.4573 17.6755 16.6155 18.0558 16.6155 18.5C16.6155 18.9442 16.4573 19.3245 16.141 19.6408C15.8246 19.9572 15.4443 20.1153 15.0001 20.1153ZM9.00012 14.1153C8.5559 14.1153 8.17562 13.9572 7.85927 13.6408C7.54293 13.3245 7.38477 12.9442 7.38477 12.5C7.38477 12.0558 7.54293 11.6755 7.85927 11.3591C8.17562 11.0428 8.5559 10.8846 9.00012 10.8846C9.44433 10.8846 9.82462 11.0428 10.141 11.3591C10.4573 11.6755 10.6155 12.0558 10.6155 12.5C10.6155 12.9442 10.4573 13.3245 10.141 13.6408C9.82462 13.9572 9.44433 14.1153 9.00012 14.1153ZM15.0001 14.1153C14.5559 14.1153 14.1756 13.9572 13.8593 13.6408C13.5429 13.3245 13.3848 12.9442 13.3848 12.5C13.3848 12.0558 13.5429 11.6755 13.8593 11.3591C14.1756 11.0428 14.5559 10.8846 15.0001 10.8846C15.4443 10.8846 15.8246 11.0428 16.141 11.3591C16.4573 11.6755 16.6155 12.0558 16.6155 12.5C16.6155 12.9442 16.4573 13.3245 16.141 13.6408C15.8246 13.9572 15.4443 14.1153 15.0001 14.1153ZM9.00012 8.11534C8.5559 8.11534 8.17562 7.95718 7.85927 7.64084C7.54293 7.32449 7.38477 6.94421 7.38477 6.49999C7.38477 6.05578 7.54293 5.67549 7.85927 5.35914C8.17562 5.04281 8.5559 4.88464 9.00012 4.88464C9.44433 4.88464 9.82462 5.04281 10.141 5.35914C10.4573 5.67549 10.6155 6.05578 10.6155 6.49999C10.6155 6.94421 10.4573 7.32449 10.141 7.64084C9.82462 7.95718 9.44433 8.11534 9.00012 8.11534ZM15.0001 8.11534C14.5559 8.11534 14.1756 7.95718 13.8593 7.64084C13.5429 7.32449 13.3848 6.94421 13.3848 6.49999C13.3848 6.05578 13.5429 5.67549 13.8593 5.35914C14.1756 5.04281 14.5559 4.88464 15.0001 4.88464C15.4443 4.88464 15.8246 5.04281 16.141 5.35914C16.4573 5.67549 16.6155 6.05578 16.6155 6.49999C16.6155 6.94421 16.4573 7.32449 16.141 7.64084C15.8246 7.95718 15.4443 8.11534 15.0001 8.11534Z" fill="#1C1B1F"/>
+                </g>
+                </svg>                
+              <div style="flex: 1 1 0; color: black; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">
+                {{answer.content}}</div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Free text & Fill right -->
+        <ng-container *ngIf="question?.questionType === 'fillRightAnswer' || question?.questionType === 'freeText'">
+          <div *ngIf="question.content" class="freeTextInput"></div>
+          <div *ngIf="question.characterLimit > 0" class="freeTextCount">0/{{question.characterLimit}}</div>
         </ng-container>
         <!-- Single correct answer -->
         <!-- <mat-radio-group *ngIf="question?.questionType === 'singleAnswer'" [name]="'singleAnswer' + i"

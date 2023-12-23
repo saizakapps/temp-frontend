@@ -403,14 +403,20 @@ export class F2fReportsComponent implements OnInit {
      } */
   }
   /* Get filtered list */
+  shimmerWidth:any;
   async getReportList(scrollDirection?: any) {
     console.log('getReportList');
     // this.ngxService.start();
+    if(document.getElementById("reports-container-table")){
+    const doc: any = document.getElementById("reports-container-table")?.clientWidth;
+    this.shimmerWidth = doc;
+    }
     this.showShimmer = true;
     console.log(this.showShimmer)
     this.recordFound = false
     this.filterRequest.page = this.paginationIndex;
     this.filterRequest.allTrainingReport = this.viewType === 'reportView' ? true : false;
+    this.filterRequest.admin = this.userDetails.learnerRole === 'SA';
     const params = this.filterRequest;
     console.log(this.filterRequest);
     const response: any = await this.apiHandler.postData(this.utils.API.GET_F2F_REPORTS, params, this.destroyed$);
@@ -771,6 +777,7 @@ export class F2fReportsComponent implements OnInit {
     const formData = new FormData();
     for (const file of files) {
       formData.append('request', file);
+      formData.append('userId', this.userDetails.id);
     }
     const apiUrl = this.utils.API.UPLOAD_EXCEL;
     this.upload(apiUrl, formData);
@@ -822,7 +829,7 @@ export class F2fReportsComponent implements OnInit {
     if (response.payload === false) {
       this.uploadFileInput.nativeElement.click()
     } else {
-      this.errorHandler.handleAlert('server is busy, please try again later')
+      this.errorHandler.handleAlert('Processing an earlier import file, please try again later')
     }
   }
 
@@ -830,6 +837,7 @@ export class F2fReportsComponent implements OnInit {
     const doc: any = document.getElementById('file')
     doc.value = '';
     this.progress = null;
+    this.resetReportList();
     this.getReportList();
   }
 

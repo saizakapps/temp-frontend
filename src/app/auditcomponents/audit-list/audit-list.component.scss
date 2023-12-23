@@ -53,7 +53,7 @@ select {
 }
 .mat-tree {
   background: #ffffff !important;
-  width: 181px;
+  // width: 181px;
   overflow-x: hidden;
 }
 
@@ -303,4 +303,11 @@ input::placeholder {
 .row{
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+.businessMail{
+  color: red;
+    font-size: 13px;
+    padding-left: 59px;
+    margin-top: -6px;
+    font-weight: 600;
 }

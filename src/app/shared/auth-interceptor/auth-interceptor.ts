@@ -43,10 +43,14 @@ export class AuthInterceptor implements HttpInterceptor {
       .pipe(catchError((error: HttpErrorResponse) => {
         console.log('auth err', error);
         let errorMessage = '';
-        if (error.status === 401 || error.status === 403 || error.status === 0) {
-          //this.loginService.logout();
+        if (error.status === 401 || error.status === 403 || error.status === 0 || error.error.errors.message.includes('[401 Unauthorized]')) {
+          if (error.error.errors.message.includes('[401 Unauthorized]')) {
+            errorMessage = 'Session expired, Please login again';
+          } else {
+            errorMessage = `${error.error.errors.message}`;
+          }
+          this.loginService.logout();
          // location.reload();
-          errorMessage = `${error.error.errors.message}`;
         } else if (error.error.error instanceof ErrorEvent) {
           // client-side error
           errorMessage = `${error.error.error.message}`;

@@ -12,6 +12,7 @@ import {
   MatDialogModule,
   MatDialogConfig,
 } from "@angular/material/dialog";
+import { IncidentService } from "../../incident/incident.service";
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -34,7 +35,9 @@ export class SidenavComponent implements OnInit {
     private utils: Utils,
     private ngxService: NgxUiLoaderService,
     private apiHandler: ApiHandlerService,
-    private emitService: CommonService, public ngxservice: ngxService, private dialog: MatDialog) {
+    private emitService: CommonService, 
+    public ngxservice: ngxService, 
+    private dialog: MatDialog, private incidentservice:IncidentService) {
 
 
     /* checking the navigation start, end */
@@ -105,18 +108,14 @@ export class SidenavComponent implements OnInit {
     this.fillerNav = this.utils.LEFT_MENU;
     this.fillerNav.forEach(item => item.isCollapsed = true);
     const accessAppsList: any = JSON.parse(localStorage.getItem('accessApps'));
-
-    const hsApps = accessAppsList?.filter(app => app.app.appCode === 'IT' || app.app.appCode === 'AT');
-
+    const hsApps = (accessAppsList!=null)?accessAppsList.filter(app => app.app.appCode === 'IT' || app.app.appCode === 'AT'):[];
     const tempHsModules = hsApps.map(app => app.app.modules);
-
     const hsModules = tempHsModules.flat();
-
     hsApps.forEach(app => {
       hsModules.concat(app.app.modules);
     });
 
-    const accessApps = accessAppsList.filter(app => app.app.appCode !== 'IT' && app.app.appCode !== 'AT');
+    const accessApps =(accessAppsList!=null)? accessAppsList.filter(app => app.app.appCode !== 'IT' && app.app.appCode !== 'AT'):[];
 
     const hs = {
       app: {
@@ -231,23 +230,39 @@ export class SidenavComponent implements OnInit {
     this.router.navigate(['/login']);
   }
   @ViewChild('leavepagepopup', { read: TemplateRef }) leavepagepopup: TemplateRef<any>;
-
+compareIncidentSubscript:any;
   sidenav(path: any) {
-    if (this.router.url == '/incident-create') {
-      this.ngxservice.nextpathValue = path;
-      this.dialog.open(this.leavepagepopup, {
-        width: "600px",
-        // enterAnimationDuration: "100ms",
-        // exitAnimationDuration: "1500ms",
-        // disableClose: true,
-      });
-    }
-    else {
-      this.router.navigate([path]);
-    }
+    // if (this.router.url == '/incident-create') {
+    //   this.incidentservice.compareIncidentSubscript = this.incidentservice.compareIncidentsubject$.subscribe((value:any)=>{
+    //   let oldData = value.old;
+    //   let newData = value.new;
+    //   let isChange = this.incidentservice.deepJsonDataCompare(oldData,newData);
+    //     if(!isChange){
+    //       this.ngxservice.nextpathValue = path;
+    //       this.dialog.open(this.leavepagepopup, {
+    //       width: "600px"
+    //       });
+    //     }else{
+    //       this.router.navigate([path]);
+    //     }
+    //   })
+
+    // }
+    // else {
+    this.router.navigate([path]);
+   // }
 
   }
   confirmnavigate() {
+    if(this.incidentservice.compareIncidentSubscript !== undefined){
+    this.incidentservice.compareIncidentSubscript.unsubscribe();
+    }
     this.router.navigate([this.ngxservice.nextpathValue]);
   }
+
+  cancelClick(){
+    if(this.incidentservice.compareIncidentSubscript !== undefined){
+      this.incidentservice.compareIncidentSubscript.unsubscribe();
+      }
+      }
 }

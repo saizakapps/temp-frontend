@@ -1,23 +1,23 @@
-import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Subject, takeUntil } from 'rxjs';
-import { MediaFileService } from '../file-upload/media-file.service';
-import { ApiHandlerService } from '../shared/services/api-handler.service';
-import { CommonService } from '../shared/services/common.services';
-import { ErrorHandlerService } from '../shared/services/error-handler.service';
-import { Utils } from '../shared/utils';
-import * as $ from 'jquery';
-import { HttpClient } from '@angular/common/http';
-import moment from 'moment';
-import * as CKEditor from '../ckeditor/ckeditor';
-
-import _ from 'underscore';
 import * as __ from 'lodash';
-import * as html2pdf from "html2pdf.js";
+import * as $ from 'jquery';
+import * as CKEditor from '../ckeditor/ckeditor';
+import * as html2pdf from 'html2pdf.js';
+import _ from 'underscore';
+import moment from 'moment';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { ApiHandlerService } from '../shared/services/api-handler.service';
+import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CommonService } from '../shared/services/common.services';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ErrorHandlerService } from '../shared/services/error-handler.service';
+import { HttpClient } from '@angular/common/http';
+import { MediaFileService } from '../file-upload/media-file.service';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { Utils } from '../shared/utils';
+
 
 
 @Component({
@@ -69,6 +69,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     ],
     completionMessage: ''
   };
+  copyCourseObj: any = $.extend(true, {}, this.course);
   clonedCourse: any;
   copiedCourseName: boolean = true;
   courseTypeDetail: any = {};
@@ -138,6 +139,19 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   quizPosition: boolean = true;
   randomLimit: any;
 
+  /* F2F variables */
+  categories: any = this.utils.ddOptions.DD_LABELS.period;
+  questionTypes: any = this.utils.ddOptions.DD_LABELS.questionTypes;
+  completionCategories: any = [];
+
+  /* Second country region store DD variables */
+  treeControl: any = new NestedTreeControl<any>((node: any) => node.child);
+  treeHasChild: any = (_: number, node: any) => !!node.child && node.child.length > 0;
+
+  certSelectedStoreCount: any = [];
+
+  certCountryList: any = [];
+
   destroyed$: Subject<void> = new Subject<void>();
 
 
@@ -157,6 +171,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.ngxService.stop();
     this.getModuleAccess();
     this.emitService.commonSubjectResEmit$.pipe(
       takeUntil(this.destroyed$)).subscribe((obj: any) => {
@@ -179,9 +194,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         break;
       }
     }
-    this.view = true;
-    this.create = true;
-    this.update = true;
+    this.view = module.view;
+    this.create = module.create;
+    this.update = module.update;
   }
 
   /* get policy category */
@@ -220,6 +235,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     // this.courseTypes = courseCategory.filter((cat) => [this.courseCode.Regular, this.courseCode.Recurring].includes(cat.code));
     if (this.courseConfig.completionMessage) {
       this.getCompTemplates();
+      this.getCompletionTypeTemplate();
     }
     // Change chaptertype & activitytype if course type is checklist
     if (this.courseConfig.code === this.courseCode.Checklist) {
@@ -270,8 +286,48 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
   }
 
+  async getCompletionTypeTemplate() {
+    const response: any = await this.apiHandler.getData(this.utils.API.GET_COMP_TEMPLATE_TYPES, '', this.destroyed$);
+    this.completionCategories = response.payload || [];
+    this.completionCategories.forEach(element => {
+      element.content = '';
+    });
+    this.selectedCompletionType = this.completionCategories[0];
+    this.getF2FCompTemplates(false);
+  }
+
+  compCategoryTemplates: any = [];
+  async getF2FCompTemplates(isGetCourseDetails: boolean) {
+    const param = {
+      typeId: !isGetCourseDetails ? this.selectedCompletionType.id : null,
+      courseId: isGetCourseDetails ? this.courseTypeDetail.courseId : null,
+      code: this.courseConfig.code
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.GET_COMP_TEMPLATES, param, this.destroyed$);
+
+    if (isGetCourseDetails) {
+      this.completionCategories.forEach(category => {
+        let res = response.payload.find(c => c.typeId === category.id);
+        if (res) {
+          category.content = res.content;
+        }
+      });
+    } else {
+      this.compCategoryTemplates = response.payload.filter(ele => ele.title !== '') || [];
+      this.compCategoryTemplates.unshift({ id: 'new', title: 'New' });
+      this.selectedCompletionType.templateId = 'new';
+    }
+    this.disableTemplateDD = false;
+    console.log('Categories: ', this.completionCategories);
+  }
+
   async getCompTemplates() {
-    const response: any = await this.apiHandler.getData(this.utils.API.GET_COMP_TEMPLATES, null, this.destroyed$);
+    const param = {
+      typeId: null,
+      courseId: null,
+      code: this.courseConfig.code
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.GET_COMP_TEMPLATES, param, this.destroyed$);
     this.compTemplates = response.payload || [];
     this.compTemplates.unshift({ id: 'new', title: 'New' });
     this.compTemplateObj.id = 'new';
@@ -286,6 +342,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       userName: userDetails?.username
     };
     const response: any = await this.apiHandler.postData(this.utils.API.GET_COURSE_DETAILS, payload, this.destroyed$);
+    this.getF2FCompTemplates(true);
     this.quizPosition = response.payload[0].quizPosition;
     if (element) {
       const courseObj = response.payload[0];
@@ -298,6 +355,15 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       }
     }
     response.payload?.forEach(element => {
+      if (this.courseConfig.code === this.courseCode.F2F) {
+        element.chapters.forEach(chapter => {
+          chapter.questions.forEach(question => {
+            if (question.questionType === 'singleAnswer') {
+              question.questionType = 'multiAnswer';
+            }
+          });
+        });
+      }
       if (this.courseConfig.code === this.courseCode.Checklist) {
         element.chapters.forEach(chapter => {
           chapter.topicEditable = true;
@@ -499,6 +565,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_ALL_COUNTRIES, null, this.destroyed$);
     this.countryList = this.emitService.sortRegion(response.payload);
     this.cloneCountryList = $.extend(true, [], this.countryList);
+    this.certCountryList = $.extend(true, [], this.countryList);
     this.apiCount++;
     if (this.apiCount === 2) {
       this.getCourseConfig();
@@ -512,7 +579,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       response.payload.splice(0, 0, response.payload.splice(suggestedIndex, 1)[0]);
       // [response.payload[suggestedIndex], response.payload[0]] = [response.payload[0], response.payload[suggestedIndex]];
     }
-    this.roleGroupList = this.sortRoleGroup(response?.payload || []);
+    this.roleGroupList = this.sortRoleGroup(response?.payload.filter(roleGroup => roleGroup.id !== 7) || []);
     this.cloneRoleGroupList = $.extend(true, [], this.roleGroupList);
     this.apiCount++;
     if (this.apiCount === 2) {
@@ -599,7 +666,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     questions.push({
       content: '',
       options: [{ key: 1 }, { key: 2 }],
-      // questionType: 'singleAnswer'
+      questionType: 'multiAnswer'
     });
     this.setQuestionId(questions);
     this.updateQuestionLimit();
@@ -648,9 +715,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.course.chapters.forEach(element => {
         if (element.chapterType) {
           for (const question of element.questions || []) {
-            questionCount++;
-            if (question.mandatory) {
-              mandatoryCount++;
+            if (question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText') {
+              questionCount++;
+              if (question.mandatory) {
+                mandatoryCount++;
+              }
+  
             }
           }
         }
@@ -726,7 +796,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   changeForm(type: any) {
     this.selectedForm = type;
-    if (type === 'questionaire') {
+    if (type === 'certification') {
+      this.currentPage = this.course.chapters.length + 2;
+      this.certificationItems[0].countries = this.buildSelectedCountries(this.countryList);
+      this.setRenderingDataForCertificationItems();
+    } else if (type === 'questionaire') {
       this.previousPage = this.currentPage < this.course.chapters.length ? this.currentPage : this.previousPage;
       if (this.quizPosition) {
         this.currentPage = this.course.chapters.length - 1;
@@ -884,13 +958,72 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
   /* Quiz type On change */
   quizTypeOnChange(question: any) {
-    question.options.forEach((option: any) => {
-      if (option.correctAnswer) {
-        delete option['correctAnswer'];
+    /* if (this.courseConfig.code === this.courseCode.F2F) {
+      let isPreFreeText = this.selectedQuestion.questionType === 'fillRightAnswer' || this.selectedQuestion.questionType === 'freeText'
+      let isSelectedFreeText = question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'
+      if (isPreFreeText && !isSelectedFreeText) { //DD change from singleAnswer to freeText
+        if (this.checkContentInCompCategory()) {
+          this.openAlert('callGetCompTemplate')
+        } else {
+          this.getCompTemplates();
+        }
+      } else { // DD change from freeText to singleAnswer
+        if (this.completionObject.content) {
+          this.openAlert('callGetCompTempCategory');
+        }
+        this.getCompletionTypeTemplate();
       }
-    });
-    if (question.correctAnswer) {
-      delete question['correctAnswer'];
+    } */
+    if (question.questionType === 'multiAnswer' || question.questionType === 'reArrangeOrder') {
+      question.options = [{ key: 1 }, { key: 2 }];
+    }
+
+    if (question.questionType === 'multiAnswer') {
+      question.options.forEach((option: any) => {
+        if (option.correctAnswer) {
+          delete option['correctAnswer'];
+        }
+      });
+      if (question.correctAnswer) {
+        delete question['correctAnswer'];
+      }  
+    } else if (question.questionType === 'fillRightAnswer' || question.questionType === 'freeText') {
+      delete question.options;
+    }
+  }
+
+  @ViewChild ('locationSelect') locationSelect;
+  @ViewChild ('selector1') selector1;
+  @ViewChild ('selector2') selector2;
+  checkCountryAndRoleSelected(event, ddType) {
+    const selectedCountries: any = this.buildSelectedCountries(this.countryList);
+    const selectedRoles: any = this.buildSelectedRoleGroups(this.roleGroupList);
+    if (event === false && selectedCountries.length > 0 && selectedRoles.length > 0) {
+      let tempArray = $.extend(true, [], this.questionTypes);
+      this.questionTypes = [];
+      tempArray.forEach(question => {
+        if (question.key === 'freeText' || question.key === 'fillRightAnswer') {
+          question.disabled = true;
+        }
+      });
+      this.questionTypes = [...tempArray];
+    } else {
+      this.questionTypes = this.utils.ddOptions.DD_LABELS.questionTypes;
+    }
+
+    if (event === true && (selectedCountries.length > 0 || selectedRoles.length > 0)) {
+      if (this.checkFreeTextQues()) {
+        if (ddType === 'location' && selectedCountries.length === 0 && selectedRoles.length > 0) {
+          this.locationSelect.toggle();
+          this.openAlert('removeFreeText');  
+        } else if (ddType === 'role1' && selectedCountries.length > 0 && selectedRoles.length === 0) {
+          this.selector1.toggle();
+          this.openAlert('removeFreeText');  
+        } else if (ddType === 'role2' && selectedCountries.length > 0 && selectedRoles.length === 0) {
+          this.selector2.toggle();
+          this.openAlert('removeFreeText');  
+        }
+      }
     }
   }
 
@@ -974,7 +1107,28 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.alertModal['text'] = 'Are you want to submit course without saving the completion message?'
     } else if (type === 'withoutRoleCountry') {
       this.alertModal['text'] = 'Do you want to proceed without Role/Country';
-    }
+    } else if (type === 'withoutCompCategory') {
+      let categoryObj = this.checkContentInCompCategory();
+      let categories: string = ``;
+      for (let category of [categoryObj.evaluate, categoryObj.passed, categoryObj.failed, categoryObj.redo]) {
+        if (!category.isValid) {
+          let index = this.completionCategories.findIndex(cat => cat.id === category.id);
+          categories = categories + `${this.completionCategories[index].name}, `;
+        }
+      }
+      categories.trim();
+      if (categories.endsWith(', ')) {
+        let temp = categories.slice(0, -2);
+        categories = temp;
+      }
+      this.alertModal['text'] = `Are you sure you want to proceed without ${categories} completion category?`;
+    } else if (type === 'removeFreeText') {
+      this.alertModal['text'] = 'Please remove fill right answer/Free text question type from Questionnaire, Otherwise you will not be able to select both country and role';
+    } /* else if (type === 'callGetCompTemplate') {
+      this.alertModal['text'] = 'Are you sure you want to clear completion content?'
+    } else if (type === 'callGetCompTempCategory') {
+      this.alertModal['text'] = 'Are you sure you want to clear completion category content?'
+    } */
     this.confirmModal.nativeElement.click();
   }
 
@@ -1010,7 +1164,13 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.templateSubmitted(true);
     } else if(type === 'withoutRoleCountry'){
       this.withoutRoleCountry();
-    }
+    } else if(type === 'withoutCompCategory'){
+      this.withoutRoleCountry();
+    } /* else if (type === 'callGetCompTemplate') {
+      this.getCompTemplates();
+    } else if (type === 'callGetCompTempCategory') {
+      this.getCompTemplates();
+    } */
     this.confirmModal.nativeElement.click();
   }
 
@@ -1260,6 +1420,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       listArray = this.roleGroupList;
     } else if (type === 'country') {
       listArray = this.countryList;
+    } else if (type === 'certCountry') {
+      listArray = this.certCountryList;
     }
     for (let child of listArray || []) {
       this.setSelectionStatus(child);
@@ -1448,6 +1610,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
     if (isPublished && (this.publishCourse.countries.length < 1 || this.publishCourse.roleGroups.length < 1)) {
       this.openAlert('withoutRoleCountry');
+    } else if (this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid) {
+      this.openAlert('withoutCompCategory');
     } else {
       this.submitCourse(isPublished, type);
     }
@@ -1471,7 +1635,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     const userDetails = JSON.parse(localStorage.getItem("userDetails") || '{}');
     this.publishCourse.lastUpdateUser = userDetails.username;
     console.log('Course', this.publishCourse);
-    if (!type && this.courseConfig.code !== this.courseCode.Checklist) {
+    if (!type && this.courseConfig.code !== this.courseCode.Checklist && this.courseConfig.code !== this.courseCode.F2F) {
       if (this.compTemplateObj.title) {
         this.templateSubmitted(isPublished);
       } /* else {
@@ -1540,12 +1704,17 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     });
   }
 
-  async hitCourseAPI(type?) {
+  async hitCourseAPI(type?, isPublished?) {
     if (!type) {
       this.ngxService.start();
     }
     const res: any = await this.apiHandler.postData(this.utils.API.CREATE_UPDATE_COURSE, this.publishCourse, this.destroyed$,
-      type ? 'Course Auto Saved' : 'Course updated successfully');
+      this.courseConfig.courseCode !== this.courseCode.F2F && type ? 'Course Auto Saved' : 'Course updated successfully');
+    if (this.courseConfig.code === this.courseCode.F2F && res && !type) {
+      for (let category of this.completionCategories) {
+        if (category.content.length > 0) this.templateCategorySubmitted(isPublished, type, res.payload.courseId, category);
+      }
+    }
     if (this.publishCourse.published) {
       localStorage.setItem('canDeactivate', 'true');
       this.router.navigate(['/courses']);
@@ -1604,13 +1773,154 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   setQuestionType(question: any) {
-    const crctAnswers = question.options?.filter(option => option.correctAnswer);
-    if (crctAnswers.length === 1) {
-      question.questionType = 'singleAnswer';
-      question.correctAnswer = crctAnswers[0].key;
-    } else {
-      question.questionType = 'multiAnswer';
+    if (question.questionType === 'multiAnswer') {
+      const crctAnswers = question.options?.filter(option => option.correctAnswer);
+      if (crctAnswers.length === 1) {
+        question.questionType = 'singleAnswer';
+        question.correctAnswer = crctAnswers[0].key;
+      } else {
+        question.questionType = 'multiAnswer';
+      }
     }
+  }
+
+  submitButton() {
+    if (this.courseConfig.code === this.courseCode.F2F) {
+      return !this.enableSubmitButtonForF2F();
+    } else {
+      return !this.enableSubmitButton();
+    }
+  }
+
+  enableSubmitButtonForF2F() {
+    let isValid: boolean = true;
+    
+    let isCourseNameValid: boolean = true;
+    let isChapterValid: boolean = true;
+    let isQuesValid: boolean = true;
+    let isCompValid: boolean = true;
+
+    isCourseNameValid = this.course.externalCourseName ? true : false;
+    isChapterValid = this.areChaptersValid();
+
+    let noQuiz: boolean = this.quizCount() === 0 ? true : false;
+    let isFreeTextAvailable: boolean = this.checkFreeTextQues();   
+
+    isQuesValid = !noQuiz;
+    if (isQuesValid) {
+      for (let chapter of this.course.chapters || []) {
+        if (chapter.chapterType) {
+          isQuesValid = this.areQuestionnaireValid(chapter.questions);
+          if (isQuesValid === false) {
+            break;
+          }
+        }
+      } 
+    }
+
+    /* Check completion message valid based on condition */
+    if (isFreeTextAvailable) {      
+      if (this.checkContentInCompCategory().isAnyValid) {
+        isCompValid = true
+      } else {
+        isCompValid = false;
+      }
+    } else {
+      isCompValid = this.completionObject?.content?.length > 0;
+    }
+
+    let condition: boolean = false;
+    if (isFreeTextAvailable) {
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid;
+    } else {
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid));
+    }
+
+    if (condition) {
+      isValid = true;
+    } else {
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  checkContentInCompCategory() {
+    let evaluate: any = {isValid: false};
+    let passed: any = {isValid: false};
+    let failed: any = {isValid: false};
+    let redo: any = {isValid: false};
+    for (let type of this.completionCategories) {
+      switch (type.id) {
+        case 1:
+          evaluate.isValid = type.content?.length > 0;
+          evaluate.id = type.id;
+          break;
+
+        case 2:
+          passed.isValid = type.content?.length > 0;
+          passed.id = type.id;
+          break;
+
+        case 3:
+          failed.isValid = type.content?.length > 0;
+          failed.id = type.id;
+          break;
+
+        case 4:
+          redo.isValid = type.content?.length > 0;
+          redo.id = type.id;
+          break;
+
+        default:
+          break;
+      }
+    }
+    let obj = { 
+      isAnyValid: evaluate.isValid || passed.isValid || failed.isValid || redo.isValid, 
+      isAllValid: evaluate.isValid && passed.isValid && failed.isValid && redo.isValid,
+      evaluate: evaluate,
+      passed: passed,
+      failed: failed,
+      redo: redo
+    };
+    return obj;
+  }
+
+  checkChapterEmpty() {
+    let chapters = $.extend(true, [], this.course.chapters);
+    let copyChapters = $.extend(true, [], this.copyCourseObj.chapters);
+
+    chapters.forEach(chapter => {
+      delete chapter.questions;
+    });
+
+    copyChapters.forEach(copyChapter => {
+      delete copyChapter.questions;
+    });
+    return JSON.stringify(copyChapters) === JSON.stringify(chapters);
+  }
+
+  quizCount() {
+    let count = 0;
+    for (let chapter of this.course.chapters) {
+      if (chapter.questions.length > 0) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  checkFreeTextQuiz() {
+    let isFreeTextAvailable: boolean = false;
+    for (let chapter of this.course.chapters) {
+      const obj = chapter.questions.find(question => question.questionType === 'freeText' || question.questionType === 'fillRightAnswer');
+      if (obj) {
+        isFreeTextAvailable = true;
+        break;
+      }
+    }
+    return isFreeTextAvailable;
   }
 
   enableSubmitButton() {
@@ -1713,9 +2023,35 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   areQuestionnaireValid(questions) {
     let areQuesValid: boolean = true;
     for (let question of questions || []) {
-      areQuesValid = this.isQuestionValid(question);
-      if (areQuesValid === false) {
-        break;
+      if (question.questionType === 'multiAnswer') {
+        areQuesValid = this.isQuestionValid(question);
+        if (areQuesValid === false) {
+          break;
+        }  
+      } else if (question.questionType === 'fillRightAnswer' || question.questionType === 'freeText') {
+        if (question.content) {
+          if (question.characterLimitCheck === true) {
+            areQuesValid = question.characterLimit > 0;
+          } else {
+            areQuesValid = true;
+          }
+        } else {
+          areQuesValid = false;
+        }
+      } else if (question.questionType === 'reArrangeOrder') {
+        if (question.content) {
+          let validOptions = 0;
+          for (let option of question.options || []) {
+            if (option.content) {
+              validOptions++;
+            }
+          }
+          if (validOptions < 2) {
+            areQuesValid = false;
+          }
+        } else {
+          areQuesValid = false;
+        }
       }
     }
     if (areQuesValid === false) {
@@ -1806,20 +2142,43 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
   }
 
-  templateChange(event) {
-    if (event.id !== 'new') {
-      this.completionObject.content = event.content;
-      this.compTemplateObj.title = event.title;
-    } else {
-      this.compTemplateObj.title = '';
+  /* On completion category DD change (Only for F2F) */
+  selectedCompletionType: any = {id: 1, name: 'Evaluated', content: '', templateId: 'new'};
+  disableTemplateDD: boolean = false;
+  compCategoryChange(event) {
+    this.disableTemplateDD = true;
+    console.log('Categories', this.completionCategories);
+    this.selectedCompletionType = {};
+    this.selectedCompletionType = event;
+    this.getF2FCompTemplates(false);
+  }
+
+  templateChange(event, type) {
+    if (type === 'normal') {
+      if (event.id !== 'new') {
+        this.completionObject.content = event.content;
+        this.compTemplateObj.title = event.title;
+      } else {
+        this.compTemplateObj.title = '';
+      }  
+    } else if (type === 'freeText') {
+      if (event.id !== 'new') {
+        this.selectedCompletionType.content = event.content;
+        this.selectedCompletionType.title = event.title;
+      } else {
+        this.selectedCompletionType.title = '';
+      }
     }
   }
 
-  async templateSubmitted(isPublished) {
+  async templateSubmitted(isPublished, courseId?) {
     if (this.completionObject.content) {
       const compObj: any = {};
       compObj.content = this.completionObject.content;
       compObj.title = this.compTemplateObj.title;
+      compObj.code = this.courseTypeDetail?.courseTypeCode;
+      compObj.typeId = this.selectedCompletionType.id;
+      compObj.courseId = courseId;
       if (this.compTemplateObj.id !== 'new') {
         compObj.id = this.compTemplateObj.id;
       }
@@ -1835,6 +2194,29 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  async templateCategorySubmitted(isPublished, type, courseId, obj) {
+    const compObj: any = {};
+      compObj.content = obj.content;
+      compObj.title = '';
+      compObj.code = this.courseTypeDetail?.courseTypeCode;
+      compObj.typeId = obj.id;
+      compObj.courseId = courseId;
+      if (obj.templateId !== 'new') {
+        compObj.id = obj.templateId;
+      }
+      const response: any = await this.apiHandler.postData(this.utils.API.POST_COMP_TEMPLATES, compObj, this.destroyed$);
+      if (!isPublished) {
+        let changedTemplateIndex = this.compTemplates.findIndex(element => element.id === response.payload.id);
+        if (changedTemplateIndex !== -1) {
+          // this.compTemplates[changedTemplateIndex] = response.payload;
+          this.compTemplates = this.compTemplates.slice(0, changedTemplateIndex).concat(response.payload, this.compTemplates.slice(changedTemplateIndex + 1))
+        } else {
+          this.compTemplates = this.compTemplates.concat(response.payload);
+          this.compTemplateObj.id = response.payload.id
+        }
+      }
   }
 
   checkCourseMod() {
@@ -2032,7 +2414,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         });
       } else {
         chapter.activities.forEach(activity => {
-          if ((activity.activityType === 'video' || activity.activityType === 'audio' || activity.activityType === 'pdf') && activity.content !== '') {
+          if ((activity.activityType === 'video' || activity.activityType === 'audio' || activity.activityType === 'pdf' || activity.activityType === 'slide') && activity.content !== '' && activity.content.length > 0) {
             mediaUrlList.push(`${this.utils.mediaDownloadUrl}${activity.content[0].url}`);
           }
         })
@@ -2086,6 +2468,93 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   enableDownloadDropDown() {
     return !this.isAllFileContent() && this.getMediaUrlList().length > 0
+  }
+
+  checkFreeTextQues() {
+    let isFreeTextAvailable: boolean = false;
+    for (let chapter of this.course.chapters) {
+      for (let question of chapter.questions) {
+        if (question.questionType === 'freeText' || question.questionType === 'fillRightAnswer') {
+          isFreeTextAvailable = true;
+          break;
+        }
+        if (isFreeTextAvailable) {
+          break;
+        }
+      }
+    }
+    return isFreeTextAvailable;
+  }
+
+  certificationItems: any[] = [
+    {
+      courseId: this.courseTypeDetail.courseId,
+      code: this.courseConfig.code,
+      countries: this.buildSelectedCountries(this.countryList),
+      certificateId: '',
+      certificateName: '',
+      certificateUrl: ''
+    }
+  ];
+
+  filterList(list: any, selectedList: any): any {
+    const filteredList: any = [];
+    let that: any = this;
+
+    function filterRecursive(items: any, selectedItems: any) {
+      for (const item of items) {
+        const selected = selectedItems.find((selectedItem) => selectedItem.id === item.id);
+  
+        if (selected) {
+          const filteredItem: any = { ...item };
+          if (selected.children && selected.children.length && item.child) {
+            filteredItem.child = that.filterList(item.child, selected.children);
+          }
+          filteredList.push(filteredItem);
+        }
+      }
+    }
+  
+    filterRecursive(list, selectedList);
+  
+    return filteredList;
+  }
+
+  setSelected(list, selectedList) {
+    const tempArray = $.extend(true, [], list);
+    const listArray = this.filterList(tempArray, selectedList);
+    this.changeObjProperty(listArray, 'selectStatus', 'checked');
+    return listArray;
+  }
+
+  setRenderingDataForCertificationItems() {
+    this.certificationItems.forEach((certificationItem, index) => {
+      certificationItem.renderingData = {
+        countryList: this.setSelected(this.cloneCountryList, certificationItem.countries),
+        selectedStoreCount: 0
+      }
+    });
+  }
+
+  addCertItem() {
+    this.certificationItems.push(
+      {
+        courseId: this.courseTypeDetail.courseId,
+        code: this.courseConfig.code,
+        countries: [],
+        certificateId: '',
+        certificateName: '',
+        certificateUrl: '',
+        renderingData: {
+          countryList: this.certificationItems[0].renderingData.countryList,
+          selectedStoreCount: 0
+        }
+      }
+    )
+  }
+
+  getCertificateList() {
+    
   }
 
   ngOnDestroy() {

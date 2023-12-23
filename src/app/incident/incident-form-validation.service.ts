@@ -110,12 +110,15 @@ contactNumberValidate(control:any){
 	{
 	isValid = false;
 	return { 'message': 'Contact number must not allow alphabets' };
-	}else if(!isSpecialCharValid){
-        return { 'message': 'Contact number must not allow special characters' };
-	}else if(control.value.trim().length<8){
-	isValid = false;
-	return { 'message': 'Contact number must be minimum 8 characters' };
-	}else{
+	}
+	// else if(!isSpecialCharValid){
+    //     return { 'message': 'Contact number must not allow special characters' };
+	// }
+	// else if(control.value.trim().length<8){
+	// isValid = false;
+	// return { 'message': 'Contact number must be minimum 8 characters' };
+	// }
+	else{
 		return null;
 	}
 }
@@ -316,90 +319,115 @@ evidenceTakenByNameValidate(control:any){
 	}
 
 }
-validateSubmitIncident(incidentFormData:any,type:any,roleCode:any){
+
+validateSubmitIncident(incidentFormData:any,type:any,roleCode:any,formFieldAccess:any){
+	let deletescenariowitness = incidentFormData.witnessList.every(witness => witness.witnessDeleted === 1)
+	let evidencesarray:any = incidentFormData.evidences.filter((item:any)=>{
+		return item.isEvidence == true
+	})
+	let evidencevideoarray:any = incidentFormData.evidences.filter((item:any)=>{
+		return item.evidenceType == 'Video'
+	})
+	let deletescenarioevidancevideo = evidencevideoarray.every((evidence:any) => evidence.evidenceDeleted === 1)
+	let deletescenarioevidance = evidencesarray.every((evidence:any) => evidence.evidenceDeleted === 1)
   let noOFVideo=(incidentFormData.evidences.filter((item:any)=>item.evidenceType=='Video')).length;
-  if(incidentFormData.store.toString()=='' || incidentFormData.store.toString().trim().length==0){
+  if( (formFieldAccess.store.create || formFieldAccess.store.write) && (incidentFormData.store.toString()=='' || incidentFormData.store.toString().trim().length==0)){
     this.common.openSnackBar('Please choose valid store',2,'Required');
     return false;
-  }else if(incidentFormData.injuredPersonFullName=='' || incidentFormData.injuredPersonFullName.trim().length==0){
+  }else if((formFieldAccess.injuredPersonFullName.create || formFieldAccess.injuredPersonFullName.write) && (incidentFormData.injuredPersonFullName=='' || incidentFormData.injuredPersonFullName.trim().length==0)){
     this.common.openSnackBar('Please enter Name of the injured',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.productComplaint=='' || incidentFormData.productComplaint.trim().length==0)){
+  }else if((formFieldAccess.complainant.create || formFieldAccess.complainant.write) && (type=='Product') && (incidentFormData.productComplaint=='' || incidentFormData.productComplaint.trim().length==0)){
    this.common.openSnackBar('Please enter complainant name',2,'Required');
     return false;
-  }else if(incidentFormData.ageValue=='' || incidentFormData.ageValue.trim().length==0){
+  }else if((formFieldAccess.ageValue.create || formFieldAccess.ageValue.write) && (incidentFormData.ageValue=='' || incidentFormData.ageValue.trim().length==0)){
     this.common.openSnackBar('Please specify age',2,'Required');
     return false;
-  }else if(incidentFormData.injuredPersonContactNumber=='' || incidentFormData.injuredPersonContactNumber.trim().length==0){
+  }else if((formFieldAccess.injuredPersonContactNo.create || formFieldAccess.injuredPersonContactNo.write) && (incidentFormData.injuredPersonContactNumber=='' || incidentFormData.injuredPersonContactNumber.trim().length==0)){
     this.common.openSnackBar('Please enter contact number',2,'Required');
     return false;
-  }else if(incidentFormData.injuredPersonEmail=='' || incidentFormData.injuredPersonEmail.trim().length==0){
+  }else if((formFieldAccess.emailAddress.create || formFieldAccess.emailAddress.write) && (type=='Contractor' || type=='Employee') && (incidentFormData.injuredPersonEmail=='' || incidentFormData.injuredPersonEmail.trim().length==0)){
     this.common.openSnackBar('Please enter contact email',2,'Required');
     return false;
-  }else if(incidentFormData.eventDate=='' || incidentFormData.eventDate==null || incidentFormData.eventDate.length==0){
+  }else if((formFieldAccess.emailAddress.create || formFieldAccess.emailAddress.write) && (incidentFormData.injuredPersonEmail!='' && incidentFormData.injuredPersonEmail.trim().length!=0) && !this.common.isValidEmail(incidentFormData.injuredPersonEmail)){
+    this.common.openSnackBar('Please enter valid contact email',2,'Required');
+    return false;
+  }else if((formFieldAccess.eventDateTime.create || formFieldAccess.eventDateTime.write) && (incidentFormData.eventDate=='' || incidentFormData.eventDate==null || incidentFormData.eventDate.length==0)){
     this.common.openSnackBar('Please enter incident date & time',2,'Required');
     return false;
   }
-  else if(incidentFormData.eventTime=='' || incidentFormData.eventTime==null || incidentFormData.eventTime.trim().length==0){
+  else if((formFieldAccess.eventDateTime.create || formFieldAccess.eventDateTime.write) && (incidentFormData.eventTime=='' || incidentFormData.eventTime==null || incidentFormData.eventTime.trim().length==0)){
     this.common.openSnackBar('Please enter incident time',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.reportedDate=='' || incidentFormData.reportedDate==null || incidentFormData.reportedDate.length==0)){
+  }else if((formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write) && (type=='Product') && (incidentFormData.reportedDate=='' || incidentFormData.reportedDate==null || incidentFormData.reportedDate.length==0)){
     this.common.openSnackBar('Please enter reported date & time',2,'Required');
     return false;
   }
-  else if((type=='Product') && (incidentFormData.reportedTime=='' || incidentFormData.reportedTime==null || incidentFormData.reportedTime.trim().length==0)){
+  else if((formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write) && (type=='Product') && (incidentFormData.reportedTime=='' || incidentFormData.reportedTime==null || incidentFormData.reportedTime.trim().length==0)){
     this.common.openSnackBar('Please enter reported time',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.injurySustained=='' || incidentFormData.injurySustained==null || incidentFormData.injurySustained.length==0)){
+  }else if((formFieldAccess.injurySustained.create || formFieldAccess.injurySustained.write) && (type=='Product') && (incidentFormData.injurySustained=='' || incidentFormData.injurySustained==null || incidentFormData.injurySustained.length==0)){
     this.common.openSnackBar('Please enter injury sustained',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.injuryCircumstances=='' || incidentFormData.injuryCircumstances==null || incidentFormData.injuryCircumstances.length==0)){
+  }else if((formFieldAccess.circumstances.create || formFieldAccess.circumstances.write) && (type=='Product') && (incidentFormData.injuryCircumstances=='' || incidentFormData.injuryCircumstances==null || incidentFormData.injuryCircumstances.length==0)){
     this.common.openSnackBar('Please enter circumstances',2,'Required');
     return false;
-  }else if((type!='Product') && (incidentFormData.witnessAvailable=='' || incidentFormData.witnessAvailable.trim().length==0)){
+  }else if((formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && (type!='Product') && (incidentFormData.witnessAvailable=='' || incidentFormData.witnessAvailable.trim().length==0)){
    this.common.openSnackBar('Please select witness available or not',2,'Required');
     return false;
-  }else if((incidentFormData.witnessAvailable==true || incidentFormData.witnessAvailable=='true') && incidentFormData.witnessList.length==0){
+  }else if((formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && (incidentFormData.witnessAvailable==true || incidentFormData.witnessAvailable=='true') && incidentFormData.witnessList.length==0){
     this.common.openSnackBar('Please enter atleast one witness details',2,'Required');
     return false;
-  }else if((incidentFormData.evidenceAvailable=='' || incidentFormData.evidenceAvailable==null) ){
+  }else if((formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && (incidentFormData.witnessAvailable==true || incidentFormData.witnessAvailable=='true') && incidentFormData.witnessList.length>0 && deletescenariowitness == true){
+    this.common.openSnackBar('Please enter atleast one witness details',2,'Required');
+    return false;
+  }else if((formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && (incidentFormData.evidenceAvailable=='' || incidentFormData.evidenceAvailable==null) ){
     this.common.openSnackBar('Please Select CCTV/Photos available or not',2,'Required');
     return false;
-  }else if((incidentFormData.evidenceAvailable==true || incidentFormData.evidenceAvailable=='true') && incidentFormData.evidenceTakenBy.trim().length==0){
+  }else if((formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && (incidentFormData.evidenceAvailable==true || incidentFormData.evidenceAvailable=='true') && incidentFormData.evidenceTakenBy.trim().length==0){
     this.common.openSnackBar('Please enter CCTV/Photos taken by name',2,'Required');
     return false;
-  }else if((incidentFormData.evidenceAvailable==true  || incidentFormData.evidenceAvailable=='true') && (incidentFormData.noFootageAvailable=='' || incidentFormData.noFootageAvailable=='false') && noOFVideo==0){
+  }else if((formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && (incidentFormData.evidenceAvailable==true  || incidentFormData.evidenceAvailable=='true') && (incidentFormData.noFootageAvailable=='' || incidentFormData.noFootageAvailable=='false') && noOFVideo==0){
     this.common.openSnackBar('One CCTV footage is mandatory',2,'Required');
     return false;
-  }else if((incidentFormData.evidenceAvailable==true || incidentFormData.evidenceAvailable=='true') && incidentFormData.evidences.length==0){
+  }else if((formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && (incidentFormData.evidenceAvailable==true  || incidentFormData.evidenceAvailable=='true') && (incidentFormData.noFootageAvailable=='' || incidentFormData.noFootageAvailable=='false') && deletescenarioevidancevideo){
+    this.common.openSnackBar('One CCTV footage is mandatory',2,'Required');
+    return false;
+  }
+  else if((formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && (incidentFormData.evidenceAvailable==true || incidentFormData.evidenceAvailable=='true') && incidentFormData.evidences.length==0){
     this.common.openSnackBar('Please select atleast one CCTV/Photos',2,'Required');
     return false;
   }
-  else if((type=='Product') && (incidentFormData.productId=='' || incidentFormData.productId.toString().trim().length==0)){
+  else if((formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && (incidentFormData.evidenceAvailable==true || incidentFormData.evidenceAvailable=='true') && incidentFormData.evidences.length>0 && deletescenarioevidance == true){
+	this.common.openSnackBar('Please select atleast one CCTV/Photos',2,'Required');
+    return false;
+  }
+  else if((formFieldAccess.productId.create || formFieldAccess.productId.write) && (type=='Product') && (incidentFormData.productId=='' || incidentFormData.productId.toString().trim().length==0)){
    this.common.openSnackBar('Please select product id or product description',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.productAge=='' || incidentFormData.productAge.toString().trim().length==0)){
+  }
+  else if((formFieldAccess.productAge.create || formFieldAccess.productAge.write) && (type=='Product') && (incidentFormData.productAge=='' || incidentFormData.productAge.toString().trim().length==0)){
    this.common.openSnackBar('Please enter product age',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.productAgeType=='' || incidentFormData.productAgeType.toString().trim().length==0)){
+  }else if((formFieldAccess.ageType.create || formFieldAccess.ageType.write) && (type=='Product') && (incidentFormData.productAgeType=='' || incidentFormData.productAgeType.toString().trim().length==0)){
    this.common.openSnackBar('Please select product age (Weeks or Months or Years)',2,'Required');
     return false;
   }else if((type=='Product') && (incidentFormData.faultCode=='' || incidentFormData.faultCode.toString().trim().length==0)){
    this.common.openSnackBar('Please enter nature of product fault',2,'Required');
     return false;
-  }else if((type=='Product') && (incidentFormData.problemReportedBefore=='' || incidentFormData.problemReportedBefore.toString().trim().length==0)){
+  }else if((formFieldAccess.problemReportedBefore.create || formFieldAccess.problemReportedBefore.write) && (type=='Product') && (incidentFormData.problemReportedBefore=='' || incidentFormData.problemReportedBefore.toString().trim().length==0)){
    this.common.openSnackBar('Please enter problem reported before',2,'Required');
     return false;
 
-  }else if((roleCode=='CS') && (type=='Product') && (incidentFormData.csdNumber=='' || incidentFormData.csdNumber.trim().length==0)){
+  }else if((formFieldAccess.csdNumber.create || formFieldAccess.csdNumber.write) && (roleCode=='CS') && (type=='Product') && (incidentFormData.csdNumber=='' || incidentFormData.csdNumber.trim().length==0)){
    this.common.openSnackBar('Please enter CSD numbers',2,'Required');
     return false;
     
-  }else if((roleCode=='CS') && (type=='Product') && (incidentFormData.handlingTeams=='' || incidentFormData.handlingTeams.length==0)){
+  }else if((formFieldAccess.handlers.create || formFieldAccess.handlers.write) && (roleCode=='CS') && (type=='Product') && (incidentFormData.handlingTeams=='' || incidentFormData.handlingTeams.length==0)){
    this.common.openSnackBar('Please select atleast one handling team',2,'Required');
     return false;
     
-  }else if((type=='Product') && (incidentFormData.priorityCode=='' || incidentFormData.priorityCode.toString().trim().length==0)){
+  }else if((formFieldAccess.priority.create || formFieldAccess.priority.write) && (type=='Product') && (incidentFormData.priorityCode=='' || incidentFormData.priorityCode.toString().trim().length==0)){
    this.common.openSnackBar('Please select priority',2,'Required');
     return false;
   }else{

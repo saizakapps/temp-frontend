@@ -33,7 +33,7 @@ margin-bottom: 0px !important;
 	line-height: 17px;
 	max-width: 390px;
 	white-space: normal;
-    word-break: break-all;
+    // word-break: break-all;
 }
 .view-box .data-view {
     margin-bottom: 10px;
@@ -80,9 +80,27 @@ margin-bottom: 0px !important;
 }
 .witness-title-wrap{
 white-space: break-spaces;
-    word-break: break-all;
+    // word-break: break-all;
 }
 .row{
     margin-left: 0px !important;
     margin-right: 0px !important;
   }
+  .w-flex{
+    display: flex;
+    align-items: center;
+    .labelView{
+        width: fit-content;
+    }
+    .data-view{
+        padding-left: 5px !important;
+        padding-top: 2px !important;
+    }
+  }
+//   .data-view-no-break{
+//     word-break: normal;
+//   }
+.gap-10-new{
+    display: flex;
+    gap: 10px;
+}

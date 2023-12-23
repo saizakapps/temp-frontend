@@ -974,9 +974,9 @@ border-color:#E6E6E6;
   gap: 3px;
   cursor: pointer;
 }
-.marginImg{
-  margin-top: 4px;
-}
+// .marginImg{
+//   // margin-top: 4px;
+// }
 .priorityBox{
   background-color: #fff;
   border-radius: 7px;
@@ -1026,4 +1026,10 @@ border: 1px solid #ccc !important;
   display: flex;
   flex-wrap: wrap;
   margin-left: 10px;
+}
+.redacted-background-history{
+  background: yellow;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: 5px;
 }

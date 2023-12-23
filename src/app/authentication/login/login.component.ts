@@ -75,6 +75,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.router.navigate(['/login']);
     }
+    this.setModuleAccess();
   }
 
   saveAuth() {
@@ -123,24 +124,37 @@ export class LoginComponent implements OnInit {
       employeeId: this.userDetails.employeeId,
       portalPassword: this.newPassword
     }
-    const response: any = await this.apiHandler.postData(this.utils.urlUtils.API.CHANGE_PASSWORD, params, this.destroyed$);
-    if (response) {
-      this.saveCredentials();
-    } else {
+    let Token = localStorage.getItem("authenticationToken")
+    this.requestapi.post(this.utils.urlUtils.API.CHANGE_PASSWORD, params, {headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
+      if (res.payLoad) {
+        this.saveCredentials();
+     }
+     else{
       this.router.navigate(['/login']);
-    }
+     }
+     })
+    // const response: any = await this.apiHandler.postData(this.utils.urlUtils.API.CHANGE_PASSWORD, params, this.destroyed$);
+    // if (response) {
+    //   this.saveCredentials();
+    // } else {
+    //   this.router.navigate(['/login']);
+    // }
   }
 
   async forgotPassword() {
-    const params = {
-      email: this.mailId
+    let params = {
+      email: this.mailId,
+      domainUrl : window.location.protocol + this.utils.urlUtils.HOSTNAME
     }
-    const response: any = await this.apiHandler.postData(this.utils.urlUtils.API.FORGOT_PASSWORD, params, this.destroyed$);
-    if (response) {
+    this.requestapi.post(this.utils.urlUtils.API.FORGOT_PASSWORD, params).subscribe((res: any) => {
+     if (res.payLoad) {
       this.mailId = '';
       this.show = 'login';
       this.errorHandler.handleAlert('Reset password sent to your mail id');
     }
+    })
+    // const response: any = this.requestapi.post(this.utils.urlUtils.API.FORGOT_PASSWORD, params);
+   
   }
 
   checkPasswordStrength() {
@@ -189,7 +203,7 @@ export class LoginComponent implements OnInit {
     let authAccessData = [];
 
     for (let x of data.accessDetail) {
-      allAccessData.push(JSON.parse(x));
+      allAccessData.push(this.removeUA(JSON.parse(x)));
     }
     learnerAccessData = allAccessData.filter(function (item: any) {
       return item.app.appCode == 'LA';
@@ -207,8 +221,7 @@ export class LoginComponent implements OnInit {
       return item.app.id == 'AA';
     })
     localStorage.setItem('accessApps', JSON.stringify(allAccessData));
-
-    let username = data.username;
+    let username = data.employeeId;
     localStorage.setItem('username', username);
     this.ngxservice.userId = username;
     let access = this.setModuleAccess();
@@ -231,11 +244,15 @@ export class LoginComponent implements OnInit {
           //this.getUserDetailsByUsername(username);
 
         }
-        console.log(redirectURL, "redirectURL");
         this.router.navigate([redirectURL]);
       }
 
       );
+  }
+
+  removeUA(access) {
+    access.app.modules = access.app.modules.filter(module => module.moduleCode !== 'LA-M');
+    return access
   }
 
 
@@ -487,7 +504,6 @@ export class LoginComponent implements OnInit {
               //this.router.navigate([redirectURL]);
               this.ngxservice.mobileView = false
             }
-    console.log(url,"url");
     return url;
   }
 }

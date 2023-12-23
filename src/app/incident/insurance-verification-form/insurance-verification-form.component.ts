@@ -82,9 +82,11 @@ photoStatusCode:this.insuranceVerificationData.showData.photoStatusCode,
 deleteDate:deleteDate});
  }
  deleteDateChange(e:any){
+ 	this.insuranceVerificationForm.value.deleteDate=e;
    this.insuranceVerificationEvent.emit(this.insuranceVerificationForm.value);
  }
  claimDateChange(e:any){
+ 	this.insuranceVerificationForm.value.claimDate=e;
    this.insuranceVerificationEvent.emit(this.insuranceVerificationForm.value);
  }
  initialChange(e:any){

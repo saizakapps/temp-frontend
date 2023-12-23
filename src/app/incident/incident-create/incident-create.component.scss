@@ -177,6 +177,7 @@ form {
 
     background: #000000;
     border-radius: 6px;
+    border: none;
   }
 
   .next-btn-witness-add {
@@ -432,6 +433,9 @@ form label {
   min-width: 540px;
   height: 105px !important;
 }
+.addressArea-182{
+  height: 182px !important;
+}
 .incidentCreateView {
   width: 640px;
   min-width: 640px;
@@ -457,6 +461,9 @@ padding-bottom: 30px !important;
   width: 90px;
 }
 .ageInput1{
+  width: 100px;
+}
+.ageInput2{
   width: 100px;
 }
 .confirmContent {
@@ -776,6 +783,9 @@ padding-bottom: 30px !important;
 .ageDD {
   width: 90px;
 }
+.ageDDNew{
+  width: 135px;
+}
 .signIcon {
   padding-left: 3px;
 }
@@ -847,7 +857,7 @@ padding-bottom: 30px !important;
   .whitepopupbox{
     padding: 18px 16px;
     padding-bottom: 10px;
-
+    max-height: calc(100vh - 36px);
     .confirmText{
       min-height: 56px;
       margin-bottom: 10px;
@@ -1223,6 +1233,9 @@ margin-bottom: 0px;
     padding-bottom: 4px;
   }
 }
+.priorityBoxpadbottom{
+  padding-bottom: 16px;
+}
 .marginbottom{
   margin-bottom: 10px
 }
@@ -1475,4 +1488,52 @@ textarea{
 .row{
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+.store-mat-icon-top{
+  margin-top: -20px;
+}
+.store-width store-width-tf{
+  text-overflow: ellipsis !important;
+}
+.mtop-legal-info{
+  margin-top: 10px;
+}
+.mtop-other-info{
+  margin-top: 10px;
+}
+
+.legal-info-other{
+  padding-bottom: 20px !important;
+}
+.genderview{
+  margin-top: -15px;
+}
+.delete-pop-button{
+  height: 34px !important;
+}
+.disableaddmail{
+  opacity: 0.5;
+  pointer-events: none;
+}
+.data-view-relative{
+  position: relative;
+}
+.businessMail{
+  position: absolute;
+  bottom: -3px;
+  left: 0px;
+  color: red;
+    font-size: 13px;
+    margin-top: -6px;
+    font-weight: 600;
+}
+.redacted-background-color{
+  color: #212529;
+  font-weight: 500;
+}
+.centerPlaceholder::placeholder {
+  text-align: center;
+  position: absolute;
+  top: 42%;
+  left: 30%;
 }

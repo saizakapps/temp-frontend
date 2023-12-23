@@ -298,7 +298,27 @@ followUpCall:{
         "create": false,
     "view": false,
     "write": false
-    }
+    },
+    openWithBuyerVendor:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentInjury:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentCause:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+genderType:{
+   "view": true,
+   "write": true,
+   "create": true
+ }
 
   }
     public customerFormAccess ={
@@ -455,7 +475,27 @@ followUpCall:{
         "create": false,
     "view": false,
     "write": false
-    }    
+    } ,
+    openWithBuyerVendor:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentInjury:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentCause:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+genderType:{
+   "view": false,
+   "write": false,
+   "create": false
+ }
   }
   
 
@@ -613,7 +653,27 @@ followUpCall:{
         "create": false,
     "view": false,
     "write": false
-    }    
+    } ,
+    openWithBuyerVendor:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentInjury:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentCause:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+genderType:{
+   "view": false,
+   "write": false,
+   "create": false
+ }
   }
   public productFormAccess ={
       "incidentReporterName": {
@@ -790,7 +850,27 @@ followUpCall:{
         "create": false,
     "view": false,
     "write": false
-    }  
+    }  ,
+    openWithBuyerVendor:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentInjury:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+incidentCause:{
+  "view": true,
+  "write": true,
+  "create": true
+},
+genderType:{
+   "view": true,
+   "write": true,
+   "create": true
+ }
   }
   public contractorFormAccess ={
             "incidentReporterName":{
@@ -946,7 +1026,27 @@ followUpCall:{
         "create": false,
     "view": false,
     "write": false
-    }     
+    }   ,
+    openWithBuyerVendor:{
+  "view": false,
+  "write": false,
+  "create": false
+},
+incidentInjury:{
+  "view": false,
+  "write": false,
+  "create": false
+},
+incidentCause:{
+  "view": false,
+  "write": false,
+  "create": false
+},
+genderType:{
+   "view": true,
+   "write": true,
+   "create": true
+ }
   }
   
 }

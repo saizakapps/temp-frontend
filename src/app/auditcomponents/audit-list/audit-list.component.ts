@@ -13,6 +13,7 @@ import { CommonService } from '../../shared/services/incident-services/common.se
 import { ErrorHandlerService } from '../../shared/services/incident-services/error-handler.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { files } from 'jszip';
 
 
 /**
@@ -77,7 +78,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
   downloadRowsStorecode:any;
   donwloadHide = false;
   countryRegionData: any[] = [];
-  disableFilter = false;
+  // disableFilter = false;
   mailId = "";
   Emails: any[] = [];
   tempTableData:any = [];
@@ -90,7 +91,14 @@ export class AuditListComponent implements OnInit, OnDestroy {
   searchEmployee: any = [{ name: 'Store Code', key: 'storeCode' }, { name: 'Store Name', key: 'storeName' }];
   searchBy: any = 'storeCode';
   yearData: any[] = [];
-
+  currentYear:any;
+  currentDate:any;
+  startDateOfYear:any
+  device:any
+  username:any = '';
+  AuditaccessData:any;
+  mainRole:any;
+  configDate:any;
   constructor(private ref: ChangeDetectorRef, private formBuilder: FormBuilder, private _database: ChecklistDatabase, public router: Router, public viewservice: AuditListService, public utils: Utils, private api: RequestApiService, private http: HttpClient, public ngxservice: ngxService, public common: CommonService, private errorhandle: ErrorHandlerService, private snackBar: MatSnackBar, private ngxService: NgxUiLoaderService) {
 
     this.treeControl = new FlatTreeControl<FoodFlatNode>(
@@ -101,19 +109,19 @@ export class AuditListComponent implements OnInit, OnDestroy {
     _database.dataChange.subscribe(data => {
       // this.dataSource.data = data;
     });
-    this.generateYearsArray();
 
   }
 
-  device:any
-  username:any = '';
-  AuditaccessData:any;
   ngOnInit(): void {
       let userDetails = JSON.parse(localStorage.getItem('userDetails'));
-      this.ngxservice.userName = userDetails.roleCode;
-      this.getAuditlist();
+      this.ngxservice.userName = userDetails.auditRole;
+      this.mainRole = userDetails.roleCode;
+      this.getcinfigValues();
+      this.generateYearsArray();
+      // this.getAuditlist();
       if(this.ngxservice.userName !== 'SM' && this.ngxservice.userName !== 'DM'){
       this.getCountryRegion();
+      
     }
 
     this.form = this.formBuilder.group({
@@ -131,21 +139,109 @@ export class AuditListComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateYearsArray() {
-    const currentYear = new Date().getFullYear();
-    for (let year = 2023; year <= currentYear; year++) {
-      this.yearData.push({
-        year : year
-      });
-    }
+  async getcinfigValues(){
+    let configvalue: any = await this.api.getData(this.utils.API.GET_AUDIT_CONFIG_VALUES+ '?userName=' + this.ngxservice.userId + '&id=1');
+    if(configvalue.payLoad){
+    this.configDate = configvalue.payLoad.configValue;
   }
-  selectedyearvalue(){
-    // console.log(this.ngxservice.selectedYear)
+}
+
+  async generateYearsArray() {
+   
+    /** With API Function */
+    this.currentYear = new Date().getFullYear();
+    this.currentDate = new Date();
+
+    let response1: any = await this.api.getData(this.utils.API.GET_AUDIT_YEAR_LIST+ '?userName=' + this.ngxservice.userId);
+      if(response1){
+        // response1 = response1.map((year: string) => ({ year }))
+        if(response1.payLoad.length == 1){
+          this.ngxservice.selectedYear = response1.payLoad[0].toString();
+          this.getAuditlist();
+
+        }
+        else if(response1.payLoad.length == 0){
+          this.ngxservice.selectedYear = new Date().getFullYear();
+          this.getAuditlist();
+        }
+        else{
+          this.ngxservice.selectedYear = response1.payLoad[0]
+          this.getAuditlist();
+        }
+        const originalArray = response1.payLoad;
+
+        this.yearData = originalArray.map(year => ({ "year": year }));
+        
+      }
+      else{
+       this.yearData = [{year : this.currentYear.toString()}]
+      }
+     
+  }
+
+ async selectedyearvalue(){
+  this.tableData.data = [];
+    // this.ngxservice.shimmerTable = true;
+    this.startDateOfYear = new Date(this.currentYear, 0, 1);
+    this.startDateOfYear.setDate(this.startDateOfYear.getDate() + this.configDate);
+
+    if(this.ngxservice.selectedYear < this.currentYear - 1){
+      this.ngxservice.auditReadonly = true;
+     }
+   else if((this.currentYear > this.ngxservice.selectedYear) && (this.currentDate > this.startDateOfYear)){
+      this.ngxservice.auditReadonly = true
+     }
+     else{
+      this.ngxservice.auditReadonly = false
+     }
+     this.ngxservice.filterStore = '';
+     this.ngxservice.recordButton = false
+     this.ngxservice.inspected = false;
+     this.ngxservice.disableFilter = false;
+     this.ngxservice.onlyNew = false;
+     this.tableData.data = [];
+     this.ngxservice.selectedCountryRegionData = [];
+     this.ngxservice.selectedRegionData = [];
+     this.ngxservice.selectedRowLength = 0;
+     this.ngxservice.isAllselect = false;
+     this.ngxservice.indeterminate = false;
+     this.ngxservice.recordButton = false;
+     this.ngxservice.selectedRowData = [];
+     this.ngxservice.activesort = -1;
+     this.ngxservice.dateSortValue = '';
+     if(this.tableData.data.length > 0){
+     for(let x of this.tableData.data){
+       x.checked = false
+     }
+   }
+     if(this.countryRegionData.length > 0){
+     for (let x of this.countryRegionData) {
+       x.checked = false
+     }
+   }
+   if(this.ngxservice.viewednameData){
+     for (let x of this.ngxservice.viewednameData) {
+       x.checked = false;
+     }
+   }
+   if(this.ngxservice.assignedManagerData){
+     for (let x of this.ngxservice.assignedManagerData) {
+       x.checked = false;
+     }
+   }
+   this.ngxservice.selectedassignedManagerType = [];
+   this.ngxservice.selectedviewedNameBy = [];
+     
+     
+     this.getAuditlist()
+
   }
   get f() { return this.form.controls; }
 
   inspectedvalue() {
     this.ngxservice.filterStore = '';
+    this.ngxservice.activesort = -1;
+    this.ngxservice.dateSortValue = '';
     this.ngxservice.inspected = this.ngxservice.inspected ? false : true;
     this.ngxservice.isAllselect = false;
     if(this.tableData.data.length > 0){
@@ -161,36 +257,33 @@ export class AuditListComponent implements OnInit, OnDestroy {
     }, 200);
   }
   else{
-    if(this.ngxservice.inspected == true){
-    setTimeout(() => {
-      this.getStoreandinspected();
-    }, 200);
-  }
-  else{
     setTimeout(() => {
     this.getFilterData();
   }, 200);
-  }
+  
   }
   }
 
-  async getStoreandinspected(){
-    this.tableData.data = [];
-    this.ngxservice.shimmerTable = true;
-    this.http.get(this.utils.API.FILTER_INSPECTED_STORE + '?store=' + this.ngxservice.filterStore).subscribe((res: any) => {
-      if(res.payLoad){
-      this.tableData.data = res.payLoad;
-      this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
-      this.ngxservice.shimmerTable = false;
-      if (this.tableData.data.length == 0) {
-        this.ngxservice.recordButton = true;
-      }
-      else {
-        this.ngxservice.recordButton = false;
-      }
-    }
-    });
-  }
+  // async getStoreandinspected(){
+  //   this.tableData.data = [];
+  //   this.ngxservice.shimmerTable = true;
+  //   this.http.get(this.utils.API.FILTER_INSPECTED_STORE + '?store=' + this.ngxservice.filterStore + '&year=' + this.ngxservice.selectedYear).subscribe((res: any) => {
+  //     if(res.payLoad){
+  //     this.tableData.data = res.payLoad;
+  //     this.tableData.data = this.tableData.data.filter((item:any) => {
+  //       return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+  //      }) 
+  //     this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
+  //     this.ngxservice.shimmerTable = false;
+  //     if (this.tableData.data.length == 0) {
+  //       this.ngxservice.recordButton = true;
+  //     }
+  //     else {
+  //       this.ngxservice.recordButton = false;
+  //     }
+  //   }
+  //   });
+  // }
 
   async inspectedvalue1() {
     this.ngxservice.onlyNew = this.ngxservice.onlyNew ? false : true;
@@ -245,11 +338,15 @@ export class AuditListComponent implements OnInit, OnDestroy {
     }
     }
   }
-
+  
   async getAuditlist() {
     this.ngxservice.shimmerTable = true;
-    let response: any = await this.api.getData(this.utils.API.STORE_LIST + '?userName=' + this.ngxservice.userId);
+    /** +'&currentYear='+ this.ngxservice.selectedYear */
+    let response: any = await this.api.getData(this.utils.API.STORE_LIST + '?userName=' + this.ngxservice.userId +'&currentYear='+ this.ngxservice.selectedYear); 
     this.auditList = response.payLoad;
+    // this.auditList = this.auditList.filter((item:any) => {
+    //  return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+    // })   
     this.auditList.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
     this.tableData.data = this.auditList;
     this.ngxservice.commonauditTablelist = this.tableData.data;
@@ -263,12 +360,20 @@ export class AuditListComponent implements OnInit, OnDestroy {
       this.ngxservice.hideTable = true
      }
      else{
-      if (this.tableData.data.length > 0)
-      if (this.tableData.data.every((name: any) => name.fileName == null)) {
-        this.ngxservice.donwloadHide = true
+      if (this.tableData.data.length > 0){
+      // if (this.tableData.data.every((name: any) => (name.fileName == null || name.fileName == ''))) {
+      //   this.ngxservice.donwloadHide = true
+      // }
+      // else {
+      //   this.ngxservice.donwloadHide = false;
+      // }
+      
+      let fileavailableTable = this.tableData.data.filter((x: any) => (x.files !== null && x.files !== ''))
+      if (fileavailableTable.length > 0) {
+        this.ngxservice.donwloadHide = false
       }
       else {
-        this.ngxservice.donwloadHide = false;
+        this.ngxservice.donwloadHide = true
       }
 
     if (this.tableData.data == 0) {
@@ -280,12 +385,17 @@ export class AuditListComponent implements OnInit, OnDestroy {
       this.ngxservice.shimmerTable = true;
     }
      }
-
+    }
     this.ngxservice.shimmerTable = false;
+    if(document.getElementById("listTable")){
+      const doc: any = document.getElementById("listTable")?.clientWidth;
+      this.ngxservice.auditShimmerWidth = doc;
+      this.ngxservice.auditShimmerWidth = this.ngxservice.auditShimmerWidth - 0;
+      }
   }
 
   getTableListEvent(data: any) {
-    this.getAuditlist();
+    // this.getAuditlist();
   }
 
   getSelectedItems() {
@@ -300,7 +410,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
     this.ngxservice.filterStore = '';
     this.ngxservice.recordButton = false
     node.checked = node.checked ? false : true;
-    if(this.ngxservice.userName == 'AD' || this.ngxservice.userName == 'HR'){
+    if(this.ngxservice.userName == 'AD' || this.ngxservice.userName == 'HR' || this.ngxservice.userName == 'SA'){
       this.ngxservice.selectedCountryRegionData = this.countryRegionData.filter(function (item: any) {
       return item.checked;
     }).map((role: any) => role.countryDescription).map(rl => {
@@ -319,9 +429,14 @@ export class AuditListComponent implements OnInit, OnDestroy {
       return rl
     });
   }
+  if(this.ngxservice.dateSortValue == ''){
  setTimeout(() => {
   this.getYearCrAuditedFilter()
  }, 200);
+}
+else{
+  this.getAuduiListFilter()
+}
   }
 
   filterChanged(e: any) {
@@ -373,10 +488,17 @@ export class AuditListComponent implements OnInit, OnDestroy {
     else{
       this.ngxservice.recordButton = false
     }
+    // let fileavailableTable = this.tableData.data.filter((x: any) => (x.files !== null && x.files !== ''))
+    //   if (fileavailableTable.length > 0) {
+    //     this.ngxservice.donwloadHide = false
+    //   }
+    //   else {
+    //     this.ngxservice.donwloadHide = true
+    //   }
   }
 
    getYearCrAuditedFilter() {
-    if (this.ngxservice.userName == 'AD') {
+    if (this.ngxservice.userName == 'AD' || this.ngxservice.userName == 'HR' || this.ngxservice.userName == 'SA') {
       this.filterParam = {
         "year": this.ngxservice.selectedYear,
         "country": (this.ngxservice.selectedCountryRegionData.length) ? this.ngxservice.selectedCountryRegionData : null,
@@ -388,62 +510,46 @@ export class AuditListComponent implements OnInit, OnDestroy {
       let Token = localStorage.getItem("authenticationToken")
       this.http.post(this.utils.API.GET_FILTERS_COUNTRY_DATA, this.filterParam,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
         this.tableData.data = res.payLoad;
+        // this.tableData.data = this.tableData.data.filter((item:any) => {
+        //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+        //  }) 
         this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
         this.tempTableData = this.tableData.data;
         this.ngxservice.commonauditTablelist = this.tableData.data;
         this.ngxservice.TempcommonauditTablelist = this.tableData.data;
           /* Assigned Manager Filter */
-          this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-            return item.assignedManager != '' && item.assignedManager != null;
-          }).map((role: any) => role.assignedManager))).map(rl => {
-            return { name: rl, checked: false }
-          });
+
+      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+        return item.assignedManager != '' && item.assignedManager != null;
+      }).map((role: any) => role.assignedManager))).map(rl => {
+        return { name: rl, checked: false }
+      });
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
+
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
           /* Last Viewed Persion Filter */
         this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
           return item.reviewByName != '' && item.reviewByName != null;
         }).map((role: any) => role.reviewByName))).map(rl => {
           return { name: rl, checked: false }
         });
-        if (this.tableData.data.length == 0) {
-          this.ngxservice.recordButton = true;
-          this.ngxservice.shimmerTable = false;
-
-        }
-        else {
-          this.ngxservice.recordButton = false
-        }
-        this.ngxservice.shimmerTable = false
-      });
-    }
-    else if (this.ngxservice.userName == 'HR') {
-      this.filterParam = {
-        "year": this.ngxservice.selectedYear,
-        "country": (this.ngxservice.selectedCountryRegionData.length) ? this.ngxservice.selectedCountryRegionData : null,
-        "inspectedFlag": (this.ngxservice.inspected) ? false : true,
-        "userName" : this.ngxservice.userId
-      }
-      this.tableData.data = []
-      this.ngxservice.shimmerTable = true;
-      let Token = localStorage.getItem("authenticationToken")
-      this.http.post(this.utils.API.GET_FILTERS_COUNTRY_DATA, this.filterParam,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
-        this.tableData.data = res.payLoad;
-        // this.ngxservice.commonauditTablelist = this.tableData.data;
-        this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
-        this.tempTableData = this.tableData.data;
-        this.ngxservice.commonauditTablelist = this.tableData.data;
-        this.ngxservice.TempcommonauditTablelist = this.tableData.data;
-    /* Assigned Manager Filter */
-    this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-      return item.assignedManager != '' && item.assignedManager != null;
-    }).map((role: any) => role.assignedManager))).map(rl => {
-      return { name: rl, checked: false }
-    });
-    /* Last Viewed Persion Filter */
-  this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-    return item.reviewByName != '' && item.reviewByName != null;
-  }).map((role: any) => role.reviewByName))).map(rl => {
-    return { name: rl, checked: false }
-  });
         if (this.tableData.data.length == 0) {
           this.ngxservice.recordButton = true;
           this.ngxservice.shimmerTable = false;
@@ -467,6 +573,9 @@ export class AuditListComponent implements OnInit, OnDestroy {
       this.http.post(this.utils.API.GET_FILTERS_REGION_DATA, this.filterParam,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
         this.tableData.data = res.payLoad;
         // this.ngxservice.commonauditTablelist = this.tableData.data;
+        // this.tableData.data = this.tableData.data.filter((item:any) => {
+        //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+        //  }) 
         this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
         this.tempTableData = this.tableData.data;
 
@@ -490,12 +599,33 @@ export class AuditListComponent implements OnInit, OnDestroy {
          this.ngxservice.TempcommonauditTablelist = this.tableData.data;
          this.ngxservice.recordButton = false;
          /* Assigned Manager Filter */
-       this.ngxservice.assignedManagerData = Array.from(new Set(this.ngxservice.commonauditTablelist.filter(function (item: any) {
+
+      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.assignedManager != '' && item.assignedManager != null;
       }).map((role: any) => role.assignedManager))).map(rl => {
         return { name: rl, checked: false }
       });
-      /* Last Viewed Persion Filter */
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
+
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
+         /* Last Viewed Persion Filter */
     this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
       return item.reviewByName != '' && item.reviewByName != null;
     }).map((role: any) => role.reviewByName))).map(rl => {
@@ -516,13 +646,16 @@ export class AuditListComponent implements OnInit, OnDestroy {
     else {
       this.filterParam = {
         "year": this.ngxservice.selectedYear,
-        "userName" : this.ngxservice.userId
+        "userName" : this.ngxservice.userId,
       }
       this.tableData.data = []
       this.ngxservice.shimmerTable = true;
       let Token = localStorage.getItem("authenticationToken")
       this.http.post(this.utils.API.GET_FILTERS_REGION_DATA, this.filterParam,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
         this.tableData.data = res.payLoad;
+        // this.tableData.data = this.tableData.data.filter((item:any) => {
+        //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+        //  }) 
         this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
         this.tempTableData = this.tableData.data;
           if(this.ngxservice.onlyNew == true){
@@ -543,11 +676,32 @@ export class AuditListComponent implements OnInit, OnDestroy {
          this.tableData.data = this.tempTableData;
          this.ngxservice.recordButton = false;
          /* Assigned Manager Filter */
-       this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+
+      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.assignedManager != '' && item.assignedManager != null;
       }).map((role: any) => role.assignedManager))).map(rl => {
         return { name: rl, checked: false }
       });
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
+
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
       /* Last Viewed Persion Filter */
     this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
       return item.reviewByName != '' && item.reviewByName != null;
@@ -568,8 +722,9 @@ export class AuditListComponent implements OnInit, OnDestroy {
 
     }
 
-    this.ngxservice.selectedviewedNameBy = 0;
-    this.ngxservice.selectedassignedManagerType = 0;
+    this.ngxservice.selectedviewedNameBy = [];
+    this.ngxservice.selectedassignedManagerType = [];
+    // this.ngxservice.activesort = -1;
     this.ngxservice.selectedRowLength = 0;
     if(this.tableData.data.length > 0){
     for(let x of this.tableData.data){
@@ -586,7 +741,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
     this.ngxservice.filterStore = '';
     this.ngxservice.recordButton = false
     this.ngxservice.inspected = false;
-    this.disableFilter = false;
+    this.ngxservice.disableFilter = false;
     this.ngxservice.onlyNew = false;
     this.tableData.data = [];
     this.ngxservice.selectedCountryRegionData = [];
@@ -596,6 +751,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
     this.ngxservice.indeterminate = false;
     this.ngxservice.recordButton = false;
     this.ngxservice.selectedRowData = [];
+    
     if(this.tableData.data.length > 0){
     for(let x of this.tableData.data){
       x.checked = false
@@ -606,6 +762,18 @@ export class AuditListComponent implements OnInit, OnDestroy {
       x.checked = false
     }
   }
+  if(this.ngxservice.viewednameData){
+    for (let x of this.ngxservice.viewednameData) {
+      x.checked = false;
+    }
+  }
+  if(this.ngxservice.assignedManagerData){
+    for (let x of this.ngxservice.assignedManagerData) {
+      x.checked = false;
+    }
+  }
+  this.ngxservice.selectedassignedManagerType = [];
+  this.ngxservice.selectedviewedNameBy = [];
     setTimeout(() => {
       this.getAuditlist();
     }, 200);
@@ -614,6 +782,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
 
   async getDataByFindStoreChange(e: any) {
     this.ngxservice.filterStore = e.srcElement.value.trim();
+    this.ngxservice.activesort = -1;
     if(this.countryRegionData.length > 0){
     for (let x of this.countryRegionData) {
       x.checked = false
@@ -624,24 +793,36 @@ export class AuditListComponent implements OnInit, OnDestroy {
       x.checked = false
     }
   }
+  if(this.ngxservice.viewednameData){
+    for (let x of this.ngxservice.viewednameData) {
+      x.checked = false;
+    }
+  }
+  if(this.ngxservice.assignedManagerData){
+    for (let x of this.ngxservice.assignedManagerData) {
+      x.checked = false;
+    }
+  }
     this.ngxservice.selectedCountryRegionData = [];
     this.ngxservice.isAllselect = false;
     this.ngxservice.indeterminate = false;
     this.ngxservice.selectedRowLength = 0;
     this.ngxservice.inspected = false;
     this.ngxservice.onlyNew = false;
+    this.ngxservice.selectedassignedManagerType = [];
+    this.ngxservice.selectedviewedNameBy = [];
     // this.ngxservice.shimmerTable = true;
 
     this.getFilterData();
     if (this.ngxservice.filterStore !== '') {
-      this.disableFilter = true
+      this.ngxservice.disableFilter = true
     }
     else {
       this.tableData.data = [];
       this.ngxservice.recordButton = false
       this.ngxservice.shimmerTable = true;
       this.getAuditlist();
-      this.disableFilter = false
+      this.ngxservice.disableFilter = false
     }
   }
 
@@ -669,7 +850,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
     if(this.ngxservice.fixedauditTablelist.length == 1){
       this.mailparam = {
         "year" : this.ngxservice.selectedYear,
-        "storeCode" : this.ngxservice.fixedauditTablelist[0].storeCode,
+        "storeCode" : [this.ngxservice.fixedauditTablelist[0].storeCode],
         "emailId": this.Emails.toString(),
         "userName" : this.ngxservice.userId
       }
@@ -679,40 +860,46 @@ export class AuditListComponent implements OnInit, OnDestroy {
     if(this.downloadRows.length == 0){
       this.mailparam = {
         "year": this.ngxservice.selectedYear,
-        "auditId": this.downloadRows1,
+        "storeCode": this.downloadRows1,
         "emailId": this.Emails.toString(),
         "userName" : this.ngxservice.userId
       }
     }
-    if(this.downloadRows.length == 1){
+   else {
       this.mailparam = {
         "year" : this.ngxservice.selectedYear,
-        "storeCode" :this.downloadRowsStorecode !== undefined ? this.downloadRowsStorecode.toString(): '',
+        "storeCode": this.downloadRows,
+        // "storeCode" :this.downloadRowsStorecode !== undefined ? this.downloadRowsStorecode: '',
         "emailId": this.Emails.toString(),
         "userName" : this.ngxservice.userId
       }
     }
-    if(this.downloadRows.length > 1){
-      this.mailparam = {
-        "year": this.ngxservice.selectedYear,
-        "auditId": this.downloadRows,
-        "emailId": this.Emails.toString(),
-        "userName" : this.ngxservice.userId
-      }
-    }
+
   }
     let Token = localStorage.getItem("authenticationToken")
     this.http.post(this.utils.API.AUDIT_DOWNLIAD_FILE, this.mailparam,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
-      this.common.openSnackBar(res.payLoad, 2, "");
+     if(res.payLoad.status == "Success"){
+      this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
+     }
     });
     this.Emails = [];
+    this.downloadRows = [];
   }
 
   addMailId() {
     if (this.form.valid) {
+      let existing = this.Emails.filter((item:any)=>{
+        return item == this.mailId
+       })
+    
+       if(existing.length > 0){
+        this.common.openSnackBar("Mail Id Already Exists",2,"Invalid")
+       }
+       else{
       this.Emails.push(this.mailId);
       this.mailId = "";
       this.ref.detectChanges();
+       }
     }
   }
 
@@ -721,15 +908,16 @@ export class AuditListComponent implements OnInit, OnDestroy {
   }
 
   getdownloadRow() {
+    //   this.ngxservice.selectedRowData = [];
     this.Emails = [];
     if (this.tableData.data.filter((data: any) => data.checked == true).length > 0) {
-      this.downloadRows = (this.tableData.data.filter((data: any) => data.checked == true)).map((item: any) => item.auditId)
+      this.downloadRows = (this.tableData.data.filter((data: any) => (data.checked == true && data.files!='' && data.files!=null))).map((item: any) => item.storeCode)
     }
     else {
       // this.downloadRows = this.tableData.data.map((item: any) => item.auditId);
       this.downloadRows1 = this.tableData.data.filter(function(item:any){
         return item.files!='' && item.files!=null;
-      }).map((item: any) => item.auditId);
+      }).map((item: any) => item.storeCode);
     }
 
     if(this.tableData.data.filter((data: any) => data.checked == true).length == 1){
@@ -740,6 +928,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
   cancelMail() {
     this.mailId = '';
     this.Emails = [];
+    this.ref.detectChanges();
   }
 
  async getMailStatus(){
@@ -771,6 +960,108 @@ export class AuditListComponent implements OnInit, OnDestroy {
     this.ngxservice.indeterminate = false;
     this.ngxservice.recordButton = false;
     this.ngxservice.selectedRowData = [];
+    this.ngxservice.activesort = -1;
+    this.ngxservice.selectedviewedNameBy = [];
+    this.ngxservice.assignedManagerData = [];
+    this.ngxservice.selectedassignedManagerType = [];
+    this.ngxservice.selectedviewedNameBy = [];
+    this.ngxservice.auditReadonly = false;
+   }
+
+   
+  async getAuduiListFilter() {
+    this.ngxservice.shimmerTable = true
+    this.tableData.data = [];
+    let param: any;
+    if (this.ngxservice.userName == "AD" || this.ngxservice.userName == "HR" || this.ngxservice.userName == "SA") {
+      param = {
+        "sortType": this.ngxservice.dateSortValue,
+        "sortBy": "storeDescription",
+        "country": (this.ngxservice.selectedCountryRegionData.length) ? this.ngxservice.selectedCountryRegionData : null,
+        "filterType": "country",
+         "userName":this.ngxservice.userId,
+         "year":this.ngxservice.selectedYear
+      }
+    }
+    else if (this.ngxservice.userName == "OM") {
+      param = {
+        "sortType": this.ngxservice.dateSortValue,
+        "sortBy": "storeDescription",
+        "region": (this.ngxservice.selectedRegionData.length) ? this.ngxservice.selectedRegionData : null,
+        "filterType": "region",
+         "userName":this.ngxservice.userId,
+         "year":this.ngxservice.selectedYear
+      }
+    }
+    else {
+      param = {
+        "sortType": this.ngxservice.dateSortValue,
+        "sortBy": "storeDescription",
+         "userName":this.ngxservice.userId,
+         "year":this.ngxservice.selectedYear
+      }
+    }
+    let Token = localStorage.getItem("authenticationToken")
+    this.http.post(this.utils.API.AUDIT_LIST_FILTER, param,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
+      this.tableData.data = res.payLoad;
+      // this.tableData.data = this.tableData.data.filter((item:any) => {
+      //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+      //  }) 
+      // this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
+      this.tempTableData = this.tableData.data;
+         /* Assigned Manager Filter */
+        /* Assigned Manager Filter */
+
+      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+        return item.assignedManager != '' && item.assignedManager != null;
+      }).map((role: any) => role.assignedManager))).map(rl => {
+        return { name: rl, checked: false }
+      });
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
+
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
+        /* Last Viewed Persion Filter */
+        this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+          return item.reviewByName != '' && item.reviewByName != null;
+        }).map((role: any) => role.reviewByName))).map(rl => {
+          return { name: rl, checked: false }
+        });
+
+      for( let x of this.tableData.data){
+        let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
+          return item.auditId==x.auditId
+        })
+        if(isExist.length > 0){
+          x.checked=true;
+        }
+      }
+      this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
+      if (this.tableData.data.length == 0) {
+        this.ngxservice.recordButton = true
+        this.ngxservice.shimmerTable = false
+      }
+      else {
+        this.ngxservice.recordButton = false
+      }
+      this.ngxservice.shimmerTable = false
+    });
   }
 }
 

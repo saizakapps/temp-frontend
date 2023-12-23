@@ -7,108 +7,221 @@
 
 
 
-			<div class="d-flex align-items-center justify-content-between flex-wrap w-100">
-           <form class="d-flex incidentListForm" *ngIf=" ( 
-	this.incidentService.isIncidentWriteAccess() ||
-	this.incidentService.isIncidentViewAccess())">
+		<div class="d-flex align-items-center justify-content-between flex-wrap w-100" id="headerForm">
+			<form class="d-flex incidentListForm" *ngIf=" (this.incidentService.isIncidentWriteAccess() || this.incidentService.isIncidentViewAccess())">
 				<div class="d-flex align-items-center incidentListDiv mt-3">
 					<div class="form-group">
 						<label class="list-filter-title d-flex align-items-center"><span>Find Case</span>
- <span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1"	 	
- ngbTooltip="Search by Incident ID/ CSD no./ Article ID">		
-	                                        <mat-icon >help_outline</mat-icon>		
-                                   </span>
+							<span class="findCaseIcon ps-1" placement="bottom" [tooltipClass]="loginEmployeeRoleCode == 'PC'?'my-custom-class1':'my-custom-class2'"
+								[ngbTooltip]="findCasetooltipmsg">
+								<mat-icon>help_outline</mat-icon>
+							</span></label>
+						<select class="form-control searchSelect searchSelectNew" [(ngModel)]="dropdownSelect"
+							[ngModelOptions]="{standalone: true}" (change)="searchByChangedropdown($event)">
+							<ng-container *ngFor="let data of this.ddLsitdatasearchby">
+							<option value="{{data.name}}" class="optionColor" [ngClass]="{'d-none': totalRegionCount <= 1 && data.name == 'filter3'}">{{data.displayname}}</option>
+							</ng-container>
+							<!-- <option value="filter2" class="optionColor" *ngIf="dropdownValue1.length > 0 && loginEmployeeRoleCode == 'PC'">Key word 1</option>
+							<option value="filter3" class="optionColor" *ngIf="totalRegionCount > 1">Country/Region</option> -->
+						</select>
+						<!-- <div class="searchby-dd auditNgselect auditNgselectIncident">
+						<label class="list-filter-title">Filter by</label>
+						<ng-select [items]="searchFilter" name="filterBy" bindLabel="name" bindValue="id" [clearable]=false
+						  [searchable]="false" [(ngModel)]="filterBy"></ng-select>
+					  </div> -->
+
+					</div>
+					<div class="form-group leftalignInput" *ngIf="dropdownSelect == 'filter1'">
+						<label class="list-filter-title d-flex align-items-center dummylable"><span>Find Case</span>
+							<span class="findCaseIcon ps-1" placement="bottom" [tooltipClass]="loginEmployeeRoleCode == 'PC'?'my-custom-class1':'my-custom-class2'"
+								[ngbTooltip]="findCasetooltipmsg">
+								<mat-icon>help_outline</mat-icon>
+							</span>
+
+						</label> 
+						<input type="text" class="form-control findInput findInput-width" id="pwd" placeholder="Type to search" name="name"
+							(change)="getDataByFindCaseChange($event)" [(ngModel)]="filterParam.findCase"
+							[ngModelOptions]="{standalone: true}">
+					</div>
+					<div class="form-group leftalignInput"  *ngIf="dropdownSelect == 'filter2' && dropdownValue1.length > 0">
+						<label class="list-filter-title d-flex align-items-center dummylable"><span>Search word</span>
+							<span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1-pc"
+								ngbTooltip="Keyword 1 for case or injury">
+								<mat-icon>help_outline</mat-icon>
+							</span>
 
 						</label>
-						<input type="text" class="form-control findInput" id="pwd" placeholder="" name="name" (change)="getDataByFindCaseChange($event)" [(ngModel)]="filterParam.findCase" [ngModelOptions]="{standalone: true}">
+						<select class="form-control field-width-height multiselecticon" [ngModelOptions]="{standalone: true}" [(ngModel)]="drop1changeValue" (change)="drop1change($event)" placeholder = "sdf">
+							<option value="" class="d-none"></option>
+							<option *ngFor="let prt of dropdownValue1;" value="{{prt.id}}">
+								{{prt.description}}</option>
+						</select>
+						<!-- <input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
+							(change)="getDataByFindCaseChange($event)" [(ngModel)]="filterParam.findCase"
+							[ngModelOptions]="{standalone: true}"> -->
 					</div>
-						<div class="form-group" *ngIf="isStoreFilterShow()">
+					<div class="form-group marginminus auditFormsLbl auditCountry auditFormsLbl-new leftalignInput"
+						*ngIf="totalRegionCount>1 && dropdownSelect == 'filter3'">
+						<label class="list-filter-title list-filter-title-1 dummylable">Country/Region</label>
+
+
+						<div class="multselectbox small-mt">
+
+							<!-- <form class="example-form"> -->
+							<mat-form-field class="example-full-width">
+								<input type="text" placeholder="{{filterAppliadText}}" aria-label="Number" matInput
+									(input)="filterChanged($event)" [matAutocomplete]="auto" id="filtertext"
+									class="multselecticon" #filtertext>
+								<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+									class="mat-autocomplete-panal-cregion">
+
+									<mat-option class="d-none">
+
+									</mat-option>
+									<div class="alldata"><mat-checkbox class="checklist-leaf-node"
+											[checked]="isAllSelected" (change)="allSelecteChange($event)"
+											*ngIf="totalRegionCount>0">All</mat-checkbox>
+									</div>
+									<mat-tree [dataSource]="dataSource" [treeControl]="treeControl"
+										class="example-tree commontreebuttonstyle1">
+
+										<mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+
+											<mat-checkbox class="checklist-leaf-node"
+												[checked]="checklistSelection.isSelected(node)"
+												(change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+										</mat-tree-node>
+
+										<mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding
+											class="mat-tree-node1">
+											<button mat-icon-button matTreeNodeToggle
+												[attr.aria-label]="'toggle ' + node.filename">
+												<mat-icon class="mat-icon-rtl-mirror">
+													{{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+												</mat-icon>
+											</button>
+											<mat-checkbox [checked]="descendantsAllSelected(node)"
+												[indeterminate]="descendantsPartiallySelected(node)"
+												(change)="todoItemSelectionToggle(node)">
+												{{node.item}}</mat-checkbox>
+										</mat-tree-node>
+									</mat-tree>
+								</mat-autocomplete>
+							</mat-form-field>
+							<!-- </form> -->
+						</div>
+					</div>
+
+					<div class="form-group" *ngIf="isStoreFilterShow()">
 						<label class="list-filter-title d-flex align-items-center"><span>Store Id</span>
- <span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1"	 	
- ngbTooltip="Search by Store Id">		
-	                                        <mat-icon >help_outline</mat-icon>		
-                                   </span>
+							<span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1"
+								ngbTooltip="Search by Store Id">
+								<mat-icon>help_outline</mat-icon>
+							</span>
 
 						</label>
-						<input type="text" class="form-control findInput" id="pwd" placeholder="" name="name" (change)="getDataByStoreIdChange($event)" [(ngModel)]="filterParam.storeId" [ngModelOptions]="{standalone: true}">
+						<input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
+							(change)="getDataByStoreIdChange($event)" [(ngModel)]="filterParam.storeId"
+							[ngModelOptions]="{standalone: true}">
 					</div>
-					<div class="form-group marginminus auditFormsLbl auditCountry auditFormsLbl-new" *ngIf="totalRegionCount>1">
-						<label class="list-filter-title">Country/Region</label>
+					
+					<!-- <div class="searchby-dd auditNgselect auditNgselectIncident">
+						<label class="list-filter-title">Search by</label>
+						<ng-select [items]="searchDate" name="searchBy" bindLabel="name" bindValue="id" [clearable]=false
+						  [searchable]="false" [(ngModel)]="searchBy"></ng-select>
+					  </div> -->
+					<!-- <div class="form-group">
+						<label class="list-filter-title">Date Filters</label>
+						<select class="form-control searchSelect" [(ngModel)]="filterParam.searchby"
+							[ngModelOptions]="{standalone: true}" (change)="searchByChange($event)">
+							<option value="1" class="optionColor">Incident Date</option>
+							<option value="2" class="optionColor">Reported Date</option>
+							<option value="3" class="optionColor">Created Date</option>
+						</select>
 
-
-<div class="multselectbox">
-
-	<!-- <form class="example-form"> -->
-		<mat-form-field class="example-full-width">
-			<input type="text"
-           placeholder="{{filterAppliadText}}"
-           aria-label="Number"
-           matInput
-           (input)="filterChanged($event)"
-           [matAutocomplete]="auto" id="filtertext"  class="multselecticon" #filtertext>
-			<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-
-				<mat-option  class="d-none" >
-
-				</mat-option>
-				<div class="alldata"><mat-checkbox class="checklist-leaf-node" [checked]="isAllSelected"
-							(change)="allSelecteChange($event)" *ngIf="totalRegionCount>0">All</mat-checkbox>
+					</div> -->
+					<!-- <div class="form-group fromDate dataiconrel">
+						<label class="list-filter-title">From Date</label>
+						<input type="text" class="form-control fromToDate " id="fromDate" maxlength="10" placeholder=" "
+							name="fromDate" [(ngModel)]="filterParam.fromDate" [ngModelOptions]="{standalone: true}"
+							(bsValueChange)="fromDateChange($event)" autocomplete="off" bsDatepicker
+							[bsConfig]="common.bsConfig" [maxDate]="fromMaxDate" [minDate]="fromMinDate" #fromDate
+							required>
+						<div class="data-icon" (click)="fromDate.click()">
+							<img src="assets/healthsafetyimages/field-icon.svg">
 						</div>
-				<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree commontreebuttonstyle1">
-
-					<mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-						<!-- <button mat-icon-button disabled></button> -->
-
-						<mat-checkbox class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)"
-							(change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-					</mat-tree-node>
-
-					<mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding class="mat-tree-node1">
-						<button mat-icon-button matTreeNodeToggle
-            [attr.aria-label]="'toggle ' + node.filename">
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-      </mat-icon>
-    </button>
-						<mat-checkbox [checked]="descendantsAllSelected(node)"
-							[indeterminate]="descendantsPartiallySelected(node)"
-							(change)="todoItemSelectionToggle(node)">
-							{{node.item}}</mat-checkbox>
-					</mat-tree-node>
-				</mat-tree>
-			</mat-autocomplete>
-		</mat-form-field>
-	<!-- </form> -->
-</div>
 					</div>
-
-
-						<div class="form-group fromDate dataiconrel">
-							<label class="list-filter-title">From</label>
-							<input type="text" class="form-control fromToDate " id="fromDate" maxlength="10" placeholder=" " name="fromDate" [(ngModel)]="filterParam.fromDate" [ngModelOptions]="{standalone: true}" (bsValueChange)="fromDateChange($event)"   autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"   [maxDate]="fromMaxDate" [minDate]="fromMinDate" #fromDate required>
-							<div class="data-icon" (click)="fromDate.click()">
-                                             <img src="assets/healthsafetyimages/field-icon.svg">
-                                             </div>
+					<div class="form-group dataiconrel">
+						<label class="list-filter-title">To Date</label>
+						<input type="text" maxlength="10" class="form-control fromToDate" id="todate" placeholder=" "
+							name="toDate" [(ngModel)]="filterParam.toDate" [ngModelOptions]="{standalone: true}"
+							(bsValueChange)="toDateChange($event)" autocomplete="off" bsDatepicker
+							[bsConfig]="common.bsConfig" [maxDate]="toMaxDate" [minDate]="toMinDate" #toDate required>
+						<div class="data-icon" (click)="toDate.click()">
+							<img src="assets/healthsafetyimages/field-icon.svg">
 						</div>
-						<div class="form-group dataiconrel">
-							<label class="list-filter-title">To</label>
-							<input type="text" maxlength="10" class="form-control fromToDate" id="todate" placeholder=" " name="toDate" [(ngModel)]="filterParam.toDate" [ngModelOptions]="{standalone: true}" (bsValueChange)="toDateChange($event)"  autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"  [maxDate]="toMaxDate" [minDate]="toMinDate"  #toDate required>
-							<div class="data-icon" (click)="toDate.click()">
-                                             <img src="assets/healthsafetyimages/field-icon.svg">
-                                             </div>
-						</div>
+					</div> -->
+                    <div class="form-group">
+					<label class="list-filter-title">Date Filters</label>
 
+					<form class="form-inline">
+						<div class="form-group ut-search-name">
 
-
-						<div class="form-group">
-							<label class="list-filter-title">Status</label>
-							<select class="form-control statusSelect" [ngClass]="{'graycolottext' : filterParam.status == 'All'}" [(ngModel)]="filterParam.status" [ngModelOptions]="{standalone: true}" (change)="statusSelectionChange($event)">
-								<option value="All" class="optionColor">All</option>
-								<option value="Draft" class="optionColor">Draft</option>
-								<option value="Open" class="optionColor">Open</option>
-								<option value="Closed" class="optionColor">Closed</option>
-								<option value="Minor" class="optionColor">Minor Incident</option>
+						  <div class="input-group">
+							<select class="form-control searchSelect" [(ngModel)]="filterParam.searchby"
+								[ngModelOptions]="{standalone: true}" (change)="searchByChange($event)">
+								<option value="1" class="optionColor">Incident Date</option>
+								<option value="2" class="optionColor">Reported Date</option>
+								<option value="3" class="optionColor">Created Date</option>
 							</select>
+							<!-- <div class="datefInput">Date of Incident</div> -->
+							<!-- drop down portion -->
+							<!-- <div class="searchby-dd pl-1 mr-2">
+							  <ng-select [items]="searchByDatelist" name="searchBy" bindLabel="name" bindValue="key"
+								[clearable]=false [searchable]="false"  [(ngModel)]="dateBy"></ng-select>
+							</div> -->
+							<!-- date picker portion -->
+                             <div class="relative">
+							<input #dateRange class="input-group-append" (keypress)="common.allowNumberOnly($event)" ([ngModal])="myModelDatepicker" #inputField [ngClass]="{'whitecolor':filterParam.fromDate == '' && filterParam.toDate == ''}" 
+							id="daterangeInput" name="daterangeInput" daterangepicker 
+							  (selected)="dateRangeChange($event)" [options]="filterDateOption" autocomplete="off">
+							  <!-- <span class="input-group-text">
+								<i class="fa fa-calendar"></i>
+							  </span> -->
+							  <div class="topunselectBox" *ngIf="filterParam.fromDate == '' && filterParam.toDate == ''" (click)="dateRange.click()"></div>
+							  </div>
+						  </div>
+						</div>
+					  </form>
+					  </div>
+
+					<div class="form-group statuslistboxform">
+						<label class="list-filter-title">Status</label>
+						<div>
+						<mat-form-field class="example-full-width statuslistbox " [floatLabel]="'never'">
+							<mat-label class="mat-labul">Select Status</mat-label>
+							<mat-select class="form-control priority-form multselecticonnew" panelClass="myPanelClassMatselectList" [disableOptionCentering]="true" [(ngModel)]="selectedOptionsNew" [ngModelOptions]="{standalone: true}" multiple>
+								  <mat-select-trigger>
+								{{ selectedOptionsnew.length ? 'Filter Applied' : 'Select Status' }}
+							  </mat-select-trigger>
+							  <mat-option *ngFor="let option of ddLsitdata"  class="removecheckbox">
+								<mat-checkbox [checked]="isSelectednew(option.name)"  [value]="option.name" (change)="toggleSelection($event, option.name)" class="checkboxstatus">
+									{{ option.displayname }}
+								  </mat-checkbox>
+							  </mat-option>
+							</mat-select>
+						  </mat-form-field>
+						  </div>
+						<!-- <mat-checkbox *ngFor="let option of ddLsitdata" [value]="option.name" [checked]="isChecked(option.name)" (change)="onCheckboxChange1($event, option.name)">
+							{{ option.displayname }}
+						  </mat-checkbox> -->
+						<!-- <select class="form-control statusSelect"
+							[ngClass]="{'graycolottext' : filterParam.status == ddLsitdata[0]?.name}" [(ngModel)]="filterParam.status"
+							[ngModelOptions]="{standalone: true}" (change)="statusSelectionChange($event)">
+							 <option *ngFor="let data of this.ddLsitdata" value="{{data.name}}" class="optionColor">
+								<mat-checkbox> </mat-checkbox>	{{data.displayname}}</option>
+						
+						</select> -->
 						<!-- 	<mat-form-field>
    <mat-label>Toppings</mat-label> 
   <mat-select [formControl]="selectedAllstatus" multiple>
@@ -121,28 +234,69 @@
     <mat-option *ngFor="let dt of allStatusData" [value]="dt">{{dt.name}}</mat-option>
   </mat-select>
 </mat-form-field> -->
-						</div>
+					</div>
 
 
 					<div class="clear-filter-text" *ngIf="filterParam.status">
 
-						<span class="" [ngClass]="{'disableClear' : filterParam.findCase == '' && filterParam.countryRegion == '' && filterParam.fromDate == undefined && filterParam.toDate == undefined && filterParam.status == 'All' && filterAppliadText==''}" (click)="clearFilter()">Clear all filters</span>
+						<!-- <span class=""
+							[ngClass]="{'disableClear' : filterParam.findCase == '' && filterParam.countryRegion == '' && (filterParam.fromDate == '' || filterParam.fromDate == undefined) && (filterParam.toDate == '' || filterParam.toDate == undefined) && filterParam.status == this.ddLsitdata[0]?.name && filterAppliadText==''}"
+							(click)="clearFilter()">Clear all filters</span> -->
+							<button type="button" title="Clear Filter"
+							[ngClass]="{'disableClear' :drop1changeValue == '' && filterParam.findCase == '' && filterParam.countryRegion == '' && filterParam.storeId == '' && (filterParam.fromDate == '' || filterParam.fromDate == undefined) && (filterParam.toDate == '' || filterParam.toDate == undefined) && this.selectedOptionsnew.length == 0 && filterAppliadText==''}"
+							 (click)="clearFilter()" class="clearFilterButton">
+								<img height="22px" width="22px" src="assets/images/clear-filter.png" alt="clear-filter">
+							  </button>
 					</div>
+
+					<!-- <div class="clear-filter-text ml-0" data-toggle="modal" data-target="#mailpopupbox"
+						(click)="exportpopup()" *ngIf="loginEmployeeRoleCode == 'PC' || loginEmployeeRoleCode == 'Insurance'">Export</div>
+					<div *ngIf="loginEmployeeRoleCode == 'PC' || loginEmployeeRoleCode == 'Insurance'">
+						<div class="clear-filter-text ml-0 scheduleReportButton" [matMenuTriggerFor]="mailSummary" (click)="exportStatus()"><img src="assets/images/export-status.svg"></div>
+						<mat-menu class="statusMenuPanelAudit" #mailSummary="matMenu" xPosition="before">
+							<table class="statusTbl" id="dynamic-table">
+								<thead>
+									<tr>
+										<th>Exported Date</th>
+										<th>Status</th>
+									</tr>
+								</thead>
+								<tbody *ngIf="this.statusList">
+									<tr *ngFor="let item of statusList; let i = index">
+										<td>{{ (item.createdOn) || '-'}}</td>
+										<td class="statusCamel"
+											[ngClass]="{'greenStatus' : item.exportStatus === 'Success', 'redStatus': item.exportStatus === 'Failed', 'yellowStatus': item.exportStatus === 'Inprogress' }">
+											{{ item.exportStatus }}</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="d-flex no-record-found-bg">
+								<div *ngIf="statusList && statusList.length == 0" class="no-record-found-status">No
+									record found
+								</div>
+							</div>
+						</mat-menu>
+
+					</div> -->
+
 				</div>
 
-				</form>
-				<div class="d-flex align-items-center">
-				<div class="d-flex mt-1 align-items-end newIncidentBtn" *ngIf="!isCreateBtnHidden && this.incidentService.isIncidentcreateAccess()">
+			</form>
+			<div class="d-flex align-items-center">
+				<div class="d-flex mt-1 align-items-end newIncidentBtn"
+					*ngIf="!isCreateBtnHidden && this.incidentService.isIncidentcreateAccess()">
 					<button [matMenuTriggerFor]="menu"
 						class="btn btn-primary incidentnewCourseBtn statusBtn d-flex justify-content-center align-items-center"
-						*ngIf="isList"><span class="textpadnew">New Incident</span> <span class="minitriangle"></span></button>
+						*ngIf="isList"><span class="textpadnew">New Incident</span> <span
+							class="minitriangle"></span></button>
 					<mat-menu #menu="matMenu" class="incidentCoursePopup mat-menu-header">
-						<div class=" p-0 coursePopup " [ngClass]="{'courseMenu' : it.isShow}" *ngFor="let it of incidentTypeData;">
+						<div class=" p-0 coursePopup " [ngClass]="{'courseMenu' : it.isShow}"
+							*ngFor="let it of incidentTypeData;">
 							<!-- <div class="arrow1"></div> -->
 							<div (click)="incidentTypeClick($event,it)" *ngIf="it.isShow">
-								<div
-									class=" d-flex justify-content-start  align-items-center" [ngClass]="{'courseMenu' : it.isShow}" mat-menu-item>
-									<button mat-menu-item >{{it.name}}</button>
+								<div class=" d-flex justify-content-start  align-items-center"
+									[ngClass]="{'courseMenu' : it.isShow}" mat-menu-item>
+									<button mat-menu-item>{{it.name}}</button>
 								</div>
 							</div>
 						</div>
@@ -182,20 +336,105 @@
 						   </div>
 					   </mat-menu>
 				</div> -->
-				</div>
 			</div>
+		</div>
 
-</div>
+	</div>
 
-	<div class="row listview" *ngIf="isList && ( 
+	<div class="row listview" id="listview" [ngClass]="{'listviewReport' : loginEmployeeRoleCode == 'PC' || loginEmployeeRoleCode == 'Insurance'}" *ngIf="isList && ( 
 	this.incidentService.isIncidentWriteAccess() ||
 	this.incidentService.isIncidentViewAccess())">
-		<app-custom-table [tableData]="tableData" [isStopScroll]="isStopScroll" [incidentCountData]="incidentCountData" (allListEvent)="getTableListEvent($event)" *ngIf="isShowTable" class="p-0"></app-custom-table>
-		<app-incident-shimmer-table style="width: 100%; padding: 10px;" *ngIf="!isShowTable"></app-incident-shimmer-table>
+		<app-custom-table [tableData]="tableData" [isStopScroll]="isStopScroll" [incidentCountData]="incidentCountData"
+			(allListEvent)="getTableListEvent($event)" *ngIf="isShowTable" class="p-0"></app-custom-table>
+		<app-incident-shimmer-table style="width: 100%; padding: 10px;"
+			*ngIf="!isShowTable"></app-incident-shimmer-table>
 	</div>
 	<div class="row" *ngIf="!isList">
 		<!-- <app-incident-create [incidentSelectedTypeData]="incidentSelectedTypeData"></app-incident-create> -->
 	</div>
 
+	<div class="bottomfooter" *ngIf="loginEmployeeRoleCode == 'PC' || loginEmployeeRoleCode == 'Insurance'">
+
+		<div>
+			<div class="scheduleReportButton" [matMenuTriggerFor]="mailSummary" (click)="exportStatus()"><img src="assets/images/export-status.svg" class="cursor"></div>
+			<mat-menu class="statusMenuPanelAudit statusMenuPanelInci" #mailSummary="matMenu" xPosition="after">
+				<table class="statusTbl" id="dynamic-table">
+					<thead>
+						<tr>
+							<th>Exported Date</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody *ngIf="this.statusList">
+						<tr *ngFor="let item of statusList; let i = index">
+							<td>{{ (item.createdOn) || '-'}}</td>
+							<td class="statusCamel"
+								[ngClass]="{'greenStatus' : item.exportStatus === 'Success', 'redStatus': item.exportStatus === 'Failed', 'yellowStatus': item.exportStatus === 'Inprogress' }">
+								{{ item.exportStatus }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="d-flex no-record-found-bg">
+					<div *ngIf="statusList && statusList.length == 0" class="no-record-found-status">No
+						record found
+					</div>
+				</div>
+			</mat-menu>
+
+		</div>
+
+		<div class="newCourseBtn" [ngClass]="{'hideexport': tableData.data.length == 0}" data-toggle="modal" (click)="exportpopup()" data-target="#mailpopupbox">
+			Export Incident
+		</div>
+	</div>
+
 </div>
 
+<!--Modal-->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="mailpopupbox" data-backdrop="static" tabindex="-1"
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				Export Incident Report - Mail
+			</div>
+
+			<div class="modal-body">
+				<div class="d-flex align-items-center mb-3">
+					<div *ngFor="let value of checkboxdata; let i = index" class="d-flex align-items-center">
+						<mat-checkbox class="checkboxdivAccess" [checked] = "checkboxdata.length == 1" #chkboxes
+							(change)="onCheckboxChange(value, $event)"></mat-checkbox>
+						<div class="cbText">{{ value }}</div>
+					</div>
+				</div>
+				<form [formGroup]="form">
+					<div class="mailbodyCss">
+						<div class="mb-2 d-flex align-items-center">
+							<label class="form-label mb-0 fw-600 emailtext">Email</label>
+							<input type="text" formControlName="email" class="form-control mailInput"
+							(change)="getMail($event)" [(ngModel)]="mailId" maxlength="60" pattern="^\w+([\.-]?\w+)*@smythstoys\.com$"
+							[ngClass]="{'invalid' : f['email']?.errors && mailId !== ''}"  />
+							<button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()"
+								type="button" class="btn btn-primary btn-sm mailAddbtn">Add</button>
+						</div>
+						<div class="businessMail" *ngIf="f['email']?.errors && mailId !== ''">Please add only business email Id.</div>
+						<div class="mailCls pl-0 d-flex flex-wrap">
+							<div *ngFor="let mailId of Emails, let m = index"
+								class="d-flex align-items-center mr-2 mailTag mb-2">
+								<span>{{ mailId }}</span><span class="removeimage" (click)="removeEmail(m)">
+									<mat-icon class="mailCloseIcon">close</mat-icon>
+								</span>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer mail-footer p-0 border-0">
+				<button type="button" class="btn userDlgBtn cancelBtn saveDraft addBtn" data-dismiss="modal"
+					(click)="cancelMail()">Cancel</button>
+				<button type="button" class="btn userDlgBtn cancelBtn saveDraft" data-dismiss="modal"
+					[ngClass]="{'disabledmailbtn' : Emails.length == 0 || checkedValues.length == 0}" (click)="sendMail()">Send</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -166,6 +166,8 @@ export class CoursesComponent implements OnInit, OnDestroy {
 
   showShimmer:boolean = false;
 
+  enableFilter: boolean = false;
+
   constructor(public utils: Utils, private ngxService: NgxUiLoaderService,
     private modalService: NgbModal, private emitService: CommonService, private router: Router, private apiHandler: ApiHandlerService, private errorHandler: ErrorHandlerService) {
     /* get page height */
@@ -250,7 +252,7 @@ export class CoursesComponent implements OnInit, OnDestroy {
       this.suggestedRoleGroup = response.payload[suggestedIndex];
       response.payload.splice(0, 0, response.payload.splice(suggestedIndex, 1)[0]);
     } */
-    this.roleGroup = this.sortRoleGroup(response?.payload || []);
+    this.roleGroup = this.sortRoleGroup(response?.payload.filter(roleGroup => roleGroup.id !== 7) || []);
     this.roleGroup.forEach((role: any) => {
       if (role.active === true) {
         roleGroupList.push(role);
@@ -347,6 +349,7 @@ export class CoursesComponent implements OnInit, OnDestroy {
 
   /* Get Course List */
   async getCourseList() {
+    this.enableFilter = true;
     // this.ngxService.start();
     this.showShimmer = true
     this.recordFound = false
@@ -365,10 +368,40 @@ export class CoursesComponent implements OnInit, OnDestroy {
     this.getFilterLists()
     this.intialCallCount--;
     this.recordFound = true;
+    this.getCourseRolesCountries(response.payload);
     if (this.intialCallCount === 0) {
       // this.ngxService.stop();
       this.showShimmer = false
     }
+  }
+
+  async getCourseRolesCountries(list: any) {
+    console.log('getCourseRolesCountries');
+    const response: any = await this.apiHandler.getData(this.utils.API.GET_COURSE_MAPPING, '', this.destroyed$);
+    this.setPropertyValue(['countries', 'roleGroups'], list, response.payload);
+    this.buildCourseList(list);
+    this.theCloneImp = $.extend(true, [], this.theImp);
+    this.thatCloneImp = $.extend(true, [], this.thatImp);
+    if (this.viewType === 'roleGroup') {
+      this.applyClmFilter();
+      this.updateClmSort();
+    } else if (this.viewType === 'course') {
+      this.applyPlainClmFilter();
+      this.updatePlainClmSort();
+    }
+    this.getFilterLists()
+    this.enableFilter = false;
+  }
+
+  setPropertyValue(properties: any[], list, valueList) {
+    list.forEach(data => {
+      const obj: any = valueList.find(value => value.courseId === data.courseId);
+      if (obj) {
+        properties.forEach(property => {
+          data[property] = obj[property];
+        })
+      }
+    });
   }
 
   toggleView() {
@@ -859,6 +892,7 @@ export class CoursesComponent implements OnInit, OnDestroy {
 
   /* Create or Edit Course set action type courseTypeCode and courseId */
   createOrEditCourse(type: any, courseType: any, obj?: any) {
+    this.ngxService.start();
     this.router.navigate(['/create-course']);
     let status;
     if (obj?.courseStatus === 'Published & Draft' || obj?.courseStatus === 'Published') {

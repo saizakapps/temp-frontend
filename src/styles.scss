@@ -1047,7 +1047,7 @@ th.mat-header-cell {
 }
 .currentEmployee .cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
   position: relative;
-  top: 3px;
+  top: 0px;
 }
 .currentEmployee .mat-form-field-empty.mat-form-field-label span {
   top: 10px;
@@ -2078,6 +2078,9 @@ video {
 .statusMenuPanelAudit{
   min-width: fit-content !important;
 }
+.statusMenuPanelInci{
+  margin-bottom: 3px;
+}
 .loginMenu.mat-menu-panel {
   width: auto !important;
   padding: 0;
@@ -2167,6 +2170,17 @@ font-weight: 600;
 @media screen and (min-width: 900px) and (max-width: 1300px) {
   .listview {
     height: calc(100vh - 145px) !important;
+  }
+  .listviewReport {
+    height: calc(100vh - 252px) !important;
+  }
+  .table-responsive-incident{
+    height: calc(100vh - 170px) !important;
+    max-height: calc(100vh - 170px) !important;
+  }
+  .table-responsive-Report {
+    height: calc(100vh - 272px) !important;
+    max-height: calc(100vh - 272px) !important;
   }
   .incidentListTblView tbody {
     max-height: calc(100vh - 240px) !important;
@@ -2293,7 +2307,11 @@ border-color: #1f96f4 !important;
 .incidentformfield-mobile .mat-form-field-infix{
   width: 100% !important;
 }
+
 .auditListTblView .popover-body{
+  padding: 0 !important;
+}
+.incidentListTblView .popover-body{
   padding: 0 !important;
 }
 .incidentListTblView .popover{
@@ -2325,7 +2343,24 @@ border-color: #1f96f4 !important;
  .priorityselectbox .mat-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-form-field-flex{
   height: 35px !important;
   padding-top: 0px !important;
+     background: #fff !important;
+     height: 35px !important;
+     padding-top: 0px !important;
+     border: 1px solid transparent;
+     border-radius: 2px !important;
 
+ }
+ .otherinfoselectbox .mat-form-field-infix{
+  width: unset !important;
+  padding: 0px !important;
+  border-top: 0em solid transparent !important;
+ }
+ .otherinfoselectbox .mat-select-min-line{
+  height: 33px !important;
+ }
+ .otherinfoselectbox .mat-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-form-field-flex{
+  height: 35px !important;
+  padding-top: 0px !important;
      background: #fff !important;
      height: 35px !important;
      padding-top: 0px !important;
@@ -2340,6 +2375,7 @@ border-color: #1f96f4 !important;
 .auditFormsLbl .mat-form-field-flex {
   padding: 0 !important;
     height: 35px !important;
+    border-radius: 2px;
 }
 .auditFormsLbl .cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
   position: relative;
@@ -2374,6 +2410,9 @@ border-color: #1f96f4 !important;
 }
 .auditFormsLbl1-msd .cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
   margin-top: -15px;
+  text-overflow: ellipsis;
+  width: calc(100% - 30px);
+  padding-right: 10px;
 }
 .auditYear .mat-form-field-appearance-legacy .mat-form-field-label span{
   display: flex;
@@ -2438,7 +2477,7 @@ width: 16px !important;
 
 .mailbodyCss {
   .mailInput {
-    height: 30px !important;
+    height: 31px !important;
     font-size: 13px !important;
     color: #0009 !important;
     font-weight: 600 !important;
@@ -2454,8 +2493,8 @@ width: 16px !important;
   }
 
   .emailtext {
-    font-size: 12px;
-    margin-right: 23px;
+    font-size: 14px;
+    margin-right: 22px;
   }
 
 
@@ -2489,7 +2528,7 @@ width: 16px !important;
   }
 
   .mailCls {
-    margin-left: 51px;
+    margin-left: 48px;
   }
 }
 .mailBodyPop{
@@ -2515,6 +2554,7 @@ width: 16px !important;
 }
 .bootstrapBackground_Pop{
  background-color: #00000090;
+ z-index: 1000;
 }
 .incidentContents .mat-form-field-appearance-legacy .mat-form-field-label {
   left: 10px;
@@ -2526,7 +2566,7 @@ width: 16px !important;
 }
 .incidentContents-mobile .mat-form-field-appearance-legacy .mat-form-field-label{
   top: 11px;
-  font-size: 12px;
+  font-size: 11px;
 }
 .mat-tree-node1:hover{
   .mat-checkbox-checked .mat-checkbox-inner-container{
@@ -2535,7 +2575,7 @@ width: 16px !important;
 }
 .mat-tree-node1{
   .mat-checkbox-checked .mat-checkbox-inner-container{
- border: 1px solid #818181 !important;
+ border: 1px solid #1f96f4 !important;
 }
 }
 .historyTableresponse{
@@ -2565,7 +2605,15 @@ width: 16px !important;
   width: fit-content !important;
 }
 .my-custom-class1 .tooltip-inner {
+  max-width: 184px !important;
+}
+.my-custom-class2 .tooltip-inner {
   max-width: 154px !important;
+}
+.my-custom-class1-pc .tooltip-inner{
+  max-width: 110px !important;
+  width: 110px !important;
+  min-width: 110px !important;
 }
 .my-custom-class-new .tooltip-inner{
   // margin-left: -1000px !important;
@@ -2612,10 +2660,23 @@ width: 16px !important;
   margin-top: 5px !important;
   font-family: "Inter";
 }
+.auditNgselectIncident .ng-select.ng-select-single .ng-select-container{
+  margin-top: 0px !important;
+  height: 35px !important;
+}
+// .auditNgselectIncident .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+//   white-space: unset !important;
+//   text-overflow: unset !important;
+//   line-height: 1.5em;
+//   min-height: 3em;
+//   display: flex;
+//   align-items: center;
+//   border-bottom: 1px solid #cccccc4f;
+// }
 .auditNgselect .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected{
   // background-color: #1f96f4 !important;
   color: #000;
-  font-size: 13px;
+  font-size: 12px;
 }
 .auditNgselect .ng-select .ng-select-container .ng-value-container {
   height: 32px !important;
@@ -2721,6 +2782,16 @@ width: 16px !important;
   margin-bottom: 25px !important;
   margin-left: -2px !important;
 }
+.myPanelClassMatselectnew{
+  margin-top: 3px !important;
+  margin-bottom: 25px !important;
+  margin-left: -2px !important;
+  max-height: 300px !important;
+}
+.myPanelClassMatselectnew1{
+  margin-bottom: 25px !important;
+}
+
 .filter-popover1{
   max-height: 30px !important;
   overflow: hidden auto;
@@ -2863,7 +2934,7 @@ width: 16px !important;
 .auditFormsLbl-new .mat-form-field-flex{
  border: 1px solid #bdbdbd;
  background-color: #fff;
-} 
+}
 .auditFormsLbl-new .cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
   position: relative;
   margin-top: -15px;
@@ -2880,3 +2951,103 @@ width: 16px !important;
 // .example-tree-audit .mat-tree-node{
 //   width: 182px;
 // }
+.ngx-doc-viewer-style{
+  img{
+    max-width: 100%;
+  }
+}
+.soteNamrLBL-1 .cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
+  margin-left: 0px;
+  padding-left: 10px;
+  padding-right: 25px;
+  width: calc(100% - 35px);
+}
+  .mat-autocomplete-storeList{
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .mat-option-storeList{
+    height: 28px !important;
+    line-height: 28px !important;
+    font-size: 14px;
+    font-family: "Inter";
+  }
+.mat-autocomplete-panal-cregion{
+  overflow-x: hidden !important;
+}
+.otherinfoselectbox .mat-form-field-wrapper{
+  margin-top: 5px !important;
+}
+.incidentformfield-mobile-store .mat-form-field-infix{
+  border-top: 10px solid transparent !important;
+}
+.soteNamrLBL-mobile .mat-form-field-appearance-legacy .mat-form-field-label {
+  top: 10px !important;
+}
+.myPanelClassMatselectnew .mat-option.mat-active {
+  background: #1f96f4 !important;
+}
+// .mat-primary .otherinfoselectbox.mat-selected:not(.mat-option-disabled){
+//   color: #fff !important;
+// }
+// .cdk-overlay-pane {
+//   // transform: translateX(-16px) translateY(0px) !important;
+// }
+.removecheckbox{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  height: 30px !important;
+  line-height: 30px !important;
+  .mat-checkbox-layout{
+    height: 30px !important;
+    display: flex;
+    align-items: center;
+  }
+  
+.mat-pseudo-checkbox{
+ display: none !important;
+}
+}
+.statuslistbox{
+  .mat-form-field-wrapper{
+    margin-top: 0px !important;
+    padding: 0px;
+  }
+  .mat-form-field-infix{
+    border-top: 0px !important;
+    padding: 0px !important;
+    width: 192px;
+  }
+  .mat-select-min-line{
+    color: #495057 !important;
+    font-size: 14px !important;
+    font-family: "Inter";
+  }
+  .mat-select-value-text{
+    color: #495057 !important;
+    font-size: 14px !important;
+    font-family: "Inter";
+  }
+}
+.statuslistboxform .mat-form-field-appearance-legacy .mat-form-field-label {
+  top: 8px !important;
+  font-size: 15px;
+  }
+  .myPanelClassMatselectList{
+    margin-left: 23px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 195px;
+    min-width: unset !important;
+  }
+  .checkboxstatus .mat-checkbox-layout .mat-checkbox-label{
+    font-size: 13px;
+    max-width: unset;
+    width: 162px;
+    padding-right: 7px;
+  }
+

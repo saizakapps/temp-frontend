@@ -1,5 +1,5 @@
 import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Subject, Subscription, catchError, fromEvent, map, throwError } from 'rxjs';
 import { ngxService } from '../../shared/services/incident-services/ngxservice';
 import { Utils } from '../../shared/incident-shared/module/utils';
@@ -25,7 +25,7 @@ export class AuditCustomTableComponent {
   storenameData: any = [];
   updatepdfData: any = [];
   reviewpdfData: any = [];
-  dateSortValue = '';
+  // dateSortValue = '';
   recordData = false;
   pdfHttpHeader: any = {};
   selection = new SelectionModel(true, []);
@@ -44,7 +44,7 @@ export class AuditCustomTableComponent {
   firstLoader = false;
   pdfLoader = false;
   sendData: any[] = [];
-  acivesort: any;
+  // acivesort: any;
   retryText = false;
   activehistory: number = 0;
   activehistoryData: any;
@@ -72,6 +72,7 @@ export class AuditCustomTableComponent {
   }
   HealthSafetyAccessData:any;
   ngOnInit(): void {
+
      let userDetails = JSON.parse(localStorage.getItem('userDetails'));
      this.username = this.ngxservice.userId;
       let allAccessData = JSON.parse(localStorage.getItem('accessApps')) ;
@@ -114,12 +115,32 @@ export class AuditCustomTableComponent {
     }
     if (this.tableData.data.length > 0 && this.tableData.data[0] !== null) {
       /* Assigned Manager Filter */
+
       this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.assignedManager != '' && item.assignedManager != null;
       }).map((role: any) => role.assignedManager))).map(rl => {
         return { name: rl, checked: false }
       });
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
 
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
       /* Last Viewed Persion Filter */
       this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.reviewByName != '' && item.reviewByName != null;
@@ -148,23 +169,54 @@ export class AuditCustomTableComponent {
         return { name: rl, checked: false }
       });
     }
+
   }
 
   async getAuditlist() {
     this.ngxservice.shimmerTable = true;
     this.tableData.data = [];
-    let response: any = await this.api.getData(this.utils.API.STORE_LIST + '?userName=' + this.ngxservice.userId+'&userName='+this.username);
+    /** +'&currentYear='+ this.ngxservice.selectedYear */
+    let response: any = await this.api.getData(this.utils.API.STORE_LIST + '?userName=' + this.ngxservice.userId +'&currentYear='+ this.ngxservice.selectedYear); 
     let auditList = response.payLoad;
+    // auditList = auditList.filter((item:any) => {
+    //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' || item.fileName !== null))
+    // })   
     auditList.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
     this.tableData.data = auditList;
     this.tempTableData = auditList;
     this.StoredauditList = auditList;
-    /* Assigned Manager Filter */
-    this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-      return item.assignedManager != '' && item.assignedManager != null;
-    }).map((role: any) => role.assignedManager))).map(rl => {
-      return { name: rl, checked: false }
-    });
+
+    this.ngxservice.commonauditTablelist = this.tableData.data;
+    this.ngxservice.TempcommonauditTablelist = this.tableData.data;
+    this.ngxservice.fixedauditTablelist = this.tableData.data;
+           /* Assigned Manager Filter */
+
+           this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+            return item.assignedManager != '' && item.assignedManager != null;
+          }).map((role: any) => role.assignedManager))).map(rl => {
+            return { name: rl, checked: false }
+          });
+          let finalassignedManagerData = []
+          this.ngxservice.assignedManagerData.forEach(element => {
+           let data = element.name.split(',');
+           if(data.length>0){
+            finalassignedManagerData = finalassignedManagerData.concat(data);
+           } 
+          });
+          let finalOriginalData = [];
+      
+          for(let x of finalassignedManagerData){
+            if(finalOriginalData.includes(x)==false){
+    
+              finalOriginalData.push(x.trim());
+            }
+          
+          }
+          finalOriginalData = Array.from(new Set(finalOriginalData));
+          this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+            return { name: rl, checked: false }
+          })
+    
 
     /* Last Viewed Persion Filter */
     this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
@@ -200,7 +252,8 @@ export class AuditCustomTableComponent {
     this.ngxservice.isAllselect = !this.ngxservice.isAllselect;
     this.ngxservice.selectedRowData = this.tableData.data.filter((x: any) => x.checked == true)
 
-    let fileavailableTable = this.tableData.data.filter((x: any) => x.files !== null)
+    let fileavailableTable = this.tableData.data.filter((x: any) => 
+    (x.files !== null && x.files !== ''))
     if (fileavailableTable.length > 0) {
       this.ngxservice.donwloadHide = false
     }
@@ -236,7 +289,7 @@ export class AuditCustomTableComponent {
 
     this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
     this.ngxservice.selectedRowData = this.tableData.data.filter((x: any) => x.checked == true);
-    let fileavailable = this.ngxservice.selectedRowData.filter((x: any) => x.files !== null)
+    let fileavailable = this.ngxservice.selectedRowData.filter((x: any) => (x.files !== null && x.files !== ''))
     if (fileavailable.length > 0) {
       this.ngxservice.donwloadHide = false
     }
@@ -245,7 +298,7 @@ export class AuditCustomTableComponent {
     }
 
     if (this.ngxservice.selectedRowData.length == 0) {
-      let fileavailableTable = this.tableData.data.filter((x: any) => x.files !== null)
+      let fileavailableTable = this.tableData.data.filter((x: any) => (x.files !== null && x.files !== ''))
       if (fileavailableTable.length > 0) {
         this.ngxservice.donwloadHide = false
       }
@@ -260,12 +313,26 @@ export class AuditCustomTableComponent {
     this.filterApivalue = indexName;
   }
   managerFilter(e:any, type:string){
-       this.acivesort = -1;
+       this.ngxservice.activesort = -1;
        this.ngxservice.filterStore = ''
+       this.ngxservice.disableFilter = false;
+       this.ngxservice.recordButton = false;
        if(type == 'assign'){
+       this.ngxservice.selectedviewedNameBy = [];
+       if(this.ngxservice.viewednameData.length > 0){
+       for(let x of this.ngxservice.viewednameData){
+        x.checked = false
+       }
+      }
        this.getAuduiListFilterbyManager();
        }
        else{
+      this.ngxservice.selectedassignedManagerType = [];
+      if(this.ngxservice.assignedManagerData.length > 0){
+      for(let x of this.ngxservice.assignedManagerData){
+        x.checked = false
+       }
+      }
        this.getAuduiListFilterbyViewer();
        }
 
@@ -312,22 +379,22 @@ export class AuditCustomTableComponent {
   dateSort(value: any) {
     this.ngxservice.inspected = false;
     this.ngxservice.onlyNew = false;
-    this.ngxservice.filterStore = ''
-
+    this.ngxservice.filterStore = '';
+    this.ngxservice.disableFilter = false;
     if (value == 2) {
-      this.dateSortValue = 'asc';
+      this.ngxservice.dateSortValue = 'asc';
       setTimeout(() => {
         this.getAuduiListFilter();
       }, 200);
     } else if (value == 3) {
-      this.dateSortValue = 'desc';
+      this.ngxservice.dateSortValue = 'desc';
       setTimeout(() => {
         this.getAuduiListFilter();
       }, 200);
     }
     else {
-      if (this.dateSortValue !== '') {
-        this.dateSortValue = '';
+      if (this.ngxservice.dateSortValue !== '') {
+        this.ngxservice.dateSortValue = '';
         // this.ngxservice.isAllselect = false;
         // this.ngxservice.selectedRowLength = 0;
         setTimeout(() => {
@@ -346,50 +413,76 @@ export class AuditCustomTableComponent {
   }
 
   selectSort(value: any) {
-    this.acivesort = value
+    this.ngxservice.activesort = value
   }
 
   async getAuduiListFilterEmpty() {
     this.ngxservice.shimmerTable = true
     this.tableData.data = [];
     let param: any;
-    if (this.ngxservice.userName == "AD" || this.ngxservice.userName == "HR") {
+    if (this.ngxservice.userName == "AD" || this.ngxservice.userName == "HR" || this.ngxservice.userName == "SA") {
       param = {
-        "sortType": this.dateSortValue,
+        "sortType": this.ngxservice.dateSortValue,
         "sortBy": "",
         "country": (this.ngxservice.selectedCountryRegionData.length) ? this.ngxservice.selectedCountryRegionData : null,
         "filterType": "country",
-         "userName":this.username
+         "userName":this.username,
+         "year":this.ngxservice.selectedYear
       }
     }
     else if (this.ngxservice.userName == "OM") {
       param = {
-        "sortType": this.dateSortValue,
+        "sortType": this.ngxservice.dateSortValue,
         "sortBy": "",
         "region": (this.ngxservice.selectedRegionData.length) ? this.ngxservice.selectedRegionData : null,
         "filterType": "region",
-         "userName":this.username
+         "userName":this.username,
+         "year":this.ngxservice.selectedYear
       }
     }
     else {
       param = {
-        "sortType": this.dateSortValue,
+        "sortType": this.ngxservice.dateSortValue,
         "sortBy": "",
-        "userName":this.username
+        "userName":this.username,
+        "year":this.ngxservice.selectedYear
       }
     }
     let Token = localStorage.getItem("authenticationToken")
     this.http.post(this.utils.API.AUDIT_LIST_FILTER, param,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
       this.tableData.data = res.payLoad;
+      // this.tableData.data = this.tableData.data.filter((item:any) => {
+      //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+      //  }) 
       this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
       this.tempTableData = this.tableData.data;
        /* Assigned Manager Filter */
-       this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+
+      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.assignedManager != '' && item.assignedManager != null;
       }).map((role: any) => role.assignedManager))).map(rl => {
         return { name: rl, checked: false }
       });
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
 
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
       /* Last Viewed Persion Filter */
       this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.reviewByName != '' && item.reviewByName != null;
@@ -421,43 +514,70 @@ export class AuditCustomTableComponent {
     this.ngxservice.shimmerTable = true
     this.tableData.data = [];
     let param: any;
-    if (this.ngxservice.userName == "AD" || this.ngxservice.userName == "HR") {
+    if (this.ngxservice.userName == "AD" || this.ngxservice.userName == "HR" || this.ngxservice.userName == "SA") {
       param = {
-        "sortType": this.dateSortValue,
+        "sortType": this.ngxservice.dateSortValue,
         "sortBy": this.filterApivalue,
         "country": (this.ngxservice.selectedCountryRegionData.length) ? this.ngxservice.selectedCountryRegionData : null,
         "filterType": "country",
-         "userName":this.username
+         "userName":this.username,
+         "year":this.ngxservice.selectedYear
       }
     }
     else if (this.ngxservice.userName == "OM") {
       param = {
-        "sortType": this.dateSortValue,
+        "sortType": this.ngxservice.dateSortValue,
         "sortBy": this.filterApivalue,
         "region": (this.ngxservice.selectedRegionData.length) ? this.ngxservice.selectedRegionData : null,
         "filterType": "region",
-         "userName":this.username
+         "userName":this.username,
+         "year":this.ngxservice.selectedYear
       }
     }
     else {
       param = {
-        "sortType": this.dateSortValue,
+        "sortType": this.ngxservice.dateSortValue,
         "sortBy": this.filterApivalue,
-         "userName":this.username
+         "userName":this.username,
+         "year":this.ngxservice.selectedYear
       }
     }
     let Token = localStorage.getItem("authenticationToken")
     this.http.post(this.utils.API.AUDIT_LIST_FILTER, param,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
       this.tableData.data = res.payLoad;
+      // this.tableData.data = this.tableData.data.filter((item:any) => {
+      //   return (item.storeIsActive == true && (item.fileName !== '' || item.fileName !== null)) || (item.storeIsActive == false && (item.fileName !== '' && item.fileName !== null))
+      //  }) 
       // this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
       this.tempTableData = this.tableData.data;
          /* Assigned Manager Filter */
-         this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-          return item.assignedManager != '' && item.assignedManager != null;
-        }).map((role: any) => role.assignedManager))).map(rl => {
-          return { name: rl, checked: false }
-        });
+        /* Assigned Manager Filter */
 
+      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+        return item.assignedManager != '' && item.assignedManager != null;
+      }).map((role: any) => role.assignedManager))).map(rl => {
+        return { name: rl, checked: false }
+      });
+      let finalassignedManagerData = []
+      this.ngxservice.assignedManagerData.forEach(element => {
+       let data = element.name.split(',');
+       if(data.length>0){
+        finalassignedManagerData = finalassignedManagerData.concat(data);
+       } 
+      });
+      let finalOriginalData = [];
+  
+      for(let x of finalassignedManagerData){
+        if(finalOriginalData.includes(x)==false){
+
+          finalOriginalData.push(x.trim());
+        }
+      
+      }
+      finalOriginalData = Array.from(new Set(finalOriginalData));
+      this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+        return { name: rl, checked: false }
+      })
         /* Last Viewed Persion Filter */
         this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
           return item.reviewByName != '' && item.reviewByName != null;
@@ -484,74 +604,6 @@ export class AuditCustomTableComponent {
       this.ngxservice.shimmerTable = false
     });
   }
-
-  // async getAuduiListFilterbyManagerold() {
-  //   this.tableData.data = [];
-  //   this.ngxservice.shimmerTable = true;
-  //   this.ngxservice.inspected = false;
-  //   this.ngxservice.onlyNew = false;
-  //   let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-  //     return item.checked == true
-  //   }).map((item: any) => item.name);
-  //   this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-  //     return item.checked == true
-  //   })
-  //   let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-  //     return item.checked == true
-  //   }).map((item: any) => item.name);
-  //   this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-  //     return item.checked == true
-  //   })
-  //   let param: any;
-  //   if (this.ngxservice.userName == "AD" || this.ngxservice.userName == "HR") {
-  //     param = {
-  //       "assignedManager": assignedManagerType,
-  //       "reviewManager": viewedNameBy,
-  //       "country": (this.ngxservice.selectedCountryRegionData.length) ? this.ngxservice.selectedCountryRegionData : null,
-  //       "filterType": "country",
-  //        "userName":this.username
-  //     }
-  //   }
-  //   else if (this.ngxservice.userName == "OM") {
-  //     param = {
-  //       "assignedManager": assignedManagerType,
-  //       "reviewManager": viewedNameBy,
-  //       "region": (this.ngxservice.selectedRegionData.length) ? this.ngxservice.selectedRegionData : null,
-  //       "filterType": "region",
-  //        "userName":this.username
-  //     }
-  //   }
-  //   else {
-  //     param = {
-  //       "assignedManager": assignedManagerType,
-  //       "reviewManager": viewedNameBy,
-  //        "userName":this.username
-  //     }
-  //   }
-  //   let Token = localStorage.getItem("authenticationToken")
-  //   this.http.post(this.utils.API.AUDIT_LIST_MANAGER_FILTER, param,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
-  //     this.tableData.data = res.payLoad;
-  //     this.tableData.data.sort((a: any, b: any) => (a.storeCode > b.storeCode) ? 1 : -1);
-  //     this.tempTableData = this.tableData.data;
-  //     for( let x of this.tableData.data){
-  //       let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
-  //         return item.auditId==x.auditId
-  //       })
-  //       if(isExist.length > 0){
-  //         x.checked=true;
-  //       }
-  //     }
-  //     this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
-  //     if (this.tableData.data.length == 0) {
-  //       this.ngxservice.recordButton = true
-  //       this.ngxservice.shimmerTable = false
-  //     }
-  //     else {
-  //       this.ngxservice.recordButton = false
-  //     }
-  //     this.ngxservice.shimmerTable = false
-  //   });
-  // }
 
   validImageFileExtensions = ['application/pdf'];
   public isValidImageFile(imageType: string, imageSize: number, imageName: string) {
@@ -592,6 +644,7 @@ export class AuditCustomTableComponent {
       uploadForm.append('regionId', data.regionId);
       uploadForm.append('regionDescription', data.regionDesc);
       uploadForm.append('userName',this.username);
+      uploadForm.append('year',this.ngxservice.selectedYear.toString());
       this.http.post(apiUrl, uploadForm, {
         headers: {Authorization: 'Bearer '+Token },
         reportProgress: true,
@@ -607,18 +660,18 @@ export class AuditCustomTableComponent {
             }
             else if (event.type == HttpEventType.Response) {
               if (event.body.payLoad) {
-                let storeCode = event.body.payLoad.storeCode;
+                let storeCode = event.body.payLoad[0].storeCode;
                 let storeIndex = this.tableData.data.findIndex((value: any) => {
                   return value.storeCode == storeCode;
                 });
-                this.tableData.data[storeIndex].storeAuditStatus = event.body.payLoad.storeAuditStatus;
-                this.tableData.data[storeIndex].updateByName = event.body.payLoad.updateByName;
-                this.tableData.data[storeIndex].updatedAt = event.body.payLoad.updatedAt;
-                this.tableData.data[storeIndex].isHistory = event.body.payLoad.isHistory;
-                this.tableData.data[storeIndex].files = event.body.payLoad.files;
-                this.tableData.data[storeIndex].reviewAt = event.body.payLoad.reviewAt;
-                this.tableData.data[storeIndex].reviewByName = event.body.payLoad.reviewByName;
-                this.tableData.data[storeIndex].fileName = event.body.payLoad.fileName;
+                this.tableData.data[storeIndex].storeAuditStatus = event.body.payLoad[0].storeAuditStatus;
+                this.tableData.data[storeIndex].updateByName = event.body.payLoad[0].updateByName;
+                this.tableData.data[storeIndex].updatedAt = event.body.payLoad[0].updatedAt;
+                this.tableData.data[storeIndex].isHistory = event.body.payLoad[0].isHistory;
+                this.tableData.data[storeIndex].files = event.body.payLoad[0].files;
+                this.tableData.data[storeIndex].reviewAt = event.body.payLoad[0].reviewAt;
+                this.tableData.data[storeIndex].reviewByName = event.body.payLoad[0].reviewByName;
+                this.tableData.data[storeIndex].fileName = event.body.payLoad[0].fileName;
                 this.ngxservice.donwloadHide = false;
                 this.retryText = false;
                 /* Upload Date Filter Data */
@@ -643,12 +696,20 @@ export class AuditCustomTableComponent {
         )
         .toPromise();
     };
-    if (this.tableData.data.every((name: any) => name.fileName == null)) {
-      this.ngxservice.donwloadHide = true
-    }
-    else {
+
+    let fileavailableTable = this.tableData.data.filter((x: any) => (x.files !== null && x.files !== ''))
+    if (fileavailableTable.length > 0) {
       this.ngxservice.donwloadHide = false
     }
+    else {
+      this.ngxservice.donwloadHide = true
+    }
+    // if (this.tableData.data.every((name: any) => (name.fileName == null || name.fileName == ''))) {
+    //   this.ngxservice.donwloadHide = true
+    // }
+    // else {
+    //   this.ngxservice.donwloadHide = false
+    // }
   }
 
   /* Upload Event in History Table*/
@@ -679,6 +740,7 @@ export class AuditCustomTableComponent {
       uploadForm.append('regionId', data.regionId);
       uploadForm.append('regionDescription', data.regionDesc);
       uploadForm.append('userName',this.username);
+      uploadForm.append('year',this.ngxservice.selectedYear.toString());
       this.http.post(apiUrl, uploadForm, {
         headers: {Authorization: 'Bearer '+Token },
         reportProgress: true,
@@ -691,20 +753,22 @@ export class AuditCustomTableComponent {
               this.retryText = false;
             } else if (event.type == HttpEventType.Response) {
               if (event.body.payLoad) {
-                let storeCode = event.body.payLoad.storeCode;
+                let storeCode = event.body.payLoad[0].storeCode;
                 let storeIndex = this.tableData.data.findIndex((value: any) => {
                   return value.storeCode == storeCode;
                 });
-                this.tableData.data[storeIndex].storeAuditStatus = event.body.payLoad.storeAuditStatus;
-                this.tableData.data[storeIndex].updateByName = event.body.payLoad.updateByName;
-                this.tableData.data[storeIndex].updatedAt = event.body.payLoad.updatedAt;
-                this.tableData.data[storeIndex].isHistory = event.body.payLoad.isHistory;
-                this.tableData.data[storeIndex].files = event.body.payLoad.files;
-                this.tableData.data[storeIndex].reviewAt = event.body.payLoad.reviewAt;
-                this.tableData.data[storeIndex].reviewByName = event.body.payLoad.reviewByName;
-                this.tableData.data[storeIndex].fileName = event.body.payLoad.fileName;
-                this.historyData.data = event.body.payLoad.auditHistoryFileDTO;
-                this.historyData.data.unshift(this.selectedData);
+                this.tableData.data[storeIndex].storeAuditStatus = event.body.payLoad[0].storeAuditStatus;
+                this.tableData.data[storeIndex].updateByName = event.body.payLoad[0].updateByName;
+                this.tableData.data[storeIndex].updatedAt = event.body.payLoad[0].updatedAt;
+                this.tableData.data[storeIndex].isHistory = event.body.payLoad[0].isHistory;
+                this.tableData.data[storeIndex].files = event.body.payLoad[0].files;
+                this.tableData.data[storeIndex].reviewAt = event.body.payLoad[0].reviewAt;
+                this.tableData.data[storeIndex].reviewByName = event.body.payLoad[0].reviewByName;
+                this.tableData.data[storeIndex].fileName = event.body.payLoad[0].fileName;
+                // this.historyData.data = event.body.payLoad.auditHistoryFileDTO;
+                this.historyData.data = event.body.payLoad;
+
+                // this.historyData.data.unshift(this.selectedData);
                 this.tempHistoryData = this.historyData.data;
                 this.activehistory = 0;
                 this.activehistoryData = this.historyData.data[this.activehistory];
@@ -736,12 +800,19 @@ export class AuditCustomTableComponent {
         )
         .toPromise();
     };
-    if (this.tableData.data.every((name: any) => name.fileName == null)) {
-      this.ngxservice.donwloadHide = true;
+    let fileavailableTable = this.tableData.data.filter((x: any) => (x.files !== null && x.files !== ''))
+    if (fileavailableTable.length > 0) {
+      this.ngxservice.donwloadHide = false
     }
     else {
-      this.ngxservice.donwloadHide = false;
+      this.ngxservice.donwloadHide = true
     }
+    // if (this.tableData.data.every((name: any) => name.fileName == null)) {
+    //   this.ngxservice.donwloadHide = true;
+    // }
+    // else {
+    //   this.ngxservice.donwloadHide = false;
+    // }
     // }
     // }
   }
@@ -767,12 +838,15 @@ export class AuditCustomTableComponent {
     let viewForm = {
     auditId: this.selectedData.auditId,
     userName: this.ngxservice.userId.toString(),
+    storeCode:this.selectedData.storeCode,
+    year:this.ngxservice.selectedYear
     };
     this.http.post(this.utils.API.VIEW_FILE, viewForm).subscribe((res: any) => {
       if (res.payLoad) {
         this.smallShimmer = true;
-        this.historyData.data = res.payLoad.auditHistoryFileDTO;
-        this.historyData.data.unshift(this.selectedData);
+        // this.historyData.data = res.payLoad.auditHistoryFileDTO;
+        this.historyData.data = res.payLoad;
+        // this.historyData.data.unshift(this.selectedData);
         this.tempHistoryData = this.historyData.data;
         this.activehistoryData = this.historyData.data[this.activehistory];
         this.pdfUrl = this.pdfPath + this.activehistoryData.files;
@@ -784,14 +858,13 @@ export class AuditCustomTableComponent {
           return { name: rl, checked: false }
         });
 
-        let auditId = res.payLoad.storeCode;
+        let auditId = res.payLoad[0].storeCode;
         let auditIndex = this.tableData.data.findIndex((value: any) => {
           return value.storeCode == auditId;
         });
-
-        this.tableData.data[auditIndex].storeAuditStatus = res.payLoad.storeAuditStatus;
-        this.tableData.data[auditIndex].reviewByName = res.payLoad.reviewByName;
-        this.tableData.data[auditIndex].reviewAt = res.payLoad.reviewAt;
+        this.tableData.data[auditIndex].storeAuditStatus = res.payLoad[0].storeAuditStatus;
+        this.tableData.data[auditIndex].reviewByName = res.payLoad[0].reviewByName;
+        this.tableData.data[auditIndex].reviewAt = res.payLoad[0].reviewAt;
         this.smallShimmer = false;
         /* Last Viewed Persion Filter History*/
         this.viewednameDataHistory = Array.from(new Set(this.historyData.data.filter(function (item: any) {
@@ -851,8 +924,7 @@ export class AuditCustomTableComponent {
       if (this.activehistoryData.reviewByName == null && (this.ngxservice.userName == 'SM' || this.ngxservice.userName == 'OM' || this.ngxservice.userName == 'DM')) {
         let param = {
           "storeCode": this.activehistoryData.storeCode,
-          "files": this.activehistoryData.files,
-          "updatedTimeStamp": this.activehistoryData.updatedTimeStamp,
+          "auditId": this.activehistoryData.auditId,
           "updateBy": this.activehistoryData.updateBy,
           "reviewBy": this.ngxservice.userId,
         }
@@ -873,46 +945,44 @@ export class AuditCustomTableComponent {
     }
   }
   getAuduiListFilterbyManager(){
-    this.tableData.data = this.ngxservice.commonauditTablelist;
+    this.ngxservice.selectedviewedNameBy = [];
+    this.tableData.data = this.ngxservice.TempcommonauditTablelist;
     let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
       return item.checked == true
     }).map((item: any) => item.name);
     this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
       return item.checked == true
     })
-    let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-      return item.checked == true
-    }).map((item: any) => item.name);
-    this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-      return item.checked == true
-    })
-
+    
           let TempData: any = [];
         for (let x of assignedManagerType) {
-          let data = this.tableData.data.filter((item: any) => {
-            return item.assignedManager == x;
+          let data = this.ngxservice.commonauditTablelist.filter((item: any) => {
+            return item.assignedManager?.includes(x);
           })
+
           for (let x of data) {
            let isFilterData = TempData.filter((data:any)=>{
            return data.auditId == x.auditId
+
            })
+
            if(isFilterData.length == 0){
             TempData.push(x);
            }
           }
         }
-
         if (assignedManagerType.length > 0) {
+
           this.tableData.data = TempData;
-          this.ngxservice.commonauditTablelist = TempData;
-          this.ngxservice.assignedManagerData = Array.from(new Set(TempData.filter(function (item: any) {
-            return item.assignedManager != '' && item.assignedManager != null;
-          }).map((role: any) => role.assignedManager))).map(rl => {
-            return { name: rl, checked: true }
-          });
-          this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-            return item.checked == true
-          })
+          this.ngxservice.commonauditTablelist = this.ngxservice.fixedauditTablelist;
+          // this.ngxservice.assignedManagerData = Array.from(new Set(TempData.filter(function (item: any) {
+          //   return item.assignedManager != '' && item.assignedManager != null;
+          // }).map((role: any) => role.assignedManager))).map(rl => {
+          //   return { name: rl, checked: true }
+          // });
+          // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+          //   return item.checked == true
+          // })
           for( let x of this.tableData.data){
             let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
               return item.auditId==x.auditId
@@ -923,112 +993,113 @@ export class AuditCustomTableComponent {
           }
           this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
           /* Error Part */
-          if(viewedNameBy.length == 0){
-    this.ngxservice.viewednameData = Array.from(new Set(TempData.filter(function (item: any) {
-      return item.reviewByName != '' && item.reviewByName != null;
-    }).map((role: any) => role.reviewByName))).map(rl => {
-            return { name: rl, checked: false }
-          });
-      this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-        return item.checked == true
-      })
-     }
+    //       if(viewedNameBy.length == 0){
+    // // this.ngxservice.viewednameData = Array.from(new Set(TempData.filter(function (item: any) {
+    // //   return item.reviewByName != '' && item.reviewByName != null;
+    // // }).map((role: any) => role.reviewByName))).map(rl => {
+    // //         return { name: rl, checked: false }
+    // //       });
+    // //   this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+    // //     return item.checked == true
+    // //   })
+    //  }
 
         }
-        else if(viewedNameBy.length > 0){
-          this.getAuduiListFilterbyViewernew();
-          }
-          else if(assignedManagerType.length == 0 && viewedNameBy.length == 0){
-            // this.getAuditlist();
-           this.tableData.data = this.ngxservice.TempcommonauditTablelist;
-           this.ngxservice.commonauditTablelist = this.tableData.data
-           for( let x of this.tableData.data){
-            let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
-              return item.auditId==x.auditId
-            })
-            if(isExist.length > 0){
-              x.checked=true;
-            }
-          }
-          this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
-           this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-            return item.assignedManager != '' && item.assignedManager != null;
-          }).map((role: any) => role.assignedManager))).map(rl => {
-            return { name: rl, checked: false }
-          });
-          this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-            return item.checked == true
-          })
-          this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-            return item.reviewByName != '' && item.reviewByName != null;
-          }).map((role: any) => role.reviewByName))).map(rl => {
-            return { name: rl, checked: false }
-          });
-          this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-            return item.checked == true
-          })
-          }
+        // else if(viewedNameBy.length > 0){
+        //   // this.getAuduiListFilterbyViewernew();
+        //   }
+        //   else if(assignedManagerType.length == 0 && viewedNameBy.length == 0){
+        //     // this.getAuditlist();
+        //    this.tableData.data = this.ngxservice.TempcommonauditTablelist;
+        //    this.ngxservice.commonauditTablelist = this.tableData.data
+        //    for( let x of this.tableData.data){
+        //     let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
+        //       return item.auditId==x.auditId
+        //     })
+        //     if(isExist.length > 0){
+        //       x.checked=true;
+        //     }
+        //   }
+        //   this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
+        //   //  this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+        //   //   return item.assignedManager != '' && item.assignedManager != null;
+        //   // }).map((role: any) => role.assignedManager))).map(rl => {
+        //   //   return { name: rl, checked: false }
+        //   // });
+        //   // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+        //   //   return item.checked == true
+        //   // })
+        //   // this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+        //   //   return item.reviewByName != '' && item.reviewByName != null;
+        //   // }).map((role: any) => role.reviewByName))).map(rl => {
+        //   //   return { name: rl, checked: false }
+        //   // });
+        //   // this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+        //   //   return item.checked == true
+        //   // })
+        //   }
 
           }
 
-  getAuduiListFilterbyManagernew(){
-    this.tableData.data = this.StoredauditList;
-    let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-      return item.checked == true
-    }).map((item: any) => item.name);
-    this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-      return item.checked == true
-    })
-    let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-      return item.checked == true
-    }).map((item: any) => item.name);
-    this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-      return item.checked == true
-    })
+  // getAuduiListFilterbyManagernew(){
+  //   this.tableData.data = this.StoredauditList;
+  //   // let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+  //   //   return item.checked == true
+  //   // }).map((item: any) => item.name);
+  //   // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+  //   //   return item.checked == true
+  //   // })
+  //   // let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+  //   //   return item.checked == true
+  //   // }).map((item: any) => item.name);
+  //   // this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+  //   //   return item.checked == true
+  //   // })
 
-          let TempData: any = [];
-        for (let x of assignedManagerType) {
-          let data = this.tableData.data.filter((item: any) => {
-            return item.assignedManager == x;
-          })
-          for (let x of data) {
-           let isFilterData = TempData.filter((data:any)=>{
-           return data.auditId == x.auditId
-           })
-           if(isFilterData.length == 0){
-            TempData.push(x);
-           }
-          }
-        }
-          this.tableData.data = TempData;
-          this.tempTableData = TempData;
-          for( let x of this.tableData.data){
-            let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
-              return item.auditId==x.auditId
-            })
-            if(isExist.length > 0){
-              x.checked=true;
-            }
-          }
-          this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
-          this.ngxservice.viewednameData = Array.from(new Set(TempData.filter(function (item: any) {
-            return item.reviewByName != '' && item.reviewByName != null;
-          }).map((role: any) => role.reviewByName))).map(rl => {
-            return { name: rl, checked: false }
-          });
+  //         let TempData: any = [];
+  //       // for (let x of assignedManagerType) {
+  //       //   let data = this.tableData.data.filter((item: any) => {
+  //       //     return item.assignedManager == x;
+  //       //   })
+  //       //   for (let x of data) {
+  //       //    let isFilterData = TempData.filter((data:any)=>{
+  //       //    return data.auditId == x.auditId
+  //       //    })
+  //       //    if(isFilterData.length == 0){
+  //       //     TempData.push(x);
+  //       //    }
+  //       //   }
+  //       // }
+  //         this.tableData.data = TempData;
+  //         this.tempTableData = TempData;
+  //         for( let x of this.tableData.data){
+  //           let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
+  //             return item.auditId==x.auditId
+  //           })
+  //           if(isExist.length > 0){
+  //             x.checked=true;
+  //           }
+  //         }
+  //         this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
+  //         this.ngxservice.viewednameData = Array.from(new Set(TempData.filter(function (item: any) {
+  //           return item.reviewByName != '' && item.reviewByName != null;
+  //         }).map((role: any) => role.reviewByName))).map(rl => {
+  //           return { name: rl, checked: false }
+  //         });
 
-            this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-              return item.checked == true
-            })
-  }
+  //           this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+  //             return item.checked == true
+  //           })
+  // }
   getAuduiListFilterbyViewer(){
-    this.tableData.data = this.ngxservice.commonauditTablelist;
-    let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-      return item.checked == true
-    }).map((item: any) => item.name);
-    this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-      return item.checked == true
-    })
+    this.ngxservice.selectedassignedManagerType = [];
+    this.tableData.data = this.ngxservice.TempcommonauditTablelist;
+    // let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+    //   return item.checked == true
+    // }).map((item: any) => item.name);
+    // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+    //   return item.checked == true
+    // })
     let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
       return item.checked == true
     }).map((item: any) => item.name);
@@ -1053,7 +1124,7 @@ export class AuditCustomTableComponent {
     }
     if (viewedNameBy.length > 0) {
       this.tableData.data = TempData;
-      this.ngxservice.commonauditTablelist = TempData;
+      this.ngxservice.commonauditTablelist = this.ngxservice.fixedauditTablelist;
       for( let x of this.tableData.data){
         let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
           return item.auditId==x.auditId
@@ -1064,116 +1135,116 @@ export class AuditCustomTableComponent {
       }
       this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
        /* Last Viewed Persion Filter */
-    this.ngxservice.viewednameData = Array.from(new Set(TempData.filter(function (item: any) {
-      return item.reviewByName != '' && item.reviewByName != null;
-    }).map((role: any) => role.reviewByName))).map(rl => {
-      return { name: rl, checked: true }
-    });
+    // this.ngxservice.viewednameData = Array.from(new Set(TempData.filter(function (item: any) {
+    //   return item.reviewByName != '' && item.reviewByName != null;
+    // }).map((role: any) => role.reviewByName))).map(rl => {
+    //   return { name: rl, checked: true }
+    // });
 
-      this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-        return item.checked == true
-      })
+    //   this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+    //     return item.checked == true
+    //   })
       /* Error Part */
-      if(assignedManagerType.length == 0){
-      this.ngxservice.assignedManagerData = Array.from(new Set(TempData.filter(function (item: any) {
-        return item.assignedManager != '' && item.assignedManager != null;
-      }).map((role: any) => role.assignedManager))).map(rl => {
-        return { name: rl, checked: false }
-      });
-      this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-        return item.checked == true
-      })
+      // if(assignedManagerType.length == 0){
+      // this.ngxservice.assignedManagerData = Array.from(new Set(TempData.filter(function (item: any) {
+      //   return item.assignedManager != '' && item.assignedManager != null;
+      // }).map((role: any) => role.assignedManager))).map(rl => {
+      //   return { name: rl, checked: false }
+      // });
+      // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+      //   return item.checked == true
+      // })
 
-      }
+      // }
     }
-    else if(assignedManagerType.length > 0){
-    this.getAuduiListFilterbyManagernew();
-    }
-    else if(assignedManagerType.length == 0 && viewedNameBy.length == 0){
-      // this.getAuditlist();
-      this.tableData.data = this.ngxservice.TempcommonauditTablelist;
-      this.ngxservice.commonauditTablelist = this.tableData.data;
-      for( let x of this.tableData.data){
-        let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
-          return item.auditId==x.auditId
-        })
-        if(isExist.length > 0){
-          x.checked=true;
-        }
-      }
-      this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
-      this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-        return item.assignedManager != '' && item.assignedManager != null;
-      }).map((role: any) => role.assignedManager))).map(rl => {
-        return { name: rl, checked: false }
-      });
-      this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-        return item.checked == true
-      })
-      this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
-        return item.reviewByName != '' && item.reviewByName != null;
-      }).map((role: any) => role.reviewByName))).map(rl => {
-        return { name: rl, checked: false }
-      });
-      this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-        return item.checked == true
-      })
-    }
+    // else if(assignedManagerType.length > 0){
+    // this.getAuduiListFilterbyManagernew();
+    // }
+    // else if(viewedNameBy.length == 0){
+    //   // this.getAuditlist();
+    //   this.tableData.data = this.ngxservice.TempcommonauditTablelist;
+    //   this.ngxservice.commonauditTablelist = this.tableData.data;
+    //   for( let x of this.tableData.data){
+    //     let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
+    //       return item.auditId==x.auditId
+    //     })
+    //     if(isExist.length > 0){
+    //       x.checked=true;
+    //     }
+    //   }
+    //   this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
+    //   // this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+    //   //   return item.assignedManager != '' && item.assignedManager != null;
+    //   // }).map((role: any) => role.assignedManager))).map(rl => {
+    //   //   return { name: rl, checked: false }
+    //   // });
+    //   // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+    //   //   return item.checked == true
+    //   // })
+    //   // this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+    //   //   return item.reviewByName != '' && item.reviewByName != null;
+    //   // }).map((role: any) => role.reviewByName))).map(rl => {
+    //   //   return { name: rl, checked: false }
+    //   // });
+    //   // this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+    //   //   return item.checked == true
+    //   // })
+    // }
 
   }
 
-  getAuduiListFilterbyViewernew(){
-    this.tableData.data = this.StoredauditList;
-    let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-      return item.checked == true
-    }).map((item: any) => item.name);
-    this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-      return item.checked == true
-    })
-    let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-      return item.checked == true
-    }).map((item: any) => item.name);
-    this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
-      return item.checked == true
-    })
-    let TempData: any = [];
+  // getAuduiListFilterbyViewernew(){
+  //   this.tableData.data = this.StoredauditList;
+  //   // let assignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+  //   //   return item.checked == true
+  //   // }).map((item: any) => item.name);
+  //   // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+  //   //   return item.checked == true
+  //   // })
+  //   let viewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+  //     return item.checked == true
+  //   }).map((item: any) => item.name);
+  //   this.ngxservice.selectedviewedNameBy = this.ngxservice.viewednameData.filter(function (item: any) {
+  //     return item.checked == true
+  //   })
+  //   let TempData: any = [];
 
-    for (let x of viewedNameBy) {
-      let data = this.tableData.data.filter((item: any) => {
-        return item.reviewByName == x;
-      })
-      for (let x of data) {
-        let isFilterData = TempData.filter((data:any)=>{
-          return data.auditId == x.auditId
-          })
-          if(isFilterData.length == 0){
-           TempData.push(x);
-            }
-          }
+  //   for (let x of viewedNameBy) {
+  //     let data = this.tableData.data.filter((item: any) => {
+  //       return item.reviewByName == x;
+  //     })
+  //     for (let x of data) {
+  //       let isFilterData = TempData.filter((data:any)=>{
+  //         return data.auditId == x.auditId
+  //         })
+  //         if(isFilterData.length == 0){
+  //          TempData.push(x);
+  //           }
+  //         }
 
-    }
+  //   }
 
-      this.tableData.data = TempData;
-      this.tempTableData = TempData;
-      for( let x of this.tableData.data){
-        let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
-          return item.auditId==x.auditId
-        })
-        if(isExist.length > 0){
-          x.checked=true;
-        }
-      }
-      this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
-      this.ngxservice.assignedManagerData = Array.from(new Set(TempData.filter(function (item: any) {
-        return item.assignedManager != '' && item.assignedManager != null;
-      }).map((role: any) => role.assignedManager))).map(rl => {
-        return { name: rl, checked: false }
-      });
-      this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
-        return item.checked == true
-      })
+  //     this.tableData.data = TempData;
+  //     this.tempTableData = TempData;
+  //     for( let x of this.tableData.data){
+  //       let isExist=this.ngxservice.selectedRowData.filter(function(item:any){
+  //         return item.auditId==x.auditId
+  //       })
+  //       if(isExist.length > 0){
+  //         x.checked=true;
+  //       }
+  //     }
+  //     this.ngxservice.selectedRowLength = (this.tableData.data.filter((x: any) => x.checked == true).length);
+  //     // this.ngxservice.assignedManagerData = Array.from(new Set(TempData.filter(function (item: any) {
+  //     //   return item.assignedManager != '' && item.assignedManager != null;
+  //     // }).map((role: any) => role.assignedManager))).map(rl => {
+  //     //   return { name: rl, checked: false }
+  //     // });
+  //     // this.ngxservice.selectedassignedManagerType = this.ngxservice.assignedManagerData.filter(function (item: any) {
+  //     //   return item.checked == true
+  //     // })
 
-  }
+  // }
   async getAuduiListFilterbyHistory() {
     this.historyData.data = this.tempHistoryData;
 
@@ -1234,35 +1305,48 @@ export class AuditCustomTableComponent {
     let param:any;
     if(this.pdfView == true){
     param = {
-      "year" : this.ngxservice.selectedYear,
-      "storeCode": this.selectedData.storeCode,
+      "year": this.ngxservice.selectedYear,
+      "storeCode": [this.selectedData.storeCode],
       "emailId": this.Emails.toString(),
-      "userName":this.username
+      "userName" : this.ngxservice.userId
     }
     let Token = localStorage.getItem("authenticationToken")
     this.http.post(this.utils.API.AUDIT_DOWNLIAD_FILE, param,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
-      this.common.openSnackBar(res.payLoad, 2, "")
+      if(res.payLoad.status == "Success"){
+        this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
+       }
     });
   }
   else{
     param = {
       "year" : this.ngxservice.selectedYear,
-      "storeCode": this.selectedscrecardData.storeCode,
+      "storeCode": [this.selectedscrecardData.storeCode],
       "emailId": this.Emails.toString(),
       "userName":this.username
     } 
     let Token = localStorage.getItem("authenticationToken")
     this.http.post(this.utils.API.DOWNLOAD_SCORECARD_FILE, param,{headers:{Authorization: 'Bearer '+Token }}).subscribe((res: any) => {
-      this.common.openSnackBar(res.payLoad, 2, "")
-    });
+      if(res.payLoad.status == "Success"){
+        this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
+       }
+      });
   }
     this.Emails = []; 
   }
 
   addMailId() {
     if (this.form.valid) {
+      let existing = this.Emails.filter((item:any)=>{
+        return item == this.mailId
+       })
+    
+       if(existing.length > 0){
+        this.common.openSnackBar("Mail Id Already Exists",2,"Invalid")
+       }
+       else{
       this.Emails.push(this.mailId);
       this.mailId = "";
+       }
     }
   }
 
@@ -1305,14 +1389,15 @@ export class AuditCustomTableComponent {
     this.ngxservice.selectedRowData = [];
     this.ngxservice.indeterminate = false;
     this.ngxservice.isAllselect = false;
+    this.ngxservice.activesort = -1;
     // this.getAuduiListFilterbyManagerold();
     this.getAuduiListFilterbyManager();
     this.getAuduiListFilterbyViewer();
 
-    if (this.dateSortValue !== '') {
+    if (this.ngxservice.dateSortValue !== '') {
       this.getAuduiListFilterEmpty();
-      this.dateSortValue = '';
-      this.acivesort = -1;
+      this.ngxservice.dateSortValue = '';
+      this.ngxservice.activesort = -1;
     }
 
   }
@@ -1339,7 +1424,8 @@ export class AuditCustomTableComponent {
       uploadForm.append('scoreCardfile', e.srcElement.files[0]);
       uploadForm.append('auditId', data.auditId);
       uploadForm.append('userName', this.ngxservice.userId.toString());
-
+      uploadForm.append('storeCode', data.storeCode);
+      uploadForm.append('year',this.ngxservice.selectedYear.toString());
       this.http.post(apiUrl, uploadForm, {
         headers: {Authorization: 'Bearer '+Token },
         reportProgress: true,
@@ -1355,15 +1441,15 @@ export class AuditCustomTableComponent {
             }
             else if (event.type == HttpEventType.Response) {
               if (event.body.payLoad) {
-                let storeCode = event.body.payLoad.storeCode;
+                let storeCode = event.body.payLoad[0].storeCode;
                 let storeIndex = this.tableData.data.findIndex((value: any) => {
                   return value.storeCode == storeCode;
                 });
-                this.tableData.data[storeIndex].scoreCardUpdateByName = event.body.payLoad.scoreCardUpdateByName;
-                this.tableData.data[storeIndex].scoreCardUpdatedAt = event.body.payLoad.scoreCardUpdatedAt;
-                this.tableData.data[storeIndex].scoreCardUpdateBy = event.body.payLoad.scoreCardUpdateBy;
-                this.tableData.data[storeIndex].scoreCardFiles = event.body.payLoad.scoreCardFiles;
-                this.tableData.data[storeIndex].scoreCardFileName = event.body.payLoad.scoreCardFileName;
+                this.tableData.data[storeIndex].scoreCardUpdateByName = event.body.payLoad[0].scoreCardUpdateByName;
+                this.tableData.data[storeIndex].scoreCardUpdatedAt = event.body.payLoad[0].scoreCardUpdatedAt;
+                this.tableData.data[storeIndex].scoreCardUpdateBy = event.body.payLoad[0].scoreCardUpdateBy;
+                this.tableData.data[storeIndex].scoreCardFiles = event.body.payLoad[0].scoreCardFiles;
+                this.tableData.data[storeIndex].scoreCardFileName = event.body.payLoad[0].scoreCardFileName;
                 this.retryText = false;
                 /* Upload Date Filter Data */
                 this.updatepdfscorecardData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
@@ -1402,6 +1488,8 @@ export class AuditCustomTableComponent {
       uploadForm.append('scoreCardfile', e.srcElement.files[0]);
       uploadForm.append('auditId', data.auditId);
       uploadForm.append('userName', this.ngxservice.userId.toString());
+      uploadForm.append('storeCode', data.storeCode);
+      uploadForm.append('year',this.ngxservice.selectedYear.toString());
 
       this.http.post(apiUrl, uploadForm, {
         headers: {Authorization: 'Bearer '+Token },
@@ -1415,17 +1503,17 @@ export class AuditCustomTableComponent {
               this.retryText = false;
             } else if (event.type == HttpEventType.Response) {
               if (event.body.payLoad) {
-                let storeCode = event.body.payLoad.storeCode;
+                let storeCode = event.body.payLoad[0].storeCode;
                 let storeIndex = this.tableData.data.findIndex((value: any) => {
                   return value.storeCode == storeCode;
                 });
-                this.tableData.data[storeIndex].scoreCardUpdateByName = event.body.payLoad.scoreCardUpdateByName;
-                this.tableData.data[storeIndex].scoreCardUpdatedAt = event.body.payLoad.scoreCardUpdatedAt;
-                this.tableData.data[storeIndex].scoreCardUpdateBy = event.body.payLoad.scoreCardUpdateBy;
-                this.tableData.data[storeIndex].scoreCardFiles = event.body.payLoad.scoreCardFiles;
-                this.tableData.data[storeIndex].scoreCardFileName = event.body.payLoad.scoreCardFileName;
-                this.scorecardData.data = event.body.payLoad.auditScoreCardHistoryFileDTO;
-                this.scorecardData.data.unshift(this.selectedscrecardData);
+                this.tableData.data[storeIndex].scoreCardUpdateByName = event.body.payLoad[0].scoreCardUpdateByName;
+                this.tableData.data[storeIndex].scoreCardUpdatedAt = event.body.payLoad[0].scoreCardUpdatedAt;
+                this.tableData.data[storeIndex].scoreCardUpdateBy = event.body.payLoad[0].scoreCardUpdateBy;
+                this.tableData.data[storeIndex].scoreCardFiles = event.body.payLoad[0].scoreCardFiles;
+                this.tableData.data[storeIndex].scoreCardFileName = event.body.payLoad[0].scoreCardFileName;
+                this.scorecardData.data = event.body.payLoad;
+                // this.scorecardData.data.unshift(this.selectedscrecardData);
                 this.tempscorecardData = this.scorecardData.data;
                 this.activescorecard = 0;
                 this.activescorecardData = this.scorecardData.data[this.activescorecard];
@@ -1464,13 +1552,15 @@ export class AuditCustomTableComponent {
     this.scorecardView = true;
     let viewForm = {
       auditId: this.selectedscrecardData.auditId,
-      userName: this.ngxservice.userId.toString()
+      userName: this.ngxservice.userId.toString(),
+      storeCode:this.selectedscrecardData.storeCode,
+      year:this.ngxservice.selectedYear
     };
     this.http.post(this.utils.API.VIEW_SCORECARD_FILE, viewForm).subscribe((res: any) => {
       if (res.payLoad) {
         this.smallShimmer = true;
-        this.scorecardData.data = res.payLoad.auditScoreCardHistoryFileDTO;
-        this.scorecardData.data.unshift(this.selectedscrecardData);
+        this.scorecardData.data = res.payLoad;
+        // this.scorecardData.data.unshift(this.selectedscrecardData);
         this.tempscorecardData = this.scorecardData.data;
         this.activescorecardData = this.scorecardData.data[this.activescorecard];
         this.scorecardpdfUrl = this.pdfPath + this.activescorecardData.scoreCardFiles;
@@ -1540,5 +1630,114 @@ export class AuditCustomTableComponent {
     });
     this.Emails = [];
 
+  }
+  deleteData:any;
+  deleteindex:any;
+  deleteAudit(data:any, l:any){
+  this.deleteData = data;
+  this.deleteindex = l
+
+  }
+  @ViewChildren('countrychkboxes') countrychkboxes: QueryList<any>; // Define this at the top
+
+ async confirmDelete(){
+    let response: any = await this.api.getData(this.utils.API.DELETE_AUDIT_FILE + '?userName=' + this.ngxservice.userId + '&storeCode=' + this.deleteData.storeCode + '&auditId=' + this.deleteData.auditId + '&year=' + this.ngxservice.selectedYear);
+    if(response.payLoad.length > 0){
+      this.historyData.data = response.payLoad
+
+      let storeCode = response.payLoad[0].storeCode;
+      let storeIndex = this.tableData.data.findIndex((value: any) => {
+        return value.storeCode == storeCode;
+      });
+      this.tableData.data[storeIndex].storeAuditStatus = response.payLoad[0].storeAuditStatus;
+      this.tableData.data[storeIndex].updateByName = response.payLoad[0].updateByName;
+      this.tableData.data[storeIndex].updatedAt = response.payLoad[0].updatedAt;
+      this.tableData.data[storeIndex].isHistory = response.payLoad[0].isHistory;
+      this.tableData.data[storeIndex].files = response.payLoad[0].files;
+      this.tableData.data[storeIndex].reviewAt = response.payLoad[0].reviewAt;
+      this.tableData.data[storeIndex].reviewByName = response.payLoad[0].reviewByName;
+      this.tableData.data[storeIndex].fileName = response.payLoad[0].fileName;
+      // this.historyData.data = response.payLoad.auditHistoryFileDTO;
+      this.historyData.data = response.payLoad;
+
+      // this.historyData.data.unshift(this.selectedData);
+      this.tempHistoryData = this.historyData.data;
+      this.activehistory = 0;
+      this.activehistoryData = this.historyData.data[this.activehistory];
+      this.pdfUrl = this.pdfPath + this.activehistoryData.files; 
+      this.ngxservice.donwloadHide = false;
+      this.smallShimmer = false;
+      this.retryText = false;
+         /* Last Viewed Persion Filter History*/
+         this.viewednameDataHistory = Array.from(new Set(this.historyData.data.filter(function (item: any) {
+          return item.reviewByName != '' && item.reviewByName != null;
+        }).map((role: any) => role.reviewByName))).map(rl => {
+          return { name: rl, checked: false }
+        });
+    }
+    else{
+     this.pdfView = false;
+     let storeCode = this.deleteData.storeCode;
+     let storeIndex = this.tableData.data.findIndex((value: any) => {
+       return value.storeCode == storeCode;
+     });
+     this.tableData.data[storeIndex].storeAuditStatus = "";
+     this.tableData.data[storeIndex].updateByName = "";
+     this.tableData.data[storeIndex].updatedAt = "";
+     this.tableData.data[storeIndex].files = "";
+     this.tableData.data[storeIndex].reviewAt = "";
+     this.tableData.data[storeIndex].reviewByName = "";
+     this.tableData.data[storeIndex].fileName = "";
+    //  this.getAuditlist();
+    }
+  // let arrayData = this.historyData.data.splice(this.deleteindex,1);
+  // this.historyData.data = arrayData;
+  }
+
+  async confirmDelete1(){
+    let response: any = await this.api.getData(this.utils.API.DELETE_SCORECARD_FILE + '?userName=' + this.ngxservice.userId + '&storeCode=' + this.deleteData.storeCode + '&auditId=' + this.deleteData.auditId + '&id=' + this.deleteData.id + '&year=' + this.ngxservice.selectedYear);
+    if(response.payLoad.length > 0){
+      this.historyData.data = response.payLoad
+
+        let storeCode = response.payLoad[0].storeCode;
+        let storeIndex = this.tableData.data.findIndex((value: any) => {
+          return value.storeCode == storeCode;
+        });
+        this.tableData.data[storeIndex].scoreCardUpdateByName = response.payLoad[0].scoreCardUpdateByName;
+        this.tableData.data[storeIndex].scoreCardUpdatedAt = response.payLoad[0].scoreCardUpdatedAt;
+        this.tableData.data[storeIndex].scoreCardUpdateBy = response.payLoad[0].scoreCardUpdateBy;
+        this.tableData.data[storeIndex].scoreCardFiles = response.payLoad[0].scoreCardFiles;
+        this.tableData.data[storeIndex].scoreCardFileName = response.payLoad[0].scoreCardFileName;
+        this.scorecardData.data = response.payLoad;
+        this.tempscorecardData = this.scorecardData.data;
+        this.activescorecard = 0;
+        this.activescorecardData = this.scorecardData.data[this.activescorecard];
+        this.scorecardpdfUrl = this.pdfPath + this.activescorecardData.scoreCardFiles; 
+        this.smallShimmer = false;
+        this.retryText = false;
+        /* Assigned Manager Filter scorecard Table*/
+        this.updateByNameDatascorecard = Array.from(new Set(this.scorecardData.data.filter(function (item: any) {
+          return item.scoreCardUpdateByName != '' && item.scoreCardUpdateByName != null;
+        }).map((role: any) => role.scoreCardUpdateByName))).map(rl => {
+          return { name: rl, checked: false }
+        });
+       
+    }
+    else{
+      let storeCode = this.deleteData.storeCode;
+      let storeIndex = this.tableData.data.findIndex((value: any) => {
+        return value.storeCode == storeCode;
+      });
+      this.tableData.data[storeIndex].scoreCardUpdateByName = "";
+      this.tableData.data[storeIndex].scoreCardUpdatedAt = "";
+      this.tableData.data[storeIndex].scoreCardUpdateBy = "";
+      this.tableData.data[storeIndex].scoreCardFiles = "";
+      this.tableData.data[storeIndex].scoreCardFileName = "";
+   
+      this.scorecardView = false;
+   
+    }
+  // let arrayData = this.historyData.data.splice(this.deleteindex,1);
+  // this.historyData.data = arrayData;
   }
 }

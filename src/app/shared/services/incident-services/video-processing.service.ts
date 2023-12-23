@@ -33,6 +33,7 @@ export class VideoProcessingService {
     const canvas: HTMLCanvasElement = this.document.createElement('canvas');
     const context: any = canvas.getContext('2d');
     return new Promise<string>((resolve, reject) => {
+
       canvas.addEventListener('error',  reject);
       video.addEventListener('error',  reject);
       video.addEventListener('canplay', event => {

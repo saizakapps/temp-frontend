@@ -18,7 +18,7 @@
   font-weight: 500;
 }
 .createdDetailsView {
-  gap: 50px;
+  gap: 40px;
 }
 .createdDetailsView label {
     padding: 0px !important;
@@ -38,7 +38,7 @@
 }
 .createBy {
     gap: 10px;
-    width: 220px;
+    width: 230px;
 }
 .status {
     width: 46px !important;
@@ -65,4 +65,7 @@
 .row{
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+.createdTextflow{
+  white-space: unset;
 }

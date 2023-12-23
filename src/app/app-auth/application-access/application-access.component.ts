@@ -283,7 +283,7 @@ export class ApplicationAccessComponent implements OnInit {
       const response: any = await this.apiHandlerService.postData(this.utils.API.DELETE_AUTH_ROLES, { id: [this.roleList[index].id] });
       if (response) {
         this.roleList[index].active = !this.roleList[index].active;
-        this.errorHandler.handleAlert(`${role.roleName} ${this.roleList[index].active ? 'disabled' : 'enabled'} successfully`);
+        this.errorHandler.handleAlert(`${role.roleName} ${this.roleList[index].active ? 'enabled' : 'disabled'} successfully`);
       }
     }
     this.updateFilter();

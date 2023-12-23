@@ -3,38 +3,45 @@
 	<div class="d-flex ">
 		<span class="versionSaved">Version saved on <span class="saveDate saveDatebold">
 			<span *ngIf=
-			"basicInfoData.showData.versionDate!=null && basicInfoData.showData.versionDate!=''">{{basicInfoData.showData.versionDate}}</span>&nbsp; </span> <span *ngIf="!isRedacted">by </span> <span class="saveDate" [ngClass]="(isRedacted)?'redacted-background':'saveDatebold saveDateboldcapital'">{{(!isRedacted)?basicInfoData.showData.versionSavedUser:'REDACTED'}}.		</span>
-			<span *ngIf="basicInfoData.isHistory" class="currentView" (click)="redirectToCurrenntIncident()">View current</span>
+			"basicInfoData.showData.versionDate!=null && basicInfoData.showData.versionDate!=''">{{basicInfoData.showData.versionDate}}</span>&nbsp; </span> <span *ngIf="!isRedacted">by </span> <span class="saveDate" [ngClass]="(isRedacted)?'redacted-background':'saveDatebold saveDateboldcapital'">{{(!isRedacted)?basicInfoData.showData.versionSavedUser:'REDACTED'}}.</span>
+			<span *ngIf="basicInfoData.isHistory" class="currentView" (click)="redirectToCurrenntIncident()"> View current</span>
 		</span>
 	</div>
 	<div class="d-flex createdDetailsView">
 		<div class="d-flex createBy">
 			<label class="">Created by:</label>
-			<div class="createdDetails createdText" [ngClass]="(isRedacted)?'redacted-background':''">{{(!isRedacted)?basicInfoData.showData.createdBy:'REDACTED'}}</div>
+			<div class="createdDetails createdText" [ngClass]="(isRedacted)?'redacted-background':''">
+				<span *ngIf="(basicInfoData.showData.createdBy !== '' && basicInfoData.showData.createdBy !== null)">{{(!isRedacted)?basicInfoData.showData.createdBy:'REDACTED'}}</span>
+						<span *ngIf="(basicInfoData.showData.createdBy == '' || basicInfoData.showData.createdBy == null)">{{(!isRedacted)?'-':'REDACTED'}}</span>
+				<!-- {{(!isRedacted)?basicInfoData.showData.createdBy:'REDACTED'}} -->
+			</div>
 		</div>
 		<div class="d-flex createBy status">
 			<label class="label1">Status:</label>
-			<div class="createdDetails">{{basicInfoData.showData.status}}</div>
+			<div class="createdDetails">{{(basicInfoData.showData.status !== null && basicInfoData.showData.status !== '')?basicInfoData.showData.status:'-'}}</div>
 		</div>
 	</div>
 	<div class="d-flex createdDetailsView">
 		<div class="d-flex createBy">
 			<label>Date:</label>
-			<div class="createdDetails">{{basicInfoData.showData.date | date:'dd-MM-yyyy'}}</div>
+			<div class="createdDetails">
+				<span *ngIf="basicInfoData.showData.date !== null && basicInfoData.showData.date !== ''">{{basicInfoData.showData.date | date:'dd-MM-yyyy'}}</span>
+				<span *ngIf="basicInfoData.showData.date == null || basicInfoData.showData.date == ''">-</span>
+			</div>
 		</div>
 		<div class="d-flex createBy status">
 			<label class="label1">Injured:</label>
-			<div class="createdDetails">{{basicInfoData.showData.injured}}</div>
+			<div class="createdDetails">{{(basicInfoData.showData.injured !== null && basicInfoData.showData.injured !== '')?basicInfoData.showData.injured:'-'}}</div>
 		</div>
 	</div>
 	<div class="d-flex createdDetailsView" *ngIf="basicInfoData.access!='All'">
 		<div class="d-flex createBy">
 			<label>Store:</label>
-			<div class="createdDetails createdText">{{basicInfoData.showData.store}}</div>
+			<div class="createdDetails createdText createdTextflow">{{(basicInfoData.showData.store !== null && basicInfoData.showData.store !== '')?basicInfoData.showData.store:'-'}}</div>
 		</div>
 		<div class="d-flex createBy">
 			<label class="label1">Region:</label>
-			<div class="createdDetails createdText">{{basicInfoData.showData.regionName}}</div>
+			<div class="createdDetails createdText">{{(basicInfoData.showData.regionName !== null && basicInfoData.showData.regionName !== '')?basicInfoData.showData.regionName:'-'}}</div>
 		</div>
 	</div>
 	<div class="d-flex createdDetailsView" >

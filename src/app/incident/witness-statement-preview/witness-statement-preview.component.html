@@ -1,6 +1,6 @@
 <div class="" >
 	<!-- gallerize="gallery-2" -->
-                     <div class="group-2 d-flex wrapflex" >
+                     <div class="group-2 d-flex wrapflex uploadfilesData" >
                         <div class="text-center" *ngFor="let img of imageObjectWitnessStatement; let i = index">
                         	<!--   [lightbox]="0" -->
                           <img 
@@ -15,6 +15,10 @@
                            [src]="img.thumbImage || img.posterImage" (click)="openPdfViewer(pdfContent,'word',i)"  *ngIf="img.type=='word'">
                       
                         </div>
+
+                          <div class="loaderwheel" *ngIf="witnessviewLoader">
+                           <div class="loader"></div>
+                       </div>
                      </div>
                                        <div class="row align-right"  *ngIf="imageObjectWitnessStatement.length>0" title="Download All">
              <span class="download-label" (click)="downloadWitnessFiles()">

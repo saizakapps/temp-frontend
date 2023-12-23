@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { ErrorHandlerService } from '../shared/services/error-handler.service';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Subject } from 'rxjs';
 import { ApiHandlerService } from '../shared/services/api-handler.service';
@@ -156,6 +156,7 @@ export class ReportsComponent implements OnInit {
 
   destroyed$: Subject<void> = new Subject<void>();
   showShimmer:boolean = false;
+  shimmerWidth:any;
   constructor(
     public utils: Utils,
     public ngxService: NgxUiLoaderService,
@@ -316,7 +317,7 @@ export class ReportsComponent implements OnInit {
     let roleLevel = [];
     roleGroup.forEach(element => {
       if (element.child) {
-        roleLevel = roleLevel.concat(_.sortBy(element.child, 'sequenceId'));
+        element.id === 7 ? roleLevel.push(element) : roleLevel = roleLevel.concat(_.sortBy(element.child, 'sequenceId'));
       }
     });
     this.roleLevelList = [...roleLevel];
@@ -454,22 +455,31 @@ export class ReportsComponent implements OnInit {
   async getReportList(scrollDirection?: any) {
     console.log('getReportList');
     // this.ngxService.start();
+    if(document.getElementById("reports-container-table")){
+    const doc: any = document.getElementById("reports-container-table")?.clientWidth;
+    this.shimmerWidth = doc;
+    }
     this.showShimmer = true;
     console.log(this.showShimmer)
     this.recordFound = false
     this.filterRequest.page = this.paginationIndex;
     this.filterRequest.allTrainingReport = this.viewType === 'reportView' ? true : false;
+    this.filterRequest.admin = this.userDetails.learnerRole === 'SA';
     const params = this.filterRequest;
     console.log(this.filterRequest);
     const response: any = await this.apiHandler.postData(this.utils.API.GET_REPORTS, params, this.destroyed$);
     this.nextPage = response.payload.length > 0 && response.payload[0].nextPage;
     if (this.viewType === 'reportView') {
       this.showShimmer = true;
-      this.generalReportList = __.flatten(this.constructReportList(response, 0, scrollDirection));
+      this.generalReportList = [];
+      const tempGeneralReportList = __.flatten(this.constructReportList(response, 0, scrollDirection));      
+      this.generalReportList =  [...tempGeneralReportList];
       this.cloneGeneralReportList = [...this.generalReportList];
     } else if (this.viewType === 'outstandingView') {
       this.showShimmer = true;
-      this.outstandingReportsList = __.flatten(this.constructReportList(response, 0, scrollDirection));
+      this.outstandingReportsList = [];
+      const tempOutstandingReportsList = __.flatten(this.constructReportList(response, 0, scrollDirection));      
+      this.outstandingReportsList = [...tempOutstandingReportsList];
       this.cloneOutstandingReportsList = [...this.outstandingReportsList];
     }
     // this.getFilterLists();

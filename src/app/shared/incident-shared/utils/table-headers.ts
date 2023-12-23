@@ -40,6 +40,18 @@ export class TableHeaders {
       {
         showName: 'Status',
         indexName: 'incidentStatus',
+        isFilter: false,
+        isSort: false
+      },
+      {
+        showName: 'Initial',
+        indexName: 'initials',
+        isFilter: true,
+        isSort: false
+      },
+      {
+        showName: 'Key word 1',
+        indexName: 'incidentCause',
         isFilter: true,
         isSort: false
       },
@@ -50,9 +62,9 @@ export class TableHeaders {
         isSort: false
       } ,
       {
-        showName: ' ',
-        indexName: 'isViewed',
-        isFilter: false,
+        showName: 'Flag',
+        indexName: 'flagValue',
+        isFilter: true,
         isSort: false
       },
       {
@@ -227,6 +239,11 @@ export class TableHeaders {
         indexName: 'reviewByName',
         historyFilter: true,
       },
+      {
+        showName: '',
+        indexName: 'deleteFile',
+        historyFilter: true,
+      },
     ],
     SCORECARD_LIST_TABLE : [
       {
@@ -243,7 +260,12 @@ export class TableHeaders {
         showName: 'Updated by',
         indexName: 'scoreCardUpdateByName',
         historyFilter: true,
-      }
+      },
+      {
+        showName: '',
+        indexName: 'deleteFile',
+        historyFilter: true,
+      },
     ]
 
   };

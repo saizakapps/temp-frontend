@@ -16,7 +16,7 @@ export class PersonalInfoViewComponent implements OnInit{
 let createdOn = this.personalInfoData.showData.createdOn;
 let redactedRule = this.personalInfoData.redactRuleData.redactRules;
       if(redactedRule=='Yes'){
-         this.isRedacted=this.common.compareDateTwoMonthCompleted(createdOn);
+         this.isRedacted=this.common.compareDateTwoMonthCompleted(createdOn, this.personalInfoData.redactRuleData.redactedDays);
       }
       this.isRedacted = this.personalInfoData.showData.isRedacted;
    }

@@ -32,9 +32,9 @@ th.mat-header-cell {
 }
 
 .new-box {
-  padding: 8px 7px 7px;
+  padding: 5px 7px 5px;
   gap: 10px;
-  width: 38px;
+  min-width: 38px;
   height: 22px;
   background: #FFD82D;
   border-radius: 3px;
@@ -46,6 +46,7 @@ th.mat-header-cell {
   align-items: center;
   text-transform: uppercase;
   text-align: center;
+  margin-left: 5px;
 }
 .table-responsiveTop{
   background-color: #fff;
@@ -64,6 +65,10 @@ th.mat-header-cell {
   height: calc(100vh - 132px);
   max-height: calc(100vh - 132px);
   position: relative;
+}
+.table-responsive-Report {
+  height: calc(100vh - 188px);
+  max-height: calc(100vh - 188px);
 }
 .incidentListTblView {
   // display: block;
@@ -96,72 +101,79 @@ th.mat-header-cell {
   text-overflow: ellipsis;
   display: block;
 }
-.incidentListTblView th:nth-child(1),.incidentListTblView td:nth-child(1) {
-  width: 119px;
-  max-width: 119px;
-  min-width: 119px;
-}
+// .incidentListTblView th:nth-child(1),.incidentListTblView td:nth-child(1) {
+//   width: 119px;
+//   max-width: 119px;
+//   min-width: 119px;
+// }
 
-.incidentListTblView th:nth-child(2),.incidentListTblView td:nth-child(2){
-  width: 103px;
-  max-width: 103px;
-  min-width: 103px;
-}
-// .incidentListTblView th:nth-child(2) span,.incidentListTblView td:nth-child(2) span{
+// .incidentListTblView th:nth-child(2),.incidentListTblView td:nth-child(2){
+//   width: 103px;
+//   max-width: 103px;
+//   min-width: 103px;
+// }
+// // .incidentListTblView th:nth-child(2) span,.incidentListTblView td:nth-child(2) span{
+// //   width: 126px;
+// //   max-width: 126px;
+// //   min-width: 126px;
+// // }
+// /*.incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
 //   width: 126px;
-//   max-width: 126px;
 //   min-width: 126px;
+//   max-width: 126px;
 // }
-/*.incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
-  width: 126px;
-  min-width: 126px;
-  max-width: 126px;
-}
-// .incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
-//   max-width: 114px;
-// }
+// // .incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
+// //   max-width: 114px;
+// // }
 
-.incidentListTblView th:nth-child(4),.incidentListTblView td:nth-child(4) {
-  width: 125px;
-  min-width: 125px;
-  max-width: 125px;
-}
-// .incidentListTblView th:nth-child(4) span,.incidentListTblView td:nth-child(4) span{
-//   max-width: 109px;
+// .incidentListTblView th:nth-child(4),.incidentListTblView td:nth-child(4) {
+//   width: 125px;
+//   min-width: 125px;
+//   max-width: 125px;
 // }
-*/
-.incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
-  width: 92px;
-  min-width: 92px;
-  max-width: 92px;
-}
-// .incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
+// // .incidentListTblView th:nth-child(4) span,.incidentListTblView td:nth-child(4) span{
+// //   max-width: 109px;
+// // }
+// */
+// .incidentListTblView th:nth-child(3),.incidentListTblView td:nth-child(3) {
+//   width: 92px;
+//   min-width: 92px;
+//   max-width: 92px;
+// }
+// // .incidentListTblView th:nth-child(3) span,.incidentListTblView td:nth-child(3) span{
+// //   max-width: 79px;
+// // }
+
+// .incidentListTblView th:nth-child(4),.incidentListTblView td:nth-child(4) {
+//   width: 85px;
+//   min-width: 85px;
+//   max-width: 85px;
+// }
+// // .incidentListTblView th:nth-child(4) span,.incidentListTblView td:nth-child(4) span {
+// //   max-width: 70px;
+// // }
+
+// .incidentListTblView th:nth-child(5),.incidentListTblView td:nth-child(5) {
+//   width: 79px;
+//   min-width: 79px;
 //   max-width: 79px;
 // }
-
-.incidentListTblView th:nth-child(4),.incidentListTblView td:nth-child(4) {
-  width: 85px;
-  min-width: 85px;
-  max-width: 85px;
-}
-// .incidentListTblView th:nth-child(4) span,.incidentListTblView td:nth-child(4) span {
-//   max-width: 70px;
+// // .incidentListTblView th:nth-child(5) span,.incidentListTblView td:nth-child(5) span {
+// //   max-width: 69px;
+// // }
+// .incidentListTblView th:nth-child(6),.incidentListTblView td:nth-child(6) {
+//   width: 55px;
+//   min-width: 55px;
+//   max-width: 55px;
 // }
-
-.incidentListTblView th:nth-child(5),.incidentListTblView td:nth-child(5) {
-  width: 79px;
-  min-width: 79px;
-  max-width: 79px;
-}
-// .incidentListTblView th:nth-child(5) span,.incidentListTblView td:nth-child(5) span {
-//   max-width: 69px;
+// .incidentListTblView th:nth-child(7),.incidentListTblView td:nth-child(7) {
+//   width: 130px;
+//   min-width: 130px;
+//   max-width: 130px;
 // }
-
-.incidentListTblView th:nth-child(6),.incidentListTblView td:nth-child(6) {
-  width: 130px;
-  min-width: 130px;
-  max-width: 130px;
-}
+// .incidentListTblView th:nth-child(8),.incidentListTblView td:nth-child(8) {
+//   min-width: 70px;
+// }
 // .incidentListTblView th:nth-child(6) span,.incidentListTblView td:nth-child(6) span {
 //   max-width: 130px;
 // }
@@ -386,4 +398,71 @@ padding-right: 5px;
 .row{
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+
+.incidentListTblView {
+  .id_width{
+    width: 119px;
+    max-width: 119px;
+    min-width: 119px;
+  }
+  .date_width{
+    width: 103px;
+    max-width: 103px;
+    min-width: 103px;
+  }
+  .type_width{
+    width: 92px;
+    min-width: 92px;
+    max-width: 92px;
+  }
+  .priority_width{
+    width: 85px;
+    min-width: 85px;
+    max-width: 85px;
+  }
+  .status_width{
+    width: 79px;
+    min-width: 79px;
+    max-width: 79px;
+  }
+  .status_width_noclick{
+    pointer-events: none;
+  }
+  .initial_width{
+    width: 65px;
+    min-width: 65px;
+    max-width: 65px;
+  }
+  .store_width{
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+  
+  }
+  .flag_width{
+    min-width: 70px;
+  }
+
+.keyword_width{
+  width: 118px;
+  min-width: 118px;
+  max-width: 118px;
+}
+.keyword_width_none{
+  display: none;
+
+}
+}
+.disableclickfilter{
+  pointer-events: none;
+}
+.popoverFlow{
+  max-height: 250px;
+  overflow-y: auto;
+}
+.datefilteractive{
+  background-color: #1f96f4;
+  color: #fff;
+  border-radius: 5px;
 }

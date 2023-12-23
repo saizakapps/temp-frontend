@@ -1,9 +1,7 @@
 <div class="container-fluid incidentContainer p-0" id="MainContent" *ngIf="mainContentShow">
 
 	<section class="incidentSection" (scroll)="scrolling($event);closeAllPanels();">
-		<div class="d-flex justify-content-end row-padding-right">
-
-		</div>
+		<div class="d-flex justify-content-end row-padding-right"></div>
 		<form [formGroup]="incidentForm" class="incidentCreateForm">
 			<div class="d-flex align-items-start">
 				<div class=" paddTop incidentCreateView"
@@ -19,46 +17,85 @@
 						<span class="historyText">History</span>
 					</div>
 					<span class="title-incident incidentCustomer">{{incidentSelectedTypeData.name}} Incident
-						<span>{{(incidentData.isAdd==false)?':
-							'+((incidentData.idIncident!=null)?incidentData.idIncident:''):''}}</span> </span>
+						<span>{{(incidentData.isAdd==false)?':'+((incidentData.idIncident!=null)?incidentData.idIncident:''):''}}</span>
+					</span>
 					<app-basic-info-view *ngIf="showBasicInfoView"
 						[basicInfoData]="basicInfoViewData"></app-basic-info-view>
-					<div class="">
+					<div
+						class="form-group mb-0 auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new soteNamrLBL-1">
 
 						<div class="ageDetails "
 							*ngIf="(formFieldAccess.store.create || formFieldAccess.store.write || formFieldAccess.store.view) && !isPersonalInfoFormHidden">
 							<div class="storeView" *ngIf="incidentData.isAdd">
 								<label class="label-name storelabeltop">Store<span class="manditory"
 										*ngIf="!isRedacted">*</span>
-										<span
-										*ngIf="!formFieldAccess.store.create && !formFieldAccess.store.write"
+									<span *ngIf="!formFieldAccess.store.create && !formFieldAccess.store.write"
 										class="labelValuepadd">
 										{{incidentForm.value.storeName}}
 									</span>
 								</label>
 								<div class="data-view customerName  d-grid">
 									<div class="d-flex align-items-center">
-										<select class="form-control store-width" formControlName="store"
+										<!-- <select class="form-control store-width" formControlName="store"
 											[ngClass]="isFieldValid('store')?'focus-border-error':''"
 											*ngIf="formFieldAccess.store.create || formFieldAccess.store.write ">
 											<option value="" disabled="disabled" class="option-first"></option>
 											<option *ngFor="let str of storeData;" value="{{str.id}}">
 												{{str.storeDescription}}
 											</option>
-										</select>
+										</select> -->
+										<div class="data-view d-grid align-items-center"
+											[ngClass]="isFieldValid('store') && formIncidentControls.store.errors!=null?'focus-border-error-new':''">
+											<div class="d-flex align-items-center">
+												<mat-form-field [floatLabel]="'never'"
+													class="example-full-width incidentformfield store-width"
+													*ngIf="formFieldAccess.store.create || formFieldAccess.store.write">
+													<input type="text" aria-label="Store" matInput
+														formControlName="storeName"
+														class="form-control placeholder-class store-width store-width-tf multselecticonnew"
+														(keyup)="storeType($event)" maxlength="100"
+														(focus)="focusinmethod()" (focusout)="focusoutmethod()"
+														placeholder="Type to auto suggest the store"
+														[matAutocomplete]="auto" id="autoCompleteTrigger2"
+														#autoCompleteTrigger2="matAutocompleteTrigger">
 
-										<span class="ps-2 "
+													<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+														(optionSelected)="onStoreSelectionChanged($event)"
+														class="mat-autocomplete-storeList">
+														<mat-option *ngFor="let option of storeFilterData;"
+															class="mat-option-storeList"
+															[value]="option.storeDescription">
+															{{option.storeDescription}}
+														</mat-option>
+													</mat-autocomplete>
+												</mat-form-field>
+
+												<span class="ps-2 store-mat-icon-top"
+													*ngIf="formFieldAccess.store.create || formFieldAccess.store.write "
+													placement="top" ngbTooltip="{{toolTipData.store}}">
+													<mat-icon>help_outline</mat-icon>
+												</span>
+											</div>
+											<div class="error mg-top15" *ngIf="isFieldValid('store')">
+
+												{{(formIncidentControls.store.errors!=null)?formIncidentControls.store.errors.message:''}}
+
+											</div>
+										</div>
+
+										<!-- <span class="ps-2 "
 											*ngIf="formFieldAccess.store.create || formFieldAccess.store.write " placement="top"
 												ngbTooltip="{{toolTipData.store}}">
 											<mat-icon >help_outline</mat-icon>
-										</span>
+										</span> -->
 									</div>
 								</div>
-								<span class="error mb-0"
-									*ngIf="isFieldValid('store')">{{(formIncidentControls.store.errors!=null)?formIncidentControls.store.errors.message:''}}</span>
+								<!-- <span class="error mb-0"
+									*ngIf="isFieldValid('store')">{{(formIncidentControls.store.errors!=null)?formIncidentControls.store.errors.message:''}}</span> -->
 							</div>
 
 						</div>
+
 						<div class="personal-info-title personalInfoCls d-block"
 							[ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}">1. Personal
 							Information</div>
@@ -82,9 +119,9 @@
 													*ngIf="(formFieldAccess.injuredPersonFullName.create || formFieldAccess.injuredPersonFullName.write) && !isRedacted">
 
 												<span class="ps-2 ageIcon"
-													*ngIf="(formFieldAccess.injuredPersonFullName.create || formFieldAccess.injuredPersonFullName.write ) && !isRedacted" placement="top"
-														ngbTooltip="{{toolTipData.injuredPersonFullName}}">
-													<mat-icon >help_outline</mat-icon>
+													*ngIf="(formFieldAccess.injuredPersonFullName.create || formFieldAccess.injuredPersonFullName.write ) && !isRedacted"
+													placement="top" ngbTooltip="{{toolTipData.injuredPersonFullName}}">
+													<mat-icon>help_outline</mat-icon>
 												</span>
 											</div>
 											<span class="error mb-0"
@@ -111,9 +148,9 @@
 													*ngIf="(formFieldAccess.complainant.create || formFieldAccess.complainant.write) && !isRedacted">
 
 												<span class="ps-2 ageIcon"
-													*ngIf="(formFieldAccess.complainant.create || formFieldAccess.complainant.write) && !isRedacted" placement="top"
-														ngbTooltip="{{toolTipData.complainant}}">
-													<mat-icon >help_outline</mat-icon>
+													*ngIf="(formFieldAccess.complainant.create || formFieldAccess.complainant.write) && !isRedacted"
+													placement="top" ngbTooltip="{{toolTipData.complainant}}">
+													<mat-icon>help_outline</mat-icon>
 												</span>
 											</div>
 											<span class="error mb-0"
@@ -150,9 +187,7 @@
 											(keypress)="common.allowNumberOnly($event)"
 											(change)="ageValueChange($event)"
 											[ngClass]="isFieldValid('ageValue')?'focus-border-error':''"
-											(keypress)="common.allowNumberOnly($event)"
 											*ngIf="(formFieldAccess.ageDropdown.create || formFieldAccess.ageDropdown.write) && !isRedacted">
-
 										<span class="error mb-0" *ngIf="isFieldValid('ageValue')">
 											{{(formIncidentControls.ageValue.errors!=null)?formIncidentControls.ageValue.errors.message:''}}
 										</span>
@@ -196,9 +231,9 @@
 											*ngIf="formFieldAccess.ageDropdown.create || formFieldAccess.ageDropdown.write || formFieldAccess.ageDropdown.view">Age
 											Approximate</span>
 										<span class="ps-1 ageIcon"
-											*ngIf="formFieldAccess.ageDropdown.create || formFieldAccess.ageDropdown.write" placement="top"
-												ngbTooltip="{{toolTipData.ageAppropriate}}">
-											<mat-icon >help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.ageDropdown.create || formFieldAccess.ageDropdown.write"
+											placement="top" ngbTooltip="{{toolTipData.ageAppropriate}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 
@@ -220,13 +255,43 @@
 								</div>
 
 							</div>
+                             
+							<!--NEW GENDER VALUE-->
+							<div class="d-flex contactDetails" *ngIf="incidentSelectedTypeData.name =='Product'"
+							[ngClass]="isRedacted?'margin-reduce':'genderview d-flex contactDetails'">
+							<div class=""
+								*ngIf="formFieldAccess.genderType.create || formFieldAccess.genderType.write || formFieldAccess.genderType.view">
+								<label class="label-name">Gender<span
+										*ngIf="(!formFieldAccess.genderType.create && !formFieldAccess.genderType.write) || isRedacted"
+										class=""
+										[ngClass]="isRedacted?' redacted-background':'labelValuepadd'">{{(!isRedacted)?incidentForm.value.genderType:'REDACTED'}}
+									</span></label>
+									<div class="data-view d-grid ageDDNew d-flex align-items-center" *ngIf="!isRedacted">
+										<select id="genderType" class="agetypeSelect" #agetype formControlName="genderType"
+											(change)="genderTypeChange($event)" class="ageInput2"
+											*ngIf="(formFieldAccess.genderType.create || formFieldAccess.genderType.write) && !isRedacted">
+
+											<!-- <option value="">Select</option> -->
+											<option value="Male">Male</option>
+											<option value="Female">Female</option>
+										</select>
+										<span class="ps-2 ageIcon"
+										*ngIf="(formFieldAccess.genderType.create || formFieldAccess.genderType.write) && !isRedacted"
+										placement="top" ngbTooltip="{{toolTipData.genderType}}">
+										<mat-icon>help_outline</mat-icon>
+									</span>
+				
+									</div>
+								
+							</div>
+						</div>
+
+
 							<div class="d-flex contactDetails"
 								[ngClass]="isRedacted?'margin-reduce':'d-flex contactDetails'">
 								<div class=""
 									*ngIf="formFieldAccess.injuredPersonContactNo.create || formFieldAccess.injuredPersonContactNo.write || formFieldAccess.injuredPersonContactNo.view">
-									<label class="label-name">Contact Number {{(incidentSelectedTypeData.name ==
-										'Product' || incidentSelectedTypeData.name == 'Customer') ?'(parent’s, if
-										injured person is a child)':''}}<span class="manditory"
+									<label class="label-name">Contact Number {{(incidentSelectedTypeData.name =='Product' || incidentSelectedTypeData.name == 'Customer') ?'(parent’s, if injured person is a child)':''}}<span class="manditory"
 											*ngIf="!isRedacted">*</span> <span
 											*ngIf="(!formFieldAccess.injuredPersonContactNo.create && !formFieldAccess.injuredPersonContactNo.write) || isRedacted"
 											class=""
@@ -237,14 +302,14 @@
 											<input type="text" class="form-control contactNo customerName"
 												autocomplete="off" maxlength="15"
 												formControlName="injuredPersonContactNumber"
-												(keypress)="common.allowNumberOnly($event)"
+												(keypress)="common.allowNumberAndSpecialChars($event)"
 												[ngClass]="isFieldValid('injuredPersonContactNumber')?'focus-border-error':''"
 												*ngIf="(formFieldAccess.injuredPersonContactNo.create || formFieldAccess.injuredPersonContactNo.write) && !isRedacted">
 
 											<span class="ps-2"
-												*ngIf="(formFieldAccess.injuredPersonContactNo.create || formFieldAccess.injuredPersonContactNo.write) && !isRedacted" placement="top"
-													ngbTooltip="{{toolTipData.injuredPersonContactNo}}">
-												<mat-icon >help_outline</mat-icon>
+												*ngIf="(formFieldAccess.injuredPersonContactNo.create || formFieldAccess.injuredPersonContactNo.write) && !isRedacted"
+												placement="top" ngbTooltip="{{toolTipData.injuredPersonContactNo}}">
+												<mat-icon>help_outline</mat-icon>
 											</span>
 										</div>
 										<span class="error"
@@ -259,7 +324,8 @@
 									*ngIf="formFieldAccess.emailAddress.create || formFieldAccess.emailAddress.write || formFieldAccess.emailAddress.view"
 									[ngClass]="isRedacted?'height-reduce':'emailContact'">
 									<label class="label-name">Contact Email<span class="manditory"
-											*ngIf="!isRedacted">*</span> <span
+											*ngIf="!isRedacted && incidentSelectedTypeData.name!='Customer' && incidentSelectedTypeData.name!='Product'">*</span>
+										<span
 											*ngIf="(!formFieldAccess.emailAddress.create && !formFieldAccess.emailAddress.write) || isRedacted"
 											class=""
 											[ngClass]="isRedacted?'redacted-background':'labelValuepadd'">{{(!isRedacted)?incidentForm.value.injuredPersonEmail:'REDACTED'}}
@@ -268,17 +334,17 @@
 										<div class="d-flex align-items-center">
 											<input type="text" class="form-control contactNo customerName"
 												autocomplete="off" maxlength="60" formControlName="injuredPersonEmail"
-												[ngClass]="isFieldValid('injuredPersonEmail')?'focus-border-error':''"
+												[ngClass]="isFieldEmailValid('injuredPersonEmail',incidentSelectedTypeData.name)?'focus-border-error':''"
 												*ngIf="(formFieldAccess.emailAddress.create || formFieldAccess.emailAddress.write) && !isRedacted">
 
 											<span class="ps-2"
-												*ngIf="(formFieldAccess.emailAddress.create || formFieldAccess.emailAddress.write) && !isRedacted" placement="top"
-													ngbTooltip="{{toolTipData.emailAddress}}">
-												<mat-icon >help_outline</mat-icon>
+												*ngIf="(formFieldAccess.emailAddress.create || formFieldAccess.emailAddress.write) && !isRedacted"
+												placement="top" ngbTooltip="{{toolTipData.emailAddress}}">
+												<mat-icon>help_outline</mat-icon>
 											</span>
 										</div>
 										<span class="error mb-0"
-											*ngIf="isFieldValid('injuredPersonEmail')">{{(formIncidentControls.injuredPersonEmail.errors!=null)?formIncidentControls.injuredPersonEmail.errors.message:''}}</span>
+											*ngIf="isFieldEmailValid('injuredPersonEmail',incidentSelectedTypeData.name)">{{(formIncidentControls.injuredPersonEmail.errors!=null)?formIncidentControls.injuredPersonEmail.errors.message:''}}</span>
 									</div>
 								</div>
 							</div>
@@ -298,15 +364,15 @@
 												*ngIf="(formFieldAccess.address.create || formFieldAccess.address.write) && !isRedacted"></textarea>
 
 											<span class="ps-2"
-												*ngIf="(formFieldAccess.address.create || formFieldAccess.address.write) && !isRedacted" placement="top"
-													ngbTooltip="{{toolTipData.address}}">
-												<mat-icon >help_outline</mat-icon> </span>
+												*ngIf="(formFieldAccess.address.create || formFieldAccess.address.write) && !isRedacted"
+												placement="top" ngbTooltip="{{toolTipData.address}}">
+												<mat-icon>help_outline</mat-icon> </span>
 										</div>
 									</div>
 								</div>
 							</div>
 
-							<div class="d-flex significientName" [ngClass]="{'significientNameNew' : isRedacted}"
+							<!-- <div class="d-flex significientName" [ngClass]="{'significientNameNew' : isRedacted}"
 								*ngIf="incidentSelectedTypeData.name=='Customer' && incidentForm.value.calculatedAge>18">
 								<div class=""
 									*ngIf="formFieldAccess.significantOther.create || formFieldAccess.significantOther.write || formFieldAccess.significantOther.view">
@@ -331,8 +397,8 @@
 										{{(formIncidentControls.significantOthers.errors!=null)?formIncidentControls.significantOthers.errors.message:''}}
 									</span>
 								</div>
-							</div>
-							
+							</div> -->
+
 						</div>
 						<!-- perfornal info view -->
 						<div class="" [hidden]="isPersonalInfoViewHidden">
@@ -343,12 +409,9 @@
 
 					</div>
 					<div class="detailView">
-						<div class="personal-info-title"
-							[ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}">2. Incident
+<div class="personal-info-title"
+[ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}">2. Incident
 							Details</div>
-
-
-
 
 						<div class=" incident-details-form " [hidden]="isIncidentDetailsFormHidden">
 							<div class="d-flex accidentDetails" *ngIf="!isIncidentDetailsFormHidden">
@@ -356,11 +419,10 @@
 									*ngIf="formFieldAccess.eventDateTime.create || formFieldAccess.eventDateTime.write || formFieldAccess.eventDateTime.view">
 									<label class="label-name">Incident Date<span class="manditory"
 											*ngIf="!isRedacted">*</span><span
-											*ngIf="!formFieldAccess.eventDateTime.create || !formFieldAccess.eventDateTime.write">{{incidentForm.value.eventDate
-											| date:'dd-MM-yyyy'}}</span></label>
+											*ngIf="!formFieldAccess.eventDateTime.create || !formFieldAccess.eventDateTime.write">
+											{{incidentForm.value.eventDate | date:'dd-MM-yyyy'}}</span></label>
 									<div class="data-view dataiconrel"
 										*ngIf="formFieldAccess.eventDateTime.create || formFieldAccess.eventDateTime.write">
-
 
 										<input type="text" id="scrolldatepicker" class="form-control dateInput"
 											autocomplete="off" maxlength="10" formControlName="eventDate"
@@ -406,9 +468,9 @@
 										<span class="text-approximate"
 											*ngIf="formFieldAccess.eventDateApproximate.create || formFieldAccess.eventDateApproximate.write">Approximate</span>
 										<span class="ps-2 ageIcon"
-											*ngIf="formFieldAccess.eventDateApproximate.create || formFieldAccess.eventDateApproximate.write" placement="top"
-												ngbTooltip="{{toolTipData.approximate}}">
-											<mat-icon >help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.eventDateApproximate.create || formFieldAccess.eventDateApproximate.write"
+											placement="top" ngbTooltip="{{toolTipData.approximate}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 
@@ -417,48 +479,55 @@
 								<!-- {{incidentForm.value.reportedDate | date:'dd-MM-yyyy'}} -->
 								<div class=""
 									*ngIf="formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write || formFieldAccess.reportedDateTime.view">
-									<label class="label-name">Reported Date <span class="manditory"
-											
+									<label class="label-name">Reported Date<span class="manditory"
 											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span><span
 											*ngIf="!formFieldAccess.reportedDateTime.create && !formFieldAccess.reportedDateTime.write">{{incidentForm.value.reportedDate
 											| date:'dd-MM-yyyy'}}</span></label>
 									<div class="data-view dataiconrel"
 										*ngIf="formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write">
 										<input type="text" class="form-control dateInput" autocomplete="off"
-											maxlength="10" formControlName="reportedDate"  
-											[ngClass]="isFieldValid('reportedDate') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''"  placeholder="DD/MM/YYYY"
-											[minDate]="reportedMinDate" [maxDate]="reportedMaxDate"
-											autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig" #reportedDate>
+											maxlength="10" formControlName="reportedDate"
+											[ngClass]="isFieldValid('reportedDate') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''"
+											placeholder="DD/MM/YYYY" [minDate]="reportedMinDate"
+											[maxDate]="reportedMaxDate" autocomplete="off" bsDatepicker (ngModelChange)="onDateChange($event)"
+											[bsConfig]="common.bsConfig" #reportedDate>
 										<div class="data-icon" (click)="reportedDate.click()">
 											<img src="assets/healthsafetyimages/field-icon.svg">
 										</div>
 
 									</div>
-									    <div class="error" *ngIf="isFieldValid('reportedDate') && ( incidentSelectedTypeData.name=='Product')">
+									<div class="error"
+										*ngIf="isFieldValid('reportedDate') && ( incidentSelectedTypeData.name=='Product')">
 										{{(formIncidentControls.reportedDate.errors!=null)?formIncidentControls.reportedDate.errors.message:''}}
 									</div>
 								</div>
 								<div class=""
 									*ngIf="formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write || formFieldAccess.reportedDateTime.view">
 									<label class="label-name">Time<span class="manditory"
-											
-											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span> <span
+											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span>
+										<span
 											*ngIf="!formFieldAccess.reportedDateTime.create || !formFieldAccess.reportedDateTime.write">{{incidentForm.value.reportedTime}}</span></label>
 									<div class="data-view d-flex align-items-center"
 										*ngIf="formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write">
 										<input type="text" class="form-control timeInput" autocomplete="off"
 											maxlength="5" formControlName="reportedTime" placeholder="HH:MM"
 											(keyup)="reportedTimeKeyUp()"
-											[ngClass]="isReportedTimeFieldValid('reportedTime','reportedDate') && ( incidentSelectedTypeData.name=='Product') && (formIncidentControls.reportedTime.errors!=null)?'focus-border-error':''"
+											[ngClass]="isFieldValid('reportedTime') && ( incidentSelectedTypeData.name=='Product') && (formIncidentControls.reportedTime.errors!=null)?'focus-border-error':''"
 											(keyup)="incidentTimeKeyUp()" (keypress)="common.allowNumberOnly($event)">
 										<span class="ps-2"
-											*ngIf="formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.reportedDateTime}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.reportedDateTime.create || formFieldAccess.reportedDateTime.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.reportedDateTime}}"><mat-icon>help_outline</mat-icon></span>
 
 									</div>
-										<div class="error" *ngIf="isReportedTimeFieldValid('reportedTime','reportedDate') && ( incidentSelectedTypeData.name=='Product')">
+									
+									<div class="error"
+										*ngIf="isFieldValid('reportedTime') && ( incidentSelectedTypeData.name=='Product')">
 										{{(formIncidentControls.reportedTime.errors!=null)?formIncidentControls.reportedTime.errors.message:''}}
+									</div>
+									<div class="error"
+										*ngIf="isFieldValid('reportedTime') && ( incidentSelectedTypeData.name!=='Product')">
+										{{(formIncidentControls.reportedTime.errors!=null && formIncidentControls.reportedTime.errors.message=='Reported time invalid')?formIncidentControls.reportedTime.errors.message:''}}
 									</div>
 								</div>
 							</div>
@@ -479,9 +548,9 @@
 											*ngIf="formFieldAccess.whereInStore.create || formFieldAccess.whereInStore.write">
 
 										<span class="ps-2"
-											*ngIf="formFieldAccess.whereInStore.create || formFieldAccess.whereInStore.write" placement="top"
-												ngbTooltip="{{toolTipData.whereInStore}}"><mat-icon
-												>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.whereInStore.create || formFieldAccess.whereInStore.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.whereInStore}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 							</div>
@@ -489,25 +558,25 @@
 								*ngIf="formFieldAccess.injurySustained.create || formFieldAccess.injurySustained.write || formFieldAccess.injurySustained.view">
 								<div class="incidentPlace"
 									*ngIf="formFieldAccess.injurySustained.create || formFieldAccess.injurySustained.write || formFieldAccess.injurySustained.view">
-									<label class="label-name">injury sustained<span class="manditory"
-											
+									<label class="label-name">Injury sustained<span class="manditory"
 											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span><span
 											*ngIf="!formFieldAccess.injurySustained.create && !formFieldAccess.injurySustained.write"
 											class=" labelValuepadd">
 											{{incidentForm.value.injurySustained}}
 										</span></label>
 									<div class="data-view d-flex injuryDescription align-items-center">
-										<textarea class="form-control textarea addressArea" autocomplete="off"
-											maxlength="250" formControlName="injurySustained"
-											[ngClass]="isFieldValid('injurySustained') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''" 
+										<textarea class="form-control textarea addressArea centerPlaceholder" autocomplete="off"
+											maxlength="250" formControlName="injurySustained" placeholder="Do not input personal data here"
+											[ngClass]="isFieldValid('injurySustained') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''"
 											*ngIf="formFieldAccess.injurySustained.create || formFieldAccess.injurySustained.write"></textarea>
 
 										<span class="ps-2"
-											*ngIf="formFieldAccess.injurySustained.create || formFieldAccess.injurySustained.write" placement="top"
-												ngbTooltip="{{toolTipData.injurySustained}}">
-											<mat-icon >help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.injurySustained.create || formFieldAccess.injurySustained.write"
+											placement="top" ngbTooltip="{{toolTipData.injurySustained}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
-									<div class="error" *ngIf="isFieldValid('injurySustained') && ( incidentSelectedTypeData.name=='Product')">
+									<div class="error"
+										*ngIf="isFieldValid('injurySustained') && ( incidentSelectedTypeData.name=='Product')">
 										{{(formIncidentControls.injurySustained.errors!=null)?formIncidentControls.injurySustained.errors.message:''}}
 									</div>
 								</div>
@@ -517,24 +586,22 @@
 								*ngIf="formFieldAccess.circumstances.create || formFieldAccess.circumstances.write || formFieldAccess.circumstances.view">
 								<div class="incidentPlace"
 									*ngIf="formFieldAccess.circumstances.create || formFieldAccess.circumstances.write || formFieldAccess.circumstances.view">
-									<label class="label-name">Circumstances <span class="manditory"
-											
+									<label class="label-name">Circumstances<span class="manditory"
 											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span><span
 											*ngIf="!formFieldAccess.circumstances.create && !formFieldAccess.circumstances.write"
 											class=" labelValuepadd">
 											{{incidentForm.value.injuryCircumstances}}
 										</span></label>
 									<div class="data-view d-flex injuryDescription align-items-center">
-										<textarea class="form-control textarea addressArea" autocomplete="off"
-											maxlength="250" formControlName="injuryCircumstances" [ngClass]="isFieldValid('injuryCircumstances') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''"
-											*ngIf="formFieldAccess.circumstances.create || formFieldAccess.circumstances.write"></textarea>
-
-										<span class="ps-2"
-											*ngIf="formFieldAccess.circumstances.create || formFieldAccess.circumstances.write" placement="top"
-												ngbTooltip="{{toolTipData.circumstances}}">
-											<mat-icon >help_outline</mat-icon></span>
+										<textarea class="form-control textarea addressArea addressArea-182 centerPlaceholder"
+											autocomplete="off" maxlength="1500" formControlName="injuryCircumstances" placeholder="Do not input personal data here"
+											[ngClass]="isFieldValid('injuryCircumstances') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''" ></textarea><span class="ps-2"
+											*ngIf="formFieldAccess.circumstances.create || formFieldAccess.circumstances.write"
+											placement="top" ngbTooltip="{{toolTipData.circumstances}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
-									<div class="error" *ngIf="isFieldValid('injuryCircumstances') && ( incidentSelectedTypeData.name=='Product')">
+									<div class="error"
+										*ngIf="isFieldValid('injuryCircumstances') && ( incidentSelectedTypeData.name=='Product')">
 										{{(formIncidentControls.injuryCircumstances.errors!=null)?formIncidentControls.injuryCircumstances.errors.message:''}}
 									</div>
 								</div>
@@ -548,12 +615,14 @@
 							<div class="witnessMargin"
 								[ngClass]="{'witnessMarginbottom' : incidentForm.value.witnessAvailable=='true' || incidentForm.value.witnessAvailable==true, 'witnessMarginbottomNew' : isRedacted}"
 								*ngIf="formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write">
-								<label class="label-name">Witness<span class="manditory" *ngIf="(formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && !isIncidentClosed">*</span><span *ngIf="!isRedacted">&nbsp;</span><span
-										*ngIf="isRedacted" class="redacted-background">REDACTED</span>
+								<label class="label-name">Witness<span class="manditory"
+										*ngIf="(formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && !isIncidentClosed">*</span><span
+										*ngIf="!isRedacted">&nbsp;</span><span *ngIf="isRedacted"
+										class="redacted-background">REDACTED</span>
 									<span class="ps-1"
-										*ngIf="(formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && !isRedacted" placement="top"
-											ngbTooltip="{{toolTipData.witnessAvailable}}">
-										<mat-icon >help_outline</mat-icon></span></label>
+										*ngIf="(formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && !isRedacted"
+										placement="top" ngbTooltip="{{toolTipData.witnessAvailable}}">
+										<mat-icon>help_outline</mat-icon></span></label>
 								<div class="data-view" *ngIf="!isRedacted">
 									<input type="radio" class="form-check-input" name="witnessAvailable" value="true"
 										formControlName="witnessAvailable" (change)="witnessAvailableChange('Y')"> <span
@@ -562,9 +631,10 @@
 										formControlName="witnessAvailable" (change)="witnessAvailableChange('N')"> <span
 										class="radioText">No</span>
 								</div>
-								<div class="error" *ngIf="isFieldValid('witnessAvailable') && ( incidentSelectedTypeData.name!='Product')">
-										{{(formIncidentControls.witnessAvailable.errors!=null)?formIncidentControls.witnessAvailable.errors.message:''}}
-									</div>
+								<div class="error"
+									*ngIf="isFieldValid('witnessAvailable') && ( incidentSelectedTypeData.name!='Product')">
+									{{(formIncidentControls.witnessAvailable.errors!=null)?formIncidentControls.witnessAvailable.errors.message:''}}
+								</div>
 							</div>
 						</div>
 						<div class=""
@@ -584,7 +654,7 @@
 
 							<div class=""
 								*ngIf="incidentForm.value.witnessList.length>0 && (formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && !isIncidentClosed">
-								
+
 								<div class="witnessBoxFlex" *ngIf="!isRedacted">
 									<div class="pe-0 witnessBoxView" [ngClass]="{'d-none' : wt.witnessDeleted !== 0}"
 										*ngFor="let wt of incidentForm.value.witnessList;index as i;">
@@ -597,26 +667,34 @@
 											</div>
 
 
-
+                                            <div [ngClass]="{'d-flex': wt.witnessContactNumber == null || wt.witnessContactNumber == ''}">
 											<div class="witnessInfo"
 												*ngIf="formFieldAccess.witnesscontactNumber.create || formFieldAccess.witnesscontactNumber.write || formFieldAccess.witnesscontactNumber.view">
 												<label class="" class="witness-title">Phone:</label>
 											</div>
 											<div class="witnessInfoValue text-break"
 												*ngIf="formFieldAccess.witnesscontactNumber.create || formFieldAccess.witnesscontactNumber.write || formFieldAccess.witnesscontactNumber.view">
-												<div class="p-0">{{(!isRedacted)?wt.witnessContactNumber:'REDACTED'}}
+												<div class="p-0">
+													<span *ngIf="wt.witnessContactNumber !== null && wt.witnessContactNumber !== ''">{{(!isRedacted)?wt.witnessContactNumber:'REDACTED'}}</span>
+													<span *ngIf="wt.witnessContactNumber == null || wt.witnessContactNumber == ''">{{(!isRedacted)?'&nbsp;&nbsp;-':'REDACTED'}}</span>
 												</div>
 											</div>
+											</div>
+											<div [ngClass]="{'d-flex': wt.witnessContactEmail == null || wt.witnessContactEmail == ''}">
 											<div class="witnessInfo"
 												*ngIf="formFieldAccess.witnessEmail.create || formFieldAccess.witnessEmail.write || formFieldAccess.witnessEmail.view">
 												<label class="" class="witness-title">Email:</label>
 											</div>
 											<div class="witnessInfoValue text-break"
 												*ngIf="formFieldAccess.witnessEmail.create || formFieldAccess.witnessEmail.write || formFieldAccess.witnessEmail.view">
-												<div class="p-0">{{(!isRedacted)?wt.witnessContactEmail:'REDACTED'}}
+												<div class="p-0">
+													<span *ngIf="wt.witnessContactEmail !== null && wt.witnessContactEmail !== ''">{{(!isRedacted)?wt.witnessContactEmail:'REDACTED'}}</span>
+													<span *ngIf="wt.witnessContactEmail == null || wt.witnessContactEmail == ''">{{(!isRedacted)?'&nbsp;&nbsp;-':'REDACTED'}}</span>
 												</div>
 											</div>
+											</div>
 
+											<div [ngClass]="{'d-flex': wt.witnessAddress == null || wt.witnessAddress == ''}">
 											<div class=" witnessInfo"
 												*ngIf="formFieldAccess.witnessAddress.create || formFieldAccess.witnessAddress.write || formFieldAccess.witnessAddress.view">
 												<label class="p-0" class="witness-title"
@@ -625,7 +703,11 @@
 											</div>
 											<div class=" witnessInfoValue text-break"
 												*ngIf="formFieldAccess.witnessAddress.create || formFieldAccess.witnessAddress.write || formFieldAccess.witnessAddress.view">
-												<div class="p-0">{{(!isRedacted)?wt.witnessAddress:'REDACTED'}}</div>
+												<div class="p-0">
+													<span *ngIf="wt.witnessAddress !== null && wt.witnessAddress !== ''">{{(!isRedacted)?wt.witnessAddress:'REDACTED'}}</span>
+													<span *ngIf="wt.witnessAddress == null || wt.witnessAddress == ''">{{(!isRedacted)?'&nbsp;&nbsp;-':'REDACTED'}}</span>
+												</div>
+											</div>
 											</div>
 											<!--<div class=" witnessInfo" *ngIf="formFieldAccess.witnessStatement.create || formFieldAccess.witnessStatement.write || formFieldAccess.witnessStatement.view">
 												<label class="p-0" class="witness-title">Statement:</label>
@@ -652,8 +734,7 @@
 
 
 							</div>
-							<div class=""
-								[ngClass]="{'buttonMargin' : incidentForm.value.witnessList.length>0}"
+							<div class="" [ngClass]="{'buttonMargin' : incidentForm.value.witnessList.length>0}"
 								*ngIf="(formFieldAccess.witnessAvailable.create || formFieldAccess.witnessAvailable.write) && !isRedacted && !isIncidentClosed">
 								<button type="button" class="next-btn-witness-add witnessBtn"
 									(click)="openWitnessPopup(witnessbox,1)">Add a witness</button>
@@ -661,21 +742,22 @@
 
 						</div>
 
-						<div class=""
-							*ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write || formFieldAccess.evidenceAvailable.view) && !isIncidentDetailsFormHidden">
+						<div *ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write || formFieldAccess.evidenceAvailable.view) && !isIncidentDetailsFormHidden">
 							<div class=""
 								*ngIf="formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write || formFieldAccess.evidenceAvailable.view">
 								<div class="evidenceMargin" [ngClass]="{'evidenceMarginNew' : isRedacted}"
 									*ngIf="formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write || formFieldAccess.evidenceAvailable.view">
 									<!-- <label class="label-name" *ngIf="!incidentForm.value.evidenceAvailable">Evidence</label> -->
 									<label class="label-name d-flex align-items-center"
-										*ngIf="formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write">CCTV/Photos<span class="manditory" *ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isIncidentClosed">*</span><span
+										*ngIf="formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write">CCTV/Photos<span
+											class="manditory"
+											*ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isIncidentClosed">*</span><span
 											*ngIf="isRedacted" class=""
 											[ngClass]="isRedacted?' redacted-background':''">REDACTED</span>
 										<span class="ps-2"
-											*ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isRedacted" placement="top"
-												ngbTooltip="{{toolTipData.evidences}}">
-											<mat-icon >help_outline</mat-icon></span></label>
+											*ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isRedacted"
+											placement="top" ngbTooltip="{{toolTipData.evidences}}">
+											<mat-icon>help_outline</mat-icon></span></label>
 									<div class="data-view"
 										*ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isRedacted">
 										<input type="radio" class="form-check-input" name="evidenceAvailable"
@@ -692,31 +774,31 @@
 								</div>
 							</div>
 
-							<div class="row"  *ngIf="incidentForm.value.evidenceAvailable==true || incidentForm.value.evidenceAvailable=='true'">
-								<div class="evidenceMargin evidenceMargin-20" [ngClass] = "{'evidenceMarginNew' : isRedacted}" *ngIf="formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write || formFieldAccess.evidenceAvailable.view">
+							<div class="" [ngClass]="{'row' : !isRedacted}"
+								*ngIf="incidentForm.value.evidenceAvailable==true || incidentForm.value.evidenceAvailable=='true'">
+								<div class="evidenceMargin evidenceMargin-20"
+									[ngClass]="{'evidenceMarginNew' : isRedacted}"
+									*ngIf="formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write || formFieldAccess.evidenceAvailable.view">
 									<!-- <label class="label-name" *ngIf="!incidentForm.value.evidenceAvailable">Evidence</label> -->
-										
-									<div class="data-view d-flex align-items-center"  *ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isRedacted">
-											<mat-checkbox class="aligncheckbox"  autocomplete="off" formControlName="noFootageAvailable"  ></mat-checkbox>
+
+									<div class="data-view d-flex align-items-center"
+										*ngIf="(formFieldAccess.evidenceAvailable.create || formFieldAccess.evidenceAvailable.write) && !isRedacted">
+										<mat-checkbox class="aligncheckbox" autocomplete="off"
+											formControlName="noFootageAvailable"></mat-checkbox>
 										<!-- <input type="checkbox" class="form-check-input" name="isVideo"
 											value="true" formControlName="isVideo" > -->
-											 <span class="cctv_text">No CCTV Available</span>
-										
+										<span class="cctv_text">No CCTV Available</span>
+
 									</div>
 								</div>
 							</div>
-
-
-
-
-
-
 
 							<div class="evidanceReport"
 								*ngIf="(incidentForm.value.evidenceAvailable=='true' || incidentForm.value.evidenceAvailable==true) && !isIncidentDetailsFormHidden && !isRedacted">
 								<div class=""
 									*ngIf="formFieldAccess.evidenceTakenBy.create || formFieldAccess.evidenceTakenBy.write || formFieldAccess.evidenceTakenBy.view">
-									<label class="label-name">CCTV/Photos taken by <span
+									<label class="label-name">CCTV/Photos taken by<span class="manditory"
+										*ngIf="(formFieldAccess.evidenceTakenBy.create || formFieldAccess.evidenceTakenBy.write) && !isIncidentClosed">*</span> <span
 											*ngIf="!formFieldAccess.evidenceTakenBy.create && !formFieldAccess.evidenceTakenBy.write"
 											class="labelValuepadd">
 											{{incidentForm.value.evidenceTakenBy}}
@@ -729,9 +811,9 @@
 											*ngIf="formFieldAccess.evidenceTakenBy.create || formFieldAccess.evidenceTakenBy.write">
 
 										<span class="ps-2"
-											*ngIf="formFieldAccess.evidenceTakenBy.create || formFieldAccess.evidenceTakenBy.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.evidenceTakenByName}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.evidenceTakenBy.create || formFieldAccess.evidenceTakenBy.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.evidenceTakenByName}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 									<div class="error" *ngIf="isFieldValid('evidenceTakenBy')">
 										{{(formIncidentControls.evidenceTakenBy.errors!=null)?formIncidentControls.evidenceTakenBy.errors.message:''}}
@@ -768,15 +850,15 @@
 											*ngIf="formFieldAccess.otherComments.create || formFieldAccess.otherComments.write"></textarea>
 
 										<span class="ps-2"
-											*ngIf="formFieldAccess.otherComments.create || formFieldAccess.otherComments.write" placement="top"
-												ngbTooltip="{{toolTipData.otherComments}}">
-											<mat-icon >help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.otherComments.create || formFieldAccess.otherComments.write"
+											placement="top" ngbTooltip="{{toolTipData.otherComments}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 							</div>
 
 
-							
+
 						</div>
 
 					</div>
@@ -795,32 +877,32 @@
 
 							<div class=""
 								*ngIf="formFieldAccess.productId.create || formFieldAccess.productId.write || formFieldAccess.productId.view">
-
-								<div class="form-group mb-0 auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new" [ngClass]="isFieldValid('productIDView') || isFieldValid('productId')?'focus-border-error-new':''">
+								<div
+									class="form-group mb-0 auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new">
 									<label class="label-name">Product Description/ID<span class="manditory">*</span>
 										<span
 											*ngIf="!formFieldAccess.productId.create && !formFieldAccess.productId.write"
 											class="labelValuepadd">
 											{{incidentForm.value.productId+'-'+incidentForm.value.productDescription}}
 										</span></label>
-									<div class="data-view d-grid align-items-center">
+									<div class="data-view d-grid align-items-center"
+										[ngClass]="isFieldValid('productIDView')  || isFieldValid('productId')?'focus-border-error-new':''">
 
 
-
+										<!-- readonly="readonly"  -->
 										<div class="d-flex align-items-center">
-											<mat-form-field [floatLabel]="'never'" class="example-full-width incidentformfield"
+											<mat-form-field [floatLabel]="'never'"
+												class="example-full-width incidentformfield"
 												*ngIf="formFieldAccess.productId.create || formFieldAccess.productId.write">
 												<input type="text" aria-label="Product ID" matInput
 													formControlName="productIDView"
 													class="form-control placeholder-class"
-													(keyup)="productIDType($event)"
-													maxlength="100" (focus)="focusinmethod()"
-													(focusout)="focusoutmethod()"
+													(keyup)="productIDType($event)" maxlength="100"
+													(focus)="focusinmethod()" (focusout)="focusoutmethod()"
 													placeholder="Type 3 letters to auto suggest the Article ID"
 													[matAutocomplete]="auto" id="autoCompleteTrigger"
 													#autoCompleteTrigger="matAutocompleteTrigger">
-												<!--  <mat-placeholder class="placeholder">Type 3 letters to auto suggest the Article ID</mat-placeholder> -->
-												<!-- <mat-hint>Type 3 letters to auto suggest the Article ID</mat-hint> -->
+
 												<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
 													(optionSelected)="onProductIDSelectionChanged($event)">
 													<mat-option *ngFor="let option of productIdData;"
@@ -831,12 +913,13 @@
 											</mat-form-field>
 
 											<span class="ps-2 pb-4"
-												*ngIf="formFieldAccess.productId.create || formFieldAccess.productId.write" 
-													placement="top"
-													ngbTooltip="{{toolTipData.productId}}"><mat-icon>help_outline</mat-icon></span>
+												*ngIf="formFieldAccess.productId.create || formFieldAccess.productId.write"
+												placement="top"
+												ngbTooltip="{{toolTipData.productId}}"><mat-icon>help_outline</mat-icon></span>
 										</div>
-										<div class="error mg-top15" *ngIf="isFieldValid('productId')">
-											<!-- <span>{{formIncidentControls.productId.errors | json}}</span> -->
+										<div class="error mg-top15"
+											*ngIf="isFieldValid('productIDView') || isFieldValid('productId')">
+
 											{{(formIncidentControls.productId.errors!=null)?formIncidentControls.productId.errors.message:''}}
 
 										</div>
@@ -851,7 +934,7 @@
 							<div class="d-flex productDetail">
 								<div class=""
 									*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write || formFieldAccess.productAge.view">
-									<label class="label-name">Product Age<span class="manditory" 
+									<label class="label-name">Product Age<span class="manditory"
 											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span><span
 											*ngIf="!formFieldAccess.productAge.create && !formFieldAccess.productAge.write"
 											class="labelValuepadd">
@@ -861,48 +944,56 @@
 											(keypress)="common.allowNumberOnly($event)" -->
 									<div class="data-view d-flex align-items-center">
 										<input type="text" class="form-control product-age " autocomplete="off"
-											maxlength="3" formControlName="productAge" (keypress)="common.allowNumberOnly($event)"
-											*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write" [ngClass]="isFieldValid('productAge')?'focus-border-error':''">
+											maxlength="3" formControlName="productAge"
+											(keypress)="common.allowNumberOnly($event)"
+											*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write"
+											[ngClass]="isFieldValid('productAge')?'focus-border-error':''">
 
 										<span class="ps-1 pe-1"
-											*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.productAge}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.productAge}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 									<div class="error" *ngIf="isFieldValid('productAge')">
 										{{(formIncidentControls.productAge.errors!=null)?formIncidentControls.productAge.errors.message:''}}
 									</div>
 								</div>
-								<div class="" *ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write || formFieldAccess.productAge.view"  >
-									<label class="label-name label-opacity">Product Age Type<span *ngIf="!formFieldAccess.productAge.create && !formFieldAccess.productAge.write" class="labelValuepadd">
-										{{incidentForm.value.productAge}}
-									</span></label>
-								
+								<div class=""
+									*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write || formFieldAccess.productAge.view">
+									<label class="label-name label-opacity">Product Age Type<span
+											*ngIf="!formFieldAccess.productAge.create && !formFieldAccess.productAge.write"
+											class="labelValuepadd">
+											{{incidentForm.value.productAge}}
+										</span></label>
+
 									<div class="data-view d-flex align-items-center">
-									
-											<select class="form-control product-age " formControlName="productAgeType" *ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write" [ngClass]="isProductAgeTypeFieldValid('productAgeType','productAge')?'focus-border-error':''">
+
+										<select class="form-control product-age " formControlName="productAgeType"
+											*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write"
+											[ngClass]="isProductAgeTypeFieldValid('productAgeType','productAge')?'focus-border-error':''">
 											<option value="" class="d-none"></option>
-											<option  value="weeks">
+											<option value="weeks">
 												Weeks</option>
-												<option  value="months">
+											<option value="months">
 												Months</option>
-												<option  value="years">
+											<option value="years">
 												Years</option>
 										</select>
-											
+
 										<!-- <span class="ps-1 pe-1" *ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write" placement="top"
 												ngbTooltip="{{toolTipData.productAge}}"><mat-icon >help_outline</mat-icon></span> -->
 									</div>
-									<div class="error" *ngIf="isProductAgeTypeFieldValid('productAgeType','productAge')">
+									<div class="error"
+										*ngIf="isProductAgeTypeFieldValid('productAgeType','productAge')">
 										{{(formIncidentControls.productAgeType.errors!=null)?formIncidentControls.productAgeType.errors.message:''}}
 									</div>
 								</div>
-								
+
 							</div>
 							<div class="d-flex productDetail">
 								<div class=""
 									*ngIf="formFieldAccess.natureOfProductFault.create || formFieldAccess.natureOfProductFault.write || formFieldAccess.natureOfProductFault.view">
-									<label class="label-name">Nature of product fault <span class="manditory" 
+									<label class="label-name">Nature of product fault<span class="manditory"
 											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span><span
 											*ngIf="!formFieldAccess.natureOfProductFault.create && !formFieldAccess.natureOfProductFault.write"
 											class=" store-width">
@@ -914,14 +1005,15 @@
 											<option *ngFor="let pf of natureOfProductFaultData;" value="{{pf.faultId}}">
 												{{pf.faultDescription}}</option>
 										</select> -->
-										<input type="text" class="form-control product-age product-fault" autocomplete="off"
-											maxlength="35" formControlName="faultCode"
-											*ngIf="formFieldAccess.natureOfProductFault.create || formFieldAccess.natureOfProductFault.write" [ngClass]="isFieldValid('faultCode')?'focus-border-error':''">
+										<input type="text" class="form-control product-age product-fault"
+											autocomplete="off" maxlength="35" formControlName="faultCode"
+											*ngIf="formFieldAccess.natureOfProductFault.create || formFieldAccess.natureOfProductFault.write"
+											[ngClass]="isFieldValid('faultCode')?'focus-border-error':''">
 
 										<span class="ps-2"
-											*ngIf="formFieldAccess.natureOfProductFault.create || formFieldAccess.natureOfProductFault.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.natureOfProductFault}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.natureOfProductFault.create || formFieldAccess.natureOfProductFault.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.natureOfProductFault}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 									<div class="error" *ngIf="isFieldValid('faultCode')">
 										{{(formIncidentControls.faultCode.errors!=null)?formIncidentControls.faultCode.errors.message:''}}
@@ -942,9 +1034,9 @@
 											*ngIf="formFieldAccess.batchNo.create || formFieldAccess.batchNo.write"></textarea>
 
 										<span class=" ps-1 pe-1"
-											*ngIf="formFieldAccess.batchNo.create || formFieldAccess.batchNo.write" placement="top"
-												ngbTooltip="{{toolTipData.batchNo}}"><mat-icon
-												>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.batchNo.create || formFieldAccess.batchNo.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.batchNo}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 
@@ -987,9 +1079,9 @@
 											<img src="assets/healthsafetyimages/field-icon.svg">
 										</div>
 										<span class="ps-1 pe-1"
-											*ngIf="formFieldAccess.productReturnToStore.create || formFieldAccess.productReturnToStore.write" placement="top"
-												ngbTooltip="{{toolTipData.productReturnToStore}}"><mat-icon
-												>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.productReturnToStore.create || formFieldAccess.productReturnToStore.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.productReturnToStore}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 								<div class=""
@@ -1003,15 +1095,15 @@
 										<input type="text" class="form-control product-age" autocomplete="off"
 											formControlName="productReturnToHeadOffice"
 											[minDate]="productReturnToHeadOfficeMinDate"
-											[maxDate]="productReturnToHeadOfficeMaxDate" autocomplete="off"
-											bsDatepicker [bsConfig]="common.bsConfig" #productReturnToHeadOffice>
+											[maxDate]="productReturnToHeadOfficeMaxDate" autocomplete="off" bsDatepicker
+											[bsConfig]="common.bsConfig" #productReturnToHeadOffice>
 										<div class="data-icon2" (click)="productReturnToHeadOffice.click()">
 											<img src="assets/healthsafetyimages/field-icon.svg">
 										</div>
 										<span class="ps-2"
-											*ngIf="formFieldAccess.productReturnToHeadOffice.create || formFieldAccess.productReturnToHeadOffice.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.productReturnToHeadOffice}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.productReturnToHeadOffice.create || formFieldAccess.productReturnToHeadOffice.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.productReturnToHeadOffice}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 
@@ -1038,7 +1130,8 @@
 							<div class="">
 								<div class="mtop-30"
 									*ngIf="formFieldAccess.problemReportedBefore.create || formFieldAccess.problemReportedBefore.write || formFieldAccess.problemReportedBefore.view">
-									<label class="label-name">This problem has been reported before<span class="manditory" 
+									<label class="label-name">This problem has been reported before<span
+											class="manditory"
 											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span><span
 											*ngIf="!formFieldAccess.problemReportedBefore.create && !formFieldAccess.problemReportedBefore.write"
 											class="labelValuepadd">
@@ -1047,80 +1140,90 @@
 									<div class="data-view d-flex align-items-center">
 										<textarea class="form-control textarea addressArea" autocomplete="off"
 											maxlength="250" formControlName="problemReportedBefore"
-											*ngIf="formFieldAccess.problemReportedBefore.create || formFieldAccess.problemReportedBefore.write" [ngClass]="isFieldValid('problemReportedBefore') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''"
-></textarea>
+											*ngIf="formFieldAccess.problemReportedBefore.create || formFieldAccess.problemReportedBefore.write"
+											[ngClass]="isFieldValid('problemReportedBefore') && ( incidentSelectedTypeData.name=='Product')?'focus-border-error':''"></textarea>
 
 										<span class="ps-2"
-											*ngIf="formFieldAccess.problemReportedBefore.create || formFieldAccess.problemReportedBefore.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.problemReportedBefore}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.problemReportedBefore.create || formFieldAccess.problemReportedBefore.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.problemReportedBefore}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
-									<div class="error" *ngIf="isFieldValid('problemReportedBefore') && ( incidentSelectedTypeData.name=='Product')">
+									<div class="error"
+										*ngIf="isFieldValid('problemReportedBefore') && ( incidentSelectedTypeData.name=='Product')">
 										{{(formIncidentControls.problemReportedBefore.errors!=null)?formIncidentControls.problemReportedBefore.errors.message:''}}
 									</div>
 								</div>
 							</div>
 
-							
+
 						</div>
 						<div class="product-form-view" [hidden]="isProductDetailsViewHidden">
 							<app-product-details-view *ngIf="!incidentData.isAdd && !isProductDetailsViewHidden"
-								[productDetailsData]="productDetailsView"
-								></app-product-details-view>
+								[productDetailsData]="productDetailsView"></app-product-details-view>
 						</div>
 					</div>
 
 					<!-- *ngIf="!incidentData.isAdd"  -->
-					<div class="" *ngIf="isAssginHandlingShow" >
+					<div class="" *ngIf="isAssginHandlingShow">
 						<div class="personal-info-title"
-							[ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}"  *ngIf="formFieldAccess.handlers.create || formFieldAccess.handlers.write" >{{(incidentSelectedTypeData.name=='Product')?'4.
-							':'3. '}}Issue Handling</div>
-							<!--[hidden]="handlingissuesFormHidden"-->
+							[ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}"
+							*ngIf="formFieldAccess.handlers.create || formFieldAccess.handlers.write">
+							{{(incidentSelectedTypeData.name=='Product')?'4. ':'3. '}}Issue Handling</div>
+						<!--[hidden]="handlingissuesFormHidden"-->
 						<div [hidden]="handlingissuesFormHidden">
 							<div class="d-flex">
-								<div class="issueTracker" *ngIf="formFieldAccess.csdNumber.create || formFieldAccess.csdNumber.write ">
-									<label class="label-name">CSD Tracking Number<span class="manditory" 
-											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span> <span class="labelValuepadd"
+								<div class="issueTracker"
+									*ngIf="formFieldAccess.csdNumber.create || formFieldAccess.csdNumber.write ">
+									<label class="label-name">CSD Tracking Number<span class="manditory"
+											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product' && loginEmployeeRoleCode !== 'PC'">*</span>
+										<span class="labelValuepadd"
 											*ngIf="!formFieldAccess.csdNumber.create && !formFieldAccess.csdNumber.write">{{incidentForm.value.csdNumber}}</span></label>
 									<div class="data-view d-flex align-items-center">
 										<input type="text"
 											class="form-control {{(incidentSelectedTypeData.name!='Product')?'customerName':'csdtracknumber'}}"
 											maxlength="15" formControlName="csdNumber"
-											[ngClass]="isFieldValid('csdNumber')?'focus-border-error':''"
+											[ngClass]="isFieldValidcsdNumber('csdNumber')?'focus-border-error':''"
 											(change)="csdNumberChange($event)">
 
 										<span class="ps-2 pe-2"
-											*ngIf="formFieldAccess.csdNumber.create || formFieldAccess.csdNumber.write" 
-												placement="top"
-												ngbTooltip="{{toolTipData.csdNumber}}"><mat-icon>help_outline</mat-icon></span>
+											*ngIf="formFieldAccess.csdNumber.create || formFieldAccess.csdNumber.write"
+											placement="top"
+											ngbTooltip="{{toolTipData.csdNumber}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
-									<div class="error" *ngIf="isFieldValid('csdNumber')">
+									<div class="error" *ngIf="isFieldValidcsdNumber('csdNumber')">
 										{{(formIncidentControls.csdNumber.errors!=null)?formIncidentControls.csdNumber.errors.message:''}}
 									</div>
 								</div>
-							
-							</div>
-							<div class=" assignHandler" *ngIf="formFieldAccess.handlers.create || formFieldAccess.handlers.write">
-								<div class="">
-									<div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH" [ngClass]="isFieldValidHandlingTeam('handlingTeams','assigneeSearchValue') && (this.selectedUsers.length==0)?'focus-border-error-new':''">
-										<label class="label-name">Assign Handler<span class="manditory" 
-											*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product'">*</span></label>
-										<div class="data-view d-flex ">
 
-											<mat-form-field class="example-full-width incidentformfieldhandling bottomassign" [floatLabel]="'never'">
+							</div>
+							<div class=" assignHandler"
+								*ngIf="formFieldAccess.handlers.create || formFieldAccess.handlers.write">
+								<div class="">
+									<div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH"
+										[ngClass]="isFieldValidHandlingTeam('handlingTeams','assigneeSearchValue') && (this.selectedUsers.length==0)?'focus-border-error-new':''">
+										<label class="label-name">Assign Handler<span class="manditory"
+												*ngIf="!isRedacted && incidentSelectedTypeData.name=='Product' && loginEmployeeRoleCode !== 'PC'">*</span></label>
+										<div class="data-view d-flex data-view-relative">
+
+											<mat-form-field
+												class="example-full-width incidentformfieldhandling bottomassign"
+												[floatLabel]="'never'">
 												<input type="text" placeholder="Select from list" aria-label="" matInput
-													[matAutocomplete]="auto2"
-													formControlName="assigneeSearchValue"  
-													(keyup)="assignChange($event)"
+													[matAutocomplete]="auto2" formControlName="assigneeSearchValue"
+													(keyup)="assignChange($event)" pattern="^\w+([\.-]?\w+)*@smythstoys\.com$"
 													class="assignhandletext  form-control " id="autoCompleteTrigger1"
 													#autoCompleteTrigger1="matAutocompleteTrigger">
 												<!-- <mat-hint>Enter text to find users by name</mat-hint>  [displayWith]="displayFn"   autoActiveFirstOption-->
-												<mat-autocomplete #auto2="matAutocomplete" matAutocompletePosition="below"
+												<mat-autocomplete #auto2="matAutocomplete"
+													matAutocompletePosition="below"
 													[displayWith]="displayFnAssignHandle" autoActiveFirstOption>
 													<mat-option *ngFor="let user of assignGenericFilterData"
-														[value]="selectedUsers" class="mat-option-design" [ngClass]="{'Disabled' : user.isDeleteAccess==false }">
+														[value]="selectedUsers" class="mat-option-design"
+														[ngClass]="{'Disabled' : user.isDeleteAccess==false }">
 														<div (click)="optionClicked($event, user)">
-															<mat-checkbox [ngClass]="{'Disabled' : user.isDeleteAccess==false }" [checked]="user.selected"
+															<mat-checkbox
+																[ngClass]="{'Disabled' : user.isDeleteAccess==false }"
+																[checked]="user.selected"
 																(change)="toggleSelection($event,user)"
 																(click)="$event.stopPropagation()">
 																<span for="auto">{{ user.emailAddress
@@ -1130,23 +1233,25 @@
 													</mat-option>
 												</mat-autocomplete>
 											</mat-form-field>
-                                             <button class="addemail-btn" (click)="addAssigneeMail()">Add Email</button>
+											<button [ngClass]="{'disableaddmail' : incidentForm.get('assigneeSearchValue').invalid}" class="addemail-btn" (click)="addAssigneeMail()">Add Email</button>
 
 											<span class="ps-2 assingIcon pt-2"
-												*ngIf="formFieldAccess.handlers.create || formFieldAccess.handlers.write" placement="top"
-													ngbTooltip="{{toolTipData.handlingTeam}}"><mat-icon
-													>help_outline</mat-icon></span>
+												*ngIf="formFieldAccess.handlers.create || formFieldAccess.handlers.write"
+												placement="top"
+												ngbTooltip="{{toolTipData.handlingTeam}}"><mat-icon>help_outline</mat-icon></span>
+												<div class="businessMail" *ngIf="incidentForm.get('assigneeSearchValue').invalid">Please add only business email Id.</div>
+											</div>
+										<div class="error handling-error"
+											*ngIf="isFieldValidHandlingTeam('handlingTeams','assigneeSearchValue') && (this.selectedUsers.length==0) && (incidentForm.get('assigneeSearchValue').valid)">
+											{{(formIncidentControls.handlingTeams.errors!=null)?formIncidentControls.handlingTeams.errors.message:''}}
 										</div>
-                                          <div class="error handling-error" *ngIf="isFieldValidHandlingTeam('handlingTeams','assigneeSearchValue') && (this.selectedUsers.length==0)">
-										{{(formIncidentControls.handlingTeams.errors!=null)?formIncidentControls.handlingTeams.errors.message:''}}
-									</div>
 									</div>
 								</div>
 							</div>
 							<div class="box-assign-row">
 								<div>
-								<label class="label-name"
-									*ngIf="(formFieldAccess.handlers.create || formFieldAccess.handlers.write) && selectedUsers.length>0">Handlers:</label>
+									<label class="label-name"
+										*ngIf="(formFieldAccess.handlers.create || formFieldAccess.handlers.write) && selectedUsers.length>0">Handlers:</label>
 								</div>
 								<div class="handling-mrg-top10">
 									<table *ngIf="selectedUsers.length>0" class="border-table">
@@ -1154,7 +1259,8 @@
 											<tr>
 												<!-- <th>S.No</th> -->
 												<th>Email Id</th>
-												<th *ngIf="incidentData.isAdd==false" class="noleftborder">Notified On</th>
+												<th *ngIf="incidentData.isAdd==false" class="noleftborder">Notified On
+												</th>
 												<th class="border-none"></th>
 											</tr>
 										</thead>
@@ -1162,14 +1268,17 @@
 											<tr *ngFor="let asn of selectedUsers;index as k;">
 												<!-- <td class="text-center">{{k+1}}</td> -->
 												<td> {{asn.emailAddress}}</td>
-												<td *ngIf="incidentData.isAdd==false" class="noleftborder">{{((asn.createdOn!='' && asn.createdOn!=null)?asn.createdOn+'(UTC)':'-')}}</td>
+												<td *ngIf="incidentData.isAdd==false" class="noleftborder">
+													{{((asn.createdOn!='' &&
+													asn.createdOn!=null)?asn.createdOn+'(UTC)':'-')}}</td>
 												<td class="text-center border-none"><mat-icon class="remove-btn-mat"
-										*ngIf="(formFieldAccess.handlers.create || formFieldAccess.handlers.write) && asn.isDeleteAccess"
-										(click)="removeAssignConfirm(asn,DeleteWitnessconformbox,k)">clear</mat-icon></td>
+														*ngIf="(formFieldAccess.handlers.create || formFieldAccess.handlers.write) && asn.isDeleteAccess"
+														(click)="removeAssignConfirm(asn,DeleteWitnessconformbox,k)">clear</mat-icon>
+												</td>
 											</tr>
 										</tbody>
 									</table>
-								<!-- 	<p class="assign-handler-list m-0" *ngFor="let asn of selectedUsers;index as k;">
+									<!-- 	<p class="assign-handler-list m-0" *ngFor="let asn of selectedUsers;index as k;">
 									
 									<span> {{asn.emailAddress+'   '+((asn.createdOn!='' && asn.createdOn!=null)?" -   Notified On:  "+asn.createdOn+'(UTC)':'')}} </span>
 									<span class="remove-btn"
@@ -1186,17 +1295,20 @@
 						</div> -->
 
 					</div>
-                      <!-- asign handler view -->
-					
+					<!-- asign handler view -->
+
 					<div class="" *ngIf="isAssginHandlingShow">
-						<div class="personal-info-title" [ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}"  *ngIf="!incidentData.isAdd && !handlingissuesViewHidden" >
-						
-						<div>{{(incidentSelectedTypeData.name=='Product')?'4.':'3. '}}Issue Handling</div>
+						<div class="personal-info-title"
+							[ngClass]="{'personal-info-title-reducted' : isRedacted || isIncidentClosed}"
+							*ngIf="!incidentData.isAdd && !handlingissuesViewHidden">
+
+							<div>{{(incidentSelectedTypeData.name=='Product')?'4.':'3. '}}Issue Handling</div>
 						</div>
 						<div [hidden]="handlingissuesViewHidden">
-							<app-issues-handling-view  [issuesHandlingData]="issuesHandlingViewData"(issuesHandlingEdit)="editHandlingIssues($event)"></app-issues-handling-view>
+							<app-issues-handling-view [issuesHandlingData]="issuesHandlingViewData"
+								(issuesHandlingEdit)="editHandlingIssues($event)"></app-issues-handling-view>
 						</div>
-						
+
 					</div>
 				</div>
 				<div>
@@ -1208,26 +1320,30 @@
 								<div *ngIf="i<=showMoreCommentCount">
 									<div class="d-flex color pb-10">
 										<div><img src="assets/healthsafetyimages/small_msg_icon.png" alt=""></div>
-										<div class="wrapflex-form">
-										<div class="fw-600-bold  uname break-word">{{cmt.createdByName}}</div>
-										<div class="wordwrap">{{cmt.addedDateTime+'(UTC)'}}</div>
+										<div class="wrapflex-form" *ngIf="!isRedacted">
+											<div class="fw-600-bold  uname break-word">{{cmt.createdByName}}</div>
+											<div class="wordwrap">{{cmt.addedDateTime+'(UTC)'}}</div>
 										</div>
+										<div *ngIf="isRedacted" class="redacted-background redacted-background-color">REDACTED</div>
 									</div>
-									
-									<div class="lh-17 pb-10 break-word" *ngIf="formFieldAccess.actionTakenToResolve.view"><span class="fw-550">Incident prevention: </span>
-<span>{{(cmt.resolveAction!='')?cmt.resolveAction:'-'}}</span>
-</div>
-<div class="lh-17 pb-10 break-word"  *ngIf="formFieldAccess.goodwillGesture.view">
-<span class="fw-550">Goodwill: </span>
-<span >{{(cmt.goodwill!='')?cmt.goodwill:'-'}}</span>
-</div>
 
-<div class="lh-17 pb-10 break-word"   *ngIf="formFieldAccess.followUpCall.view"  >
-	<span class="fw-550">Follow-up call: </span>
-{{(cmt.followUpCall!='')?cmt.followUpCall:'-'}}
-</div>
-<div class="lh-17 pb-20 break-word"  *ngIf="formFieldAccess.actionTakenComment.view">{{(cmt.comments!='')?cmt.comments:'-'}}
-</div>
+									<div class="lh-17 pb-10 break-word"
+										*ngIf="formFieldAccess.actionTakenToResolve.view"><span class="fw-550">Incident
+											prevention: </span>
+										<span>{{(cmt.resolveAction!='')?cmt.resolveAction:'-'}}</span>
+									</div>
+									<div class="lh-17 pb-10 break-word" *ngIf="formFieldAccess.goodwillGesture.view">
+										<span class="fw-550">Goodwill: </span>
+										<span>{{(cmt.goodwill!='')?cmt.goodwill:'-'}}</span>
+									</div>
+
+									<div class="lh-17 pb-10 break-word" *ngIf="formFieldAccess.followUpCall.view">
+										<span class="fw-550">Follow-up call: </span>
+										{{(cmt.followUpCall!='')?cmt.followUpCall:'-'}}
+									</div>
+									<div class="lh-17 pb-20 break-word" *ngIf="formFieldAccess.actionTakenComment.view">
+										{{(cmt.comments!='')?cmt.comments:'-'}}
+									</div>
 									<div class="line"></div>
 								</div>
 
@@ -1241,60 +1357,57 @@
 							*ngIf="this.incidentForm.value.resolveActions.length>2 && boxList == false"
 							class="add-comment-btn add-comment-btn1">Show Less</button>
 
-						<div class="addData"
-							*ngIf="!isIncidentClosed && isActionTakenBoxShow">
+						<div class="addData" *ngIf="!isIncidentClosed && isActionTakenBoxShow">
 							<div class="fw-600-bold newComment">Add a new comment</div>
-							<div class="d-flex commentsDetail"  *ngIf="formFieldAccess.actionTakenToResolve.create || formFieldAccess.actionTakenToResolve.write ">
+							<div class="d-flex commentsDetail"
+								*ngIf="formFieldAccess.actionTakenToResolve.create || formFieldAccess.actionTakenToResolve.write ">
 								<div class="">
-									<label class="label-name" >Incident prevention</label>
+									<label class="label-name">Incident prevention</label>
 									<div class="data-view d-flex align-items-center">
 
 										<input type="text" class="form-control action-taken" autocomplete="off"
 											formControlName="actionTakenToResolve" maxlength="500">
-										<span class="ps-1" placement="top"
-												ngbTooltip="{{toolTipData.actionTaken}}">
-											<mat-icon >help_outline</mat-icon></span>
+										<span class="ps-1" placement="top" ngbTooltip="{{toolTipData.actionTaken}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 							</div>
-							<div class="d-flex commentsDetail" >
-								<div class="" *ngIf="formFieldAccess.goodwillGesture.create || formFieldAccess.goodwillGesture.write ">
+							<div class="d-flex commentsDetail" *ngIf="formFieldAccess.goodwillGesture.create || formFieldAccess.goodwillGesture.write">
+								<div class="">
 									<label class="label-name">Goodwill gesture</label>
 									<div class="data-view d-flex align-items-center">
 										<input type="text" class="form-control action-taken" autocomplete="off"
 											formControlName="goodWillGuster" maxlength="500">
-										<span class="ps-1" placement="top"
-												ngbTooltip="{{toolTipData.goodwillGesture}}">
-											<mat-icon >help_outline</mat-icon></span>
+										<span class="ps-1" placement="top" ngbTooltip="{{toolTipData.goodwillGesture}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 							</div>
-							<div class="d-flex commentsDetail"  >
-								<div class="" *ngIf="formFieldAccess.followUpCall.create || formFieldAccess.followUpCall.write ">
+							<div class="d-flex commentsDetail" *ngIf="formFieldAccess.followUpCall.create || formFieldAccess.followUpCall.write">
+								<div class="">
 									<label class="label-name">Follow-up call</label>
 									<div class="data-view d-flex align-items-center">
 										<input type="text" class="form-control action-taken" autocomplete="off"
 											formControlName="followUpCall" maxlength="250">
-										<span class="ps-1" placement="top"
-												ngbTooltip="{{toolTipData.followUpCall}}">
-											<mat-icon >help_outline</mat-icon></span>
+										<span class="ps-1" placement="top" ngbTooltip="{{toolTipData.followUpCall}}">
+											<mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 							</div>
-							<div class="" >
-								<div class="" *ngIf="formFieldAccess.actionTakenComment.create || formFieldAccess.actionTakenComment.write ">
+							<div class="" *ngIf="formFieldAccess.actionTakenComment.create || formFieldAccess.actionTakenComment.write">
+								<div class="">
 									<label class="label-name">Comments</label>
 									<div class="data-view d-flex align-items-center">
 										<textarea class="form-control textarea comment-area" autocomplete="off"
 											maxlength="500" formControlName="actoinTakenComment"></textarea>
 										<span class="ps-1" placement="top"
-												ngbTooltip="{{toolTipData.otherComments}}"><mat-icon >help_outline</mat-icon></span>
+											ngbTooltip="{{toolTipData.otherComments}}"><mat-icon>help_outline</mat-icon></span>
 									</div>
 								</div>
 							</div>
 							<div class="addbtn-box">
 								<button
-*ngIf="(this.incidentForm.value.actionTakenToResolve == '' && this.incidentForm.value.goodWillGuster == '' && this.incidentForm.value.followUpCall == '' && this.incidentForm.value.actoinTakenComment=='') || isAlreadyAddProcess"
+									*ngIf="(this.incidentForm.value.actionTakenToResolve == '' && this.incidentForm.value.goodWillGuster == '' && this.incidentForm.value.followUpCall == '' && this.incidentForm.value.actoinTakenComment=='') || isAlreadyAddProcess"
 									type="button" class="add-comment-btn"
 									[ngClass]="{'Disabled' : this.incidentForm.value.actionTakenToResolve == '' && this.incidentForm.value.goodWillGuster == ''  && this.incidentForm.value.followUpCall == '' && this.incidentForm.value.actoinTakenComment=='' }">Add
 									a comment</button>
@@ -1307,10 +1420,15 @@
 					</div>
 
 					<div class="priorityBox"
+						[ngClass]="{'priorityBoxpadbottom' : (!formFieldAccess.priority.create && !formFieldAccess.priority.write) || isIncidentClosed}"
 						*ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write || formFieldAccess.priority.view) && incidentSelectedTypeData.name=='Product'">
-						<div class="priorityBoxtitle d-flex align-items-center">Priority<span class="manditory" *ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write) && !isIncidentClosed">*</span><span class="selectPriority1 d-flex align-items-center"
+						<div class="priorityBoxtitle d-flex align-items-center">Priority<span class="manditory"
+								*ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write) && !isIncidentClosed">*</span><span
+								class="selectPriority1 d-flex align-items-center"
 								*ngIf="(!formFieldAccess.priority.create && !formFieldAccess.priority.write) || isIncidentClosed">
-								:&nbsp;<span class="editminicircledot {{this.incidentEditData.priorityInfo.colorCode}}1" [style.background-color]="this.incidentEditData.priorityInfo.colorCode"></span>{{this.productDetailsView.showData.priority}}</span></div>
+								:&nbsp;<span class="editminicircledot {{this.incidentEditData.priorityInfo.colorCode}}1"
+									[style.background-color]="this.incidentEditData.priorityInfo.colorCode"></span>{{this.productDetailsView.showData.priority}}</span>
+						</div>
 						<div class=""
 							*ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write || formFieldAccess.priority.view) && incidentSelectedTypeData.name=='Product'">
 							<!-- <label class="label-name"><span class="selectPriority" *ngIf="(!formFieldAccess.priority.create && !formFieldAccess.priority.write) || isIncidentClosed">{{incidentForm.value.priorityCode}}</span></label>
@@ -1328,7 +1446,9 @@
 									<!-- <mat-label> Theme Color</mat-label> -->
 
 									<mat-select name="priorityCode" formControlName="priorityCode"
-										class="form-control priority-form multselecticonnew" panelClass="myPanelClassMatselect" [disableOptionCentering]="true" [ngClass]="isFieldValid('priorityCode')?'focus-border-error':''">
+										class="form-control priority-form multselecticonnew"
+										panelClass="myPanelClassMatselect" [disableOptionCentering]="true"
+										[ngClass]="isFieldValid('priorityCode')?'focus-border-error':''">
 
 										<mat-option *ngFor="let prt of priorityData;index as i;" value="{{prt.id}}"
 											(click)="optionClick(prt.colorCode)">
@@ -1340,13 +1460,15 @@
 										</mat-option>
 
 									</mat-select>
-									<div class="absminicircledot {{optionData}}2"
-										[style.background-color]="optionData"></div>
+									<div class="absminicircledot {{optionData}}2" [style.background-color]="optionData">
+									</div>
 								</mat-form-field>
 
-								<span class="ps-1 priorityMaticonadjust" *ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write) && !isIncidentClosed">
+								<span class="ps-1 priorityMaticonadjust"
+									*ngIf="(formFieldAccess.priority.create || formFieldAccess.priority.write) && !isIncidentClosed">
 									<mat-icon [ngbTooltip]="priorityTable"
-										tooltipClass="my-custom-class my-custom-class-new" container="body">help_outline</mat-icon>
+										tooltipClass="my-custom-class my-custom-class-new"
+										container="body">help_outline</mat-icon>
 								</span>
 								<ng-template #priorityTable>
 									<!-- 	<app-priority-table *ngIf="priorityData.length>0" [tableData]="priorityTableData"></app-priority-table> -->
@@ -1378,39 +1500,44 @@
 
 
 							</div>
-							<div class="error mb-0 mg-top"
-												*ngIf="isFieldValid('priorityCode')">{{(formIncidentControls.priorityCode.errors!=null)?formIncidentControls.priorityCode.errors.message:''}}</div>	
+							<div class="error mb-0 mg-top" *ngIf="isFieldValid('priorityCode')">
+								{{(formIncidentControls.priorityCode.errors!=null)?formIncidentControls.priorityCode.errors.message:''}}
+							</div>
 						</div>
 					</div>
 					<!--  -->
-					<div class="legal-info legal-margin" *ngIf="!incidentData.isAdd && isLegalInfoBoxShow "
-						[ngClass]="{'legal-info-form' : !incidentData.isAdd && isShowInsuranceVerification}"
-						>
-						<!-- <div class="title-info" *ngIf="incidentSelectedTypeData.name=='Product'">Legal info</div>
-						<div *ngIf="incidentSelectedTypeData.name=='Product'">
-							<app-legal-info-form *ngIf="!incidentData.isAdd" [legalInfoData]="legalInfoFormData"></app-legal-info-form> 
-						</div> -->
-						<!-- *ngIf="incidentSelectedTypeData.name!='Product'" *ngIf="!incidentData.isAdd && isShowInsuranceVerification" -->
-						<div>
-							<app-insurance-verification-form  *ngIf='isShowInsuranceVerification'
+					<!-- <div class="legal-info legal-margin" >
+						<app-other-info-form [otherinfoData] = "otherinfoData" (otherinfoevent) = "setotherInfovalue($event)"></app-other-info-form>
+					</div> -->
+					<div class="legal-info legal-margin"
+						*ngIf="!incidentData.isAdd && (isLegalInfoBoxShow || isLegalInfoView) && incidentEditData.incidentStatus!='Draft'"
+						[ngClass]="{'legal-info-form' : !incidentData.isAdd && isShowInsuranceVerification}">
+
+						<div *ngIf="isShowInsuranceVerification" class="mtop-legal-info">
+							<app-insurance-verification-form *ngIf='isShowInsuranceVerification'
 								[insuranceVerificationData]="insuranceVerificationData" [scrollCount]="scrollCount"
 								(insuranceVerificationEvent)="saveInsuranceVerification($event)"></app-insurance-verification-form>
-
-							<div class="submitbox marginbottom"
-								*ngIf="!incidentData.isAdd && isShowInsuranceVerification && !isIncidentClosed">
-								<div class="">
-
-									<button type="button" class="next-btn-black" (click)="saveLegalInfo()">Save</button>
-								</div>
-							</div>
-
 						</div>
-						<div>
-							<app-insurance-verification-view *ngIf="!incidentData.isAdd && !isShowInsuranceVerification"
+						<div *ngIf="isLegalInfoView && !isShowInsuranceVerification" class="mtop-legal-info">
+							<app-insurance-verification-view *ngIf="!incidentData.isAdd && isLegalInfoView"
 								[insuranceVerificationData]="insuranceVerificationData"></app-insurance-verification-view>
 						</div>
-
 					</div>
+					<div class="legal-info legal-info-other legal-margin"
+					*ngIf="!incidentData.isAdd && (isOtherInfoBoxShow) && incidentEditData.incidentStatus!='Draft'"
+					[ngClass]="{'legal-info-form' : !incidentData.isAdd && isOtherInfoBoxShow}">
+						<div *ngIf="isOtherInfoBoxShow" class="mtop-other-info">
+							<app-other-info-form [otherinfoData]="otherinfoData"
+								(otherinfoevent)="setotherInfovalue($event)"></app-other-info-form>
+						</div>
+					</div>
+					<div class="submitbox mt-3 marginbottom"
+					*ngIf="!incidentData.isAdd && (isShowInsuranceVerification || isOtherInfoBoxShow) && !isIncidentClosed">
+					<div class="">
+
+						<button type="button" class="next-btn-black" (click)="saveLegalInfo()">Save</button>
+					</div>
+				</div>
 				</div>
 			</div>
 		</form>
@@ -1418,65 +1545,86 @@
 	<footer class="d-flex align-items-center footerBtns">
 		<div class="d-flex submitbox">
 			<div class="">
+				<!-- || this.incidentForm['controls'].productId.status=='INVALID' -->
 				<button type="button"
 					*ngIf="(incidentSelectedTypeData.name=='Product'  )
       	&& (this.incidentForm['controls'].injuredPersonFullName.status=='INVALID' 
       	|| this.incidentForm['controls'].ageType.status=='INVALID'
       	|| this.incidentForm['controls'].ageValue.status=='INVALID'
-      	|| this.incidentForm['controls'].injuredPersonContactNumber.status=='INVALID'
-      	|| this.incidentForm['controls'].injuredPersonEmail.status=='INVALID' || this.incidentForm['controls'].productId.status=='INVALID'|| this.incidentForm['controls'].priorityCode.status=='INVALID' || this.incidentForm['controls'].injurySustained.status=='INVALID' || this.incidentForm['controls'].injuryCircumstances.status=='INVALID'  || this.incidentForm['controls'].eventDate.status=='INVALID' || this.incidentForm['controls'].eventTime.status=='INVALID' || this.incidentForm['controls'].reportedDate.status=='INVALID' || this.incidentForm['controls'].reportedTime.status=='INVALID' || this.incidentForm['controls'].problemReportedBefore.status=='INVALID'|| this.incidentForm['controls'].productAge.status=='INVALID' || this.incidentForm['controls'].faultCode.status=='INVALID' || 
-this.incidentForm['controls'].evidenceAvailable.status=='INVALID') || (loginEmployeeRoleCode=='CS' && (this.selectedUsers.length==0 || this.incidentForm['controls'].csdNumber.status=='INVALID')) &&  !isIncidentClosed && !isShowInsuranceVerification "
-					class="submit-btn-disable" (click)="onSubmit()">{{(incidentData.isAdd)?'Submit incident report':(( incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
-				<button type="button" *ngIf="(incidentSelectedTypeData.name=='Customer' || incidentSelectedTypeData.name=='Contractor' || incidentSelectedTypeData.name=='Employee'  )
+      	|| this.incidentForm['controls'].injuredPersonContactNumber.status=='INVALID' || this.incidentForm['controls'].priorityCode.status=='INVALID' || this.incidentForm['controls'].injurySustained.status=='INVALID' || this.incidentForm['controls'].injuryCircumstances.status=='INVALID'  || this.incidentForm['controls'].eventDate.status=='INVALID' || this.incidentForm['controls'].eventTime.status=='INVALID' || this.incidentForm['controls'].reportedDate.status=='INVALID' || this.incidentForm['controls'].reportedTime.status=='INVALID' || this.incidentForm['controls'].problemReportedBefore.status=='INVALID'||   this.incidentForm['controls'].productId.status=='INVALID' || this.incidentForm['controls'].productAge.status=='INVALID' || this.incidentForm['controls'].faultCode.status=='INVALID' || 
+this.incidentForm['controls'].evidenceAvailable.status=='INVALID') || (loginEmployeeRoleCode=='CS' && (this.selectedUsers.length==0 || this.incidentForm['controls'].csdNumber.status=='INVALID')) &&  !isIncidentClosed && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'"
+					class="submit-btn-disable" (click)="onSubmit()">
+					{{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
+				<button type="button" class="submit-btn-enable submitBtn"
+					*ngIf="(incidentSelectedTypeData.name=='Product' )
+      	&& this.incidentForm['controls'].injuredPersonFullName.status=='VALID' 
+      	&& this.incidentForm['controls'].ageType.status=='VALID'
+      	&& this.incidentForm['controls'].ageValue.status=='VALID'
+      	&& this.incidentForm['controls'].injuredPersonContactNumber.status=='VALID'
+      	 && this.incidentForm['controls'].priorityCode.status=='VALID' &&   this.incidentForm['controls'].injurySustained.status=='VALID' && this.incidentForm['controls'].injuryCircumstances.status=='VALID' 
+      	 && this.incidentForm['controls'].reportedDate.status=='VALID' && this.incidentForm['controls'].reportedTime.status=='VALID' && this.incidentForm['controls'].productId.status=='VALID' && this.incidentForm['controls'].problemReportedBefore.status=='VALID' && this.incidentForm['controls'].eventDate.status=='VALID' && this.incidentForm['controls'].eventTime.status=='VALID' && this.incidentForm['controls'].productAge.status=='VALID'  && this.incidentForm['controls'].faultCode.status=='VALID' &&
+this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmployeeRoleCode=='CS' && (this.selectedUsers.length>0 && this.incidentForm['controls'].csdNumber.status=='VALID')) && !isIncidentClosed  && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'"
+					(click)="onSubmit()">
+					{{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
+
+				<!-- && this.incidentForm['controls'].productId.status=='VALID' -->
+				<button type="button" class="submit-btn-enable submitBtn"
+					*ngIf="(incidentSelectedTypeData.name=='Product' )
+      	&& this.incidentForm['controls'].injuredPersonFullName.status=='VALID' 
+      	&& this.incidentForm['controls'].ageType.status=='VALID'
+      	&& this.incidentForm['controls'].ageValue.status=='VALID'
+      	&& this.incidentForm['controls'].injuredPersonContactNumber.status=='VALID'
+      	
+      	 && this.incidentForm['controls'].priorityCode.status=='VALID' &&   this.incidentForm['controls'].injurySustained.status=='VALID' && this.incidentForm['controls'].injuryCircumstances.status=='VALID' && this.incidentForm['controls'].eventDate.status=='VALID' && this.incidentForm['controls'].eventTime.status=='VALID'
+      	 && this.incidentForm['controls'].reportedDate.status=='VALID' && this.incidentForm['controls'].productId.status=='VALID' && this.incidentForm['controls'].reportedTime.status=='VALID' && this.incidentForm['controls'].problemReportedBefore.status=='VALID' && this.incidentForm['controls'].productAge.status=='VALID'  && this.incidentForm['controls'].faultCode.status=='VALID' &&
+this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmployeeRoleCode!='CS') && !isIncidentClosed  && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'"
+					(click)="onSubmit()">{{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
+				<!-- customer submit btn -->
+				<button type="button" class="submit-btn-disable"
+					*ngIf="(incidentSelectedTypeData.name=='Customer'  )
+      	&& (this.incidentForm['controls'].injuredPersonFullName.status=='INVALID' 
+      	|| this.incidentForm['controls'].ageType.status=='INVALID'
+      	|| this.incidentForm['controls'].ageValue.status=='INVALID'
+      	|| this.incidentForm['controls'].injuredPersonContactNumber.status=='INVALID' || this.incidentForm['controls'].eventDate.status=='INVALID' || this.incidentForm['controls'].eventTime.status=='INVALID'  || this.incidentForm['controls'].witnessAvailable.status=='INVALID'  || this.incidentForm['controls'].evidenceAvailable.status=='INVALID'  ) &&  !isIncidentClosed  && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'"
+					(click)="onSubmit()">{{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
+
+				<button type="button" class="submit-btn-enable" (click)="onSubmit()"
+					*ngIf="(incidentSelectedTypeData.name=='Customer'  )
+      	&& this.incidentForm['controls'].injuredPersonFullName.status=='VALID' 
+      	&& this.incidentForm['controls'].ageType.status=='VALID'
+      	&& this.incidentForm['controls'].ageValue.status=='VALID'
+      	&& this.incidentForm['controls'].injuredPersonContactNumber.status=='VALID'  && this.incidentForm['controls'].eventDate.status=='VALID' && this.incidentForm['controls'].eventTime.status=='VALID'  && this.incidentForm['controls'].witnessAvailable.status=='VALID'  && this.incidentForm['controls'].evidenceAvailable.status=='VALID' 
+      	 &&  !isIncidentClosed  && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'">
+		 {{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}
+		</button>
+				<!-- constractor & employee submit button -->
+				<button type="button" class="submit-btn-disable"
+					*ngIf="( incidentSelectedTypeData.name=='Contractor' || incidentSelectedTypeData.name=='Employee'  )
       	&& (this.incidentForm['controls'].injuredPersonFullName.status=='INVALID' 
       	|| this.incidentForm['controls'].ageType.status=='INVALID'
       	|| this.incidentForm['controls'].ageValue.status=='INVALID'
       	|| this.incidentForm['controls'].injuredPersonContactNumber.status=='INVALID'
-      	|| this.incidentForm['controls'].injuredPersonEmail.status=='INVALID' || this.incidentForm['controls'].eventDate.status=='INVALID' || this.incidentForm['controls'].eventTime.status=='INVALID'  || this.incidentForm['controls'].witnessAvailable.status=='INVALID'  || this.incidentForm['controls'].evidenceAvailable.status=='INVALID'  ) &&  !isIncidentClosed  && !isShowInsuranceVerification" class="submit-btn-disable"
-					(click)="onSubmit()">{{(incidentData.isAdd)?'Submit incident report':(( incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
-				
-				<button type="button"  class="submit-btn-enable"
-					(click)="onSubmit()" *ngIf="(incidentSelectedTypeData.name=='Customer' || incidentSelectedTypeData.name=='Contractor' || incidentSelectedTypeData.name=='Employee'  )
+      	|| this.incidentForm['controls'].injuredPersonEmail.status=='INVALID' || this.incidentForm['controls'].eventDate.status=='INVALID' || this.incidentForm['controls'].eventTime.status=='INVALID'  || this.incidentForm['controls'].witnessAvailable.status=='INVALID'  || this.incidentForm['controls'].evidenceAvailable.status=='INVALID'  ) &&  !isIncidentClosed  && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'"
+					(click)="onSubmit()">
+					{{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}
+				</button>
+
+				<button type="button" class="submit-btn-enable" (click)="onSubmit()"
+					*ngIf="(incidentSelectedTypeData.name=='Contractor' || incidentSelectedTypeData.name=='Employee'  )
       	&& this.incidentForm['controls'].injuredPersonFullName.status=='VALID' 
       	&& this.incidentForm['controls'].ageType.status=='VALID'
       	&& this.incidentForm['controls'].ageValue.status=='VALID'
       	&& this.incidentForm['controls'].injuredPersonContactNumber.status=='VALID'
       	&& this.incidentForm['controls'].injuredPersonEmail.status=='VALID' && this.incidentForm['controls'].eventDate.status=='VALID' && this.incidentForm['controls'].eventTime.status=='VALID'  && this.incidentForm['controls'].witnessAvailable.status=='VALID'  && this.incidentForm['controls'].evidenceAvailable.status=='VALID' 
-      	 &&  !isIncidentClosed  && !isShowInsuranceVerification">{{(incidentData.isAdd)?'Submit incident report':(( incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button>
-				<button type="button"
-					*ngIf="(incidentSelectedTypeData.name=='Product' )
-      	&& this.incidentForm['controls'].injuredPersonFullName.status=='VALID' 
-      	&& this.incidentForm['controls'].ageType.status=='VALID'
-      	&& this.incidentForm['controls'].ageValue.status=='VALID'
-      	&& this.incidentForm['controls'].injuredPersonContactNumber.status=='VALID'
-      	&& this.incidentForm['controls'].injuredPersonEmail.status=='VALID' 
-      	&& this.incidentForm['controls'].productId.status=='VALID'
-      	 && this.incidentForm['controls'].priorityCode.status=='VALID' &&   this.incidentForm['controls'].injurySustained.status=='VALID' && this.incidentForm['controls'].injuryCircumstances.status=='VALID' 
-      	 && this.incidentForm['controls'].reportedDate.status=='VALID' && this.incidentForm['controls'].reportedTime.status=='VALID' && this.incidentForm['controls'].problemReportedBefore.status=='VALID' && this.incidentForm['controls'].eventDate.status=='VALID' && this.incidentForm['controls'].eventTime.status=='VALID' && this.incidentForm['controls'].productAge.status=='VALID'  && this.incidentForm['controls'].faultCode.status=='VALID' &&
-this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmployeeRoleCode=='CS' && (this.selectedUsers.length>0 && this.incidentForm['controls'].csdNumber.status=='VALID')) && !isIncidentClosed  && !isShowInsuranceVerification"
-					class="submit-btn-enable submitBtn" (click)="onSubmit()">
-				{{(incidentData.isAdd)?'Submit incident report':(( incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button
-				>
-
-				<button type="button"
-					*ngIf="(incidentSelectedTypeData.name=='Product' )
-      	&& this.incidentForm['controls'].injuredPersonFullName.status=='VALID' 
-      	&& this.incidentForm['controls'].ageType.status=='VALID'
-      	&& this.incidentForm['controls'].ageValue.status=='VALID'
-      	&& this.incidentForm['controls'].injuredPersonContactNumber.status=='VALID'
-      	&& this.incidentForm['controls'].injuredPersonEmail.status=='VALID' 
-      	&& this.incidentForm['controls'].productId.status=='VALID'
-      	 && this.incidentForm['controls'].priorityCode.status=='VALID' &&   this.incidentForm['controls'].injurySustained.status=='VALID' && this.incidentForm['controls'].injuryCircumstances.status=='VALID' && this.incidentForm['controls'].eventDate.status=='VALID' && this.incidentForm['controls'].eventTime.status=='VALID'
-      	 && this.incidentForm['controls'].reportedDate.status=='VALID' && this.incidentForm['controls'].reportedTime.status=='VALID' && this.incidentForm['controls'].problemReportedBefore.status=='VALID' && this.incidentForm['controls'].productAge.status=='VALID'  && this.incidentForm['controls'].faultCode.status=='VALID' &&
-this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmployeeRoleCode!='CS') && !isIncidentClosed  && !isShowInsuranceVerification"
-					class="submit-btn-enable submitBtn" (click)="onSubmit()">
-				{{(incidentData.isAdd)?'Submit incident report':(( incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}</button
-				>
+      	 &&  !isIncidentClosed  && !isShowInsuranceVerification && !isOtherInfoBoxShow && loginEmployeeRoleCode!='Buyer'">
+		 {{(incidentData.isAdd)?'Submit incident report':((incidentData.incidentRowData.incidentStatus=='Draft')?'Submit incident report':'Update incident report')}}
+		</button>
 			</div>
 			<div class="d-flex"
 				*ngIf="(incidentData.isAdd) || (incidentData.isAdd==false && incidentData.incidentRowData.incidentStatus=='Draft')  && !isIncidentClosed">
 				<button type="button" class="saveBtn saveDraft" (click)="onSaveDraft(1)"
-					*ngIf="(incidentData.isAdd) || (incidentData.isAdd==false && incidentData.incidentRowData.incidentStatus=='Draft')  && !isIncidentClosed">Save Draft</button>
+					*ngIf="(incidentData.isAdd) || (incidentData.isAdd==false && incidentData.incidentRowData.incidentStatus=='Draft')  && !isIncidentClosed">Save
+					Draft</button>
 			</div>
 
 			<div class="d-flex align-items-center"
@@ -1490,16 +1638,22 @@ this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmploy
 			<div class="d-flex align-items-center"
 				*ngIf="(incidentData.isAdd==false && incidentData.incidentRowData.incidentStatus!='Draft')">
 				<button class="btn-download" *ngIf="isDownload">
-				
-				<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+username}}" target="_blank" *ngIf="incidentEditData && (loginEmployeeRoleCode=='Insurance') && isDownload"
-									class=" d-flex justify-content-start  align-items-center atagButton word-wrap" title="Incident details with insurance" >
-									<span >Download the incident</span>
-						       </a>
-								<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/privacy/'+username}}" target="_blank" *ngIf="incidentEditData  && (loginEmployeeRoleCode=='PC' || loginEmployeeRoleCode=='Privacy' || loginEmployeeRoleCode=='HR') && isDownload"
-								class=" d-flex justify-content-start  align-items-center atagButton word-wrap" title="Download the incident" >
-								<span  >Download the incident</span>
-							</a>
-			</button>
+
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+username}}"
+						target="_blank"
+						*ngIf="incidentEditData && (loginEmployeeRoleCode=='Insurance' || loginEmployeeRoleCode=='SA') && isDownload"
+						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
+						title="Incident details with insurance">
+						<span>Download the incident</span>
+					</a>
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/privacy/'+username}}"
+						target="_blank"
+						*ngIf="incidentEditData  && (loginEmployeeRoleCode=='PC' || loginEmployeeRoleCode=='Privacy' || loginEmployeeRoleCode=='HR') && isDownload"
+						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
+						title="Download the incident">
+						<span>Download the incident</span>
+					</a>
+				</button>
 			</div>
 
 		</div>
@@ -1521,9 +1675,9 @@ this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmploy
 					Are you sure want to delete?
 				</div>
 				<div class="d-flex justify-content-end confirmBtnDiv">
-					<button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft"
+					<button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft delete-pop-button"
 						mat-dialog-close>Cancel</button>
-					<button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft  cform"
+					<button mat-button class="btn btn-sm btn-outline-secondary close-btn saveDraft  cform delete-pop-button"
 						mat-dialog-close (click)="deleteConfirmed()">Confirm</button>
 				</div>
 			</div>
@@ -1553,4 +1707,3 @@ this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmploy
 	</div>
 
 </ng-template>
-

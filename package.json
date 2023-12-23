@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --outputHashing=all",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -32,8 +32,10 @@
     "angular-material": "^1.2.5",
     "bootstrap": "^4.6.2",
     "core-js": "^3.24.1",
+    "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "html2pdf.js": "^0.9.3",
+    "jszip": "^3.10.1",
     "mammoth": "^1.6.0",
     "moment": "^2.29.4",
     "ng-image-slider": "^5.0.0",

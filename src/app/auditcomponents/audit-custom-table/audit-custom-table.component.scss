@@ -166,7 +166,11 @@
 .camelCase {
   text-transform: capitalize;
 }
-
+.auditListTblViewnoCursor{
+  td{
+    cursor: default;
+  }
+}
 .auditListTblView {
   .store_name_width {
     width: 135px !important;
@@ -180,7 +184,6 @@
     width: 113px !important;
     max-width: 241px !important;
     text-overflow: ellipsis;
-    cursor: default;
   }
 
   .rm_width {
@@ -259,6 +262,8 @@
   border-radius: 3px;
   color: #000000 !important;
   font-family: "Inter";
+  padding-left: 4px !important;
+  padding-top: 1px;
 }
 
 .viewer {
@@ -356,14 +361,38 @@
 
   .absShimmerTable {
     position: absolute;
-    width: 583px;
+    width: 100%;
+    // width: 583px;
     top: 32px;
     left: 0px;
     z-index: 2;
   }
   .historyListTblView td{
     overflow: hidden !important;
+
+    mat-icon{
+      width: 20px !important;
+      height: 20px !important;
+      font-size: 20px;
+    }
+    .delete-icon{
+      display: flex;
+      height: 24px;
+      align-items: center;
+      // border: 1px solid red;
+    }
   }
+  // .historyListTblView td span{
+  //   display: flex;
+  //   border: 1px solid red;
+  //   overflow: hidden !important;
+  //   height: 31px;
+  //   align-items: center;
+  //   text-overflow: ellipsis;
+  //   overflow: hidden;
+  //   width: 205px !important;
+  //   max-width: 205px !important;
+  // }
   .historyListTblView th:nth-child(1),
   .historyListTblView td:nth-child(1) {
     width: 105px !important;
@@ -387,9 +416,9 @@
 
   .historyListTblView th:nth-child(4),
   .historyListTblView td:nth-child(4) {
-    width: 180px !important;
-    max-width: 180px !important;
-    min-width: 180px !important;
+    width: 155px !important;
+    max-width: 155px !important;
+    min-width: 155px !important;
     text-overflow: ellipsis;
   }
   .historyListTblView td:nth-child(1){
@@ -404,6 +433,22 @@
    }
    .historyListTblView tr:hover{
     background-color: #f2f2f257 !important;
+  }
+  .scorecardListTblView th:nth-child(2),
+  .scorecardListTblView td:nth-child(2){
+    width: 300px !important;
+    max-width: 300px !important;
+  }
+  .scorecardListTblView th:nth-child(3),
+  .scorecardListTblView td:nth-child(3){
+    width: 185px !important;
+    max-width: 185px !important;
+  }
+  .scorecardListTblView th:nth-child(4),
+  .scorecardListTblView td:nth-child(4){
+    width: 30px !important;
+    max-width: 30px !important;
+    min-width: 30px !important;
   }
 }
 .heightData{
@@ -654,4 +699,19 @@ padding-right: 5px;
 .row{
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+.popoverFlow{
+  max-height: 300px;
+  overflow-y: auto;
+}
+.businessMail{
+  color: red;
+    font-size: 13px;
+    padding-left: 59px;
+    margin-top: -6px;
+    font-weight: 600;
+}
+.opac5data{
+  opacity: 0.5 !important;
+  // pointer-events: none !important;
 }

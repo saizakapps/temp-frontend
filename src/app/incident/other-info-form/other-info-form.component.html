@@ -1,0 +1,51 @@
+<form [formGroup]="otherInfoform" class="example-form">
+    <div class="personal-info-title legalInfoTitle">Other Info</div>
+
+    <div class="d-flex open align-items-center"
+        *ngIf="otherinfoData.formFieldAccess.openWithBuyerVendor.create || otherinfoData.formFieldAccess.openWithBuyerVendor.write">
+        <mat-checkbox *ngIf="isformShow" class="aligncheckbox incidentagecheckbox pr-2" autocomplete="off"
+            formControlName="openWithBuyerVendor" (change)="otherinfoChange($event)">
+        </mat-checkbox><span class="label-name mb-0">Open with Vendor/Buyer</span><span
+            *ngIf="!isformShow && isviewShow">: {{this.otherInfoform.value.openWithBuyerVendor == true ||
+            this.otherInfoform.value.openWithBuyerVendor == 'true' ? 'Yes' : 'No'}}</span>
+
+            <span class="ps-1"
+                *ngIf="(otherinfoData.formFieldAccess.openWithBuyerVendor.create || otherinfoData.formFieldAccess.openWithBuyerVendor.write) && isformShow">
+                <mat-icon ngbTooltip="{{otherinfoData.tooltipData.openWithBuyerVendor}}"
+                    container="body">help_outline</mat-icon>
+            </span>
+    </div>
+    <div class="mbottom-10" [ngClass]="{'mbottomview' : !isformShow && isviewShow}">
+        <label class="label-name">Key word 1</label><span *ngIf="!isformShow && isviewShow">:
+            {{(otherInfoform.value.incidentCauseName !== '' && otherInfoform.value.incidentCauseName !==null)?otherInfoform.value.incidentCauseName: '-'}}</span>
+        <div class="data-view d-flex align-items-center" *ngIf="isformShow">
+             <select class="form-control field-width-height multiselecticon" formControlName="incidentCause" (change)="drop1change($event)">
+                    <option value=""  class="d-none"></option>
+                    <option *ngFor="let prt of dropdownValue1;" value="{{prt.id}}">
+                        {{prt.description}}</option>
+                </select>
+            <span class="ps-1 priorityMaticonadjust"
+                *ngIf="(otherinfoData.formFieldAccess.incidentCause.create || otherinfoData.formFieldAccess.incidentCause.create)">
+                <mat-icon ngbTooltip="{{otherinfoData.tooltipData.otherInfoDropdown1}}"
+                    container="body">help_outline</mat-icon>
+            </span>
+        </div>
+    </div>
+    <div class="">
+        <label class="label-name">Key word 2</label><span *ngIf="!isformShow && isviewShow">:
+            {{(otherInfoform.value.incidentInjuryName !== '' && otherInfoform.value.incidentInjuryName !==
+            null)?otherInfoform.value.incidentInjuryName:'-'}}</span>
+        <div class="data-view d-flex align-items-center" *ngIf="isformShow">
+            <select class="form-control field-width-height multiselecticon" formControlName="incidentInjury" (change)="drop2change($event)">
+                <option value=""  class="d-none"></option>
+                <option *ngFor="let prt2 of dropdownValue2;" value="{{prt2.id}}">
+                    {{prt2.description}}</option>
+            </select>
+            <span class="ps-1 priorityMaticonadjust"
+                *ngIf="(otherinfoData.formFieldAccess.incidentInjury.create || otherinfoData.formFieldAccess.incidentInjury.create)">
+                <mat-icon ngbTooltip="{{otherinfoData.tooltipData.otherInfoDropdown2}}"
+                    container="body">help_outline</mat-icon>
+            </span>
+        </div>
+    </div>
+</form>

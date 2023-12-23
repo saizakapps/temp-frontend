@@ -4,8 +4,8 @@ export class UrlUtils {
       window.location.hostname : 'smyths360-dev-admin.smythstoys.com'); */
 
   private browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
-     window.location.hostname : 'smyths360-admin-qa.smythsuat.com');
-      //  window.location.hostname : '192.168.68.100:8068');
+     window.location.hostname : 'smyths360-dev-admin.smythsuat.com');
+      //  smyths360-admin-qa.smythsuat.com;
 
  // http://smyths360-dev-admin.smythsuat.com/
   // public browserHostName = this.tempHostName.replace('-admin', '');
@@ -90,33 +90,41 @@ export class UrlUtils {
     GET_INCIDENT_SUB_FILTER_COUNT:`${this.LIST_URL}getIncidentsCountforSubFilters`,
     GET_ASSIGNEES_GENERIC_LIST:`${this.WEB_URL}getAssigneesGenericList`,
     GET_INCIDENT_FORM_FIELD_DESCRIPTION:`${this.WEB_URL}getFormFieldDescription`,
-     GET_INCIDENT_VIEW_LOCK_INFO:`${this.LIST_URL}getViewAndLockedInfo`,
- 
+    GET_INCIDENT_VIEW_LOCK_INFO:`${this.LIST_URL}getViewAndLockedInfo`,
+    GET_OTHERINFO_DROPDOWN1: `${this.WEB_URL}getIncidentInjuryValues`,
+    GET_OTHERINFO_DROPDOWN2: `${this.WEB_URL}getIncidentCauseValues`,
+    GET_EXPORT_INCIDENT_DOWNLOAD_STATUS: `${this.WEB_URL}view/exportIncidents`,
+    GET_INCIDENT_EXPORT_STATUS : `${this.WEB_URL}view/getExportStatus`,
+    GET_INCIDENT_LISTDD_VALUES : `${this.WEB_URL}view/getListDropDownValues`,
+    GET_EXPORT_INCIDENT_DOWNLOAD_STATUS_WITH_FILTER : `${this.WEB_URL}view/exportIncidentByFilters`,
+
     /* AUDIT API URLS */
     STORE_LIST : `${this.AUDIT_WEB_URL}storeList`,
     UPLOAD_FILE : `${this.AUDIT_WEB_URL}createAudit`,
     EDIT_FILE : `${this.AUDIT_WEB_URL}edit`,
     VIEW_FILE : `${this.AUDIT_WEB_URL}fileView`,
-    FILTER_STORE : `${this.AUDIT_WEB_URL}searchStore`,
-    FILTER_YEAR : `${this.AUDIT_WEB_URL}dropdown/getYear`,
+    // FILTER_STORE : `${this.AUDIT_WEB_URL}searchStore`,
+    // FILTER_YEAR : `${this.AUDIT_WEB_URL}dropdown/getYear`,
     FILTER_INSPECTED : `${this.AUDIT_WEB_URL}dropdown/notInspected`,
     FILTER_INSPECTED_STORE : `${this.AUDIT_WEB_URL}storeAndNotInspected`,
     AUDIT_LIST_FILTER : `${this.AUDIT_WEB_URL}filterAudit`,
-    AUDIT_LIST_MANAGER_FILTER : `${this.AUDIT_WEB_URL}managerFilter`,
-    AUDIT_LIST_HISTORY_FILTER : `${this.AUDIT_WEB_URL}historyFilter`,
+    // AUDIT_LIST_MANAGER_FILTER : `${this.AUDIT_WEB_URL}managerFilter`,
+    // AUDIT_LIST_HISTORY_FILTER : `${this.AUDIT_WEB_URL}historyFilter`,
     
     GET_COUNTRY_DATA : `${this.AUDIT_WEB_URL}regionCountry`,
     AUDIT_DOWNLIAD_FILE : `${this.AUDIT_WEB_URL}downloadAudit`,
     GET_FILTERS_COUNTRY_DATA : `${this.AUDIT_WEB_URL}findCountryYearFilter`,
     GET_FILTERS_REGION_DATA : `${this.AUDIT_WEB_URL}findRegionOnlyYearFilter`,
     GET_HISTORY_VIEWED_NAME : `${this.AUDIT_WEB_URL}history`,
-    GET_ROLE_CODE: `${this.AUDIT_WEB_URL}getRoleCode`,
-    // GET_EXPORT_STATUS: `${this.AUDIT_WEB_URL}exportEmailStatus`,
+    // GET_ROLE_CODE: `${this.AUDIT_WEB_URL}getRoleCode`,
     GET_EXPORT_STATUS: `${this.AUDIT_WEB_URL}exportEmailStatus`,
 
     UPLOAD_SCORECARD_FILE : `${this.AUDIT_WEB_URL}createScoreCard`,
     DOWNLOAD_SCORECARD_FILE : `${this.AUDIT_WEB_URL}downloadScoreCard`,
     VIEW_SCORECARD_FILE : `${this.AUDIT_WEB_URL}scoreCardView`,
-    
+    GET_AUDIT_YEAR_LIST : `${this.AUDIT_WEB_URL}getAuditYear`,
+    DELETE_AUDIT_FILE: `${this.AUDIT_WEB_URL}deleteAuditFiles`,
+    DELETE_SCORECARD_FILE: `${this.AUDIT_WEB_URL}deleteScoreCardFiles`,
+    GET_AUDIT_CONFIG_VALUES : `${this.AUDIT_WEB_URL}getAuditConfigValues`
   }
 }

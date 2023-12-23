@@ -66,13 +66,13 @@ export class ApplicationViewComponent implements OnInit {
           isShow: false,
           moduleCode: 'LA-R'
         },
-        {
+        /* {
           icon: "assets/images/tile-icon4.png",
           title: "User access",
           url: "/#/userAccess",
           isShow: false,
           moduleCode: 'LA-UA'
-        },
+        }, */
         {
           icon: "assets/images/tile-icon8.png",
           title: "F2F-Reports",
@@ -377,7 +377,7 @@ export class ApplicationViewComponent implements OnInit {
   }
 
   logoutConfirm(content: any) {
-    this.dialog.open(content, { width: "600px" });
+    this.dialog.open(content, { width: "500px" });
   }
   logOut() {
     localStorage.clear();
