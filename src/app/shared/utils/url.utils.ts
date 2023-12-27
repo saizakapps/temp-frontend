@@ -108,5 +108,8 @@ export class UrlUtils {
     POST_AUTH_ROLES: `${this.INCIDENT_USER}roles/add`,
     DELETE_AUTH_ROLES: `${this.INCIDENT_USER}roles/delete`,
     ASSIGN_USER_ROLE: `${this.INCIDENT_USER}roles/assign`,
+
+    /* F2F module */
+    GET_CERTIFICATES_LIST: `${this.USER_URL}get-default-certificates`
   };
 }
