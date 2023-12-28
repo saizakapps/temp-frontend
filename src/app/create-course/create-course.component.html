@@ -237,9 +237,9 @@
                   </div>
 
 
-                  <div>
+                  <div class="">
                     <label>Locations</label>
-                    <mat-form-field appearance="fill" class="roleDropdown"
+                    <mat-form-field appearance="fill" 
                       [ngClass]="{appliedFilter: selectedStoreCount > 0}">
                       <mat-label *ngIf="selectedStoreCount < 1"> Select Countries / Regions / Stores </mat-label>
                       <mat-label *ngIf="selectedStoreCount > 0" class="levelSelected">
@@ -788,19 +788,18 @@
 
             <div *ngIf="selectedForm === 'completionMessage' && courseConfig.completionMessage"
               class="completionMessageCls">
-              <div class="d-flex align-items-center completionTemplate">
+                
+              <div *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()" (click)="policyGroupOnClick()" class="btn-group mr-2 courseGroupCls mb-2" role="group" aria-label="First group">
+                <ng-container *ngFor="let item of completionCategories">
+                  <button type="button" [ngClass]="{active: item.id === selectedCompletionType.id}" class="btn courseContentDetails"
+                  (click)="compCategoryChange(item)"> {{item.name}} </button>
+                </ng-container>
+              </div>
+              <div class="d-flex align-items-center completionTemplate" >
                 <!-- Comp category (Only for F2F) -->
                 <!-- <ng-select *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()" (click)="policyGroupOnClick()" [items]="completionCategories" name="compCategory" [searchable]=true [clearable]=false
                                 [(ngModel)]="selectedCompletionType.id" bindLabel="name" bindValue="id" (change)="compCategoryChange($event)"
                                 class="completionSelect mt-3 mr-2"></ng-select> -->
-              
-                <div *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()" (click)="policyGroupOnClick()" class="btn-group mr-2 float-left courseGroupCls" role="group" aria-label="First group">
-                  <ng-container *ngFor="let item of completionCategories">
-                    <button type="button" [ngClass]="{active: item.id === selectedCompletionType.id}" class="btn courseContentDetails"
-                    (click)="compCategoryChange(item)"> {{item.name}} </button>
-                  </ng-container>
-                </div>
-              
                 <label class="mb-0 mr-2"> Template name: </label>
                 <ng-container
                   *ngIf="courseConfig.code !== courseCode.F2F || !(courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues())">
@@ -845,6 +844,7 @@
                             </div>
                           </tr>
                         </th>
+                        <th style="width: 100%;"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -856,8 +856,9 @@
                           </td>
                           <!-- Locations -->
                           <td>
+
                             <div>
-                              <mat-form-field appearance="fill" class="roleDropdown" [ngClass]="{appliedFilter: getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0}">
+                              <mat-form-field appearance="fill" class="roleDropdown certificateMatformfield" [ngClass]="{appliedFilter: getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0}">
                                 
                                 <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') < 1"> Select Countries / Regions / Stores </mat-label>
                                 
@@ -925,13 +926,13 @@
                               </div>
                             </div>
             
-                            <mat-menu #certificatesDD="matMenu" class="newCoursePopup">
+                            <mat-menu #certificatesDD="matMenu" panelClass="table-menu-class" class="tableMatmenu">
                     
                               <div class=" p-0 coursePopup">
                                 <div>
                                   <div *ngFor="let certificate of certificates"
                                     class=" d-flex justify-content-start  align-items-center courseMenu" mat-menu-item>
-                                    <button (click)="onCertificateChange(certificate, certItem)" class="mb-2 d-flex justify-content-start"
+                                    <button (click)="onCertificateChange(certificate, certItem)" class="d-flex justify-content-start"
                                       mat-menu-item>{{certificate.name}}</button>
                                   </div>
                                 </div>
@@ -940,7 +941,9 @@
                           </td>
                           <!-- Preview -->
                           <td>
-                            <a *ngIf="certItem.id !== 6" style="margin-bottom: 10px;" [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
+                            <div style="margin-bottom: 10px;">
+                            <a *ngIf="certItem.id !== 6" [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
+                           </div>
                           </td>
                           <!-- Delete -->
                           <td>
@@ -951,13 +954,10 @@
                         </ng-container>
                       </tr>
                       <!-- Add button -->
-                      <tr>
-                        <td>
-                          <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length" (click)="addCertItem()" class="btn btn-primary">Add</button>
-                        </td>
-                      </tr>
+                     
                     </tbody>
                   </table>
+                    <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
                 </div>
               </div>              
             </ng-container>
@@ -1250,14 +1250,14 @@
             <span class="chapterList">Question {{question.questionId}}</span>
           </div>
 
-          <div class="float-right d-flex align-items-center ">
+          <div class="float-right d-flex align-items-center">
             <!-- Question Type DD(Available only for F2F) -->
             <ng-select *ngIf="courseConfig.code === courseCode.F2F" (change)="quizTypeOnChange(question)" [items]="questionTypes"
               [name]="'qType' + config.chapterData?.chapterId + question.questionId" bindValue="key" [clearable]=false
               [searchable]="false" bindLabel="name" [(ngModel)]="question.questionType">
             </ng-select>
 
-            <span>|</span>
+            <span class="pb-3 pr-2 pl-2">|</span>
 
             <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
               <input (change)="updateQuestionLimit()"
@@ -1333,11 +1333,11 @@
             </div>
             <!-- Fill in the blanks & Free text -->
             <div class="multiAnswer w-100" *ngIf="question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'">
-              <div>
+              <div class="d-flex align-items-center">
                 <mat-checkbox [name]="'charLimitCheckBox' + selectedActivity.activityId" [(ngModel)]="question.characterLimitCheck"
                   class="pl-3"></mat-checkbox>
-                <label>Character Limit</label>
-                <input [disabled]="!question.characterLimitCheck" type="number" [(ngModel)]="question.characterLimit"
+                <label class="mb-0">Character Limit</label>&nbsp;&nbsp;
+                <input class="p-1" [disabled]="!question.characterLimitCheck" type="number" [(ngModel)]="question.characterLimit"
                 [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
               </div>
             </div>
@@ -1454,7 +1454,7 @@
       <ng-container *ngFor="let question of quizConfig.questions || []; let i = index">
         <!-- MultiChoice question Block -->
         <!-- Question -->
-        <div class="row previewQuestion question  mt-5 flex-nowrap align-items-center">
+        <div class="row previewQuestion question  mt-5 flex-nowrap align-items-center" [ngClass]="{previewQuestionforFill : question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'}">
           <div [ngClass]="{'pdfQuiz': print}" class="d-flex questionDiv">
             <span *ngIf="print" class="quizSeries fontBold">{{i+1}}</span>
             <div [innerHTML]="(question.content || '') | safe: 'html'" class="fontBold questionContent calibri"></div>
@@ -1475,9 +1475,10 @@
         </ng-container>
         <!-- Re arrange order -->
         <ng-container *ngIf="question?.questionType === 'reArrangeOrder'">
-          <label *ngIf="question.content">drag and down to re-arrange the order</label>
-          <div class="answerSection" *ngFor="let answer of question?.options || []">
-            <div *ngIf="answer.content" style="width: 100%; height: 100%; padding-left: 5px; padding-right: 5px; padding-top: 10px; padding-bottom: 10px; background: white; border-radius: 6px; border: 1px #808080 solid; justify-content: flex-start; align-items: center; gap: 5px; display: inline-flex">
+          <label *ngIf="question.content" class="newyellowBG">drag and down to re-arrange the order</label>
+          <div class="answerSection answerSection1" *ngFor="let answer of question?.options || []">
+            <div *ngIf="answer.content" class="d-flex align-items-center answersubSection">
+              <div>
               <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_193_1986" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
                 <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
@@ -1485,15 +1486,15 @@
                 <g mask="url(#mask0_193_1986)">
                 <path d="M9.00012 20.1153C8.5559 20.1153 8.17562 19.9572 7.85927 19.6408C7.54293 19.3245 7.38477 18.9442 7.38477 18.5C7.38477 18.0558 7.54293 17.6755 7.85927 17.3591C8.17562 17.0428 8.5559 16.8846 9.00012 16.8846C9.44433 16.8846 9.82462 17.0428 10.141 17.3591C10.4573 17.6755 10.6155 18.0558 10.6155 18.5C10.6155 18.9442 10.4573 19.3245 10.141 19.6408C9.82462 19.9572 9.44433 20.1153 9.00012 20.1153ZM15.0001 20.1153C14.5559 20.1153 14.1756 19.9572 13.8593 19.6408C13.5429 19.3245 13.3848 18.9442 13.3848 18.5C13.3848 18.0558 13.5429 17.6755 13.8593 17.3591C14.1756 17.0428 14.5559 16.8846 15.0001 16.8846C15.4443 16.8846 15.8246 17.0428 16.141 17.3591C16.4573 17.6755 16.6155 18.0558 16.6155 18.5C16.6155 18.9442 16.4573 19.3245 16.141 19.6408C15.8246 19.9572 15.4443 20.1153 15.0001 20.1153ZM9.00012 14.1153C8.5559 14.1153 8.17562 13.9572 7.85927 13.6408C7.54293 13.3245 7.38477 12.9442 7.38477 12.5C7.38477 12.0558 7.54293 11.6755 7.85927 11.3591C8.17562 11.0428 8.5559 10.8846 9.00012 10.8846C9.44433 10.8846 9.82462 11.0428 10.141 11.3591C10.4573 11.6755 10.6155 12.0558 10.6155 12.5C10.6155 12.9442 10.4573 13.3245 10.141 13.6408C9.82462 13.9572 9.44433 14.1153 9.00012 14.1153ZM15.0001 14.1153C14.5559 14.1153 14.1756 13.9572 13.8593 13.6408C13.5429 13.3245 13.3848 12.9442 13.3848 12.5C13.3848 12.0558 13.5429 11.6755 13.8593 11.3591C14.1756 11.0428 14.5559 10.8846 15.0001 10.8846C15.4443 10.8846 15.8246 11.0428 16.141 11.3591C16.4573 11.6755 16.6155 12.0558 16.6155 12.5C16.6155 12.9442 16.4573 13.3245 16.141 13.6408C15.8246 13.9572 15.4443 14.1153 15.0001 14.1153ZM9.00012 8.11534C8.5559 8.11534 8.17562 7.95718 7.85927 7.64084C7.54293 7.32449 7.38477 6.94421 7.38477 6.49999C7.38477 6.05578 7.54293 5.67549 7.85927 5.35914C8.17562 5.04281 8.5559 4.88464 9.00012 4.88464C9.44433 4.88464 9.82462 5.04281 10.141 5.35914C10.4573 5.67549 10.6155 6.05578 10.6155 6.49999C10.6155 6.94421 10.4573 7.32449 10.141 7.64084C9.82462 7.95718 9.44433 8.11534 9.00012 8.11534ZM15.0001 8.11534C14.5559 8.11534 14.1756 7.95718 13.8593 7.64084C13.5429 7.32449 13.3848 6.94421 13.3848 6.49999C13.3848 6.05578 13.5429 5.67549 13.8593 5.35914C14.1756 5.04281 14.5559 4.88464 15.0001 4.88464C15.4443 4.88464 15.8246 5.04281 16.141 5.35914C16.4573 5.67549 16.6155 6.05578 16.6155 6.49999C16.6155 6.94421 16.4573 7.32449 16.141 7.64084C15.8246 7.95718 15.4443 8.11534 15.0001 8.11534Z" fill="#1C1B1F"/>
                 </g>
-                </svg>                
-              <div style="flex: 1 1 0; color: black; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">
-                {{answer.content}}</div>
+                </svg>  
+                </div>              
+              <div class="answersubSectionContent">{{answer.content}}</div>
             </div>
           </div>
         </ng-container>
         <!-- Free text & Fill right -->
         <ng-container *ngIf="question?.questionType === 'fillRightAnswer' || question?.questionType === 'freeText'">
-          <div *ngIf="question.content" class="freeTextInput"></div>
+          <div *ngIf="question.content" class="freeTextInput" [ngClass]="{'bigfreeTextInput' :  question?.questionType === 'freeText'}"></div>
           <div *ngIf="question.characterLimit > 0" class="freeTextCount">0/{{question.characterLimit}}</div>
         </ng-container>
         <!-- Single correct answer -->

@@ -3051,3 +3051,23 @@ width: 16px !important;
     padding-right: 7px;
   }
 
+.certificateMatformfield .mat-form-field-wrapper{
+  margin-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.tableMatmenu .mat-menu-content{
+  background-color: #fff !important;
+}
+.tableMatmenu .mat-menu-content:not(:empty){
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.tableMatmenu .mat-menu-item{
+  height: 38px !important;
+  line-height: 38px !important;
+  width: 300px !important;
+  font-size: 15px;
+}
+.tableMatmenu.mat-menu-panel{
+  max-width: 302px !important;
+}

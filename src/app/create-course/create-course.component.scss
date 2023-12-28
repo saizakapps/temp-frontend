@@ -1509,6 +1509,26 @@ button {
 .answerSection {
   margin-bottom: 10px;
 }
+
+.answersubSection{
+  border: 1px solid #808080;
+  padding: 5px 5px;
+  border-radius: 6px;
+}
+.answersubSectionContent{
+ color: black; 
+ font-size: 16px; 
+ font-family: "Inter"; 
+ font-weight: 400; 
+}
+.newyellowBG{
+  background-color: #FFF7D3;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 13px;
+}
 .answerSection:last-child {
   margin-bottom: 0;
 }
@@ -1762,6 +1782,9 @@ button {
 .quizPortion .previewQuestion.question {
   margin-top: 16px !important;
 }
+.quizPortion .previewQuestionforFill.question{
+  margin-top: 48px !important;
+}
 .courseVideo {
   position: relative;
   top: 24px;
@@ -1855,6 +1878,7 @@ button {
   margin-left: 3px;
   width: 335px;
   padding: 10px 15px 0px !important;
+  padding-left: 0px !important;
 }
 .createRoleCls :disabled {
   opacity: 0.5;
@@ -2430,6 +2454,10 @@ button.pdfDownload:disabled {
   background: white;
   border-radius: 6px;
   border: 1px #C5C5C5 solid;
+  margin-bottom: 5px;
+}
+.bigfreeTextInput{
+  height: 76px;
 }
 .freeTextCount {
   color: #808080;
@@ -2447,7 +2475,7 @@ button.pdfDownload:disabled {
 .cert-select-container {
   position: relative;
   margin-bottom: 10px;
-  max-width: 300px !important;
+  max-width: 302px !important;
 }
 
 .cert-select {
@@ -2487,7 +2515,6 @@ button.pdfDownload:disabled {
 .cert-container {
   height: calc(100vh - 172px);
   background: #fff;
-
   position: relative;
   overflow: auto;
 }
@@ -2495,9 +2522,17 @@ button.pdfDownload:disabled {
 .cert-container{
   table{
 
-    tbody :hover{
+    tr:hover{
       // border-bottom: 1px solid #e8e8e8;
       background-color: #ededed;
+    }
+    tr:nth-child(1){
+      td{
+        padding-top: 14px !important;
+      }
+    }
+    .mat-select:hover{
+      background-color: transparent !important;
     }
     // tr:nth-child(1){
     //   border-bottom: 1px solid #e8e8e8;
@@ -2544,25 +2579,22 @@ th {
 /* Add borders to table cells */
 td {
   padding: 8px 8px;
+  padding-bottom: 0px;
 }
-td:nth-child(1), th:nth-child(1){
-  padding-left: 2px;
-  padding-right: 0px;
-}
-td:last-child, th:last-child{
-  padding-right: 10px;
-  // width: 100%;
-}
+
 tr{
   padding: 0px 5px;
 }
 
 .tdDefault {
-  width:auto !important;
+  width:fit-content !important;
 }
 
 .certDeleteBtn {
   border: none;
   background: none !important;
   margin-bottom: 10px;
+}
+.tableMatmenu .mat-menu-content{
+  background-color: #fff !important;
 }
