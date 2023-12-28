@@ -65,9 +65,7 @@ export class ApiHandlerService {
       /* prepare common post param */
       const userDetail = JSON.parse(localStorage.getItem('userDetails') || '{}');
       const postParam = {
-        deviceId: 'portal',
         payload: param,
-        source: 'web',
         userId: userDetail?.id
       };
       this.http.post(url, postParam).pipe(takeUntil(subject)).subscribe(

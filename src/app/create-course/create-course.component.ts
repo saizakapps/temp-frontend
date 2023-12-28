@@ -148,13 +148,13 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   treeControl: any = new NestedTreeControl<any>((node: any) => node.child);
   treeHasChild: any = (_: number, node: any) => !!node.child && node.child.length > 0;
 
+  certificationItemTableColumns: any = this.utils.TABLE_HEADERS.CERTIFICATE_ITEMS_TABLE;
+
   certificationItems: any[] = [
     {
-      courseId: this.courseTypeDetail.courseId,
-      code: this.courseConfig.code,
       countries: [],
-      certificateId: '',
-      certificateName: '',
+      id: '',
+      name: '',
       certificateUrl: '',
       renderingData: {
         countryList: this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList): this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0),
@@ -1158,6 +1158,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.alertModal['text'] = 'Please remove fill right answer/Free text question type from Questionnaire, Otherwise you will not be able to select both country and role';
     } else if (type === 'clearCertLineItems') {
       this.alertModal['text'] = `If location changes created certificates will be removed, Are you sure you want to proceed?`;
+    } else if (type === 'deleteCertItem') {
+      this.alertModal['text'] = `Are you sure you want to delete this line item?`;
     } /* else if (type === 'callGetCompTemplate') {
       this.alertModal['text'] = 'Are you sure you want to clear completion content?'
     } else if (type === 'callGetCompTempCategory') {
@@ -1200,14 +1202,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.withoutRoleCountry();
     } else if(type === 'withoutCompCategory'){
       this.withoutRoleCountry();
-    } else {
+    } else if (type === 'clearCertLineItems') {
       this.certificationItems = [
         {
-          courseId: this.courseTypeDetail.courseId,
-          code: this.courseConfig.code,
           countries: [],
-          certificateId: '',
-          certificateName: '',
+          id: '',
+          name: '',
           certificateUrl: '',
           renderingData: {
             countryList: this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList): this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0),
@@ -1217,6 +1217,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       ];
       this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
       this.setRenderingDataForCertificationItems();
+    } else if (type === 'deleteCertItem') {
+      this.deleteCertItem(chapter);
     } /* else if (type === 'callGetCompTemplate') {
       this.getCompTemplates();
     } else if (type === 'callGetCompTempCategory') {
@@ -1447,10 +1449,6 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     node.selectStatus = isChecked ? 'checked' : 'unchecked';
     this.updateSelectionstatus(type, certItem);
     if (type === 'certCountry') {
-      const changeOccurs = JSON.stringify(this.preCertList) !== JSON.stringify(this.certificationItems);
-      /* Update default line item while changing selectStatus to take count */
-      this.updateShowProperty(this.certificationItems[0].renderingData.countryList, certItem.renderingData.countryList, changeOccurs);
-      /* Check if store count of default line item, If count is 1, disable unchecked stores in all trees */
       if (this.getSelectedChildCount(this.certificationItems[0].renderingData.countryList, 0, 'cert') === 1) {
         this.disableSelection = false;
       } else {
@@ -1678,7 +1676,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
     if (isPublished && (this.publishCourse.countries.length < 1 || this.publishCourse.roleGroups.length < 1)) {
       this.openAlert('withoutRoleCountry');
-    } else if (this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid) {
+    } else if (isPublished && (this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid)) {
       this.openAlert('withoutCompCategory');
     } else {
       this.submitCourse(isPublished, type);
@@ -1718,6 +1716,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     this.autoSaveInterval = setInterval(() => {
       if (this.course.externalCourseName) {
         this.alertBeforeSubmit(false, 'autoSave');
+        this.getF2FCompTemplates(true);
+        this.getCertificationItems();
         // clearInterval(this.autoSaveInterval);
       }
     }, 600000);
@@ -1778,11 +1778,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
     const res: any = await this.apiHandler.postData(this.utils.API.CREATE_UPDATE_COURSE, this.publishCourse, this.destroyed$,
       this.courseConfig.courseCode !== this.courseCode.F2F && type ? 'Course Auto Saved' : 'Course updated successfully');
-    if (this.courseConfig.code === this.courseCode.F2F && res && !type) {
+    if (this.courseConfig.code === this.courseCode.F2F && res) {
       for (let category of this.completionCategories) {
         if (category.content.length > 0) this.templateCategorySubmitted(isPublished, type, res.payload.courseId, category);
       }
-      this.createUpdateCertificateList();
+      this.createUpdateCertificateList(res.payload.courseId);
     }
     if (this.publishCourse.published) {
       localStorage.setItem('canDeactivate', 'true');
@@ -2563,15 +2563,21 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   async getCertificates() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CERTIFICATES_LIST, null, this.destroyed$);
     this.certificates = response.payload;
+    this.certificates = this.certificates.filter(certificate => certificate.id !== this.certificationItems.find(certItem => certItem.id === certificate.id)?.id);
     this.copyCertificates = $.extend(true, [], response.payload)
   }
 
   /* Create update certificate list API, Once called with courseId after course creation */
-  async createUpdateCertificateList() {
+  async createUpdateCertificateList(courseId) {
     this.certificationItems.forEach(certItem => {
       certItem.countries = [...this.buildCertCountries(certItem.renderingData.countryList)];
     });
-    // const response: any = await this.apiHandler.postData(this.utils.API.CREATE_UPDATE_COURSE, this.certificationItems, this.destroyed$);
+    const params = {
+      courseId: courseId,
+      code: this.courseConfig.code,
+      data: this.certificationItems
+    }
+    const response: any = await this.apiHandler.plainPostData(this.utils.API.CREATE_UPDATE_CERTIFICATE, params, this.destroyed$);
     console.log('Certified countries', this.certificationItems);
   }
 
@@ -2579,841 +2585,16 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   async getCertificationItems() {
     const params: any = {
       courseId: this.courseTypeDetail.courseId,
-      code: this.courseConfig.code
     }
-    // const response: any = await this.apiHandler.postData(this.utils.API.GET_COURSE_LIST, params, this.destroyed$);
-    const response: any = [
-      {
-        "countries": [
-          {
-            "id": 2,
-            "desc": "ROI",
-            "children": [
-              {
-                "id": 5,
-                "desc": "Region 1",
-                "children": [
-                  {
-                    "id": 26,
-                    "desc": "Ballymena"
-                  },
-                  {
-                    "id": 39,
-                    "desc": "Salisbury"
-                  }
-                ]
-              },
-              {
-                "id": 13,
-                "desc": "Region 2",
-                "children": [
-                  {
-                    "id": 64,
-                    "desc": "Hull"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "certificateId": "",
-        "certificateName": "",
-        "certificateUrl": "",
-        "renderingData": {
-          "countryList": [
-            {
-              "id": 1,
-              "desc": "UK",
-              "child": [
-                {
-                  "id": 4,
-                  "desc": "Region 1",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 4,
-                      "desc": "Bangor",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 6,
-                      "desc": "Belfast Forestside",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 27,
-                      "desc": "Belfast Boucher Road",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "checked",
-                  "show": false
-                },
-                {
-                  "id": 10,
-                  "desc": "Region 4",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 42,
-                      "desc": "Essex Rayleigh Weir",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 66,
-                      "desc": "Essex Thurrock",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 70,
-                      "desc": "Colchester",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 4,
-                  "selectStatus": "checked",
-                  "show": false
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "checked",
-              "show": false
-            },
-            {
-              "id": 2,
-              "desc": "ROI",
-              "child": [
-                {
-                  "id": 5,
-                  "desc": "Region 1",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 5,
-                      "desc": "Derry",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 26,
-                      "desc": "Ballymena",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 39,
-                      "desc": "Salisbury",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "checked",
-                  "show": true
-                },
-                {
-                  "id": 13,
-                  "desc": "Region 2",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 47,
-                      "desc": "St Helens",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 53,
-                      "desc": "Speke  Liverpool",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": false
-                    },
-                    {
-                      "id": 64,
-                      "desc": "Hull",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 2,
-                  "selectStatus": "checked",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "checked",
-              "show": true
-            }
-          ],
-          "selectedStoreCount": 0
-        }
-      },
-      {
-        "code": "LA003",
-        "countries": [
-          {
-            "id": 1,
-            "desc": "UK",
-            "children": [
-              {
-                "id": 4,
-                "desc": "Region 1",
-                "children": [
-                  {
-                    "id": 4,
-                    "desc": "Bangor"
-                  },
-                  {
-                    "id": 6,
-                    "desc": "Belfast Forestside"
-                  }
-                ]
-              },
-              {
-                "id": 10,
-                "desc": "Region 4",
-                "children": [
-                  {
-                    "id": 66,
-                    "desc": "Essex Thurrock"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "desc": "ROI",
-            "children": [
-              {
-                "id": 5,
-                "desc": "Region 1",
-                "children": [
-                  {
-                    "id": 5,
-                    "desc": "Derry"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "certificateId": "",
-        "certificateName": "",
-        "certificateUrl": "",
-        "renderingData": {
-          "countryList": [
-            {
-              "id": 1,
-              "desc": "UK",
-              "child": [
-                {
-                  "id": 4,
-                  "desc": "Region 1",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 4,
-                      "desc": "Bangor",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 6,
-                      "desc": "Belfast Forestside",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 27,
-                      "desc": "Belfast Boucher Road",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "mixed",
-                  "show": true
-                },
-                {
-                  "id": 10,
-                  "desc": "Region 4",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 42,
-                      "desc": "Essex Rayleigh Weir",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 66,
-                      "desc": "Essex Thurrock",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 70,
-                      "desc": "Colchester",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 4,
-                  "selectStatus": "mixed",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "mixed",
-              "show": true
-            },
-            {
-              "id": 2,
-              "desc": "ROI",
-              "child": [
-                {
-                  "id": 5,
-                  "desc": "Region 1",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 5,
-                      "desc": "Derry",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 26,
-                      "desc": "Ballymena",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    },
-                    {
-                      "id": 39,
-                      "desc": "Salisbury",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "mixed",
-                  "show": true
-                },
-                {
-                  "id": 13,
-                  "desc": "Region 2",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 47,
-                      "desc": "St Helens",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 53,
-                      "desc": "Speke  Liverpool",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 64,
-                      "desc": "Hull",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 2,
-                  "selectStatus": "unchecked",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "mixed",
-              "show": true
-            }
-          ],
-          "selectedStoreCount": 0
-        }
-      },
-      {
-        "code": "LA003",
-        "countries": [
-          {
-            "id": 1,
-            "desc": "UK",
-            "children": [
-              {
-                "id": 4,
-                "desc": "Region 1",
-                "children": [
-                  {
-                    "id": 27,
-                    "desc": "Belfast Boucher Road"
-                  }
-                ]
-              },
-              {
-                "id": 10,
-                "desc": "Region 4",
-                "children": [
-                  {
-                    "id": 42,
-                    "desc": "Essex Rayleigh Weir"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "certificateId": "",
-        "certificateName": "",
-        "certificateUrl": "",
-        "renderingData": {
-          "countryList": [
-            {
-              "id": 1,
-              "desc": "UK",
-              "child": [
-                {
-                  "id": 4,
-                  "desc": "Region 1",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 4,
-                      "desc": "Bangor",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 6,
-                      "desc": "Belfast Forestside",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 27,
-                      "desc": "Belfast Boucher Road",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "mixed",
-                  "show": true
-                },
-                {
-                  "id": 10,
-                  "desc": "Region 4",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 42,
-                      "desc": "Essex Rayleigh Weir",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 66,
-                      "desc": "Essex Thurrock",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 70,
-                      "desc": "Colchester",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 4,
-                  "selectStatus": "mixed",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "mixed",
-              "show": true
-            },
-            {
-              "id": 2,
-              "desc": "ROI",
-              "child": [
-                {
-                  "id": 5,
-                  "desc": "Region 1",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 5,
-                      "desc": "Derry",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 26,
-                      "desc": "Ballymena",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    },
-                    {
-                      "id": 39,
-                      "desc": "Salisbury",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "unchecked",
-                  "show": true
-                },
-                {
-                  "id": 13,
-                  "desc": "Region 2",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 47,
-                      "desc": "St Helens",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 53,
-                      "desc": "Speke  Liverpool",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 64,
-                      "desc": "Hull",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 2,
-                  "selectStatus": "unchecked",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "unchecked",
-              "show": true
-            }
-          ],
-          "selectedStoreCount": 0
-        }
-      },
-      {
-        "code": "LA003",
-        "countries": [
-          {
-            "id": 1,
-            "desc": "UK",
-            "children": [
-              {
-                "id": 10,
-                "desc": "Region 4",
-                "children": [
-                  {
-                    "id": 70,
-                    "desc": "Colchester"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "desc": "ROI",
-            "children": [
-              {
-                "id": 13,
-                "desc": "Region 2",
-                "children": [
-                  {
-                    "id": 47,
-                    "desc": "St Helens"
-                  },
-                  {
-                    "id": 53,
-                    "desc": "Speke  Liverpool"
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "certificateId": "",
-        "certificateName": "",
-        "certificateUrl": "",
-        "renderingData": {
-          "countryList": [
-            {
-              "id": 1,
-              "desc": "UK",
-              "child": [
-                {
-                  "id": 4,
-                  "desc": "Region 1",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 4,
-                      "desc": "Bangor",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 6,
-                      "desc": "Belfast Forestside",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 27,
-                      "desc": "Belfast Boucher Road",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "unchecked",
-                  "show": false
-                },
-                {
-                  "id": 10,
-                  "desc": "Region 4",
-                  "parent": "UK",
-                  "child": [
-                    {
-                      "id": 42,
-                      "desc": "Essex Rayleigh Weir",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 66,
-                      "desc": "Essex Thurrock",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 70,
-                      "desc": "Colchester",
-                      "parent": "Region 4",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 4,
-                  "selectStatus": "mixed",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "mixed",
-              "show": true
-            },
-            {
-              "id": 2,
-              "desc": "ROI",
-              "child": [
-                {
-                  "id": 5,
-                  "desc": "Region 1",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 5,
-                      "desc": "Derry",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": false
-                    },
-                    {
-                      "id": 26,
-                      "desc": "Ballymena",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    },
-                    {
-                      "id": 39,
-                      "desc": "Salisbury",
-                      "parent": "Region 1",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 1,
-                  "selectStatus": "unchecked",
-                  "show": true
-                },
-                {
-                  "id": 13,
-                  "desc": "Region 2",
-                  "parent": "ROI",
-                  "child": [
-                    {
-                      "id": 47,
-                      "desc": "St Helens",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 53,
-                      "desc": "Speke  Liverpool",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "checked",
-                      "show": true
-                    },
-                    {
-                      "id": 64,
-                      "desc": "Hull",
-                      "parent": "Region 2",
-                      "active": true,
-                      "selectStatus": "unchecked",
-                      "show": true
-                    }
-                  ],
-                  "active": true,
-                  "sequenceId": 2,
-                  "selectStatus": "mixed",
-                  "show": true
-                }
-              ],
-              "parent": null,
-              "active": true,
-              "selectStatus": "mixed",
-              "show": true
-            }
-          ],
-          "selectedStoreCount": 0
-        }
-      }
-    ];
-    this.certificationItems = response;
+    const response: any = await this.apiHandler.plainPostData(this.utils.API.GET_CERTIFICATE, params, this.destroyed$);
+    if (response.payload && response.payload.data.length > 0) {
+      this.certificationItems = $.extend(true, [], JSON.parse(response.payload.data));
+    } else {
+      this.certificationItems[0].countries = this.setCountryStatusChecked($.extend(true, [], this.countryList));
+      this.setRenderingDataForCertificationItems();
+    }
+    console.log('Certified countries', this.certificationItems);
+    this.getCertificates();
   }
 
   /* Build countries as per backend need */
@@ -3535,11 +2716,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   addCertItem() {
     this.certificationItems.push(
       {
-        courseId: this.courseTypeDetail.courseId,
-        code: this.courseConfig.code,
         countries: [],
-        certificateId: '',
-        certificateName: '',
+        id: '',
+        name: '',
         certificateUrl: '',
         renderingData: {
           countryList: this.changeObjProperty($.extend(true, [], this.certificationItems[0].renderingData.countryList), 'selectStatus', 'unchecked'),
@@ -3557,12 +2736,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   onCertificateChange(event, certItem) {
-    if (certItem.id) {
-      this.certificates.push(this.copyCertificates.find(c => c.id === certItem.id));
-    }
     const tempArray = [...this.certificates];
     this.certificates = [];
     this.certificates = [...tempArray.filter(c => c.id !== event.id)];
+
+    if (certItem.name) {
+      this.certificates.push(this.copyCertificates.find(c => c.id === certItem.id));
+      this.certificates.sort((a, b) => a.id - b.id);
+    }
 
     certItem.id = event.id;
     certItem.name = event.name;
@@ -3573,6 +2754,33 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   viewCertificate(certItem: any) {
     this.pdfLoader('start');
     this.previewData = certItem;
+  }
+
+  deleteCertItem(certItem) {
+    const tempItems = $.extend(true, [], this.certificationItems);
+    this.certificationItems = [];
+    this.certificationItems = tempItems.filter(item => item.id !== certItem.id);
+    this.certificationItems.forEach((item, index) => {
+      item.renderingData.countryList.forEach(country => {
+        const selectedCountry = certItem.renderingData.countryList.find(selectedCountry => selectedCountry.id === country.id);
+        country.child.forEach(region => {
+          const selectedRegion = selectedCountry.child.find(selectedRegion => selectedRegion.id === region.id);
+          region.child.forEach(store => {
+            const selectedStore = selectedRegion.child.find(selectedStore => selectedStore.id === store.id);
+            if (selectedStore.selectStatus === 'checked' && selectedStore.show === true) {
+              store.show = true;
+              if (index === 0) {
+                store.selectStatus = 'checked';
+              } else {
+                store.selectStatus = 'unchecked';
+              }
+            }
+          });
+        });
+      });
+    });
+    this.certificates.push(this.copyCertificates.find(c => c.id === certItem.id));
+    this.certificates.sort((a, b) => a.id - b.id);
   }
 
   ngOnDestroy() {

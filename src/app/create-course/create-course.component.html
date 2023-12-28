@@ -833,69 +833,134 @@
             </div>
 
             <ng-container *ngIf="selectedForm === 'pdfCertification'">
-              <div *ngFor="let certItem of certificationItems; let certItemIndex = index" class="d-flex">
-                <div *ngIf="true">
-                  <label>Locations</label>
-                  <mat-form-field appearance="fill" class="roleDropdown" [ngClass]="{appliedFilter: getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0}">
-                    
-                    <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') < 1"> Select Countries / Regions / Stores </mat-label>
-                    
-                    <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0" class="levelSelected">
-                      {{getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') + ' stores selected'}} </mat-label>
-
-                    <mat-select class="roleSelectionCls" (openedChange)=" updateSelectionStatusOnCertItemChange($event, certItem, certItemIndex)">
-
-                      <!-- <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update) && certItemIndex === 0}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
-                        (change)="selectAll($event, certItem.renderingData.countryList, 'certCountry'); calcSelectedStore();">
-                        All</mat-checkbox> -->
-
-                      <mat-tree [dataSource]="certItem.renderingData.countryList" [treeControl]="treeControl" class="example-tree">
-
-                        <mat-option class="disableRipple">
-                          <!-- This is the tree node template for leaf nodes -->
-                          <mat-nested-tree-node *matTreeNodeDef="let node">
-                            <li *ngIf="node.show" class="mat-tree-node">
-                              <!-- use a disabled button to provide padding for tree leaf -->
-                              <button mat-icon-button disabled></button>
-                              <mat-checkbox [disabled]="this.getSelectedChildCount(this.certificationItems[0].renderingData.countryList, 0, 'cert') === 1 && node.selectStatus === 'unchecked'" [ngClass]="{'viewOnly': (view && !create && !update) || certItemIndex === 0}" class="ml-3"
-                                (change)="selectionToggleLeaf($event.checked, node, 'certCountry', certItem); calcSelectedStore();"
-                                [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
-                            </li>
-                          </mat-nested-tree-node>
-                          <!-- This is the tree node template for expandable nodes -->
-                          <mat-nested-tree-node *matTreeNodeDef="let node; when: treeHasChild">
-                            <ul>
-                              <li *ngIf="node.show">
-                                <div class="mat-tree-node">
-                                  <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
-                                    <mat-icon class="mat-icon-rtl-mirror m-0 roleIcon">
-                                      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                                    </mat-icon>
-                                  </button>
-                                  <!-- <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update) || certItemIndex === 0}"
-                                    (change)="selectionToggle($event.checked, node, 'certCountry'); calcSelectedStore();"
-                                    [indeterminate]="node.selectStatus === 'mixed'"
-                                    [checked]="node.selectStatus === 'checked'">
-                                    {{node.desc}}</mat-checkbox> -->
-                                    <div>{{node.desc}}</div>
+              <div class="cert-page-container-top">
+                <div id="table" class="cert-container">
+                  <table>
+                    <thead>
+                      <tr class="borderTr">
+                        <th *ngFor="let column of certificationItemTableColumns">
+                          <tr>
+                            <div class="d-flex">
+                              <span>{{column.name}}</span>                                       
+                            </div>
+                          </tr>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let certItem of certificationItems; let certItemIndex = index">
+                        <ng-container>
+                          <!-- Default -->
+                          <td>
+                            <mat-icon *ngIf="index === 0" alt="default" title="default">check_circle_outline</mat-icon>
+                          </td>
+                          <!-- Locations -->
+                          <td>
+                            <div>
+                              <mat-form-field appearance="fill" class="roleDropdown" [ngClass]="{appliedFilter: getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0}">
+                                
+                                <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') < 1"> Select Countries / Regions / Stores </mat-label>
+                                
+                                <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0" class="levelSelected">
+                                  {{getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') + ' stores selected'}} </mat-label>
+            
+                                <mat-select class="roleSelectionCls" (openedChange)=" updateSelectionStatusOnCertItemChange($event, certItem, certItemIndex)">
+            
+                                  <!-- <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update) && certItemIndex === 0}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
+                                    (change)="selectAll($event, certItem.renderingData.countryList, 'certCountry'); calcSelectedStore();">
+                                    All</mat-checkbox> -->
+            
+                                  <mat-tree [dataSource]="certItem.renderingData.countryList" [treeControl]="treeControl" class="example-tree">
+            
+                                    <mat-option class="disableRipple">
+                                      <!-- This is the tree node template for leaf nodes -->
+                                      <mat-nested-tree-node *matTreeNodeDef="let node">
+                                        <li *ngIf="node.show" class="mat-tree-node">
+                                          <!-- use a disabled button to provide padding for tree leaf -->
+                                          <button mat-icon-button disabled></button>
+                                          <mat-checkbox [disabled]="this.getSelectedChildCount(this.certificationItems[0].renderingData.countryList, 0, 'cert') === 1 && node.selectStatus === 'unchecked'" [ngClass]="{'viewOnly': (view && !create && !update) || certItemIndex === 0}" class="ml-3"
+                                            (change)="selectionToggleLeaf($event.checked, node, 'certCountry', certItem); calcSelectedStore();"
+                                            [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                        </li>
+                                      </mat-nested-tree-node>
+                                      <!-- This is the tree node template for expandable nodes -->
+                                      <mat-nested-tree-node *matTreeNodeDef="let node; when: treeHasChild">
+                                        <ul>
+                                          <li *ngIf="node.show">
+                                            <div class="mat-tree-node">
+                                              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
+                                                <mat-icon class="mat-icon-rtl-mirror m-0 roleIcon">
+                                                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                                </mat-icon>
+                                              </button>
+                                              <!-- <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update) || certItemIndex === 0}"
+                                                (change)="selectionToggle($event.checked, node, 'certCountry'); calcSelectedStore();"
+                                                [indeterminate]="node.selectStatus === 'mixed'"
+                                                [checked]="node.selectStatus === 'checked'">
+                                                {{node.desc}}</mat-checkbox> -->
+                                                <div>{{node.desc}}</div>
+                                            </div>
+                                            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                                              <ng-container matTreeNodeOutlet></ng-container>
+                                            </ul>
+                                          </li>
+                                        </ul>
+                                      </mat-nested-tree-node>
+                                    </mat-option>
+                                  </mat-tree>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <!-- Certificates -->
+                          <td>
+                            <div [ngClass]="{'disableClass': getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') === 0}" class="cert-select-container">
+                              <div [matMenuTriggerFor]="certificatesDD" [ngClass]="{'no-cursor' : isDisabled}" class="cert-select">
+                                <div *ngIf="certItem.name.length === 0" class="selected-cert-options placeholder d-flex justify-content-between">
+                                  Select certificate...
                                 </div>
-                                <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
-                                  <ng-container matTreeNodeOutlet></ng-container>
-                                </ul>
-                              </li>
-                            </ul>
-                          </mat-nested-tree-node>
-                        </mat-option>
-                      </mat-tree>
-                    </mat-select>
-                  </mat-form-field>
+                                <div *ngIf="certItem.name.length > 0" class="selected-cert-options d-flex justify-content-between">
+                                  {{certItem.name}}
+                                </div>
+                              </div>
+                            </div>
+            
+                            <mat-menu #certificatesDD="matMenu" class="newCoursePopup">
+                    
+                              <div class=" p-0 coursePopup">
+                                <div>
+                                  <div *ngFor="let certificate of certificates"
+                                    class=" d-flex justify-content-start  align-items-center courseMenu" mat-menu-item>
+                                    <button (click)="onCertificateChange(certificate, certItem)" class="mb-2 d-flex justify-content-start"
+                                      mat-menu-item>{{certificate.name}}</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </mat-menu>
+                          </td>
+                          <!-- Preview -->
+                          <td>
+                            <a [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
+                          </td>
+                          <!-- Delete -->
+                          <td>
+                            <button [ngClass]="{'disableClass': certItem.name.length === 0}" *ngIf="certItemIndex !== 0" (click)="openAlert('deleteCertItem', certItemIndex, certItem)">
+                              <img src="assets/images/delete-user.svg" height="13px" width="13px"
+                              class=" ml-2 m-0 closeActivity answerDeleteCls">
+                            </button>
+                          </td>
+                        </ng-container>
+                      </tr>
+                      <!-- Add button -->
+                      <tr>
+                        <td>
+                          <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length" (click)="addCertItem()" class="btn btn-primary">Add</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                <ng-select [disabled]="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') === 0" (click)="policyGroupOnClick()" (change)="onCertificateChange($event, certItem)" [items]="certificates" name="name" bindValue="id" bindLabel="name"
-                  [clearable]=false [searchable]=false [(ngModel)]="certItem.certificateName" placeholder="certificates" class="periodSelectCls">
-                </ng-select>
-                <a (click)="viewCertificate(certItem)">Preview</a>
-              </div>
-              <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length" (click)="addCertItem()" class="btn btn-primary">Add</button>
+              </div>              
             </ng-container>
 
             <!-- Common buttons -->
@@ -1109,7 +1174,7 @@
               </ng-container>
               <!-- certificate page -->
               <ng-container *ngIf="currentPage === course.chapters.length + 2">
-                <ng-container *ngIf="courseConfig.code !== courseCode.F2F">
+                <ng-container *ngIf="(courseConfig.code !== courseCode.F2F) || courseConfig.code === courseCode.F2F && !certificationItems[0].id">
                   <div>
                     <img src="assets/images/sample-certificate.png" alt="Certificate" />
                   </div>

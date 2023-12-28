@@ -2442,3 +2442,89 @@ button.pdfDownload:disabled {
   pointer-events: none;
   opacity: 0.5;
 }
+
+/* Certification module */
+.cert-select-container {
+  position: relative;
+    // width: 360px;
+
+}
+
+.cert-select {
+  border: 1px solid #616161;
+  padding: 5px 10px;
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.selected-cert-options {
+  flex: 1;
+  overflow: hidden;
+}
+
+.dropdown-arrow {
+  margin-left: 5px;
+}
+
+.no-cursor{
+  cursor: default;
+}
+
+.disableClass{
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cert-page-container-top {
+  padding: 20px;
+  padding-bottom: 0px;
+  background: #fff;
+  border-radius: 5px;
+}
+
+.cert-container {
+  height: calc(100vh - 172px);
+  background: #fff;
+
+  position: relative;
+  overflow: auto;
+}
+
+.cert-container{
+  table{
+
+    tbody :hover{
+      // border-bottom: 1px solid #e8e8e8;
+      background-color: #ededed;
+    }
+    // tr:nth-child(1){
+    //   border-bottom: 1px solid #e8e8e8;
+    // }
+    th{
+      background-color: #fff;
+      font-weight: 600;
+    }
+  }
+  .textinput{
+    border: 1px solid #616161!important;
+    width: 210px;
+    /* margin-top: 0px; */
+    font-weight: 500;
+    color: #212529;
+    height: 32px;
+    border-radius: 3px;
+    padding-left: 10px;
+  }
+  .textinput:hover {
+    background-color: #ffffff !important;
+  }
+  /* .textinput:focus-visible{
+    border-bottom: 1px solid #1F96F4 !important;
+  } */
+}
+
+.borderTr {
+  border-bottom: 1px solid #e8e8e8;
+}

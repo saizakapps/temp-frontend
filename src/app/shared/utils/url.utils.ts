@@ -110,6 +110,8 @@ export class UrlUtils {
     ASSIGN_USER_ROLE: `${this.INCIDENT_USER}roles/assign`,
 
     /* F2F module */
-    GET_CERTIFICATES_LIST: `${this.USER_URL}get-default-certificates`
+    GET_CERTIFICATES_LIST: `${this.USER_URL}get-default-certificates`,
+    CREATE_UPDATE_CERTIFICATE: `${this.USER_URL}create-ff-certificate`,
+    GET_CERTIFICATE: `${this.USER_URL}get-ff-course-certificate`,
   };
 }

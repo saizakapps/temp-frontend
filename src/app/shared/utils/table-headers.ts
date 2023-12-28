@@ -657,6 +657,28 @@ export class TableHeaders {
         filter: false,
         sort: false
       }
+    ],
+    CERTIFICATE_ITEMS_TABLE: [
+      {
+        name: '',
+        property: 'default',
+      },
+      {
+        name: 'Location',
+        property: 'location',
+      },
+      {
+        name: 'Certificates',
+        property: 'certificates',
+      },
+      {
+        name: '',
+        property: 'preview',
+      },
+      {
+        name: '',
+        property: 'delete',
+      }
     ]
 
   };
