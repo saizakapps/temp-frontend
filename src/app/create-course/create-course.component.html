@@ -851,8 +851,8 @@
                       <tr *ngFor="let certItem of certificationItems; let certItemIndex = index">
                         <ng-container>
                           <!-- Default -->
-                          <td>
-                            <mat-icon *ngIf="index === 0" alt="default" title="default">check_circle_outline</mat-icon>
+                          <td class="tdDefault">
+                            <mat-icon *ngIf="certItemIndex === 0" alt="default" title="default">check_circle_outline</mat-icon>
                           </td>
                           <!-- Locations -->
                           <td>
@@ -940,13 +940,12 @@
                           </td>
                           <!-- Preview -->
                           <td>
-                            <a [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
+                            <a *ngIf="certItem.id !== 6" style="margin-bottom: 10px;" [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
                           </td>
                           <!-- Delete -->
                           <td>
-                            <button [ngClass]="{'disableClass': certItem.name.length === 0}" *ngIf="certItemIndex !== 0" (click)="openAlert('deleteCertItem', certItemIndex, certItem)">
-                              <img src="assets/images/delete-user.svg" height="13px" width="13px"
-                              class=" ml-2 m-0 closeActivity answerDeleteCls">
+                            <button class="certDeleteBtn" [ngClass]="{'disableClass': certItem.name.length === 0}" *ngIf="certItemIndex !== 0" (click)="openAlert('deleteCertItem', certItemIndex, certItem)">
+                              <img src="assets/images/delete-user.svg" height="20px" width="20px">
                             </button>
                           </td>
                         </ng-container>

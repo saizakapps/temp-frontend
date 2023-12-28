@@ -1011,6 +1011,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     } else if (question.questionType === 'fillRightAnswer' || question.questionType === 'freeText') {
       delete question.options;
     }
+    this.updateQuestionLimit()
   }
 
   @ViewChild ('locationSelect') locationSelect;

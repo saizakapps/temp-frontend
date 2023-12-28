@@ -2446,8 +2446,8 @@ button.pdfDownload:disabled {
 /* Certification module */
 .cert-select-container {
   position: relative;
-    // width: 360px;
-
+  margin-bottom: 10px;
+  max-width: 300px !important;
 }
 
 .cert-select {
@@ -2527,4 +2527,42 @@ button.pdfDownload:disabled {
 
 .borderTr {
   border-bottom: 1px solid #e8e8e8;
+}
+
+/* Add borders to table */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Add borders to table header cells */
+th {
+  padding: 8px 8px;
+  padding-top: 0px !important;
+}
+
+/* Add borders to table cells */
+td {
+  padding: 8px 8px;
+}
+td:nth-child(1), th:nth-child(1){
+  padding-left: 2px;
+  padding-right: 0px;
+}
+td:last-child, th:last-child{
+  padding-right: 10px;
+  // width: 100%;
+}
+tr{
+  padding: 0px 5px;
+}
+
+.tdDefault {
+  width:auto !important;
+}
+
+.certDeleteBtn {
+  border: none;
+  background: none !important;
+  margin-bottom: 10px;
 }
