@@ -679,8 +679,63 @@ export class TableHeaders {
         name: '',
         property: 'delete',
       }
+    ],
+    F2F_REPORTS_TABLE_SUMMARY:[
+      {
+        name: 'Employee id',
+        property: 'employeeId',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Employee name',
+        property: 'firstName',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'F2F Training name',
+        property: 'courseName',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Trainer name',
+        property: 'trainerName',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Trained Date',
+        property: 'completionDate',
+        filter: false,
+        sort: true
+      },
+      {
+        name: 'Expired date',
+        property: 'expiredDate',
+        filter: false,
+        sort: true
+      },
+      {
+        name: 'Store Id',
+        property: 'storeCode',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Store name',
+        property: 'store',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Employee role',
+        property: 'role',
+        filter: false,
+        sort: false
+      },
     ]
-
   };
 
   constructor() {

@@ -2317,6 +2317,12 @@ border-color: #1f96f4 !important;
 .incidentListTblView .popover{
   margin-top: -3px !important;
 }
+.f2fTableview .popover-body{
+  padding: 0px;
+}
+.f2fTableview .popover{
+  margin-top: 2px !important;
+}
 .auditListTblView .popover{
   margin-top: -3px !important;
 }
@@ -2702,8 +2708,7 @@ width: 16px !important;
   color: #000;
   font-size: 14px;
   height: 35px !important;
- display: flex;
- align-items: center;
+  line-height: 35px;
  min-height: unset !important;
 }
 .auditNgselectYear .ng-select .ng-select-container .ng-value-container {
@@ -2719,6 +2724,8 @@ width: 16px !important;
 }
 .auditNgselectYear .ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
   height: 35px !important;
+  line-height: 35px;
+  padding: 0px 10px;
   min-height: unset !important;
 }
 .auditNgselectYear .ng-dropdown-panel{
@@ -3070,4 +3077,278 @@ width: 16px !important;
 }
 .tableMatmenu.mat-menu-panel{
   max-width: 302px !important;
+}
+
+.summaryngSelect .ng-select.ng-select-single .ng-select-container{
+  width: 150px !important;
+  height: 35px !important;
+  // margin-top: 5px !important;
+  font-family: "Inter";
+}
+.summaryngSelect-new .ng-select.ng-select-single .ng-select-container{
+  width: 130px !important;
+  height: 35px !important;
+  // margin-top: 5px !important;
+  font-family: "Inter";
+}
+
+.summaryngSelect .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected{
+  // background-color: #1f96f4 !important;
+  color: #000;
+  font-size: 14px;
+  height: 35px !important;
+  line-height: 35px;
+//  display: flex;
+//  align-items: center;
+ min-height: unset !important;
+}
+.summaryngSelect .ng-select .ng-select-container .ng-value-container {
+  height: 32px !important;
+}
+.summaryngSelect .ng-select.ng-select-single .ng-select-container .ng-arrow-wrapper{
+  bottom: 14px !important;
+}
+.summaryngSelect span.ng-value-label{
+  font-size: 14px !important;
+  font-family: "Inter";
+  font-weight: 450 !important;
+  color: #000 !important;
+}
+.summaryngSelect .ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+  height: 35px !important;
+  line-height: 35px;
+  min-height: unset !important;
+  padding: 0px 10px;
+  // display: flex;
+  // align-items: center;
+}
+.summaryngSelect .ng-dropdown-panel{
+  font-size: 14px !important;
+}
+.summaryngSelect .ng-select.ng-select-disabled .ng-select-container, .ng-select.ng-select-single.ng-select-disabled .ng-select-container {
+  background-color: #fff !important;
+}
+.summaryngSelect .ng-select{
+  padding-bottom: 0px !important;
+}
+.summaryngSelect ng-dropdown-panel.ng-select-bottom{
+  top: 100% !important;
+}
+.summaryngSelectcourse .ng-select.ng-select-single .ng-select-container{
+  width: 330px !important;
+}
+.batchselect{
+  width: 100%;
+  
+}
+.batchselect1{
+  width: 100%;
+  
+}
+
+.batchselect .ng-select.ng-select-single .ng-select-container{
+  width: 100% !important;
+}
+.batchselect .ng-select.ng-select-single .ng-select-container{
+  border: 1px solid #818181 !important;
+}
+.batchselect1 .ng-select.ng-select-single .ng-select-container{
+  width: 100% !important;
+}
+.batchselect1 .ng-select.ng-select-single .ng-select-container{
+  border: 1px solid #818181 !important;
+}
+.f2f_coursename_list{
+  .mat-form-field-wrapper{
+    margin-top: 0px !important;
+    padding: 0px;
+  }
+  .mat-form-field-infix{
+    border-top: 0px !important;
+    padding: 0px !important;
+    width: 330px;
+  }
+  .mat-select-min-line{
+    color: #000 !important;
+    font-size: 15px !important;
+    font-family: "Inter";
+  }
+  .mat-select-value-text{
+    color: #000 !important;
+    font-size: 15px !important;
+    font-family: "Inter";
+  }
+  .mat-select-value{
+    color: #000 !important;
+    font-size: 14px !important;
+    font-family: "Inter";
+  }
+}
+
+.f2f_coursename_form .mat-form-field-appearance-legacy .mat-form-field-label {
+  top: 8px !important;
+  font-size: 15px;
+  color: #000000af;
+  font-family: "Inter";
+  }
+
+  .f2fPanelClassMatselectList{
+    margin-left: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 330px;
+    max-width: 330px !important;
+    min-width: unset !important;
+  }
+  .f2fcheckboxstatus .mat-checkbox-layout .mat-checkbox-label{
+    font-size: 13px;
+    max-width: unset;
+    width: 295px;
+    padding-right: 7px;
+  }
+
+  .f2f_trainername_list {
+    .mat-form-field-infix{
+      width: 150px;
+    }
+  }
+  .f2fPaneltrainerList{
+    margin-left: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 150px;
+    max-width: 150px !important;
+    min-width: unset !important;
+  }
+  .f2ftrianercheckboxstatus .mat-checkbox-layout .mat-checkbox-label{
+    font-size: 13px;
+    max-width: unset;
+    width: 115px;
+    padding-right: 7px;
+  }
+  .f2f_trainer_form .mat-form-field-appearance-legacy .mat-form-field-label {
+    top: 8px !important;
+    font-size: 15px;
+    width: 120px;
+    color: #818181;
+    font-family: "Inter";
+    }
+
+    .summaryngSelect .ng-select .ng-select-container .ng-value-container .ng-input>input{
+      padding-left: 10px;
+    }
+
+    // @media screen and (max-width: 1366px){
+    //   .batchselect .ng-select.ng-select-single .ng-select-container{
+    //     width: 192px !important;
+    //   }
+    // }
+
+@media screen and (max-width: 1200px){
+  .batchselect .ng-select.ng-select-single .ng-select-container{
+    width: 100px !important;
+  }
+}
+@media screen and (max-width: 1100px){
+  .batchselect .ng-select.ng-select-single .ng-select-container{
+    width: 100% !important;
+  }
+}
+
+.batchselect .ng-dropdown-panel .ng-dropdown-panel-items{
+  max-height: 140px !important;
+}
+
+.f2fSummary-countryRegion .mat-form-field-flex{
+  width: 215px;
+  height: 35px !important;
+}
+
+.f2fSummary-countryRegion .mat-form-field-wrapper{
+  padding-bottom: 0px !important;
+}
+
+.f2fSummary-rolegroup .mat-form-field-flex{
+  width: 160px;
+  height: 35px !important;
+}
+
+.f2fSummary-rolegroup .mat-form-field-wrapper{
+  padding-bottom: 0px !important;
+}
+
+.f2fSummary-forms .mat-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-form-field-flex{
+  height: 35px !important;
+  border: 1px solid #BDBDBD;
+  padding-top: 11px !important;
+}
+.f2fSummary-forms .mat-form-field-wrapper{
+  margin-top: 0px !important;
+}
+.f2fSummary-forms .mat-checkbox-layout .mat-checkbox-label{
+  max-width: 116px !important;
+}
+.f2fSummary-forms .mat-form-field-appearance-fill.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-fill.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
+  transform: translateY(-0.79575em) scale(0.75);
+  width: 133.3333333333%;
+}
+.f2fPanelClass-countryregion{
+  min-width: calc(100% + 27px) !important;
+  margin-top: 3px;
+  max-height: 330px !important;
+}
+.f2fPanelClass-rolegroup{
+  width: 132px;
+  min-width: calc(100% + 27px) !important;
+  margin-top: 3px;
+  max-height: 330px !important;
+}
+.f2fsummary-reportsCheckbox .mat-checkbox-layout {
+  padding-left: 14px !important;
+}
+.f2fSummary-matcheckbox .mat-checkbox-layout .mat-checkbox-label {
+  max-width: 110px !important;
+}
+.f2fSummary-forms .mat-form-field-type-mat-select .mat-form-field-label{
+  font-size: 14px;
+  font-family: "Inter";
+  top: -2px !important;
+}
+.f2fSummay-levelselected {
+  // font-weight: 600;
+  font-size: 14px !important;
+  color: #000;
+  font-family: "Inter";
+}
+.f2fSummay-levelselected .mat-form-field-type-mat-select .mat-form-field-label {
+  width: calc(100% - 50px);
+  background: #000;
+  color: #fff;
+  padding: 3px;
+  font-size: 11px;
+}
+.moreOption-menu.mat-menu-panel{
+  min-height: unset !important;
+  }
+  .ctryRegMat-form .mat-form-field-wrapper{
+    margin-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  .summaryngSelect .ng-select.ng-select-single .ng-select-container .ng-clear-wrapper {
+    bottom: 6px;
+}
+.modal-dialog-delete{
+  max-width: 500px !important;
+}
+.f2fFormsLbl .mat-form-field-wrapper{
+  padding-bottom: 0px !important;
+}
+.f2f_trainername_form .mat-form-field-appearance-legacy .mat-form-field-label {
+  top: 10px !important;
+  font-size: 15px;
+  color: #000;
+  font-family: "Inter";
+  font-weight: 500;
+  width: calc(100% - 30px);
 }

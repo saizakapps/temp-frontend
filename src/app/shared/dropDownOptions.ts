@@ -283,7 +283,19 @@ export class DropdownOptions {
     {
       name: 'Group Message',
       key: 'groupMessage'
-    }]
+    }],
+    employeeTraineeSearch: [
+      {
+        name: 'Employee Name',
+        key: 'employeeName',
+        showname:'Search by Name'
+      },
+      {
+        name: 'Employee Id',
+        key: 'employeeId',
+        showname:'Search by Id'
+      }
+    ],
   }
 
   public sortOption = ['Reset', 'Sort By Asc', 'Sort By Desc'];

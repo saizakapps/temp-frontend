@@ -113,5 +113,18 @@ export class UrlUtils {
     GET_CERTIFICATES_LIST: `${this.USER_URL}get-default-certificates`,
     CREATE_UPDATE_CERTIFICATE: `${this.USER_URL}create-ff-certificate`,
     GET_CERTIFICATE: `${this.USER_URL}get-ff-course-certificate`,
+
+
+     /* Create Batch APIs */
+     
+     GET_F2f_FILTER_DATA_LIST : `${this.USER_URL}ff-master-data`,
+     POST_CREATE_BATCH_COURSE_LIST : `${this.USER_URL}batch-creation-f2f-courses-list`,
+     GET_CREATE_BATCH_TRAINER_LIST : `${this.USER_URL}batch-creation-f2f-trainers-list`,
+     POST_VALIDATE_BATCH_EMPLOYEES : `${this.USER_URL}f2f-create-batch-validate-employees`,   
+     POST_CREATE_NEW_BATCH:`${this.USER_URL}f2f-create-batch`,
+     POST_UPDATE_BATCH: `${this.USER_URL}f2f-update-batch-info`,
+     POST_EVENT_UPCOMING_BATCH_LIST: `${this.USER_URL}f2f-course-batch-list`,
+     POST_EVENT_DRAFT_BATCH_LIST: `${this.USER_URL}f2f-course-batch-list`,
+     POST_GET_BATCH_INFO: `${this.USER_URL}get-f2f-course-batch-info`,
   };
 }

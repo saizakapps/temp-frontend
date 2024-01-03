@@ -1,0 +1,1174 @@
+<section>
+    <div class="summary-page" *ngIf="createBatch == false">
+
+        <div>
+            <div class="summarytitle">F2F Expiration Summary</div>
+            <div class="summaryTable">
+                <div class="date-filters">
+                    <div class="form-group dataiconrel">
+                        <label class="list-filter-title">From Date</label>
+                        <div class="relative">
+                            <input type="text" class="form-control fromToDate " id="fromDate" maxlength="10"
+                                placeholder=" " name="fromDate" [(ngModel)]="fromDatevalue"
+                                [ngModelOptions]="{standalone: true}" bsDatepicker
+                                (bsValueChange)="fromDateChange($event)" autocomplete="off" bsDatepicker
+                                [bsConfig]="common.bsConfig" [minDate]="fromMinDate"
+                                [maxDate]="(toDatevalue == '' || toDatevalue == undefined)?toMaxDate:fromMaxDate"
+                                #fromDate required>
+                            <div class="data-icon" (click)="fromDate.click()">
+                                <img src="assets/healthsafetyimages/field-icon.svg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group dataiconrel">
+                        <label class="list-filter-title">To Date</label>
+                        <div class="relative">
+                            <input type="text" class="form-control fromToDate " id="toDate1" maxlength="10"
+                                placeholder=" " name="toDate" [(ngModel)]="toDatevalue"
+                                [ngModelOptions]="{standalone: true}" bsDatepicker
+                                (bsValueChange)="toDateChange($event)" autocomplete="off" bsDatepicker
+                                [bsConfig]="common.bsConfig" [maxDate]="toMaxDate" [minDate]="toMinDate" #toDate
+                                required>
+                            <div class="data-icon" (click)="toDate.click()">
+                                <img src="assets/healthsafetyimages/field-icon.svg">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="clear-filter-text">
+                        <button type="button" title="Clear Filter"
+                            [ngClass]="{'disabledateClear' :(fromDatevalue == '' || fromDatevalue == undefined) && (toDatevalue == '' || toDatevalue == undefined)}"
+                            (click)="cleardateFilter()" class="clearFilterButton">
+                            <img height="22px" width="22px" src="assets/images/clear-filter.png" alt="clear-filter">
+                        </button>
+                    </div>
+
+                </div>
+                <div class="infoData">
+                    <div class="d-flex align-items-center">
+                        <div class="colorbox"></div>
+                        <div class="colorbox_text">Expired</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="colorbox yellow"></div>
+                        <div class="colorbox_text">About to Expire</div>
+                    </div>
+                </div>
+                <div class="listData">
+                    <div *ngFor="let data of this.summaryList; let i = index" class="forData">
+                        <div class="d-flex align-items-center justify-content-between rowdata">
+                            <div class="list_title" title="{{data.title}}">{{data.title}}</div>
+                            <div class="d-flex align-items-center">
+                                <div class="list_expired notification"
+                                    [ngClass]="{'opacity0' : data.expired == '' || data.expired == '0'}">
+                                    {{data.expired}}
+                                </div>
+                                <div class="list_about notification"
+                                    [ngClass]="{'opacity0' : data.about == '' || data.about == '0'}">{{data.about}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottombutton" (click)="gotocreateBatch()">View Report & Create Batch →</div>
+        </div>
+        <div class="cardListItems">
+            <div class="summarytitle">Upcoming Events</div>
+            <div class="cardData">
+                <div *ngFor="let item of this.upcomingListData; let j =index" class="card">
+                    <div class="cardtitle">{{item.courseName}}</div>
+                    <div class="cardbatch">{{item.batchName}}</div>
+                    <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png" alt="">&nbsp;
+                        {{item.batchEmployeesCount}} Employee(s)</div>
+                    <div class="cardtrainer"><span class="train">Trainer(s):</span> {{item.trainerName}}</div>
+                    <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
+                            alt="">&nbsp;{{item.scheduledDate  | date:'dd-MMM-yyyy'}}</div>
+                            <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
+
+                    <div class="detailview" data-toggle="modal" data-target="#detailsModalUpdate"
+                        (click)="getscheduledDetails(item)">View Details</div>
+                </div>
+            </div>
+            <div  *ngIf="upcomingListData.length == 0 && cardShimmer == false">
+                No Upcoming Events Record
+                </div>
+                <div *ngIf="cardShimmer">
+                <div class="cardShimmer">
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+   
+            </div>
+                <div class="cardShimmer">
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+   
+                    </div>
+                    </div>
+            </div>
+        <div class="cardListItems">
+            <div class="summarytitle">Drafted Events</div>
+            <div class="cardData">
+                <div *ngFor="let item of this.draftListData; let j =index" class="card">
+                    <div class="cardtitle">{{item.courseName}}</div>
+                    <div class="cardbatch">{{item.batchName}}</div>
+                    <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png" alt="">&nbsp;
+                        {{item.emp_count}} Employees</div>
+                    <div class="cardtrainer"><span class="train">Trainer:</span> {{item.trainerName}}</div>
+                    <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
+                            alt="">&nbsp;{{item.scheduledDate}}</div>
+                            <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
+
+                    <div class="detailview detailviewyellow">View Details</div>
+                </div>
+            </div>
+            <div  *ngIf="draftListData.length == 0 && cardShimmer1 == false">
+            No Draft Events Record
+            </div>
+            <div *ngIf="cardShimmer1">
+                <div class="cardShimmer">
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+   
+            </div>
+                <div class="cardShimmer">
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+   
+                    </div>
+                    </div>
+        </div>
+    </div>
+
+    <div class="batch-page" id="MainContent" *ngIf="createBatch == true">
+        <div class="filter-header d-flex">
+            <div class="form-group">
+                <label class="list-filter-title">Search</label>
+                <div class="d-flex">
+                    <div class="searchby-dd summaryngSelect">
+                        <ng-select class="employeeDetail" [items]="searchLabels" name="searchBy" bindLabel="showname"
+                            bindValue="key" [clearable]=false [searchable]="false" (change)="searchTextModal = ''"
+                            [(ngModel)]="searchBy">
+                        </ng-select>
+                    </div>
+                    <input type='text' id="SearchInputText" [(ngModel)]="searchTextModal" name="search"
+                        (change)="callGetFilteredList('search')" class="empSearchInput"
+                        placeholder="{{searchBy == 'employeeId' ? 'Employee & Trainer ID' : 'Employee & Trainer Name'}}" />
+                </div>
+                <!-- <input type="text" class="form-control findInput" id="name" placeholder="" name="name" [(ngModal)] = "filterSearch"
+                (keyup.enter)="searchfilter($event)" pattern="[A-Za-z0-9 ]+" maxlength="60" (keypress)="this.common.RestrictSpaceSpecial($event)"  [ngModelOptions]="{standalone: true}"> -->
+            </div>
+
+            <div class="form-group f2fSummary-forms">
+                <label class="list-filter-title">Role Group/ Role</label>
+                <!-- <input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
+                    [ngModelOptions]="{standalone: true}"> -->
+                <div>
+                    <mat-form-field appearance="fill" class="f2fSummary-rolegroup"
+                        [ngClass]="{appliedFilter : selectedRoleGroupDropDown.length > 0}">
+                        <mat-label *ngIf="selectedRoleGroupDropDown.length < 1"> Select Roles
+                        </mat-label>
+                        <mat-label *ngIf="selectedRoleGroupDropDown.length > 0" class="levelSelected"> Filter applied
+                        </mat-label>
+                        <mat-select (openedChange)="callGetFilteredList('rolelevel',$event)"
+                            panelClass="f2fPanelClass-rolegroup">
+                            <mat-checkbox [checked]="levelCount === selectedLevelCount"
+                                [indeterminate]="levelCount !== selectedLevelCount && selectedLevelCount > 0"
+                                *ngIf="roleLevelList.length > 0" id="all"
+                                class="w-100 allCheckbox reportsCheckbox countryCheckbox f2fsummary-reportsCheckbox mt-0"
+                                name="allRoleGroups" (change)="selectAll($event, roleLevelList, 'roleGroup')">
+                                All</mat-checkbox>
+                            <mat-tree [dataSource]="roleLevelList" [treeControl]="roleTreeControl" class="example-tree">
+                                <mat-option>
+                                    <!-- This is the tree node template for leaf nodes -->
+                                    <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                                        <li class="mat-tree-node storeList node1 reportsRole">
+                                            <!-- use a disabled button to provide padding for tree leaf -->
+                                            <!-- <button mat-icon-button disabled></button> -->
+                                            <mat-checkbox
+                                                (change)="selectionToggleLeaf($event.checked, node, 'roleGroup')"
+                                                [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                        </li>
+                                    </mat-nested-tree-node>
+                                    <!-- This is the tree node template for expandable nodes -->
+                                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                                        <li>
+                                            <div class="mat-tree-node node2">
+                                                <button mat-icon-button matTreeNodeToggle
+                                                    [attr.aria-label]="'toggle ' + node.desc">
+                                                    <mat-icon class="mat-icon-rtl-mirror mt-2">
+                                                        {{roleTreeControl.isExpanded(node) ? 'expand_more' :
+                                                        'chevron_right'}}
+                                                    </mat-icon>
+                                                </button>
+                                                <mat-checkbox
+                                                    (change)="selectionToggle($event.checked, node, 'roleGroup')"
+                                                    [indeterminate]="node.selectStatus === 'mixed'"
+                                                    [checked]="node.selectStatus === 'checked'">
+                                                    {{node.desc}}</mat-checkbox>
+                                            </div>
+                                            <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)"
+                                                class="mb-0">
+                                                <ng-container matTreeNodeOutlet></ng-container>
+                                            </ul>
+                                        </li>
+                                    </mat-nested-tree-node>
+                                </mat-option>
+                            </mat-tree>
+                        </mat-select>
+                    </mat-form-field>
+                    <!-- <mat-form-field appearance="fill" class="f2fSummary-rolegroup">
+              <mat-label *ngIf="selectedRoleGroupDropDown.length < 1"> Select Roles
+              </mat-label>
+              <mat-label *ngIf="selectedRoleGroupDropDown.length > 0" class="f2fSummay-levelselected"> Filter applied
+              </mat-label>
+              <mat-select (openedChange)="callGetFilteredList('rolelevel',$event)"  panelClass="f2fPanelClass-rolegroup">
+                <mat-checkbox [checked]="levelCount === selectedLevelCount" [indeterminate]="levelCount !== selectedLevelCount && selectedLevelCount > 0" *ngIf="roleLevelList.length > 0" id="all"
+                  class="w-100 allCheckbox reportsCheckbox countryCheckbox mt-0 f2fsummary-reportsCheckbox" name="allRoleGroups"
+                  (change)="selectAll($event, roleLevelList, 'roleGroup')">
+                  All</mat-checkbox>
+                <mat-tree [dataSource]="roleLevelList" [treeControl]="roleTreeControl" class="example-tree">
+                  <mat-option>
+                    <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                      <li class="mat-tree-node storeList node1 reportsRole">
+              
+                        <mat-checkbox class="f2fSummary-matcheckbox" (change)="selectionToggleLeaf($event.checked, node, 'roleGroup')"
+                          [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                      </li>
+                    </mat-nested-tree-node>
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                      <li>
+                        <div class="mat-tree-node node2">
+                          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.desc">
+                            <mat-icon class="mat-icon-rtl-mirror mt-2">
+                              {{roleTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                          </button>
+                          <mat-checkbox (change)="selectionToggle($event.checked, node, 'roleGroup')"
+                            [indeterminate]="node.selectStatus === 'mixed'" [checked]="node.selectStatus === 'checked'">
+                            {{node.desc}}</mat-checkbox>
+                        </div>
+                        <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)" class="mb-0">
+                          <ng-container matTreeNodeOutlet></ng-container>
+                        </ul>
+                      </li>
+                    </mat-nested-tree-node>
+                  </mat-option>
+                </mat-tree>
+              </mat-select>
+            </mat-form-field> -->
+                </div>
+            </div>
+
+            <div class="form-group f2fSummary-forms">
+                <label class="list-filter-title">Country/Region/ Store</label>
+                <!-- <input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
+                    [ngModelOptions]="{standalone: true}"> -->
+                <div>
+                    <!--[ngClass]="{appliedFilter : selectedCountryDropDown.length > 0}"-->
+                    <mat-form-field appearance="fill" class="countryList countryRegion f2fSummary-countryRegion">
+                        <mat-label *ngIf="selectedCountryDropDown.length < 1"> Select Countries / Regions / Stores
+                        </mat-label>
+                        <mat-label *ngIf="selectedCountryDropDown.length > 0" class="f2fSummay-levelselected"> Filter
+                            applied
+                        </mat-label>
+                        <mat-select (openedChange)="callGetFilteredList('countries',$event)"
+                            panelClass="f2fPanelClass-countryregion">
+                            <mat-checkbox [checked]="storeCount === selectedStoreCount"
+                                [indeterminate]="storeCount !== selectedStoreCount && selectedStoreCount > 0"
+                                *ngIf="countryList?.length > 0" id="all"
+                                class="w-100 allCheckbox countryCheckbox  reportsCheckbox pl-3 mt-0" name="allCountries"
+                                (change)="selectAll($event, countryList, 'country')">
+                                All</mat-checkbox>
+                            <mat-tree [dataSource]="countryList" [treeControl]="roleTreeControl"
+                                class="example-tree countryList">
+                                <mat-option>
+                                    <!-- This is the tree node template for leaf nodes -->
+                                    <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                                        <li class="mat-tree-node storeList node1 reportsRole">
+                                            <!-- use a disabled button to provide padding for tree leaf -->
+                                            <!-- <button mat-icon-button disabled class="d-none"></button> -->
+                                            <mat-checkbox
+                                                (change)="selectionToggleLeaf($event.checked, node, 'country')"
+                                                [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                        </li>
+                                    </mat-nested-tree-node>
+                                    <!-- This is the tree node template for expandable nodes -->
+                                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                                        <li>
+                                            <div class="mat-tree-node ">
+                                                <button mat-icon-button matTreeNodeToggle
+                                                    [attr.aria-label]="'toggle ' + node.desc">
+                                                    <mat-icon class="mat-icon-rtl-mirror mt-2">
+                                                        {{roleTreeControl.isExpanded(node) ? 'expand_more' :
+                                                        'chevron_right'}}
+                                                    </mat-icon>
+                                                </button>
+                                                <mat-checkbox
+                                                    (change)="selectionToggle($event.checked, node, 'country')"
+                                                    [indeterminate]="node.selectStatus === 'mixed'"
+                                                    [checked]="node.selectStatus === 'checked'">
+                                                    {{node.desc}}</mat-checkbox>
+                                            </div>
+                                            <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)">
+                                                <ng-container matTreeNodeOutlet></ng-container>
+                                            </ul>
+                                        </li>
+                                    </mat-nested-tree-node>
+                                </mat-option>
+                            </mat-tree>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div>
+                <div class="form-group auditYear width-input-100 d-flex align-items-end">
+                    <!-- <div class="searchby-dd summaryngSelect">
+                   
+                    <ng-select [items]="dateValues" name="filterDatevalue" bindLabel="name" bindValue="name"
+                        [clearable]=false [searchable]="false" (change)="filterdateValue()"
+                        [(ngModel)]="filterDatevalue"></ng-select>
+                </div>
+                        <div class="relative">
+							<input #dateRange class="input-group-append" (keypress)="common.allowNumberOnly($event)" ([ngModal])="myModelDatepicker" #inputField [ngClass]="{'whitecolor':filterFromdate == '' && filterTodate == ''}" 
+							id="daterangeInput" name="daterangeInput" daterangepicker 
+							  (selected)="traindateRangeChange($event)" [options]="filterDateOption" autocomplete="off">
+							  <div class="topunselectBox" *ngIf="filterFromdate == '' && filterTodate == ''" (click)="dateRange.click()"></div>
+                              <div class="data-icon" (click)="dateRange.click()">
+                                <img src="assets/healthsafetyimages/field-icon.svg">
+                            </div>  
+                            </div> -->
+                    <div class="searchby-dd summaryngSelect summaryngSelect-new">
+                        <label class="list-filter-title">Date Filter</label>
+                        <ng-select [items]="searchDateList" name="searchDateBy" bindLabel="name" bindValue="key"
+                            [clearable]=false [searchable]="false" [(ngModel)]="searchDateBy" class="dateJoining">
+                        </ng-select>
+                    </div>
+                    <div class="relative">
+                        <input #dateRange class="input-group-append" (keypress)="common.allowNumberOnly($event)"
+                            [ngModel]="selectedDateLabel" #inputField
+                            [ngClass]="{'whitecolor':filterFromdate == '' && filterTodate == ''}" id="daterangeInput"
+                            name="dateOfJoiningRangeInput" daterangepicker (selected)="dateRangeChange($event, false)"
+                            [options]="filterDateOption" autocomplete="off">
+                        <div class="topunselectBox" *ngIf="filterRequest.fromDate == '' && filterRequest.toDate == ''"
+                            (click)="dateRange.click()"></div>
+                        <div class="data-icon" (click)="dateRange.click()">
+                            <img src="assets/healthsafetyimages/field-icon.svg">
+                        </div>
+                    </div>
+                    <!-- <div class="input-group-append dateJoinInput" name="dateOfJoiningRangeInput" daterangepicker
+                                [options]="filterDateOption" (selected)="dateRangeChange($event, false)">
+                                <input name="dateOfJoining" [ngModel]="selectedDateLabel" class="date-input pl-2 d-none" readonly>
+                                <span class="input-group-text"><i
+                                    class="fa fa-calendar calendarIcon d-flex align-items-center ml-0"></i></span>
+                              </div> -->
+
+                </div>
+            </div>
+
+            <div class="form-group f2f_coursename_form">
+                <label class="list-filter-title list-filter-title1">F2F Course Name</label>
+                <!-- <ng-select [items]="courseNameList" name="filtercourseName" bindLabel="name" bindValue="name"
+                        [clearable]=false [searchable]="false" (change)="filtercoursebyName()"
+                        [(ngModel)]="filtercourseName"></ng-select> -->
+                <div>
+                    <mat-form-field class="example-full-width f2f_coursename_list" [floatLabel]="'never'">
+                        <mat-label class="mat-labul"
+                            [ngClass]="{'mat-labulApplied' : selectedOptionsnew.length > 0}">{{selectedOptionsnew.length
+                            == 0?'Select Coursename':'Filter Applied'}}</mat-label>
+                        <mat-select (openedChange)="callGetFilteredList('courses',$event)"
+                            class="form-control priority-form multselecticonnew" panelClass="f2fPanelClassMatselectList"
+                            [disableOptionCentering]="true" [(ngModel)]="selectedOptionsNew"
+                            [ngModelOptions]="{standalone: true}" multiple>
+                            <mat-select-trigger>
+                                {{ selectedOptionsnew.length > 0 ? 'Filter Applied' : 'Select Coursename' }}
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let option of filtercourseNameList" class="removecheckbox">
+                                <mat-checkbox [checked]="option.checked" [value]="option.courseName"
+                                    (change)="toggleSelectionForCourse($event, option)" class="f2fcheckboxstatus">
+                                    <div style="white-space: pre-line; line-height: 16px;">{{ option.courseName }}</div>
+                                </mat-checkbox>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-end">
+                <div class="clear_filter"
+                    [ngClass]="{'greyText': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && selectedOptionsnew.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal}"
+                    (click)="clearFilters()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        viewBox="0 0 16 16" fill="none">
+                        <mask id="mask0_430_7303" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                            width="16" height="16">
+                            <rect width="16" height="16" fill="#D9D9D9" />
+                        </mask>
+                        <g mask="url(#mask0_430_7303)">
+                            <path
+                                d="M9.86644 7.98337L8.91644 7.03337L11.2998 4.00003H5.88311L4.54977 2.6667H12.6664C12.9442 2.6667 13.1442 2.78892 13.2664 3.03337C13.3887 3.27781 13.3664 3.51114 13.1998 3.73337L9.86644 7.98337ZM13.1831 15.0667L9.33311 11.2167V12.6667C9.33311 12.8556 9.26922 13.0139 9.14144 13.1417C9.01366 13.2695 8.85533 13.3334 8.66644 13.3334H7.33311C7.14422 13.3334 6.98588 13.2695 6.85811 13.1417C6.73033 13.0139 6.66644 12.8556 6.66644 12.6667V8.55003L0.933105 2.8167L1.86644 1.8667L14.1331 14.1334L13.1831 15.0667Z"
+                                fill="#1C1B1F" />
+                        </g>
+                    </svg></div>
+            </div>
+
+            <!-- <div class="form-group f2f_coursename_form f2f_trainer_form">
+                <div class="searchby-dd summaryngSelect">
+                    <label class="list-filter-title list-filter-title1">Trainer</label>
+                    <div>
+                        <mat-form-field class="example-full-width f2f_coursename_list f2f_trainername_list"
+                            [floatLabel]="'never'">
+                            <mat-label class="mat-labul"
+                                [ngClass]="{'mat-labulApplied' : selectedOptionsnew1.length > 0}">{{selectedOptionsnew1.length
+                                == 0?'Select Trainer':'Filter Applied'}}</mat-label>
+                            <mat-select (openedChange)="callGetFilteredList('trainers',$event)"
+                                class="form-control priority-form multselecticonnew" panelClass="f2fPaneltrainerList"
+                                [disableOptionCentering]="true" [(ngModel)]="selectedOptionsnew1"
+                                [ngModelOptions]="{standalone: true}" multiple>
+                                <mat-select-trigger>
+                                </mat-select-trigger>
+                                <mat-option *ngFor="let option of trainerNameList" class="removecheckbox">
+                                    <mat-checkbox [checked]="option.checked" [value]="option.name"
+                                        (change)="getSelectedOptions($event,option)"
+                                        class="f2fcheckboxstatus f2ftrianercheckboxstatus">
+                                        {{ option.name }}
+                                    </mat-checkbox>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="d-flex align-items-end clear_filter_absolute">
+                <div class="pl-1">
+                    <button [disabled]="view && !create && !update" (click)="import()" type="button"
+                        class="mat-menu-trigger btn btn-primary btn-sm statusBtn importBtn">Import
+                    </button>
+                    <input type="file" class="fileInputCls" (change)="onFileBrowse($event, xlsContent)" hidden
+                        #uploadFileInput id="file" name="file"
+                        [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" />
+                </div>
+
+            </div>
+        </div>
+        <!-- <div class="" (click)="hidecreate()">hidebatch</div> -->
+        <div class="d-flex scheduleData">
+            <div class="padTable" [ngClass]="{'padTablefullwidth' : hideBatch == false && firstclick == true}">
+                <div class="tableDatta table-container" (scroll)="containerScrollCheck($event)" id="reports-container">
+                    <table class="emplistTable f2fTableview" id="reports-container-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th><mat-checkbox class="checkboxdivAccess" [indeterminate]="allboxinter"
+                                        [checked]="isAllselect" (change)="checkboxallSelect($event)" required>
+                                    </mat-checkbox></th>
+                                <ng-container *ngFor="let column of this.f2freportTableheader">
+                                    <th>
+                                        <span *ngIf="column.filter" [ngbPopover]="menu" class="normal-column"
+                                            [placement]="'bottom'" [autoClose]="'outside'" #statusPopover="ngbPopover"
+                                            (hidden)="onPopoverClose(column.property)"
+                                            [ngClass]="{'filtered-column': (sortByField === column.property)}">
+                                            <ng-container *ngTemplateOutlet="filter_icon">
+                                            </ng-container>
+                                        </span>
+                                        <span *ngIf="column.sort" [ngbPopover]="menu" class="normal-column"
+                                            [placement]="'bottom'" [autoClose]="'outside'" #statusPopover="ngbPopover"
+                                            [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property)}">
+                                            <ng-container *ngTemplateOutlet="filter_icon">
+                                            </ng-container>
+                                        </span>
+                                        <span class="tableHeaderpad"
+                                            *ngIf="(!column.filter && !column.sort)">{{column.name}}</span>
+                                        <ng-template #filter_icon>
+                                            <!-- (column.property == 'trainerName' && filterRequest.trainers.length > 0) || (column.property == 'storeCode' && filterRequest.storeIds.length > 0) || (column.property == 'store' && filterRequest.storeNames.length > 0) || (column.property == 'role' && filterRequest.filterRoles.length > 0)-->
+                                            <!--[ngClass]="{'filtered-column': (column.property == 'courseName' && filterRequest?.courseNamelength > 0)}"-->
+                                            <span class="normal-column">
+                                                <span *ngIf="(column.filter || column.sort)">{{column.name}}</span>
+                                                <span *ngIf="column.filter"
+                                                    class="fw-600 cursor-pointer ut-filter-status-pointer pl-1">
+                                                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="10px"
+                                                        height="10px" viewBox="0 0 512.000000 512.000000"
+                                                        preserveAspectRatio="xMidYMid meet">
+
+                                                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                                                            fill="#000000" stroke="none">
+                                                            <path d="M181 5106 c-49 -18 -106 -70 -130 -119 -26 -54 -28 -153 -4 -204 9
+                    -20 447 -503 974 -1075 651 -706 965 -1054 981 -1086 l23 -47 5 -1230 c5
+                    -1212 5 -1231 25 -1265 23 -39 93 -80 138 -80 65 0 94 28 430 414 415 476 398
+                    455 433 518 l29 53 5 795 5 795 27 51 c18 34 338 389 970 1074 519 563 954
+                    1039 968 1059 36 52 41 162 10 226 -26 54 -86 108 -139 123 -57 18 -4702 16
+                    -4750 -2z" />
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                                <span *ngIf="column.sort"
+                                                    class="fw-600 cursor-pointer ut-filter-status-pointer"> &#8645;
+                                                </span>
+                                            </span>
+                                        </ng-template>
+                                        <ng-template #menu>
+                                            <!-- select filter section -->
+                                            <div *ngIf="column.filter" class="filter-popover">
+                                                <ng-container *ngIf="column.property == 'courseName'">
+                                                    <div *ngFor="let filteritem of this.filterCourseNamevalues"
+                                                        class="p-2 pl-3 d-flex align-items-center">
+                                                        <mat-checkbox class="checkboxdivAccess"
+                                                            [checked]="filteritem.checked"
+                                                            (change)="courseChange($event, filteritem)" required>
+                                                        </mat-checkbox>
+                                                        <div class="no-wrap" title="{{filteritem.courseName}}">
+                                                            {{filteritem.courseName}}</div>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="column.property == 'trainerName'">
+                                                    <div *ngFor="let filteritem of this.filterTrainerNamevalues"
+                                                        class="p-2 pl-3 d-flex align-items-center">
+                                                        <mat-checkbox class="checkboxdivAccess"
+                                                            [checked]="filteritem.checked"
+                                                            (change)="trainerChange($event, filteritem)" required>
+                                                        </mat-checkbox>
+                                                        <div class="no-wrap" title="{{filteritem.name}}">
+                                                            {{filteritem.name}}</div>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="column.property == 'storeCode'">
+                                                    <div *ngFor="let filteritem of this.filterStoreCodevalues"
+                                                        class="p-2 pl-3 d-flex align-items-center">
+                                                        <mat-checkbox class="checkboxdivAccess"
+                                                            [checked]="filteritem.checked"
+                                                            (change)="storecodeChange($event, filteritem)" required>
+                                                        </mat-checkbox>
+                                                        <div class="no-wrap" title="{{filteritem.name}}">
+                                                            {{filteritem.name}}</div>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="column.property == 'store'">
+                                                    <div *ngFor="let filteritem of this.filterStoreNamevalues"
+                                                        class="p-2 pl-3 d-flex align-items-center">
+                                                        <mat-checkbox class="checkboxdivAccess"
+                                                            [checked]="filteritem.checked"
+                                                            (change)="storenameChange($event, filteritem)" required>
+                                                        </mat-checkbox>
+                                                        <div class="no-wrap" title="{{filteritem.name}}">
+                                                            {{filteritem.name}}</div>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="column.property == 'role'">
+                                                    <div *ngFor="let filteritem of this.filterEmployeeRolevalues"
+                                                        class="p-2 pl-3 d-flex align-items-center">
+                                                        <mat-checkbox class="checkboxdivAccess"
+                                                            [checked]="filteritem.checked"
+                                                            (change)="employeeroleChange($event, filteritem)" required>
+                                                        </mat-checkbox>
+                                                        <div class="no-wrap" title="{{filteritem.name}}">
+                                                            {{filteritem.name}}</div>
+                                                    </div>
+                                                </ng-container>
+                                                <!-- <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
+                                            [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
+                                            (click)="updateFilter(item, column); closePopover(colIndex)" (keyup)="updateFilter(item, column)">
+                                            <span>{{item.name }}</span>
+                                          </div>
+                                          <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                                          </div> -->
+                                            </div>
+                                            <!-- select sort section for column -->
+                                            <div *ngIf="column.sort" class="filter-popover">
+                                                <div *ngFor="let item of sortOption" class="cursor-pointer p-2"
+                                                    [ngClass]="sortByField === column.property && sortBy === item ?'active-status' : 'active-filter-Options'"
+                                                    (click)="updateSort(item, column.property); closePopover(colIndex)"
+                                                    (keyup)="updateSort(item, column.property)">
+                                                    <span>{{(item) | titlecase}}</span>
+                                                </div>
+                                                <div *ngIf="(sortOption).length === 0">{{'No sorting found'}}.</div>
+                                            </div>
+                                        </ng-template>
+                                    </th>
+
+
+
+
+                                </ng-container>
+
+                                <th style="width: 100%;" class="p-0"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of this.generalReportList"
+                                [draggable]="shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data) ? true : false"
+                                (dragstart)="onDragStart($event, data)" (mouseenter)="onMouseEnter($event)"
+                                (mouseleave)="onMouseLeave()" [ngClass]="{'activeTR' : data.checked == true}">
+                                <td class="nopad"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <mask id="mask0_442_10211" style="mask-type:alpha" maskUnits="userSpaceOnUse"
+                                            x="0" y="0" width="24" height="24">
+                                            <rect width="24" height="24" fill="#D9D9D9" />
+                                        </mask>
+                                        <g mask="url(#mask0_442_10211)">
+                                            <path
+                                                d="M9 20C8.45 20 7.97917 19.8042 7.5875 19.4125C7.19583 19.0208 7 18.55 7 18C7 17.45 7.19583 16.9792 7.5875 16.5875C7.97917 16.1958 8.45 16 9 16C9.55 16 10.0208 16.1958 10.4125 16.5875C10.8042 16.9792 11 17.45 11 18C11 18.55 10.8042 19.0208 10.4125 19.4125C10.0208 19.8042 9.55 20 9 20ZM15 20C14.45 20 13.9792 19.8042 13.5875 19.4125C13.1958 19.0208 13 18.55 13 18C13 17.45 13.1958 16.9792 13.5875 16.5875C13.9792 16.1958 14.45 16 15 16C15.55 16 16.0208 16.1958 16.4125 16.5875C16.8042 16.9792 17 17.45 17 18C17 18.55 16.8042 19.0208 16.4125 19.4125C16.0208 19.8042 15.55 20 15 20ZM9 14C8.45 14 7.97917 13.8042 7.5875 13.4125C7.19583 13.0208 7 12.55 7 12C7 11.45 7.19583 10.9792 7.5875 10.5875C7.97917 10.1958 8.45 10 9 10C9.55 10 10.0208 10.1958 10.4125 10.5875C10.8042 10.9792 11 11.45 11 12C11 12.55 10.8042 13.0208 10.4125 13.4125C10.0208 13.8042 9.55 14 9 14ZM15 14C14.45 14 13.9792 13.8042 13.5875 13.4125C13.1958 13.0208 13 12.55 13 12C13 11.45 13.1958 10.9792 13.5875 10.5875C13.9792 10.1958 14.45 10 15 10C15.55 10 16.0208 10.1958 16.4125 10.5875C16.8042 10.9792 17 11.45 17 12C17 12.55 16.8042 13.0208 16.4125 13.4125C16.0208 13.8042 15.55 14 15 14ZM9 8C8.45 8 7.97917 7.80417 7.5875 7.4125C7.19583 7.02083 7 6.55 7 6C7 5.45 7.19583 4.97917 7.5875 4.5875C7.97917 4.19583 8.45 4 9 4C9.55 4 10.0208 4.19583 10.4125 4.5875C10.8042 4.97917 11 5.45 11 6C11 6.55 10.8042 7.02083 10.4125 7.4125C10.0208 7.80417 9.55 8 9 8ZM15 8C14.45 8 13.9792 7.80417 13.5875 7.4125C13.1958 7.02083 13 6.55 13 6C13 5.45 13.1958 4.97917 13.5875 4.5875C13.9792 4.19583 14.45 4 15 4C15.55 4 16.0208 4.19583 16.4125 4.5875C16.8042 4.97917 17 5.45 17 6C17 6.55 16.8042 7.02083 16.4125 7.4125C16.0208 7.80417 15.55 8 15 8Z"
+                                                fill="#8D8D8D" />
+                                        </g>
+                                    </svg></td>
+                                <td draggable=false><mat-checkbox class="checkboxdivAccess" [checked]="data.checked"
+                                        (change)="onCheckboxChange($event, data)" required>
+                                    </mat-checkbox></td>
+                                <td class="td_overflowtext">{{data.employeeId}}</td>
+
+                                <td class="employeedetails_width" title="{{data.firstName}}">
+                                    <div class="name_width">{{data.firstName}}</div>
+                                    <!-- <div class="d-flex align-items-center">
+                                        <div class="smallfont">{{data.employeeId}} | <span
+                                                title="{{data.role}}">{{data.role}}</span></div>
+                                    </div> -->
+                                </td>
+                                <td class="td_overflowtext" title="{{data.courseName}}">{{data.courseName}}</td>
+                                <td class="trainer_width" title="{{data.trainerName}}">{{data.trainerName}}</td>
+                                <td class="completiondate_width">{{data.completionDate | dateUtcToLocal
+                                    :utils.FORMAT.DATEM}}</td>
+                                <td class="expiredate_width">{{data.expiredDate | dateUtcToLocal :utils.FORMAT.DATEM}}
+                                </td>
+                                <td class="storename_width">{{data.storeCode}}</td>
+                                <td class="storename_width" title="{{data.store}}">{{data.store}}</td>
+                                <td class="role_width">{{data.role}}</td>
+                                <td class="p-0"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="showShimmer" class="adjustshimmertable" [style.width.px]="shimmerWidth"
+                        [ngClass]="{'hideheader' : paginationIndex == 0 , 'showheader' : paginationIndex > 0}">
+                        <app-shimmertable></app-shimmertable>
+                    </div>
+                    <div *ngIf="generalReportList.length === 0 && recordFound == true"
+                        class="text-center no-record-found">
+                        No record found
+                    </div>
+                </div>
+                <div class="tablebottom">
+                    <div class="buttons align-items-center">
+                        <div class="commonbutton blackbutton" (click)="gotoSummarypage()">Back</div>
+                        <div class="commonbutton blackbutton">Export</div>
+                    </div>
+                    <!-- <div>{{generalReportList.length}} records found</div> -->
+                </div>
+            </div>
+
+            <div class="batchContent"
+                [ngClass]="{'batchContenthide' : hideBatch == false && firstclick == true, 'batchContentshow' : hideBatch == true && firstclick == true}">
+                <div class="batch-header" id="selectContainer">
+                    <div class="batch_count">Batches ({{batchData.length}})</div>
+                    <div class="commonbutton" (click)="addBatch()">+ New Batch</div>
+                </div>
+                <div class="newBatch" *ngIf="this.batchData.length > 0" (scroll)="scrolling($event);closeAllPanels();">
+                    <div id="targetElement" class="targetelement"></div>
+                    <div class="newbatchData" id="targetElement" *ngFor="let item of this.batchData; let b=index"
+                        (dragover)="onDragOver($event)" (drop)="onDrop($event, item)">
+                        <div class="d-flex align-items-center gap-8">
+                            <div class="batchlabel">F2F Course name</div>
+                            <div class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}"><ng-select
+                                    [items]="courseNameList" name="item.courseName" bindLabel="courseName"
+                                    bindValue="courseName" [clearable]=false [searchable]="false"
+                                    (change)="batchCoursename($event, item)" [(ngModel)]="item.courseName"></ng-select>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-8">
+                            <div class="batchlabel">Batch Name</div>
+                            <div class="tabletW-100">
+                                <input type="text" maxlength="65" (change)="batchName($event, item)"
+                                    [(ngModel)]="item.batchname" name="batch">
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-8 f2f_coursename_form" [ngClass]="{'f2f_trainername_form': item.trainerName.length > 0}">
+                            <div class="batchlabel">Trainer Name</div>
+
+                            <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                                <mat-form-field
+                                    class="example-full-width bottomassign"
+                                    [floatLabel]="'never'"  [ngStyle]="{width:getWidth()}">
+                                    <input type="text" [placeholder]="item.trainerName.length == 0 ? 'Select From List':getinputPlaceholderValue(item)" aria-label="" matInput
+                                        [matAutocomplete]="auto2" 
+                                        (keyup)="assignChange($event, item)" (click)="assignDDvalue($event,item)"
+                                        class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
+                                        #autoCompleteTrigger3="matAutocompleteTrigger">
+                                    <mat-autocomplete #auto2="matAutocomplete"
+                                        matAutocompletePosition="below"
+                                        autoActiveFirstOption>
+                                        <mat-option *ngFor="let user of item.trainerDropdownData"
+                                          [value] = "item.trainerName"  class="mat-option-design">
+                                            <div class="optionDivetag" (click)="optionClicked($event, user, item)">
+                                                <mat-checkbox
+                                                    [checked]="user.checked"
+                                                    (change)="toggleSelection($event,user,item)"
+                                                    (click)="$event.stopPropagation()">
+                                                    <span for="auto">{{ user.username }}</span>
+                                                </mat-checkbox>
+                                            </div>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                
+                            
+                        </div>
+                            <!-- <ng-select [items]="trainerNameList" bindLabel="combinedLabel" bindValue="combinedValue"
+                                [clearable]="true" [searchable]="true" (change)="batchTrainername($event, item)"
+                                [(ngModel)]="item.trainerCombine" multiple="true">
+                            </ng-select> -->
+                        </div>
+                        <div class="d-flex align-items-center gap-8">
+                            <div class="batchlabel">Schedule Date</div>
+                            <div class="relative">
+                                <input type="text" class="form-control scheduleDate" id="scheduleDate{{b}}"
+                                    maxlength="10" placeholder=" " name="scheduleDate{{b}}" [(ngModel)]="item.scheduledDate"
+                                    [ngModelOptions]="{standalone: true}" bsDatepicker
+                                    (change)="scheduleDateselect($event, item)" autocomplete="off" bsDatepicker
+                                    [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate required>
+                                <div class="data-icon" (click)="scheduleDate.click()">
+                                    <img src="assets/healthsafetyimages/field-icon.svg">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="employeeList employeeListwithpad">
+                            <div class="employeeData">
+                                <div class="font-weight-bold">Employees ({{item.employeesList.length}})</div>
+                                <!-- <div (click)="deleteAllemp(item)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                                fill="none">
+                                <path
+                                    d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                    stroke="#E20512" />
+                            </svg></div> -->
+                            </div>
+                            <div *ngFor="let employee of this.item.employeesList; let k = index">
+                                <div class="employeeData" *ngIf="k <= 2">
+                                    <div>
+                                        <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
+                                        <div class="d-flex align-items-center empidposition">
+                                            <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div (click)="deleteEmployee(item.employeesList,employee)"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                            viewBox="0 0 22 22" fill="none">
+                                            <path
+                                                d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                                stroke="#E20512" />
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="viewmore" data-toggle="modal" data-target="#deatilsModal"
+                                (click)="showBatchpopup(item)" *ngIf="item.employeesList.length > 3">view more </div>
+                        </div>
+                        <div class="batchdata_footer d-flex align-items-center justify-content-between">
+                            <div class="schedulebutton"
+                                [ngClass]="{'disableButton' : item.coursename == '' || item.trainerName.length == 0 || (item.scheduledDate == '' || item.scheduledDate == null || item.scheduledDate == undefined) || item.employeesList.length == 0}">
+                                <div class="buttonText" (click)="scheduleBatch(item, b)">
+                                    <span *ngIf="item.batchStatus == 'scheduled'">Schedule</span>
+                                    <span *ngIf="item.batchStatus == 'draft'">Draft</span>
+                                </div>
+                                <div class="break-line"></div>
+                                <div class="menuarrow" [matMenuTriggerFor]="typeValue">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"
+                                        fill="none">
+                                        <path d="M4 7.5L0 2.5H8L4 7.5Z" fill="white" />
+                                    </svg>
+                                </div>
+                                <mat-menu #typeValue="matMenu" [xPosition]="'before'" [yPosition]="'above'"
+                                    class="statusPopup batchType-metMenu">
+                                    <div class=" p-0 coursePopup">
+                                        <div>
+                                            <div *ngFor="let status of actionList"
+                                                class="d-flex justify-content-start align-items-center">
+                                                <button (click)="changeTypeAction(status, item)"
+                                                    class="d-flex justify-content-start typeMenu" mat-menu-item
+                                                    data-target="#statusModal"
+                                                    data-toggle="modal">{{status.name}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-menu>
+                            </div>
+                            <div class="batchdata_footer_right d-flex align-items-center">
+                                <div class="content_copy" data-toggle="modal" data-target="#addPeople"
+                                    (click)="addPeopleData(item)"><svg xmlns="http://www.w3.org/2000/svg" width="22"
+                                        height="18" viewBox="0 0 22 18" fill="black">
+                                        <path
+                                            d="M10.0076 7.24748C10.4574 6.76559 10.7957 6.22247 11.0226 5.61811C11.2494 5.01374 11.3629 4.39517 11.3629 3.7624C11.3629 3.12218 11.242 2.4943 11.0002 1.87875C10.7584 1.2632 10.4201 0.729404 9.98521 0.277349C10.8962 0.44257 11.6175 0.861209 12.149 1.53327C12.6805 2.20533 12.9462 2.94837 12.9462 3.7624C12.9462 4.60628 12.6767 5.36052 12.1378 6.02513C11.5988 6.68973 10.8887 7.09718 10.0076 7.24748ZM14.5296 14.4035V11.6929C14.5296 11.1135 14.4277 10.5907 14.2241 10.1246C14.0204 9.65849 13.7247 9.23813 13.3369 8.86353C14.1515 9.06374 14.8477 9.39662 15.4253 9.86216C16.003 10.3277 16.2919 10.9379 16.2919 11.6929V14.4035H14.5296ZM16.2583 8.01162V6.39471H14.6414V4.81138H16.2583V3.19448H17.8417V4.81138H19.4586V6.39471H17.8417V8.01162H16.2583ZM6.24372 7.30945C5.26101 7.30945 4.42416 6.96395 3.73317 6.27296C3.04219 5.58196 2.6967 4.74511 2.6967 3.7624C2.6967 2.77971 3.04219 1.94473 3.73317 1.25747C4.42416 0.570199 5.26101 0.226562 6.24372 0.226562C7.22643 0.226562 8.06141 0.570199 8.74867 1.25747C9.43593 1.94473 9.77956 2.77971 9.77956 3.7624C9.77956 4.74511 9.43593 5.58196 8.74867 6.27296C8.06141 6.96395 7.22643 7.30945 6.24372 7.30945ZM-0.469971 14.4035V11.7841C-0.469971 11.2684 -0.337743 10.7926 -0.0732864 10.3569C0.191183 9.92124 0.548297 9.58951 0.998056 9.36176C1.84594 8.94527 2.70889 8.63103 3.58691 8.41907C4.4649 8.2071 5.35051 8.10111 6.24372 8.10111C7.15931 8.10111 8.05423 8.20523 8.9285 8.41347C9.80277 8.62171 10.6527 8.93408 11.4782 9.35056C11.928 9.57831 12.2851 9.90818 12.5495 10.3402C12.814 10.7721 12.9462 11.2535 12.9462 11.7841V14.4035H-0.469971Z"
+                                            fill="black" />
+                                    </svg></div>
+                                <div class="addbutton" [ngClass]="{'addbutton-active' : selectedIndices.length > 0}"
+                                    (click)="addEmployee(item)">Add</div>
+                                <div class="content_copy" (click)="copyBatch(item.employeesList)"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="21" viewBox="0 0 18 21"
+                                        fill="none">
+                                        <path
+                                            d="M6.5 16.5C5.95 16.5 5.47917 16.3042 5.0875 15.9125C4.69583 15.5208 4.5 15.05 4.5 14.5V2.5C4.5 1.95 4.69583 1.47917 5.0875 1.0875C5.47917 0.695833 5.95 0.5 6.5 0.5H15.5C16.05 0.5 16.5208 0.695833 16.9125 1.0875C17.3042 1.47917 17.5 1.95 17.5 2.5V14.5C17.5 15.05 17.3042 15.5208 16.9125 15.9125C16.5208 16.3042 16.05 16.5 15.5 16.5H6.5ZM6.5 14.5H15.5V2.5H6.5V14.5ZM2.5 20.5C1.95 20.5 1.47917 20.3042 1.0875 19.9125C0.695833 19.5208 0.5 19.05 0.5 18.5V4.5H2.5V18.5H13.5V20.5H2.5Z"
+                                            fill="#1C1B1F" />
+                                    </svg></div>
+                                <div class="more_vert" [matMenuTriggerFor]="more_options"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="4" height="17" viewBox="0 0 4 17"
+                                        fill="none">
+                                        <path
+                                            d="M2 16.5C1.45 16.5 0.979167 16.3042 0.5875 15.9125C0.195833 15.5208 0 15.05 0 14.5C0 13.95 0.195833 13.4792 0.5875 13.0875C0.979167 12.6958 1.45 12.5 2 12.5C2.55 12.5 3.02083 12.6958 3.4125 13.0875C3.80417 13.4792 4 13.95 4 14.5C4 15.05 3.80417 15.5208 3.4125 15.9125C3.02083 16.3042 2.55 16.5 2 16.5ZM2 10.5C1.45 10.5 0.979167 10.3042 0.5875 9.9125C0.195833 9.52083 0 9.05 0 8.5C0 7.95 0.195833 7.47917 0.5875 7.0875C0.979167 6.69583 1.45 6.5 2 6.5C2.55 6.5 3.02083 6.69583 3.4125 7.0875C3.80417 7.47917 4 7.95 4 8.5C4 9.05 3.80417 9.52083 3.4125 9.9125C3.02083 10.3042 2.55 10.5 2 10.5ZM2 4.5C1.45 4.5 0.979167 4.30417 0.5875 3.9125C0.195833 3.52083 0 3.05 0 2.5C0 1.95 0.195833 1.47917 0.5875 1.0875C0.979167 0.695833 1.45 0.5 2 0.5C2.55 0.5 3.02083 0.695833 3.4125 1.0875C3.80417 1.47917 4 1.95 4 2.5C4 3.05 3.80417 3.52083 3.4125 3.9125C3.02083 4.30417 2.55 4.5 2 4.5Z"
+                                            fill="#1C1B1F" />
+                                    </svg>
+                                    <mat-menu #more_options="matMenu" [xPosition]="'before'" [yPosition]="'above'"
+                                        class="statusPopup batchType-metMenu moreOption-menu">
+                                        <div class=" p-0 coursePopup">
+                                            <div>
+
+                                                <button class="d-flex justify-content-start typeMenu" mat-menu-item
+                                                    data-target="#deleteModal" data-toggle="modal"
+                                                    (click)="deleteBatch(b)">Delete</button>
+
+                                            </div>
+                                        </div>
+                                    </mat-menu>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="newBatch d-flex align-items-center justify-content-center"
+                    *ngIf="this.batchData.length == 0">
+                    <div class="instruction">Click&nbsp;<b>“New Batch”</b>&nbsp;to create<br>new training group</div>
+                </div>
+                <div class="slideshow" (click)="hidecreate()" [title]="hideBatch == false? 'Show Batch' : 'Hide Batch'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <mask id="mask0_1451_4723" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                            width="18" height="18">
+                            <rect x="18" y="18" width="18" height="18" transform="rotate(-180 18 18)" fill="#D9D9D9" />
+                        </mask>
+                        <g mask="url(#mask0_1451_4723)">
+                            <path
+                                d="M9.75 4.5L14.25 9L9.75 13.5L8.7 12.45L12.1313 9L8.7 5.55L9.75 4.5ZM4.8 4.5L9.3 9L4.8 13.5L3.75 12.45L7.18125 9L3.75 5.55L4.8 4.5Z"
+                                fill="#1C1B1F" />
+                        </g>
+                    </svg>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="custom-tooltip" [ngStyle]="tooltipStyles">{{ dragText }}</div> -->
+    <div *ngIf="dragStarted" class="drag-started-indicator" [style.left.px]="indicatorPositionX" [style.top.px]="indicatorPositionY">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="15" viewBox="0 0 19 15" fill="none">
+            <path d="M10.0076 7.24748C10.4574 6.76559 10.7957 6.22247 11.0226 5.61811C11.2494 5.01374 11.3629 4.39517 11.3629 3.7624C11.3629 3.12218 11.242 2.4943 11.0002 1.87875C10.7584 1.2632 10.4201 0.729404 9.98521 0.277349C10.8962 0.44257 11.6175 0.861209 12.149 1.53327C12.6805 2.20533 12.9462 2.94837 12.9462 3.7624C12.9462 4.60628 12.6767 5.36052 12.1378 6.02513C11.5988 6.68973 10.8887 7.09718 10.0076 7.24748ZM14.5296 14.4035V11.6929C14.5296 11.1135 14.4277 10.5907 14.2241 10.1246C14.0204 9.65849 13.7247 9.23813 13.3369 8.86353C14.1515 9.06374 14.8477 9.39662 15.4253 9.86216C16.003 10.3277 16.2919 10.9379 16.2919 11.6929V14.4035H14.5296ZM16.2583 8.01162V6.39471H14.6414V4.81138H16.2583V3.19448H17.8417V4.81138H19.4586V6.39471H17.8417V8.01162H16.2583ZM6.24372 7.30945C5.26101 7.30945 4.42416 6.96395 3.73317 6.27296C3.04219 5.58196 2.6967 4.74511 2.6967 3.7624C2.6967 2.77971 3.04219 1.94473 3.73317 1.25747C4.42416 0.570199 5.26101 0.226562 6.24372 0.226562C7.22643 0.226562 8.06141 0.570199 8.74867 1.25747C9.43593 1.94473 9.77956 2.77971 9.77956 3.7624C9.77956 4.74511 9.43593 5.58196 8.74867 6.27296C8.06141 6.96395 7.22643 7.30945 6.24372 7.30945ZM-0.469971 14.4035V11.7841C-0.469971 11.2684 -0.337743 10.7926 -0.0732864 10.3569C0.191183 9.92124 0.548297 9.58951 0.998056 9.36176C1.84594 8.94527 2.70889 8.63103 3.58691 8.41907C4.4649 8.2071 5.35051 8.10111 6.24372 8.10111C7.15931 8.10111 8.05423 8.20523 8.9285 8.41347C9.80277 8.62171 10.6527 8.93408 11.4782 9.35056C11.928 9.57831 12.2851 9.90818 12.5495 10.3402C12.814 10.7721 12.9462 11.2535 12.9462 11.7841V14.4035H-0.469971Z" fill="white"/>
+            </svg>&nbsp;&nbsp; <span *ngIf="selectedIndices.length == 0">1 people </span>
+        <span *ngIf="selectedIndices.length > 0">{{selectedIndices.length}} People</span>
+      </div>
+</section>
+
+<!--Modal Popup for Open BatchDetails-->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="deatilsModal" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex align-items-center label-input pb-15">
+                    <div class="label-name">F2F Course name</div>
+                    <div class="summaryngSelect batchselect1"><ng-select [items]="courseNameList"
+                            name="selected_PopupData.courseName" bindLabel="courseName" bindValue="courseName"
+                            [clearable]=false [searchable]="false"
+                            (change)="batchCoursename($event, selected_PopupData)"
+                            [(ngModel)]="selected_PopupData.courseName"></ng-select></div>
+                </div>
+
+                <div class="d-flex align-items-center label-input pb-15">
+                    <div class="label-name">Batch name</div>
+                    <div class="selectDD">
+                        <input type="text" maxlength="65" (change)="batchName($event, selected_PopupData)"
+                            [(ngModel)]="selected_PopupData.batchname">
+                    </div>
+
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width" [ngClass]="{'f2f_trainername_form': selected_PopupData?.trainerName?.length > 0}">
+                    <div class="d-flex align-items-center label-input w-100">
+                        <div class="label-name">Trainer Name</div>
+                        <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                            <mat-form-field
+                                class="example-full-width bottomassign"
+                                [floatLabel]="'never'" style="width: 330px;">
+                                <input type="text" [placeholder]="selected_PopupData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(selected_PopupData)" aria-label="" matInput
+                                    [matAutocomplete]="auto2" 
+                                    (keyup)="assignChange($event, selected_PopupData)" (click)="assignDDvalue($event,selected_PopupData)"
+                                    class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
+                                    #autoCompleteTrigger3="matAutocompleteTrigger">
+                                <mat-autocomplete #auto2="matAutocomplete"
+                                    matAutocompletePosition="below"
+                                    autoActiveFirstOption>
+                                    <mat-option *ngFor="let user of selected_PopupData.trainerDropdownData"
+                                      [value] = "selected_PopupData.trainerName"  class="mat-option-design">
+                                        <div class="optionDivetag" (click)="optionClicked($event, user, selected_PopupData)">
+                                            <mat-checkbox
+                                                [checked]="user.checked"
+                                                (change)="toggleSelection($event,user,selected_PopupData)"
+                                                (click)="$event.stopPropagation()">
+                                                <span for="auto">{{ user.username }}</span>
+                                            </mat-checkbox>
+                                        </div>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            
+                        
+                    </div>
+                        <!-- <div class="summaryngSelect batchselect1">
+                            <ng-select [items]="trainerNameList" name="selected_PopupData.trainerCombine"
+                                bindValue="combinedLabel" [clearable]="true" bindLabel="combinedLabel"
+                                [searchable]="true" (change)="batchTrainername($event, selected_PopupData)"
+                                [(ngModel)]="selected_PopupData.trainerCombine">
+                            </ng-select>
+                        </div> -->
+                    </div>
+
+                    <div class="d-flex align-items-center label-input">
+                        <div class="label-name no-width">Schedule Date</div>
+                        <div class="selectDD">
+                            <div class="relative">
+                                <input type="text" style="width: 130px;" class="form-control selectedscheduleDate " id="scheduleDate"
+                                maxlength="10" placeholder=" " name="scheduleDate"  [(ngModel)]="selected_PopupData.scheduledDate"
+                                    [ngModelOptions]="{standalone: true}" bsDatepicker
+                                    (change)="scheduleDateselect($event, selected_PopupData)" autocomplete="off"
+                                    bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate
+                                    required>
+                                <div class="data-icon" (click)="scheduleDate.click()">
+                                    <img src="assets/healthsafetyimages/field-icon.svg">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="employeeList">
+                    <div class="employeeData">
+                        <div class="font-weight-bold">Employees ({{this.selected_PopupData?.employeesList?.length}})
+                        </div>
+                        <!-- <div><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                                fill="none">
+                                <path
+                                    d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                    stroke="#E20512" />
+                            </svg></div> -->
+                    </div>
+                    <div *ngFor="let employee of this.selected_PopupData?.employeesList" class="employeeData">
+                        <div>
+                            <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
+                            <div class="d-flex align-items-center empidposition">
+                                <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
+                            </div>
+                        </div>
+                        <div (click)="deleteEmployee(selected_PopupData.employeesList,employee)"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                                fill="none">
+                                <path
+                                    d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                    stroke="#E20512" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <div class="bottomfooter d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center buttongap">
+                        <div class="button bluebutton">Schedule training</div>
+                    </div>
+
+                    <div class="d-flex align-items-center buttongap">
+                        <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
+                            (click)="addPeopleData(selected_PopupData)">+ Add people</div>
+                        <div class="button blackbutton">Save as draft</div>
+                        <div class="button blackbutton">Delete</div>
+                        <div class="button blackbutton" data-dismiss="modal">Close</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Delete Modal Audit File-->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="deleteModal" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-delete">
+        <div class="modal-content">
+            <div class="modal-header">
+                Delete Confirmation
+            </div>
+            <div class="modal-body modal-body-delete">
+                Do you want to delete this audit file?
+            </div>
+            <div class="modal-footer mail-footer border-0">
+                <button type="button" class="cancelBtn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="cancelBtn deleteBtn" data-dismiss="modal"
+                    (click)="confirmDelete()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Popup for Open BatchDetails-->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="detailsModalUpdate" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" *ngIf="showPopUP">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body modal-body-height">
+                <div *ngIf="viewDetails">
+                <div class="d-flex align-items-center label-input pb-15">
+                    <div class="label-name">F2F Course name</div>
+                    <div class="summaryngSelect batchselect1"><ng-select [items]="courseNameList"
+                            name="detailsData.courseName" bindLabel="courseName" bindValue="courseName"
+                            [clearable]=false [searchable]="false"
+                            (change)="batchCoursename($event, detailsData)"
+                            [(ngModel)]="detailsData.courseName"></ng-select></div>
+                </div>
+
+                <div class="d-flex align-items-center label-input pb-15">
+                    <div class="label-name">Batch name</div>
+                    <div class="selectDD">
+                        <input type="text" maxlength="65" (change)="batchName($event, detailsData)"
+                            [(ngModel)]="detailsData.batchName">
+                    </div>
+
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width" [ngClass]="{'f2f_trainername_form': detailsData?.trainerName?.length > 0}">
+                    <div class="d-flex align-items-center label-input w-100">
+                        <div class="label-name">Trainer Name</div>
+                        <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                            <mat-form-field
+                                class="example-full-width bottomassign"
+                                [floatLabel]="'never'" style="width: 330px;">
+                                <input type="text" [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)" aria-label="" matInput
+                                    [matAutocomplete]="auto2" 
+                                    (keyup)="assignChange($event, detailsData)" (click)="assignDDvalue($event,detailsData)"
+                                    class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
+                                    #autoCompleteTrigger3="matAutocompleteTrigger">
+                                <mat-autocomplete #auto2="matAutocomplete"
+                                    matAutocompletePosition="below"
+                                    autoActiveFirstOption>
+                                    <mat-option *ngFor="let user of detailsData.trainerDropdownData"
+                                      [value] = "detailsData.trainerName"  class="mat-option-design">
+                                        <div class="optionDivetag" (click)="optionClicked($event, user, detailsData)">
+                                            <mat-checkbox
+                                                [checked]="user.checked"
+                                                (change)="toggleSelection($event,user,detailsData)"
+                                                (click)="$event.stopPropagation()">
+                                                <span for="auto">{{ user.username }}</span>
+                                            </mat-checkbox>
+                                        </div>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            
+                        
+                    </div>
+                     </div>
+
+                    <div class="d-flex align-items-center label-input">
+                        <div class="label-name no-width">Schedule Date</div>
+                        <div class="selectDD">
+                            <div class="relative">
+                                <input type="text" style="width: 130px;" class="form-control selectedscheduleDate " id="detailsDatascheduleDate"
+                                maxlength="10" placeholder=" "  name="detailsDatascheduleDate"  [(ngModel)]="detailsData.scheduledDate"
+                                    bsDatepicker
+                                    (ngModelChange)="scheduleDateselect1($event, detailsData)" autocomplete="off"
+                                    bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate1
+                                    required>
+                                <div class="data-icon" (click)="scheduleDate1.click()">
+                                    <img src="assets/healthsafetyimages/field-icon.svg">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="employeeList">
+                    <div class="employeeData">
+                        <div class="font-weight-bold">Employees ({{this.upDatedEmployeeCount}})
+                        </div>
+                        <!-- <div><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                                fill="none">
+                                <path
+                                    d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                    stroke="#E20512" />
+                            </svg></div> -->
+                    </div>
+                    <div *ngFor="let employee of this.detailsData.employeesList">
+                        <div class="employeeData" *ngIf="employee.isDeleted == false">
+                        <div>
+                            <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
+                            <div class="d-flex align-items-center empidposition">
+                                <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
+                            </div>
+                        </div>
+                        <div (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee)"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                                fill="none">
+                                <path
+                                    d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                    stroke="#E20512" />
+                            </svg></div>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="bottomfooter d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center buttongap">
+                        <div class="button bluebutton" (click)="updateBatch(detailsData, 'update')">Save</div>
+                    </div>
+
+                    <div class="d-flex align-items-center buttongap">
+                        <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
+                            (click)="addPeopleData(detailsData)">+ Add people</div>
+                        <div class="button blackbutton" (click)="updateBatch(detailsData, 'cancel')">Cancel schedule</div>
+                        <div class="button blackbutton" data-dismiss="modal">Close</div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal Popup for Open Epmolyee Details-->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" *ngIf="showempComponent" id="addPeople" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <app-employee-details
+                    (sendDatatof2f)="receiveDataFromEmp($event)"></app-employee-details>
+            </div>
+        </div>
+    </div>
+</div>
