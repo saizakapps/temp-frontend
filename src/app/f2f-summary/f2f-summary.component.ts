@@ -18,6 +18,7 @@ import { NgbPopover, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DaterangepickerComponent } from 'ng2-daterangepicker';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { ngxService } from '../shared/services/incident-services/ngxservice';
 
 
 @Component({
@@ -25,7 +26,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
   templateUrl: './f2f-summary.component.html',
   styleUrls: ['./f2f-summary.component.scss']
 })
-export class F2fSummaryComponent implements OnInit, OnChanges {
+export class F2fSummaryComponent implements OnInit {
   fromDatevalue: any;
   toDatevalue: any;
   maxDate: any;
@@ -174,10 +175,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   private picker: DaterangepickerComponent;
   actionList = [
     {
-      name: "scheduled",
+      name: "Scheduled",
     },
     {
-      name: "draft",
+      name: "Draft",
     }
   ]
   selectedTrainersControl = new FormControl([]);
@@ -270,6 +271,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   loginEmployeeStoreId: any;
   loginEmployeeRegionId: any;
   loginEmployeeManager: any;
+  viewHistory = false;
   @ViewChildren(MatAutocompleteTrigger) autoCompleteTriggers: any;
 
   @HostListener('window:keydown.esc', ['$event'])
@@ -306,20 +308,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   }
   previousDetailsData: any; // To store previous data
   detailsData: any = { /* Your initial data here */ };
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['detailsData'] && changes['detailsData'].currentValue) {
-      // Check if previous data exists and compare it with the current data
-      if (this.previousDetailsData) {
-        const isUpdated = this.isDetailsDataUpdated(this.previousDetailsData, this.detailsData);
-        if (isUpdated) {
-          alert('Data is updated');
-          // Show your alert or perform any action here
-        }
-      }
-      // Update previousDetailsData with the current data for the next comparison
-      this.previousDetailsData = { ...this.detailsData };
-    }
-  }
+ 
   batchCourselist: any[] = [];
   batchTrainerlist: any[] = [];
 
@@ -374,8 +363,8 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   async getBatchCourseList() {
     const params = {
       "country": this.loginEmployeeCountry,
-      "isManager": true,
-      "roleCode": "SM",
+      "isManager": this.loginEmployeeManager,
+      "roleCode": this.loginEmployeeRoleCode,
       "regionId": this.loginEmployeeRegionId,
       "storeId": this.loginEmployeeStoreId
     }
@@ -1183,7 +1172,6 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
 
   fromDateChange(event: any) {
     this.fromDatevalue = event;
-
     this.toMinDate = this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd');
     //  if(this.filterParam.toDate!='' && this.filterParam.fromDate>this.filterParam.toDate){
     //   this.filterParam.toDate="";
@@ -1191,6 +1179,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     this.toMinDate = new Date(this.toMinDate);
     this.toMinDate.setDate(this.toMinDate.getDate());
     this.cdr.detectChanges();
+
+    if (this.fromDatevalue !== undefined && this.toDatevalue !== undefined && this.fromDatevalue !== '' && this.toDatevalue !== ''){
+      this.filterwithDate();
+    }
   }
   toDateChange(event: any) {
     this.toDatevalue = event;
@@ -1198,8 +1190,27 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     this.fromMaxDate = new Date(this.fromMaxDate);
     this.fromMaxDate.setDate(this.fromMaxDate.getDate());
     this.cdr.detectChanges();
+    if (this.fromDatevalue !== undefined && this.toDatevalue !== undefined && this.fromDatevalue !== '' && this.toDatevalue !== ''){
+      this.filterwithDate();
+    }
   }
+  async filterwithDate(){
+    console.log(this.loginEmployeeRoleCode)
+    const convertfromdate = this.datepipe.transform(this.fromDatevalue,'yyyy-MM-dd');
+    const converttodate = this.datepipe.transform(this.toDatevalue,'yyyy-MM-dd')
 
+    const param = {
+      "country": this.loginEmployeeCountry,
+        "isManager": this.loginEmployeeManager,
+        "roleCode": this.loginEmployeeRoleCode,
+        "regionId": this.loginEmployeeRegionId,
+        "storeId": this.loginEmployeeStoreId,
+        "fromDate": convertfromdate,
+        "toDate": converttodate
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_SUMMARY_LIST_FILTER, param, this.destroyed$);
+
+  }
   setInitialFromToDate() {
     let currentDate = new Date();
     let year = currentDate.getFullYear();
@@ -1263,7 +1274,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
         trainerName: [],
         batchEmployeesCount: "",
         scheduledDate: '',
-        batchStatus: "scheduled",
+        batchStatus: "Scheduled",
         employeesList: [],
         trainerDropdownData: [],
         batchCreatedBy: this.username
@@ -1358,10 +1369,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   }
   oldNumber: number = 0;
   onDrop(event: DragEvent, item: any) {
+    this.oldNumber = 0;
     event.preventDefault();
     if (this.selectedIndices.length > 0) {
       const transferredData = JSON.parse(event.dataTransfer?.getData('text/plain') || '[]');
-
       transferredData.forEach((data: any) => {
         // Perform actions for each dropped row data
         if (data) {
@@ -1438,7 +1449,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
         trainerName: [],
         batchEmployeesCount: "",
         scheduledDate: '',
-        batchStatus: "scheduled",
+        batchStatus: "Scheduled",
         employeesList: [...list],
         trainerDropdownData: [],
         batchCreatedBy: this.username
@@ -1508,6 +1519,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   cleardateFilter() {
     this.fromDatevalue = '';
     this.toDatevalue = '';
+    this.setInitialFromToDate();
   }
 
   batchCoursename(event: any, item: any) {
@@ -1545,8 +1557,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     return formattedDate;
   }
   selected_PopupData: any = [];
-  showBatchpopup(item: any) {
+  showBatchpopup(item: any, ivalue:any) {
+    this.ModalPopup1 = true;
     this.selected_PopupData = item;
+    this.batchItem = ivalue;
   }
 
   getWidth() {
@@ -1560,7 +1574,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   }
   scheduleParams: any;
   cloneBatchdata: any[] = [];
-  async scheduleBatch(item: any, b: any) {
+  ModalPopup1 = false;
+  AlreadyscheduledEmployees:any[] = []
+  async scheduleBatch(item: any, b: any, type:string) {
+   
     this.scheduleParams = JSON.parse(JSON.stringify(item));
     this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false }));
     this.scheduleParams.scheduledDate = this.datepipe.transform(this.scheduleParams.scheduledDate, 'yyyy-MM-dd') || '';;
@@ -1579,25 +1596,35 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
 
     const paramsToRemove = ['trainerDropdownData'];
     const modifiedParam = this.removeParams(this.scheduleParams, paramsToRemove);
+    if(type == 'Scheduled'){
+      modifiedParam.batchStatus = 'Scheduled'
+    }
+    else if(type == 'Draft'){
+      modifiedParam.batchStatus = 'Draft'
+    }
     //  
     // 
     this.cloneBatchdata = [...this.batchData];
     this.cloneBatchdata.splice(b, 1);
     // Compare objects in the array
     if (this.cloneBatchdata.length == 0) {
-      console.log(this.responseDataLength, "responseDataLengthresponseDataLength responseDataLength")
-      // this.validateBatch(modifiedParam)
-      // if (this.responseDataLength > 0) {
-      //   this.batchData.splice(b, 1);
-      // }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, modifiedParam, this.destroyed$);
       if (response.payload.length == 0) {
         const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
-        if (response1) {
+        if (response1.payload) {
+          console.log(response1, "response1")
           this.batchData.splice(b, 1);
+             let paylLoad:any = response1.payload
+            if(paylLoad.batchStatus == "Draft"){
+            this.common.openSnackBar("Batch Drafted Successfully", 2, "Success")
+          }
+          else{
+            this.common.openSnackBar("Batch Created Successfully", 2, "Success")
+          }
         }
       }
       else {
+        this.AlreadyscheduledEmployees = response.paylLoad;
         this.common.openSnackBar(`${response.payload.length} Employees Already Scheduled`, 2, "Invalid")
       }
 
@@ -1612,11 +1639,22 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
           const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, modifiedParam, this.destroyed$);
           if (response.payload.length == 0) {
             const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
-            if (response1) {
+            if (response1.payload) {
+              console.log(response1, "response1")
               this.batchData.splice(b, 1);
+                 let paylLoad:any = response1.payload
+                if(paylLoad.batchStatus == "Draft"){
+                this.common.openSnackBar("Batch Drafted Successfully", 2, "Success")
+              }
+              else{
+                this.common.openSnackBar("Batch Created Successfully", 2, "Success")
+          
+              }
             }
+           
           }
           else {
+            this.AlreadyscheduledEmployees = response.paylLoad;
             this.common.openSnackBar(`${response.payload.length} Employees Already Scheduled`, 2, "Invalid")
           }
         }
@@ -1624,13 +1662,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     }
   }
 
-  // trainerNameList: any[] = [
-  //   { id: 1, name: 'Anna' },
-  //   { id: 456, name: 'Adam' },
-  //   { id: 789, name: 'Paul' },
-  //   { id: 102, name: 'Revan' },
-  //   { id: 345, name: 'Anwar' }
-  // ];
+
   compareObjects(obj1: any, obj2: any): boolean {
     // Check the specified properties for equality
     const scheduledDate1 = this.formatDate(obj1.scheduledDate);
@@ -1652,17 +1684,20 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
 
     // Compare the employeesList arrays
     const employeesList1 = JSON.parse(JSON.stringify(obj1.employeesList)) || [];
-    const employeesList2 = JSON.parse(JSON.stringify(obj1.employeesList)) || [];
+    const employeesList2 = JSON.parse(JSON.stringify(obj2.employeesList)) || [];
 
     if (employeesList1.length !== employeesList2.length) {
       return false; // If the employeesList lengths are different, return false
     }
-
+     console.log(employeesList1.length)
+     console.log(employeesList2.length)
     // Sort and stringify the employeesList arrays for comparison
     const sortedEmployeesList1 = JSON.stringify(employeesList1.sort((a: any, b: any) => (a.employeeId > b.employeeId) ? 1 : -1));
     const sortedEmployeesList2 = JSON.stringify(employeesList2.sort((a: any, b: any) => (a.employeeId > b.employeeId) ? 1 : -1));
     return sortedEmployeesList1 === sortedEmployeesList2;
   }
+
+
   showempComponent = false;
   addpeopleArray: any;
   upDatedEmployeeCount: any;
@@ -1699,8 +1734,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
             // Update the count of non-deleted employees
             const updatedCount = this.addpeopleArray.employeesList.filter(
               (employee: any) => employee.isDeleted === false
-            ).length;
-            this.upDatedEmployeeCount = updatedCount;
+            );
+            this.upDatedEmployeeCount = updatedCount.length;
+            this.updateEmployeeList = updatedCount;
+            console.log(this.updateEmployeeList, "console.log(this.updateEmployeeList)")
           } else {
             this.oldNumber = this.oldNumber + 1;
             this.common.openSnackBar(`${this.oldNumber} Employee(s) Already there`, 2, "");
@@ -1712,8 +1749,13 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
           // Update the count of non-deleted employees
           const updatedCount = this.addpeopleArray.employeesList.filter(
             (employee: any) => employee.isDeleted === false
-          ).length;
-          this.upDatedEmployeeCount = updatedCount;
+          );
+          this.upDatedEmployeeCount = updatedCount.length;
+          this.updateEmployeeList = updatedCount;
+        }
+
+        if(this.showPopUP){
+          this.compareDataforUpdate();
         }
         // let oldEployee = this.addpeopleArray.employeesList.filter((name: any) => {
         //   return name.employeeId == droppedData.employeeId
@@ -1740,8 +1782,10 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     this.batchItem = deleteitem
   }
   confirmDelete() {
+    this.ModalPopup1 = false;
     this.batchData.splice(this.batchItem, 1)
   }
+  
 
   filtercourseList: any[] = [];
   filterTrainerNamevalues: any[] = [];
@@ -1904,28 +1948,21 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     });
     return newObj;
   }
-  responseDataLength: any;
-  async validateBatch(param: any) {
-    const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, param, this.destroyed$);
-    this.responseDataLength = response.payload.length; // Store the length in the class property
-    if (response.payload.length == 0) {
-      this.batchCreate(param)
-    }
-  }
-
-  async batchCreate(param: any) {
-    const response: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, param, this.destroyed$);
-    if (response.payload) {
-      this.common.openSnackBar("Batch Created Successfully", 2, "Success")
-    }
-  }
 
   async batchUpdate(param: any) {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_UPDATE_BATCH, param, this.destroyed$);
-    if (response) {
+    if (response.payload) {
       this.showPopUP = false;
       this.getUpcominglist();
-      this.common.openSnackBar("Batch Updated Successfully", 2, "Success")
+      this.getDraftlist();
+      if(response.payload.batchStatus == 'Canceled'){
+        this.common.openSnackBar("Batch Canceled Successfully", 2, "Success")
+
+      }
+      else if(response.payload.batchStatus == 'Scheduled'){
+        this.common.openSnackBar("Batch Updated Successfully", 2, "Success")
+      }
+     
     }
   }
 
@@ -1935,8 +1972,6 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     const paramsToRemove = ['batchHistoryLists'];
     param = this.removeParams(param, paramsToRemove);
     const newParam = JSON.parse(JSON.stringify(param));
-    // newParam.scheduledDate = this.datepipe.transform(newParam.scheduledDate, 'yyyy-MM-dd')
-    console.log(newParam.scheduledDate, "newParam.scheduledDate")
 
     newParam.employeesList = param.employeesList.filter((item: any) => {
       return item.isnewFlag !== false
@@ -1948,11 +1983,11 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, newParam, this.destroyed$);
     if (response.payload.length == 0) {
       const updateParam = JSON.parse(JSON.stringify(param));
-      console.log(updateParam.scheduledDate, "newParam.scheduledDate")
       updateParam.employeesList = param.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted }));
       this.batchUpdate(updateParam)
     }
     else{
+      this.AlreadyscheduledEmployees = response.paylLoad;
       this.common.openSnackBar(`${response.payload.length} Employee(s) Already in Another Schedule`, 2, "Invalid")
     }
   }
@@ -1992,12 +2027,13 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
   // detailsData: any;
   viewDetails = false;
   async getscheduledDetails(item: any) {
+    this.ngxloaderService.start()
     this.viewDetails = false;
     this.showPopUP = true
     const param = {
       courseId: item.courseId,
       batchId: item.batchId,
-      isManager: true,
+      isManager: this.loginEmployeeManager,
       userEmployeeId: this.username
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_BATCH_INFO, param, this.destroyed$);
@@ -2021,18 +2057,22 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
         })
         x.checked = (isAlreadySelect.length > 0) ? true : false;
       }
-      this.previousDetailsData = { ...this.detailsData };
+      this.previousDetailsData = JSON.parse(JSON.stringify(this.detailsData));
+      this.ngxloaderService.stop()
+
+      console.log(this.previousDetailsData, "previousDetailsData")
     }
 
   }
 
   updateBatch(value: any, type: string) {
     const updateParams = JSON.parse(JSON.stringify(value));
-    if (type == "update") {
-      updateParams.batchStatus = 'scheduled'
-    }
-    else if (type == "cancel") {
+    
+    if (type == "Canceled") {
       updateParams.batchStatus = 'Canceled'
+    }
+    else if (type == "Scheduled") {
+      updateParams.batchStatus = 'Scheduled'
 
     }
     updateParams.trainerId = updateParams.trainerId.map(name => `${name}`).join(',');
@@ -2059,7 +2099,7 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     console.log(modifiedParam.scheduledDate, "modifiedParam.scheduledDate")
     this.validateupdateBatch(modifiedParam);
   }
-
+  updateEmployeeList:any[] = [];
   deleteEmployeefromUpdate(item: any, emp: any) {
     if (emp.isnewFlag == false) {
       emp.isDeleted = true
@@ -2074,7 +2114,9 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     const Count = item.filter((count: any) => {
       return count.isDeleted == false
     })
+    console.log(Count, "count")
     this.upDatedEmployeeCount = Count.length;
+    this.updateEmployeeList = Count;
     // let noRemove = this.fixedEmployeeData.filter((item:any)=>{
     //   return item.employeeId == emp.employeeId
     // })
@@ -2099,6 +2141,83 @@ export class F2fSummaryComponent implements OnInit, OnChanges {
     // Implement your logic for comparison here based on your requirements
     // For example, compare individual properties or use a deep comparison method
     return JSON.stringify(oldData) !== JSON.stringify(newData);
+  }
+  compareObjectsFieldsonly(obj1: any, obj2: any): boolean {
+    // Check the specified properties for equality
+    const scheduledDate1 = this.formatDate(obj1.scheduledDate);
+    const scheduledDate2 = this.formatDate(obj2.scheduledDate);
+    obj1.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
+    obj2.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
+
+    const formatTrainer1 = obj1.trainerId.map(name => `'${name}'`).join(',')
+    const formatTrainer2 = obj2.trainerId.map(name => `'${name}'`).join(',')
+
+    const propertiesEqual =
+      obj1.courseName === obj2.courseName &&
+      obj1.batchName === obj2.batchName &&
+      scheduledDate1 === scheduledDate2 &&
+      formatTrainer1 === formatTrainer2;
+    if (!propertiesEqual) {
+      return false; // If properties don't match, return false
+    }
+    else{
+      return true
+    }
+  }
+  compareEmployeeArrays(array1: any[], array2: any[]): boolean {
+    const employeeIdsArray1 = array1.map(employee => employee.employeeId);
+    const employeeIdsArray2 = array2.map(employee => employee.employeeId);
+
+    employeeIdsArray1.sort();
+    employeeIdsArray2.sort();
+
+    return JSON.stringify(employeeIdsArray1) === JSON.stringify(employeeIdsArray2);
+
+  }
+
+  saveButtonshow = false
+  compareDataforUpdate(){
+    if(this.updateEmployeeList.length == 0){
+      this.updateEmployeeList = this.previousDetailsData.employeesList
+    }
+    if (this.compareObjectsFieldsonly(this.previousDetailsData, this.detailsData) && this.compareEmployeeArrays(this.previousDetailsData.employeesList,this.updateEmployeeList)) {
+      this.saveButtonshow = false
+      return;
+    }
+    else{
+      this.saveButtonshow = true
+    }
+  }
+
+  async deleteDraft(item:any){
+    console.log(item, "item")
+   let param = {
+    batchId : item.batchId,
+    courseId: item.courseId
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_DELETE_DRAFT_BATCH, param, this.destroyed$);
+    if(response.payload){
+      this.getDraftlist();
+      this.showPopUP = false;
+      this.common.openSnackBar("Draft Deleted Successfully",2,"Success");
+    }
+  }
+  historyData:any;
+  historyTableview=false
+  async viewHistorydata(history:any){
+    this.ngxloaderService.start()
+   const param = {
+    batchId:history.batchId,
+    revisionId:history.revision
+   }
+   const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_BATCH_HISTORY, param, this.destroyed$);
+   if(response.payload){
+    console.log(response.payload)
+    this.historyData = response.payload;
+    this.viewHistory = true;
+    this.historyTableview = false
+    this.ngxloaderService.stop()
+   }
   }
   ngOnDestroy(): void {
     this.destroyed$.next();
