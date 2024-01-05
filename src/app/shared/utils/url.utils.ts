@@ -130,5 +130,6 @@ export class UrlUtils {
      POST_GET_BATCH_HISTORY: `${this.USER_URL}get-f2f-course-batch-history-info`,
      POST_SUMMARY_LIST_FILTER: `${this.USER_URL}filter-f2f-course-summary-info`,
      POST_GET_SUMMARY_LIST: `${this.USER_URL}get-f2f-course-expiration-summary`,
+     POST_EXPORT_MAIL_F2F: `${this.USER_URL}export-ff-list`,
   };
 }

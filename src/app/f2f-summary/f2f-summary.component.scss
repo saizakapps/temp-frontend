@@ -46,6 +46,15 @@
     line-height: 24.2px;
     color: #3C3F45;
     padding-bottom: 20px;
+
+    .mat-icon{
+        font-size: 22px;
+        font-weight: unset !important;
+        width: unset !important;
+        height: unset !important;
+        margin-left: 10px;
+        margin-top: 2px;
+    }
 }
 
 .summaryTable {
@@ -307,6 +316,9 @@
         background-color: #F0BF0F;
     }
 }
+.cardDataupcoming{
+    max-height: calc(100vh - 126px);
+}
 
 .cardData {
     .card:last-child {
@@ -455,7 +467,7 @@
     max-height: calc(100vh - 300px);
     overflow-y: auto;
     position: relative;
-
+    
     .employeeData {
         display: flex;
         align-items: center;
@@ -498,6 +510,25 @@
 .employeeListwithpad {
     padding-bottom: 26px;
     max-height: unset !important;
+}
+
+.updatedemployeeListheight{
+    height: 250px;
+
+    .employeeList{
+        max-height: 250px !important;
+        overflow-y: auto !important;
+    }
+}
+
+
+.updatedemployeeListheight1{
+    height: 308px;
+
+    .employeeList{
+        max-height: 308px !important;
+        overflow-y: auto !important;
+    }
 }
 
 .batch-page {
@@ -1343,7 +1374,7 @@
     max-width: 300px;
   }
   .modal-body-height{
-    min-height: 300px;
+    height: 520px;
   }
   .cardShimmer{
     background-color: #ffffff70;
@@ -1352,6 +1383,7 @@
     border-radius: 8px;
     box-shadow: 0px 0px 10px 0px #0000001A;
     min-width: 240px;
+
   }
   .bluebutton-inactive{
     opacity: 0.5;
@@ -1403,8 +1435,17 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
+    
 }
-
+.historyCancel{
+    background-color: #000;
+    color: #fff;
+    font-weight: 400;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-top: 10px;
+    cursor: pointer;
+}
 .historyviewtext{
     color: #1F96F4;
     font-weight: 500;
@@ -1434,3 +1475,49 @@
   .summaryngSelect-new1{
     margin-bottom: 15px;
   }
+  .norecordButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    background: #f2f2f2;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 15px;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+    .businessMail{
+        color: red;
+          font-size: 13px;
+          padding-left: 59px;
+          margin-top: -6px;
+          font-weight: 600;
+      }
+
+      .cancelMailbtn{
+        margin-top: 20px;
+        line-height: 15px;
+        width: 85px;
+        font-size: 13px;
+        height: 30px;
+        background: #000;
+        border-radius: 6px;
+        color: #fff;
+        margin-right: 15px;
+        border-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sendMailbtn{
+        background: #1F96F4;
+        margin-right: 0px;
+        border-color: #1F96F4;
+      }
+  
+
+      

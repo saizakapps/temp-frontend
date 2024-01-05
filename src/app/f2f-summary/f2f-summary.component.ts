@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { ApiHandlerService } from '../shared/services/api-handler.service';
 import { CommonService as learnersCommonservice } from '../shared/services/common.services';
 import { Utils as leranersutils } from '../shared/utils';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, QueryList, OnChanges, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
@@ -181,6 +181,7 @@ export class F2fSummaryComponent implements OnInit {
       name: "Draft",
     }
   ]
+  form!: FormGroup;
   constructor(private modalService: NgbModal, public learnutils: leranersutils, public emitservice: learnersCommonservice, public common: CommonService, private datepipe: DatePipe, public utils: Utils,
     private apiHandler: ApiHandlerService, private http: HttpClient,
     private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private errorHandler: ErrorHandlerService, public ngxloaderService: NgxUiLoaderService) {
@@ -221,6 +222,7 @@ export class F2fSummaryComponent implements OnInit {
   loginEmployeeStoreId: any;
   loginEmployeeRegionId: any;
   loginEmployeeManager: any;
+  loginEmployeeIstrainer: any;
   viewHistory = false;
   summaryList: any[] = [];
   summaryShimmer = false;
@@ -256,6 +258,7 @@ export class F2fSummaryComponent implements OnInit {
     this.loginEmployeeRegionId = userDetails.regionId;
     this.loginEmployeeStoreId = userDetails.storeId;
     this.loginEmployeeManager = userDetails.manager;
+    this.loginEmployeeIstrainer = userDetails.isTrainer;
     // this.getCourseTypes();
 
     // this.getAllTableFilterData();
@@ -265,7 +268,11 @@ export class F2fSummaryComponent implements OnInit {
     this.getDraftlist();
     this.getBatchCourseList();
     this.getBatchTrainerlist();
+    this.form = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]]
+    });
   }
+  get f() { return this.form.controls; }
   previousDetailsData: any; // To store previous data
   detailsData: any = { /* Your initial data here */ };
 
@@ -1978,8 +1985,8 @@ export class F2fSummaryComponent implements OnInit {
     this.cardShimmer = true;
     const param = {
       batchStatusList: [this.batchStatusList],
-      isTrainer: false,
-      userEmployeeId: this.username
+      isTrainer: this.loginEmployeeIstrainer,
+      userEmployeeId: this.loginEmployeeId
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -1991,8 +1998,8 @@ export class F2fSummaryComponent implements OnInit {
     this.cardShimmer1 = true;
     const param = {
       batchStatusList: [2],
-      isTrainer: false,
-      userEmployeeId: this.username
+      isTrainer: this.loginEmployeeIstrainer,
+      userEmployeeId: this.loginEmployeeId
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -2012,7 +2019,7 @@ export class F2fSummaryComponent implements OnInit {
       courseId: item.courseId,
       batchId: item.batchId,
       isManager: this.loginEmployeeManager,
-      userEmployeeId: this.username
+      userEmployeeId: this.loginEmployeeId
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_BATCH_INFO, param, this.destroyed$);
     let sampleJson: any = response.payload;
@@ -2114,6 +2121,14 @@ export class F2fSummaryComponent implements OnInit {
     this.getSummarylist();
     this.getDraftlist();
     this.getUpcominglist();
+    this.batchData = [];
+    for (let x of this.generalReportList) {
+      x.checked = false;
+    }
+    for (let x of this.cloneGeneralReportList) {
+      x.checked = false;
+    }
+    this.resetFilters();
   }
   isDetailsDataUpdated(oldData: any, newData: any): boolean {
     // Compare oldData with newData and return true if they differ
@@ -2196,6 +2211,49 @@ export class F2fSummaryComponent implements OnInit {
       this.viewHistory = true;
       this.historyTableview = false
       this.ngxloaderService.stop()
+    }
+  }
+  mailIdsend = "";
+  Emails: any[] = [];
+  getMail(e: any) {
+    if (this.form.valid) {
+      this.mailIdsend = e.target.value;
+    }
+  }
+  
+  addMailId() {
+    if (this.form.valid) {
+      let existing = this.Emails.filter((item:any)=>{
+        return item == this.mailIdsend
+       })
+    
+       if(existing.length > 0){
+        this.common.openSnackBar("Mail Id Already Exists",2,"Invalid")
+       }
+       else{
+      this.Emails.push(this.mailIdsend);
+      this.mailIdsend = "";
+      this.cdr.detectChanges();
+       }
+    }
+  }
+
+  removeEmail(m: any) {
+    let temp = this.Emails.splice(m, 1);
+  }
+  cancelMail() {
+    this.mailIdsend = '';
+    this.Emails = [];
+    this.cdr.detectChanges();
+  }
+  async sendMail(){
+    this.filterRequest.emailIds = [this.Emails.toString()];
+    const params = this.filterRequest;
+    this.Emails = [];
+    this.mailIdsend = '';
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_EXPORT_MAIL_F2F, params, this.destroyed$);
+    if(response.payload){
+      this.filterRequest.emailIds = [];
     }
   }
   ngOnDestroy(): void {
