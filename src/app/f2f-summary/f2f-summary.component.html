@@ -1,6 +1,5 @@
 <section>
     <div class="summary-page" *ngIf="createBatch == false">
-
         <div>
             <div class="summarytitle">F2F Expiration Summary</div>
             <div class="summaryTable">
@@ -55,34 +54,44 @@
                         <div class="colorbox_text">About to Expire</div>
                     </div>
                 </div>
-                <div class="listData">
+                <div class="listData" *ngIf="!summaryShimmer">
                     <div *ngFor="let data of this.summaryList; let i = index" class="forData">
                         <div class="d-flex align-items-center justify-content-between rowdata">
-                            <div class="list_title" title="{{data.title}}">{{data.title}}</div>
+                            <div class="list_title" title="{{data.courseName}}">{{data.courseName}}</div>
                             <div class="d-flex align-items-center">
                                 <div class="list_expired notification"
-                                    [ngClass]="{'opacity0' : data.expired == '' || data.expired == '0'}">
-                                    {{data.expired}}
+                                    [ngClass]="{'opacity0' : data.expiryCount == '' || data.expiryCount == 0 || data.expiryCount == null}">
+                                    {{data.expiryCount}}
                                 </div>
                                 <div class="list_about notification"
-                                    [ngClass]="{'opacity0' : data.about == '' || data.about == '0'}">{{data.about}}
+                                    [ngClass]="{'opacity0' : data.aboutToExpireCount == '' || data.aboutToExpireCount == '0' || data.aboutToExpireCount == null}">{{data.aboutToExpireCount}}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div *ngIf="summaryShimmer"><ng-container *ngFor="let index of shimmerArray">
+                    <div class="shimmerCSS">
+                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    </div>
+                  </ng-container></div>
             </div>
             <div class="bottombutton" (click)="gotocreateBatch()">View Report & Create Batch →</div>
         </div>
         <div class="cardListItems">
             <div class="summarytitle">Upcoming Events</div>
+            <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
+            <ng-select [items]="upcomingFilterlist" name="searchDateBy" bindLabel="name" bindValue="filterId"
+            [clearable]=false [searchable]="false" [(ngModel)]="batchStatusList" class="dateJoining" (change)="filterbyListstatus($event)">
+                        </ng-select>
+                        </div>
             <div class="cardData">
                 <div *ngFor="let item of this.upcomingListData; let j =index" class="card">
-                    <div class="cardtitle">{{item.courseName}}</div>
+                    <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
                     <div class="cardbatch">{{item.batchName}}</div>
                     <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png" alt="">&nbsp;
                         {{item.batchEmployeesCount}} Employee(s)</div>
-                    <div class="cardtrainer"><span class="train">Trainer(s):</span> {{item.trainerName}}</div>
+                    <div class="cardtrainer d-flex"><div class="train">Trainer(s):</div> <div class="Tname">&nbsp;{{item.trainerName}}</div></div>
                     <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
                             alt="">&nbsp;{{item.scheduledDate  | date:'dd-MMM-yyyy'}}</div>
                             <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
@@ -122,11 +131,11 @@
             <div class="summarytitle">Drafted Events</div>
             <div class="cardData">
                 <div *ngFor="let item of this.draftListData; let j =index" class="card">
-                    <div class="cardtitle">{{item.courseName}}</div>
+                    <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
                     <div class="cardbatch">{{item.batchName}}</div>
                     <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png" alt="">&nbsp;
                         {{item.batchEmployeesCount}} Employees</div>
-                    <div class="cardtrainer"><span class="train">Trainer(s):</span> {{item.trainerName}}</div>
+                    <div class="cardtrainer d-flex"><div class="train">Trainer(s):</div> <div class="Tname">&nbsp;{{item.trainerName}}</div></div>
                     <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
                             alt="">&nbsp;{{item.scheduledDate | date:'dd-MMM-yyyy'}}</div>
                             <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
@@ -1171,7 +1180,7 @@
                         </div>
                     
                     <div class="d-flex align-items-center label-input pb-15">
-                        <div class="label-name">F2F Course name:</div>
+                        <div class="label-name no-width">F2F Course name:</div>
                         <div>{{historyData.courseName}}</div>
                         <!-- <div class="summaryngSelect batchselect1"><ng-select [items]="courseNameList"
                                 name="detailsData.courseName" bindLabel="courseName" bindValue="courseName"
@@ -1181,7 +1190,7 @@
                     </div>
     
                     <div class="d-flex align-items-center label-input pb-15">
-                        <div class="label-name">Batch name:</div>
+                        <div class="label-name no-width">Batch name:</div>
                         <div>{{historyData.batchName}}</div>
                         <!-- <div class="selectDD">
                             <input type="text" maxlength="65" (change)="batchName($event, detailsData);compareDataforUpdate()"
@@ -1191,7 +1200,7 @@
                     </div>
     
                         <div class="d-flex align-items-center label-input pb-15">
-                            <div class="label-name">Trainer Name:</div>
+                            <div class="label-name no-width">Trainer Name:</div>
                             <div>{{historyData.trainerName}}</div>
                             <!-- <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                                 <mat-form-field
@@ -1225,7 +1234,7 @@
     
                         <div class="d-flex align-items-center label-input pb-15">
                             <div class="label-name no-width">Schedule Date:</div>
-                            <div>{{historyData.scheduledDate}}</div>
+                            <div>{{historyData.scheduledDate | date:'dd-MM-yyyy'}}</div>
                             <!-- <div class="selectDD">
                                 <div class="relative">
                                     <input type="text" style="width: 130px;" class="form-control selectedscheduleDate read-only" id="detailsDatascheduleDate"
@@ -1335,7 +1344,7 @@
 
 <div *ngIf="historyTableview" class="modal fade mailBodyPop bootstrapBackground_Pop" id="historyTable" data-backdrop="static" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-historyTable">
         <div class="modal-content">
             <div class="modal-header">
                 History
@@ -1344,19 +1353,19 @@
                <table class="historyTable">
                 <thead>
                 <tr>
-                    <th>Batch Name</th>
-                    <th>Course Name</th>
-                    <th>Modified By</th>
-                    <th>Modified on</th>
+                    <th class="tablewidth1">Batch Name</th>
+                    <th class="tablewidth2">Course Name</th>
+                    <th class="tablewidth3">Modified By</th>
+                    <th class="tablewidth1">Modified on</th>
                     <th style="width: 100%;"></th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let history of this.detailsData.batchHistoryLists">
-                    <td>{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td>
-                    <td>{{(history.courseName == '' || history.courseName == null)? '-':history.courseName }}</td>
-                    <td>{{history.batchCreatedBy}}</td>
-                    <td>{{history.batchCreatedOn}}</td>
+                    <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td>
+                    <td class="tablewidth2" title="{{history.courseName}}">{{(history.courseName == '' || history.courseName == null)? '-':history.courseName }}</td>
+                    <td class="tablewidth3">{{history.batchCreatedBy}}</td>
+                    <td class="tablewidth4">{{history.batchCreatedOn}}</td>
                     <td><div class="viewButton" (click)="viewHistorydata(history)">View</div></td>
                     </tr>
                 </tbody>

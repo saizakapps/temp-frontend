@@ -222,7 +222,7 @@
 
     .card {
         background-color: #fff;
-        padding: 20px;
+        padding: 20px 18px;
         padding-bottom: 0px;
         border-radius: 8px;
         box-shadow: 0px 0px 10px 0px #0000001A;
@@ -231,6 +231,7 @@
         flex-direction: column;
         gap: 5px;
         margin-bottom: 15px;
+        min-width: 230px;
 
     }
     .no-event{
@@ -243,6 +244,17 @@
         font-size: 15px;
         color: #000000;
         font-weight: 600;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        /* Set the number of lines before adding ellipsis */
+        -webkit-line-clamp: 2;
+        /* For text overflow */
+        text-overflow: ellipsis;
+        /* Set line height and max height if needed */
+        line-height: 1.4; /* Adjust as per your design */
+        max-height: calc(1.4 * 2); /* Adjust as per your design */
+        
     }
 
     .cardbatch {
@@ -261,10 +273,14 @@
         color: #000000;
         font-weight: 500;
         font-size: 14px;
-
+      
         .train {
             color: #575757;
             font-weight: 400;
+        }
+        .Tname{
+            font-size: 13px;
+            padding-top: 2px;
         }
     }
 
@@ -1331,10 +1347,11 @@
   }
   .cardShimmer{
     background-color: #ffffff70;
-    padding:10px 20px;
+    padding:10px 18px;
     margin-bottom: 15px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px 0px #0000001A;
+    min-width: 240px;
   }
   .bluebutton-inactive{
     opacity: 0.5;
@@ -1366,6 +1383,26 @@
         width: fit-content;
         cursor: pointer;
     }
+    .tablewidth1{
+        max-width: 150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .tablewidth2{
+        max-width: 220px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .tablewidth3{
+        max-width: 122px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .tablewidth4{
+        max-width: 170px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 .historyviewtext{
@@ -1375,3 +1412,25 @@
     margin-bottom: 10px;
     cursor: pointer;
 }
+.overflow-text {
+    /* Required styles */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    /* Set the number of lines before adding ellipsis */
+    -webkit-line-clamp: 2;
+    /* For text overflow */
+    text-overflow: ellipsis;
+    /* Set line height and max height if needed */
+    line-height: 1.4; /* Adjust as per your design */
+    max-height: calc(1.4 * 2); /* Adjust as per your design */
+  }
+  .shimmerCSS{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #cdcdcd;
+  }
+  .summaryngSelect-new1{
+    margin-bottom: 15px;
+  }
