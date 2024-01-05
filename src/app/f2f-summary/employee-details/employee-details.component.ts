@@ -284,6 +284,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   indeterminateAll= false;
   checkedAll = false;
   @Output() sendDatatof2f: EventEmitter<any> = new EventEmitter<any>();
+  @Output() closeEmppopup: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(public utils: Utils, public ngxService: NgxUiLoaderService,
     private modalService: NgbModal, private emitService: CommonService, private router: Router,
@@ -332,32 +333,37 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
 
       if (x.checked) {
         this.selectedEmployeesData.push(x);
-      } else {
-        const selectedIndex = this.selectedEmployeesData.indexOf(x);
-        if (selectedIndex !== -1) {
-          this.selectedEmployeesData.splice(selectedIndex, 1);
-        }
-      }
+      } 
+  }
+   if (event.checked == false) {
+      this.selectedEmployeesData = []
     }
     this.selectedEmployeesData = this.selectedEmployeesData.map((list:any)=> {
       return {...list, isnewFlag:true, isDeleted : false};
      })
-    if (event.checked == false) {
-      this.selectedEmployeesData = []
-    }
+   
     this.indeterminateAll = false;
     this.checkedAll = !this.checkedAll;
   }
   onSelectcheckbox(event: any, index: any) {
+
     index.checked = event.checked;
-    if (event.checked) {
+    const ind = this.selectedEmployeesData.findIndex(item => item.id === index.id);
+
+    if (index.checked && ind === -1) {
       this.selectedEmployeesData.push(index);
-    } else {
-      const selectedIndex = this.selectedEmployeesData.indexOf(index);
-      if (selectedIndex !== -1) {
-        this.selectedEmployeesData.splice(selectedIndex, 1);
-      }
+    } else if (!index.checked && ind !== -1) {
+      this.selectedEmployeesData = this.selectedEmployeesData.filter(item => item.id !== index.id);
     }
+    // if (index.checked) {
+    //   this.selectedEmployeesData.push(index);
+    // } else {
+    //   const selectedIndex = this.selectedEmployeesData.indexOf(index);
+    //   if (selectedIndex !== -1) {
+    //     this.selectedEmployeesData.splice(selectedIndex, 1);
+    //   }
+    // }
+    console.log(this.selectedEmployeesData, "selectedEmployeesData")
     this.selectedEmployeesData = this.selectedEmployeesData.map((list:any)=> {
       return {...list, isnewFlag:true, isDeleted : false};
      })
@@ -2250,5 +2256,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     x.checked = false
    }
   }
-
+  closepopup(){
+    this.closeEmppopup.emit();
+  }
 }

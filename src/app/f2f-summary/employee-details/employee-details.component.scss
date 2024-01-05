@@ -995,3 +995,7 @@ tbody td {
 .closebutton{
   background-color: #000;
 }
+.disabledAddbutton{
+  opacity: 0.5;
+  pointer-events: none;
+}

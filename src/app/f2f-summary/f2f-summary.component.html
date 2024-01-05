@@ -2,7 +2,7 @@
     <div class="summary-page" *ngIf="createBatch == false">
         <div *ngIf="loginEmployeeIstrainer == false">
             <div class="summarytitle d-flex align-items-center">F2F Expiration Summary 
-                <!-- <mat-icon [matMenuTriggerFor]="information">info</mat-icon> -->
+                <mat-icon [matMenuTriggerFor]="information" (click) ="getActivecount()">info</mat-icon>
             </div>
             <div class="summaryTable">
                 <div class="date-filters">
@@ -173,9 +173,16 @@
                     </div>
         </div>
     </div>
-    <!-- <mat-menu class="statusMenuPanelAudit custom-centered-menu" #information="matMenu">
-        <div>Fire Warden and First Aid</div>
-    </mat-menu> -->
+    <mat-menu class="statusMenuPanelAudit custom-centered-menu" #information="matMenu">
+        <div *ngIf="activeShimmer == true">               
+            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+        </div>
+        <div *ngIf="activeShimmer == false">
+            <div>Fire Warden</div>
+            <div>First Aid</div>
+        </div>
+    </mat-menu>
     <div class="batch-page" id="MainContent" *ngIf="createBatch == true">
         <div class="filter-header d-flex">
             <div class="form-group">
@@ -1304,7 +1311,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <app-employee-details
-                    (sendDatatof2f)="receiveDataFromEmp($event)"></app-employee-details>
+                    (sendDatatof2f)="receiveDataFromEmp($event)" (closeEmppopup)="closeEmppopup()"></app-employee-details>
             </div>
         </div>
     </div>

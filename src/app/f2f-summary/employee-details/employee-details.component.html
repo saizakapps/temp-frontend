@@ -89,8 +89,8 @@
             </form>
             </div>
             <div class="d-flex align-items-center">
-            <div class="addPeoplebutton" data-dismiss="modal" (click)="sendEmployeetof2f(this.selectedEmployeesData)">Add</div>
-            <div class="ml-2 addPeoplebutton closebutton" data-dismiss="modal">Close</div>
+            <div class="addPeoplebutton" data-dismiss="modal" [ngClass]="{'disabledAddbutton' : selectedEmployeesData.length == 0}" (click)="sendEmployeetof2f(this.selectedEmployeesData)">Add</div>
+            <div class="ml-2 addPeoplebutton closebutton" data-dismiss="modal"  (click)="closepopup()">Close</div>
             </div>
           </div>
   

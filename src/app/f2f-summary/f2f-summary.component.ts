@@ -1238,7 +1238,7 @@ export class F2fSummaryComponent implements OnInit {
         batchStatus: "Scheduled",
         employeesList: [],
         trainerDropdownData: [],
-        batchCreatedBy: this.username
+        batchCreatedBy: this.loginEmployeeId
       })
 
       const element = document.getElementById('targetElement');
@@ -1413,7 +1413,7 @@ export class F2fSummaryComponent implements OnInit {
         batchStatus: "Scheduled",
         employeesList: [...list],
         trainerDropdownData: [],
-        batchCreatedBy: this.username
+        batchCreatedBy: this.loginEmployeeId
       })
       this.cdr.detectChanges();
       const element = document.getElementById('targetElement');
@@ -2254,6 +2254,21 @@ export class F2fSummaryComponent implements OnInit {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EXPORT_MAIL_F2F, params, this.destroyed$);
     if(response.payload){
       this.filterRequest.emailIds = [];
+    }
+  }
+  closeEmppopup(){
+    this.showempComponent = false;
+  }
+  activeShimmer = false
+  async getActivecount(){
+    this.activeShimmer = true;
+   const param ={
+      "userId": this.loginEmployeeId,
+        "isManager": this.loginEmployeeManager
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_ACTIVE_COUNT, param, this.destroyed$);
+    if(response.payload){
+      this.activeShimmer = false
     }
   }
   ngOnDestroy(): void {
