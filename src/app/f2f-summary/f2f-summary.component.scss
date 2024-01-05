@@ -243,10 +243,7 @@
         min-width: 230px;
 
     }
-    .no-event{
-        pointer-events: none;
-        opacity: 0.5;
-    }
+    
 
     .cardtitle {
         // min-height: 45px;
@@ -314,6 +311,13 @@
 
     .detailviewyellow {
         background-color: #F0BF0F;
+    }
+    .inactiveCard{
+        opacity: 0.5;
+
+        .detailview{
+            pointer-events: none !important;
+        }
     }
 }
 .cardDataupcoming{

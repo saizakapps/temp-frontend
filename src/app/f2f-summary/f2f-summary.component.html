@@ -1075,14 +1075,14 @@
                             name="detailsData.courseName" bindLabel="courseName" bindValue="courseName"
                             [clearable]=false [searchable]="false"
                             (change)="batchCoursename($event, detailsData);compareDataforUpdate()"
-                            [(ngModel)]="detailsData.courseName" [readonly]="detailsData.batchStatus == 'Canceled'"></ng-select></div>
+                            [(ngModel)]="detailsData.courseName" [readonly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'"></ng-select></div>
                 </div>
 
                 <div class="d-flex align-items-center label-input pb-15">
                     <div class="label-name">Batch name</div>
                     <div class="selectDD">
                         <input type="text" maxlength="65" (change)="batchName($event, detailsData);compareDataforUpdate()"
-                            [(ngModel)]="detailsData.batchName" [readOnly]="detailsData.batchStatus == 'Canceled'">
+                            [(ngModel)]="detailsData.batchName" [readOnly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
                     </div>
 
                 </div>
@@ -1093,7 +1093,7 @@
                         <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                             <mat-form-field
                                 class="example-full-width bottomassign"
-                                [floatLabel]="'never'" style="width: 330px;" [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled'}">
+                                [floatLabel]="'never'" style="width: 330px;" [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
                                 <input type="text" [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)" aria-label="" matInput
                                     [matAutocomplete]="auto2" 
                                     (keyup)="assignChange($event, detailsData)" (click)="assignDDvalue($event,detailsData)"
@@ -1128,9 +1128,9 @@
                                 maxlength="10" placeholder=" "  name="detailsDatascheduleDate"  [(ngModel)]="detailsData.scheduledDate"
                                     bsDatepicker
                                     (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()" autocomplete="off"
-                                    bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate1 [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled'}"
+                                    bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate1 [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}"
                                     required>
-                                <div class="data-icon" (click)="scheduleDate1.click()" [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled'}">
+                                <div class="data-icon" (click)="scheduleDate1.click()" [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
                                     <img src="assets/healthsafetyimages/field-icon.svg">
                                 </div>
                             </div>
@@ -1158,7 +1158,7 @@
                                 <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
                             </div>
                         </div>
-                        <div *ngIf="detailsData.batchStatus !== 'Canceled'" (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()"><svg
+                        <div *ngIf="detailsData.batchStatus !== 'Canceled' || detailsData.batchStatus !== 'Assigned'" (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
                                 fill="none">
                                 <path
@@ -1173,12 +1173,12 @@
                 <div class="bottomfooter d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center buttongap">
                         <div class="button bluebutton"  *ngIf="detailsData.batchStatus == 'Draft'" (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
-                        <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div>
+                        <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled' || detailsData.batchStatus !== 'Assigned'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div>
                     </div>
 
                     <div class="d-flex align-items-center buttongap">
                         <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
-                            (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Canceled'">+ Add people</div>
+                            (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Canceled' || detailsData.batchStatus !== 'Assigned'">+ Add people</div>
                         <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'" data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
                         <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft" *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
                         <div class="button blackbutton" data-dismiss="modal">Close</div>
