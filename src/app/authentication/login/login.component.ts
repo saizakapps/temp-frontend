@@ -75,6 +75,10 @@ export class LoginComponent implements OnInit {
     } else {
       this.router.navigate(['/login']);
     }
+    const accessApps = '[{"roleName":"LA-Super Admin","app":{"id":1,"access":true,"name":"Learners App","modules":[{"id":1,"name":"Employees","view":true,"create":true,"update":true,"access":true,"moduleCode":"LA-E"},{"id":4,"name":"Courses","view":true,"create":true,"update":true,"access":true,"moduleCode":"LA-C"},{"id":5,"name":"Useraccess","view":true,"create":true,"update":true,"access":true,"moduleCode":"LA-UA"},{"id":6,"name":"f2freports","view":true,"create":true,"update":true,"access":true,"moduleCode":"LA-F2FR"},{"id":8,"name":"Reports","view":true,"create":true,"update":true,"access":true,"moduleCode":"LA-R"},{"id":11,"name":"Create Course","view":true,"create":true,"update":true,"access":true,"moduleCode":"LA-CC"}],"groupName":"Learn","appCode":"LA"},"id":12},{"roleName":"I-Super Admin","app":{"id":2,"name":"Incident Tracker","groupName":"Health & Safety","access":true,"modules":[{"name":"Incident Tracker ","id":2,"moduleCode":"IT","view":true,"create":true,"update":true,"access":true}],"appCode":"IT"},"id":9,"edit":true,"modules":[{"name":"Incident Tracker ","id":2,"moduleCode":"IT","view":true,"create":true,"update":true,"access":true}]},{"roleName":"AT-Super Admin","app":{"id":3,"name":"Audit Tracker","groupName":"Health & Safety","access":true,"modules":[{"name":"Audit Tracker","id":3,"moduleCode":"AT","view":true,"create":true,"update":true,"access":true}],"appCode":"AT"},"id":15,"edit":true,"modules":[{"name":"Audit Tracker","id":3,"moduleCode":"AT","view":true,"create":true,"update":true,"access":true}]},{"roleName":"AA-Super Admin","app":{"id":4,"name":"App Auth","groupName":"APP AUTH","access":true,"modules":[{"name":"Roles","id":9,"moduleCode":"AA-ROLE","view":true,"create":true,"update":true,"access":true},{"name":"User role mapping","id":10,"moduleCode":"AA-URM","view":true,"create":true,"update":true,"access":true}],"appCode":"AA"},"id":1,"modules":[{"name":"Roles","id":9,"moduleCode":"AA-ROLE","view":true,"create":true,"update":true,"access":true},{"name":"User role mapping","id":10,"moduleCode":"AA-URM","view":true,"create":true,"update":true,"access":true}]}]'
+    const userDetails = '{"access":{"userAccess":true,"employees":true,"courses":true,"reports":true,"faq":false,"message":false,"f2freports":true,"incidentList":true,"incidentCreateincident":true,"HistoryauditList":true,"IncidentMobile":true,"IncidentMobileCreate":true,"applicationAccessuserRoles":false,"incidentCreate":true,"incidentHistory":true,"auditList":true,"applicationAccess":true,"userRoles":true},"username":"Shan QA","firstName":"Shan QA","lastName":null,"roleId":"18","country":"UK","region":"Region 1","employeeId":"360085985","roleCode":"HOEE","id":35177,"emailId":"Shan@zakapps.com","isIncharge":false,"countryId":1,"regionId":4,"storeId":28,"store":"Newry","periodUsers":[],"role":"Head Office Employee","roleGroup":"ROI Head Office Roles","roleGroupId":4,"dateOfJoining":1700006400000,"portalRoleId":null,"portalRole":null,"manager":false,"changePassCheck":false,"authRole":"SA","learnerRole":"SA","incidentRole":"SA","auditRole":"SA","isTrainer":false}';
+    localStorage.setItem('accessApps', accessApps);
+    localStorage.setItem('userDetails', userDetails);
     this.setModuleAccess();
   }
 
@@ -84,7 +88,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('authenticationToken', authorizationCode[1] || null);
 
     // localStorage.setItem('authenticationToken', response.jwtToken);
-    localStorage.setItem('userDetails', JSON.stringify(this.userDetails));
+    // localStorage.setItem('userDetails', JSON.stringify(this.userDetails));
 
     localStorage.setItem('isLoggedIn', 'true');
 
