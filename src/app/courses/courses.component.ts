@@ -726,6 +726,8 @@ export class CoursesComponent implements OnInit, OnDestroy {
         }
         return hasValue;
       });
+    } else {
+      this.updatePlainClmSort();
     }
   }
 
@@ -738,7 +740,13 @@ export class CoursesComponent implements OnInit, OnDestroy {
     this.sortBy = sortBy ? sortBy : this.sortBy;
     this.sortByField = sortObj ? sortObj : this.sortByField;
     if (this.sortBy === 'Reset') {
-      this.applyPlainClmFilter();
+      const filterFields = Object.keys(this.currentFilters);
+      const notResetAll = filterFields.find((key) => this.currentFilters[key] !== 'All');
+      if (notResetAll) {
+        this.applyPlainClmFilter();
+      } else {
+        this.thatImp = $.extend(true, [], this.thatCloneImp);
+      }
     } else if (this.sortBy === 'Sort By Asc') {
       this.thatImp = __.sortBy(this.thatImp, this.sortByField);
     } else if (this.sortBy === 'Sort By Desc') {

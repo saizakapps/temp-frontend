@@ -1024,10 +1024,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       if (event === true && this.certificationItems.length > 1) {
         this.locationSelect.toggle();
         this.openAlert('clearCertLineItems');
-      } else {
+        return;
+      }/*  else {
         this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
         this.setRenderingDataForCertificationItems();
-      }
+      } */
     }
     const selectedCountries: any = this.buildSelectedCountries(this.countryList);
     const selectedRoles: any = this.buildSelectedRoleGroups(this.roleGroupList);
@@ -1218,6 +1219,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       ];
       this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
       this.setRenderingDataForCertificationItems();
+      this.certificates = $.extend(true, [], this.copyCertificates);
     } else if (type === 'deleteCertItem') {
       this.deleteCertItem(chapter);
     } /* else if (type === 'callGetCompTemplate') {
@@ -1677,7 +1679,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
     if (isPublished && (this.publishCourse.countries.length < 1 || this.publishCourse.roleGroups.length < 1)) {
       this.openAlert('withoutRoleCountry');
-    } else if (isPublished && (this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid)) {
+    } else if (isPublished && // check if course is to publish
+      (this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid) && // check if course type is F2F and Comp category content is invalid
+      (this.checkFreeTextQues())) { // check if comp category found in this course
       this.openAlert('withoutCompCategory');
     } else {
       this.submitCourse(isPublished, type);
@@ -2782,6 +2786,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     });
     this.certificates.push(this.copyCertificates.find(c => c.id === certItem.id));
     this.certificates.sort((a, b) => a.id - b.id);
+    this.previewData = undefined;
   }
 
   ngOnDestroy() {

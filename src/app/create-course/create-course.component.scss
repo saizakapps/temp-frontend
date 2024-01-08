@@ -2207,7 +2207,7 @@ button.versionHistory:disabled svg {
 }
 .internalNameTxt {
   position: relative;
-  padding-right: 25px !important;
+  padding-right: 125px !important;
   font-size: 13px !important;
 }
 .internalImg {
@@ -2236,7 +2236,7 @@ button.versionHistory:disabled svg {
   height: 40px;
 }
 .interName {
-  padding-right: 100px;
+  padding-right: 125px;
 }
 .courseRegionContent .form-inline label {
   display: block;
@@ -2597,4 +2597,7 @@ tr{
 }
 .tableMatmenu .mat-menu-content{
   background-color: #fff !important;
+}
+.mat-tree-node:hover .locMasterNode {
+  color: #fff;
 }

@@ -899,7 +899,7 @@
                                                 [indeterminate]="node.selectStatus === 'mixed'"
                                                 [checked]="node.selectStatus === 'checked'">
                                                 {{node.desc}}</mat-checkbox> -->
-                                                <div>{{node.desc}}</div>
+                                                <div class="locMasterNode">{{node.desc}}</div>
                                             </div>
                                             <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
                                               <ng-container matTreeNodeOutlet></ng-container>
@@ -942,7 +942,7 @@
                           <!-- Preview -->
                           <td>
                             <div style="margin-bottom: 10px;">
-                            <a *ngIf="certItem.id !== 6" [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
+                            <a *ngIf="certItem.id !== 9" [ngClass]="{'disableClass': certItem.name.length === 0}" (click)="viewCertificate(certItem)">Preview</a>
                            </div>
                           </td>
                           <!-- Delete -->
@@ -957,7 +957,7 @@
                      
                     </tbody>
                   </table>
-                    <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
+                    <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length || calcSelectedStore() === 1" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
                 </div>
               </div>              
             </ng-container>
@@ -1173,7 +1173,7 @@
               </ng-container>
               <!-- certificate page -->
               <ng-container *ngIf="currentPage === course.chapters.length + 2">
-                <ng-container *ngIf="(courseConfig.code !== courseCode.F2F) || courseConfig.code === courseCode.F2F && !certificationItems[0].id">
+                <ng-container *ngIf="courseConfig.code !== courseCode.F2F">
                   <div>
                     <img src="assets/images/sample-certificate.png" alt="Certificate" />
                   </div>
