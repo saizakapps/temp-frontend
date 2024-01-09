@@ -175,10 +175,12 @@ export class F2fSummaryComponent implements OnInit {
   private picker: DaterangepickerComponent;
   actionList = [
     {
-      name: "Scheduled",
+      name: "Schedule",
+      type: "Scheduled"
     },
     {
       name: "Draft",
+      type: "Draft"
     }
   ]
   form!: FormGroup;
@@ -200,15 +202,15 @@ export class F2fSummaryComponent implements OnInit {
   upcomingFilterlist = [
     {
       name: "Scheduled",
-      filterId : 1
+      filterId: 1
     },
     {
       name: "Canceled",
-      filterId : 0
+      filterId: 0
     },
     {
       name: "Assigned",
-      filterId : 3
+      filterId: 3
     },
   ]
   f2freportTableheader: any[] = []
@@ -1329,7 +1331,9 @@ export class F2fSummaryComponent implements OnInit {
     event.preventDefault(); // Prevent default to allow drop
   }
   oldNumber: number = 0;
+  viewPeopleinst = false;
   onDrop(event: DragEvent, item: any) {
+    this.dragStarted = false;
     this.oldNumber = 0;
     event.preventDefault();
     if (this.selectedIndices.length > 0) {
@@ -1351,6 +1355,13 @@ export class F2fSummaryComponent implements OnInit {
 
         }
       });
+      this.selectedIndices = [];
+      for (let x of this.generalReportList) {
+        x.checked = false
+      }
+      this.isAllselect = false;
+      this.allboxinter = false;
+
     }
     else {
       const dataString = event.dataTransfer?.getData('text/plain');
@@ -1384,6 +1395,13 @@ export class F2fSummaryComponent implements OnInit {
         item.employeesList.unshift(this.selectedIndices[i]); // Push the dropped data to the destinationArray
       }
     }
+
+    this.selectedIndices = [];
+    for (let x of this.generalReportList) {
+      x.checked = false
+    }
+    this.isAllselect = false;
+    this.allboxinter = false;
   }
   shouldEnableDragCondition1(data: any) {
     return this.selectedIndices.length > 0 && data.checked
@@ -1531,7 +1549,8 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
   changeTypeAction(type: any, item: any) {
-    item.batchStatus = type.name;
+    item.batchStatus = type.type;
+    console.log(item.batchStatus, "item.batchStatus")
   }
   scheduleParams: any;
   cloneBatchdata: any[] = [];
@@ -1975,7 +1994,7 @@ export class F2fSummaryComponent implements OnInit {
     this.summaryShimmer = false
 
   }
-  filterbyListstatus(event:any){
+  filterbyListstatus(event: any) {
     console.log(event.filterId)
     this.batchStatusList = event.filterId;
     this.cardShimmer = true;
@@ -2011,10 +2030,11 @@ export class F2fSummaryComponent implements OnInit {
   // detailsData: any;
   viewDetails = false;
   async getscheduledDetails(item: any) {
-    this.ngxloaderService.start()
+    this.ngxloaderService.start();
+    this.saveButtonshow = false;
     this.viewDetails = false;
     this.showPopUP = true;
-    this.viewHistory = false
+    this.viewHistory = false;
     const param = {
       courseId: item.courseId,
       batchId: item.batchId,
@@ -2220,21 +2240,22 @@ export class F2fSummaryComponent implements OnInit {
       this.mailIdsend = e.target.value;
     }
   }
-  
+
   addMailId() {
     if (this.form.valid) {
-      let existing = this.Emails.filter((item:any)=>{
+      let existing = this.Emails.filter((item: any) => {
         return item == this.mailIdsend
-       })
-    
-       if(existing.length > 0){
-        this.common.openSnackBar("Mail Id Already Exists",2,"Invalid")
-       }
-       else{
-      this.Emails.push(this.mailIdsend);
-      this.mailIdsend = "";
-      this.cdr.detectChanges();
-       }
+      })
+
+      if (existing.length > 0) {
+        this.common.openSnackBar("Mail Id Already Exists", 2, "Invalid")
+      }
+      else {
+        this.Emails.push(this.mailIdsend);
+        this.mailIdsend = "";
+        console.log(this.Emails, "Emails")
+        this.cdr.detectChanges();
+      }
     }
   }
 
@@ -2246,28 +2267,31 @@ export class F2fSummaryComponent implements OnInit {
     this.Emails = [];
     this.cdr.detectChanges();
   }
-  async sendMail(){
-    this.filterRequest.emailIds = [this.Emails.toString()];
+  async sendMail() {
+    this.filterRequest.emailIds = this.Emails;
     const params = this.filterRequest;
     this.Emails = [];
     this.mailIdsend = '';
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EXPORT_MAIL_F2F, params, this.destroyed$);
-    if(response.payload){
+    if (response.payload) {
       this.filterRequest.emailIds = [];
     }
   }
-  closeEmppopup(){
+  closeEmppopup() {
     this.showempComponent = false;
   }
-  activeShimmer = false
-  async getActivecount(){
+  activeShimmer = false;
+  activeData:any[] =[];
+  async getActivecount() {
     this.activeShimmer = true;
-   const param ={
+    const param = {
       "userId": this.loginEmployeeId,
-        "isManager": this.loginEmployeeManager
+      "isManager": this.loginEmployeeManager
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_ACTIVE_COUNT, param, this.destroyed$);
-    if(response.payload){
+    if (response.payload) {
+      this.activeData = response.payload;
+      console.log(this.activeData.length)
       this.activeShimmer = false
     }
   }

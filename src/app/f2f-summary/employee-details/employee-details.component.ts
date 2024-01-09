@@ -561,7 +561,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     if (!minChar || !inputLength || inputLength >= minChar) {
       return false;
     } else {
-      this.errorHandler.handleAlert(`Please enter minimum ${minChar} character for auto suggesstion.`);
+      this.errorHandler.handleAlert(`Please enter minimum ${minChar} characters for auto suggestion.`);
       return true;
     }
   }
