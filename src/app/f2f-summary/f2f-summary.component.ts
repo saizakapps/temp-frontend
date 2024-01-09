@@ -1505,6 +1505,7 @@ export class F2fSummaryComponent implements OnInit {
     this.fromDatevalue = '';
     this.toDatevalue = '';
     this.setInitialFromToDate();
+    this.getSummarylist();
   }
 
   batchCoursename(event: any, item: any) {
