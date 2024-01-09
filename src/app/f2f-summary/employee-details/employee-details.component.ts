@@ -339,7 +339,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       this.selectedEmployeesData = []
     }
     this.selectedEmployeesData = this.selectedEmployeesData.map((list:any)=> {
-      return {...list, isnewFlag:true, isDeleted : false};
+      return {...list, isNewEmployee:true, isDeleted : false};
      })
    
     this.indeterminateAll = false;
@@ -365,7 +365,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     // }
     console.log(this.selectedEmployeesData, "selectedEmployeesData")
     this.selectedEmployeesData = this.selectedEmployeesData.map((list:any)=> {
-      return {...list, isnewFlag:true, isDeleted : false};
+      return {...list, isNewEmployee:true, isDeleted : false};
      })
     if (this.employeeList.every((x: any) => x.checked !== true)) {
       this.checkedAll = false;

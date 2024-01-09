@@ -791,7 +791,7 @@
                             </svg></div> -->
                             </div>
                             <div *ngFor="let employee of this.item.employeesList; let k = index">
-                                <div class="employeeData" *ngIf="k <= 2">
+                                <div class="employeeData" *ngIf="k <= 2" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                                     <div>
                                         <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                                         <div class="d-flex align-items-center empidposition">
@@ -1008,7 +1008,7 @@
                                     stroke="#E20512" />
                             </svg></div> -->
                     </div>
-                    <div *ngFor="let employee of this.selected_PopupData?.employeesList" class="employeeData">
+                    <div *ngFor="let employee of this.selected_PopupData?.employeesList" class="employeeData" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                         <div>
                             <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                             <div class="d-flex align-items-center empidposition">
@@ -1156,7 +1156,7 @@
                             </svg></div> -->
                     </div>
                     <div *ngFor="let employee of this.detailsData.employeesList">
-                        <div class="employeeData" *ngIf="employee.isDeleted == false">
+                        <div class="employeeData" *ngIf="employee.isDeleted == false" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                         <div>
                             <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                             <div class="d-flex align-items-center empidposition">
@@ -1272,11 +1272,11 @@
 
                     <div class="employeeList">
                         <div class="employeeData">
-                            <div class="font-weight-bold">Employees ({{this.batchEmployeesCount}})
+                            <div class="font-weight-bold">Employees ({{this.historyData.batchEmployeesCount}})
                             </div>
                             </div>
-                        <div *ngFor="let employee of this.detailsData.employeesList">
-                            <div class="employeeData">
+                        <div *ngFor="let employee of this.historyData.employeesList">
+                            <div class="employeeData" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                             <div>
                                 <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                                 <div class="d-flex align-items-center empidposition">

@@ -77,7 +77,7 @@ span.input-group-text {
 
 /*--------------------------------Body Css Start----------------------------------*/
 .employee-management-page-container {
-  height: calc(100vh - 185px);
+  height: calc(100vh - 215px);
   background: #fff;
   width: 100%;
   border-radius: 5px;
@@ -90,7 +90,7 @@ span.input-group-text {
 
 .table-responsive {
   min-height: 300px;
-  height: calc(100vh - 215px);
+  height: calc(100vh - 245px);
   overflow: auto;
 }
 
@@ -986,7 +986,7 @@ tbody td {
   background-color: #1f96f4;
   color: #fff;
   margin-left: 10px;
-  margin-top: -6px;
+  // margin-top: -6px;
   margin-right: 0px;
   width: fit-content;
   border-radius: 4px;
@@ -998,4 +998,9 @@ tbody td {
 .disabledAddbutton{
   opacity: 0.5;
   pointer-events: none;
+}
+.acbutton{
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 7px;
 }

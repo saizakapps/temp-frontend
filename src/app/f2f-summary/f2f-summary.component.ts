@@ -1159,6 +1159,8 @@ export class F2fSummaryComponent implements OnInit {
   }
   async filterwithDate() {
     console.log(this.loginEmployeeRoleCode)
+    this.summaryShimmer = true;
+    this.summaryList = [];
     const convertfromdate = this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd');
     const converttodate = this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd')
 
@@ -1172,7 +1174,11 @@ export class F2fSummaryComponent implements OnInit {
       "toDate": converttodate
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_SUMMARY_LIST_FILTER, param, this.destroyed$);
-
+    console.log(response.payload, "LIST")
+    if(response.payload){
+      this.summaryList = response.payload;
+      this.summaryShimmer = false;
+    }
   }
   setInitialFromToDate() {
     let currentDate = new Date();
@@ -1559,7 +1565,7 @@ export class F2fSummaryComponent implements OnInit {
   async scheduleBatch(item: any, b: any, type: string) {
 
     this.scheduleParams = JSON.parse(JSON.stringify(item));
-    this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false }));
+    this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false, isNewEmployee:true }));
     this.scheduleParams.scheduledDate = this.datepipe.transform(this.scheduleParams.scheduledDate, 'yyyy-MM-dd') || '';;
     this.scheduleParams.trainerId = this.scheduleParams.trainerId.map(name => `${name}`).join(', ');
     this.scheduleParams.trainerName = this.scheduleParams.trainerName.map(name => `${name}`).join(', ');
@@ -1604,7 +1610,8 @@ export class F2fSummaryComponent implements OnInit {
         }
       }
       else {
-        this.AlreadyscheduledEmployees = response.paylLoad;
+        this.AlreadyscheduledEmployees = response.payload;
+        // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
         this.common.openSnackBar(`${response.payload.length} Employees Already Scheduled`, 2, "Invalid")
       }
 
@@ -1634,7 +1641,8 @@ export class F2fSummaryComponent implements OnInit {
 
           }
           else {
-            this.AlreadyscheduledEmployees = response.paylLoad;
+            this.AlreadyscheduledEmployees = response.payload;
+            // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
             this.common.openSnackBar(`${response.payload.length} Employees Already Scheduled`, 2, "Invalid")
           }
         }
@@ -1954,9 +1962,7 @@ export class F2fSummaryComponent implements OnInit {
     param = this.removeParams(param, paramsToRemove);
     const newParam = JSON.parse(JSON.stringify(param));
 
-    newParam.employeesList = param.employeesList.filter((item: any) => {
-      return item.isnewFlag !== false
-    }).map((employee: any) => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted }));
+    newParam.employeesList = param.employeesList.map((employee: any) => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted, isNewEmployee:employee.isNewEmployee }));
 
 
 
@@ -1968,7 +1974,8 @@ export class F2fSummaryComponent implements OnInit {
       this.batchUpdate(updateParam)
     }
     else {
-      this.AlreadyscheduledEmployees = response.paylLoad;
+      this.AlreadyscheduledEmployees = response.payload;
+      // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
       this.common.openSnackBar(`${response.payload.length} Employee(s) Already in Another Schedule`, 2, "Invalid")
     }
   }
@@ -2050,7 +2057,7 @@ export class F2fSummaryComponent implements OnInit {
 
       this.upDatedEmployeeCount = sampleJson.employeesList?.length;
       sampleJson.employeesList = sampleJson.employeesList?.map((list: any) => {
-        return { ...list, isnewFlag: false };
+        return { ...list, isNewEmployee: false };
       })
       this.detailsData = sampleJson;
       this.detailsData.scheduledDate = this.datepipe.transform(this.detailsData.scheduledDate, 'dd-MM-yyyy'); // Apply DatePipe to format
@@ -2106,7 +2113,7 @@ export class F2fSummaryComponent implements OnInit {
   }
   updateEmployeeList: any[] = [];
   deleteEmployeefromUpdate(item: any, emp: any) {
-    if (emp.isnewFlag == false) {
+    if (emp.isNewEmployee == false) {
       emp.isDeleted = true
     }
     else {
@@ -2295,6 +2302,20 @@ export class F2fSummaryComponent implements OnInit {
       this.activeShimmer = false
     }
   }
+  removeDuplicates(data: any[]): any[] {
+    const uniqueEmployeeIds = new Set<string>();
+    const uniqueObjects = [];
+
+    for (const obj of data) {
+      if (!uniqueEmployeeIds.has(obj.employeeId)) {
+        uniqueEmployeeIds.add(obj.employeeId);
+        uniqueObjects.push(obj);
+      }
+    }
+
+    return uniqueObjects;
+  }
+
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
