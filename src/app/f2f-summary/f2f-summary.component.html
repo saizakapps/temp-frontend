@@ -71,6 +71,7 @@
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="summaryList.length == 0" class="norecordButton">No Record Found</div>
                 </div>
                 <div *ngIf="summaryShimmer"><ng-container *ngFor="let index of shimmerArray">
                     <div class="shimmerCSS">
@@ -791,7 +792,7 @@
                             </svg></div> -->
                             </div>
                             <div *ngFor="let employee of this.item.employeesList; let k = index">
-                                <div class="employeeData" *ngIf="k <= 2" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
+                                <div class="employeeData" *ngIf="k <= 2" title="{{employee.employeeIsActive == false?'This Employee is Temporarily Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                                     <div>
                                         <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                                         <div class="d-flex align-items-center empidposition">
@@ -1446,4 +1447,42 @@
              </div>
         </div>
     </div>
+</div>
+
+<button style="display: none;" #importProgress data-toggle="modal" data-target="#importProgressModal"></button>
+<div class="modal fade linkedEmployee suggestCourseModal f2fModal bootstrapBackground_Pop" id="importProgressModal" tabindex="-1"
+  role="dialog" aria-labelledby="importProgressModalModalLongTitle" data-keyboard="false" data-backdrop='static'
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header employee-header">
+        <span class="modal-title" id="suggestCourseModalLongTitle">
+          {{headerSuggestCourseObj?.employeeId}} -> Suggested Course
+        </span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div> -->
+      <div class="modal-body">
+        <div class="progress" *ngIf="progress < 100">
+          <div class="progress-bar progress-bar-striped" [style.width]="progress + '%'">{{progress}}%</div>
+        </div>
+        <div *ngIf="progress === 100">
+          <div>
+            <span class="successMsg">File imported successfully</span>
+          </div>
+          <div class="successData">
+            <div><b>Note:</b></div>
+            <div class="successContent pt-2">The data will be verified in the background and will send the import status success or fail to your email address.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer employee-footer px-3 border-0 w-100 justify-content-end align-items-center">
+        <div class="">
+          <button (click)="progressDoneClick()" [disabled]="progress !== 100 && progress !== null" type="button" #progressDone
+            class="btn doneBtn" data-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

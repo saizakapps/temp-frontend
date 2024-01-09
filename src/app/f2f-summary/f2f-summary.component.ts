@@ -225,6 +225,7 @@ export class F2fSummaryComponent implements OnInit {
   loginEmployeeRegionId: any;
   loginEmployeeManager: any;
   loginEmployeeIstrainer: any;
+  userId:any;
   viewHistory = false;
   summaryList: any[] = [];
   summaryShimmer = false;
@@ -252,6 +253,7 @@ export class F2fSummaryComponent implements OnInit {
     this.f2freportTableheader = this.utils.TABLE_HEADERS.F2F_REPORTS_TABLE_SUMMARY;
     let userDetails = JSON.parse(localStorage.getItem('userDetails'));
     this.username = localStorage.getItem('username');
+    this.userId = userDetails.id;
     this.loginEmployeeId = userDetails.employeeId;
     this.loginEmployeeCountry = userDetails.country;
     this.loginEmployeeRoleCode = userDetails.learnerRole;
@@ -976,7 +978,7 @@ export class F2fSummaryComponent implements OnInit {
 
   /* File Upload Area start*/
   onFileBrowse(event: any, uploadedMedia: any) {
-    this.importProgress.nativeElement.click();
+    this.importProgress?.nativeElement.click();
     var pattern = /(xls)/;
     let checkFileType = false;
     let ext = '';
@@ -1007,8 +1009,9 @@ export class F2fSummaryComponent implements OnInit {
     const formData = new FormData();
     for (const file of files) {
       formData.append('request', file);
-      formData.append('userId', this.userDetails.id);
+      formData.append('userId', this.userId);
     }
+    console.log(this.userId, "this.userDetails?.id")
     const apiUrl = this.utils.API.UPLOAD_EXCEL;
     this.upload(apiUrl, formData);
     // const res: any = await this.apiHandler.fileUpload(apiUrl, formData, this.destroyed$);
@@ -1019,10 +1022,12 @@ export class F2fSummaryComponent implements OnInit {
 
   progress: any;
   upload(url, file) {
+    let Token = localStorage.getItem("authenticationToken")
     this.progress = 1;
     new Promise((resolve, reject) => {
       this.http
         .post(url, file, {
+          headers:{Authorization: 'Bearer '+Token },
           reportProgress: true,
           observe: "events"
         })
@@ -1046,7 +1051,7 @@ export class F2fSummaryComponent implements OnInit {
               this.errorHandler.handleAlert(error?.error?.errors?.message || 'Internal Server Error !!!');
               const doc: any = document.getElementById('file')
               doc.value = '';
-              this.progressDone.nativeElement.click();
+              this.progressDone?.nativeElement.click();
             }
             reject('error');
           });
@@ -1057,7 +1062,7 @@ export class F2fSummaryComponent implements OnInit {
   async import() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_F2F_STATUS, '', this.destroyed$);
     if (response.payload === false) {
-      this.uploadFileInput.nativeElement.click()
+      this.uploadFileInput?.nativeElement?.click()
     } else {
       this.errorHandler.handleAlert('server is busy, please try again later')
     }
@@ -2284,6 +2289,7 @@ export class F2fSummaryComponent implements OnInit {
     this.cdr.detectChanges();
   }
   async sendMail() {
+    this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
     this.filterRequest.emailIds = this.Emails;
     const params = this.filterRequest;
     this.Emails = [];

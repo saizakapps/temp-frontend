@@ -141,7 +141,7 @@
     }
 
     .listData {
-        max-height: calc(100vh - 310px);
+        height: calc(100vh - 310px);
         overflow-y: auto;
 
         .rowdata {
@@ -1540,3 +1540,48 @@
         border-color: #1F96F4;
       }
   
+
+      .f2fModal .modal-body {
+        border-radius: 5px 5px 0px 0px;
+      }
+      .doneBtn {
+        height: 30px;
+        line-height: 16px;
+        font-size: 12px;
+        background-color: #1f96f4;
+        border-color: #1f96f4;
+        opacity: 1;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .f2fModal .modal-footer {
+        height: 60px !important;
+      }
+      .successContent,.successMsg {
+        color: #8d8d8d;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.2;
+      }
+      .successMsg {
+        color: rgb(0, 0, 0);
+        font-size: 13px;
+        background: rgb(223, 222, 222);
+        display: flex;
+        // width: 175px;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: fit-content;
+        height: 30px;
+        align-items: center;
+        justify-content:flex-start;
+        font-weight: 600;
+        border-radius: 5px;
+      }
+      .successData {
+        margin-top: 15px;
+      }
+      .hiddenXflow{
+        overflow-x: hidden;
+      }
