@@ -477,10 +477,6 @@ input.noarrow::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Firefox */
-.noarrow input[type="number"] {
-  -moz-appearance: textfield;
-}
 
 .dropdown.employeeContent {
   min-width: 150px;

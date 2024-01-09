@@ -1612,8 +1612,10 @@ export class F2fSummaryComponent implements OnInit {
       }
       else {
         this.AlreadyscheduledEmployees = response.payload;
-        // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
-        this.common.openSnackBar(`${response.payload.length} Employees Already Scheduled`, 2, "Invalid")
+        const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
+        console.log(this.AlreadyscheduledEmployees, "AlreadyscheduledEmployees");
+        console.log(emp_names, "emp_names");
+        this.common.openSnackBar(`${emp_names} Already Scheduled`, 2, "Invalid")
       }
 
     }
@@ -1643,8 +1645,11 @@ export class F2fSummaryComponent implements OnInit {
           }
           else {
             this.AlreadyscheduledEmployees = response.payload;
+            const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
+        console.log(this.AlreadyscheduledEmployees, "AlreadyscheduledEmployees");
+        console.log(emp_names, "emp_names");
             // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
-            this.common.openSnackBar(`${response.payload.length} Employees Already Scheduled`, 2, "Invalid")
+            this.common.openSnackBar(`${emp_names} Already Scheduled`, 2, "Invalid")
           }
         }
       }
@@ -1976,8 +1981,11 @@ export class F2fSummaryComponent implements OnInit {
     }
     else {
       this.AlreadyscheduledEmployees = response.payload;
+      const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
+        console.log(this.AlreadyscheduledEmployees, "AlreadyscheduledEmployees");
+        console.log(emp_names, "emp_names");
       // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
-      this.common.openSnackBar(`${response.payload.length} Employee(s) Already in Another Schedule`, 2, "Invalid")
+      this.common.openSnackBar(`${emp_names} Already in Another Schedule`, 2, "Invalid")
     }
   }
 
@@ -2302,19 +2310,6 @@ export class F2fSummaryComponent implements OnInit {
       console.log(this.activeData.length)
       this.activeShimmer = false
     }
-  }
-  removeDuplicates(data: any[]): any[] {
-    const uniqueEmployeeIds = new Set<string>();
-    const uniqueObjects = [];
-
-    for (const obj of data) {
-      if (!uniqueEmployeeIds.has(obj.employeeId)) {
-        uniqueEmployeeIds.add(obj.employeeId);
-        uniqueObjects.push(obj);
-      }
-    }
-
-    return uniqueObjects;
   }
 
   ngOnDestroy(): void {
