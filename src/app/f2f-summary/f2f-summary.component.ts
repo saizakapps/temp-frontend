@@ -16,10 +16,7 @@ import * as $ from 'jquery';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { NgbPopover, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DaterangepickerComponent } from 'ng2-daterangepicker';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { ngxService } from '../shared/services/incident-services/ngxservice';
-
 
 @Component({
   selector: 'app-f2f-summary',
@@ -27,22 +24,6 @@ import { ngxService } from '../shared/services/incident-services/ngxservice';
   styleUrls: ['./f2f-summary.component.scss']
 })
 export class F2fSummaryComponent implements OnInit {
-  fromDatevalue: any;
-  toDatevalue: any;
-  maxDate: any;
-  fromMinDate: any;
-  fromMaxDate: any;
-  toMinDate: any;
-  toMaxDate: any;
-  fromMaxDatechange: any;
-  courseName: any;
-  trainerName: any;
-  scheduleDatevalue: any;
-  createBatch: boolean = false;
-  filterDatevalue: any;
-  expireDatevalue: any;
-  filtercourseName: any;
-  scheduleminDate: any;
 
   view: boolean = false;
   create: boolean = false;
@@ -173,22 +154,111 @@ export class F2fSummaryComponent implements OnInit {
   showShimmer: boolean = false;
   @ViewChild(DaterangepickerComponent)
   private picker: DaterangepickerComponent;
-  actionList = [
-    {
-      name: "Schedule",
-      type: "Scheduled"
-    },
-    {
-      name: "Draft",
-      type: "Draft"
-    }
-  ]
+  
   form!: FormGroup;
-  constructor(private modalService: NgbModal, public learnutils: leranersutils, public emitservice: learnersCommonservice, public common: CommonService, private datepipe: DatePipe, public utils: Utils,
-    private apiHandler: ApiHandlerService, private http: HttpClient,
-    private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private errorHandler: ErrorHandlerService, public ngxloaderService: NgxUiLoaderService) {
-  }
 
+  /* Values for Date Filters */
+  fromDatevalue: any;
+  toDatevalue: any;
+  maxDate: any;
+  fromMinDate: any;
+  fromMaxDate: any;
+  toMinDate: any;
+  toMaxDate: any;
+  fromMaxDatechange: any;
+  courseName: any;
+  trainerName: any;
+  scheduleDatevalue: any;
+  createBatch: boolean = false;
+  filterDatevalue: any;
+  expireDatevalue: any;
+  filtercourseName: any;
+  scheduleminDate: any;
+
+  f2freportTableheader: any[] = []
+  batchData: any = []
+  username: any;
+  loginEmployeeId: any;
+  loginEmployeeCountry: any;
+  loginEmployeeRoleCode: any;
+  loginMainRoleCode: any;
+  isIncharge: any;
+  loginEmployeeStoreId: any;
+  loginEmployeeRegionId: any;
+  loginEmployeeManager: any;
+  loginEmployeeIstrainer: any;
+  userId:any;
+  viewHistory = false;
+  summaryList: any[] = [];
+  summaryShimmer = false;
+  shimmerCount = 7; // Change this number based on how many shimmer elements you want
+
+  // Generate an array with a length equal to shimmerCount
+  shimmerArray = Array(this.shimmerCount).fill(0).map((x, i) => i);
+  batchStatusList = 1
+  showempComponent = false;
+  addpeopleArray: any;
+  upDatedEmployeeCount: any;
+  receivedpeopleData: any;
+  upcomingListData: any[] = [];
+  draftListData: any[] = [];
+  cardShimmer = false;
+  cardShimmer1 = false;
+  showPopUP = false
+  viewDetails = false;
+  updateEmployeeList: any[] = [];
+  saveButtonshow = false
+  historyData: any;
+  historyTableview = false;
+  mailIdsend = "";
+  Emails: any[] = [];
+  activeShimmer = false;
+  activeData:any[] =[];
+  previousDetailsData: any; // To store previous data
+  detailsData: any = { /* Your initial data here */ };
+  batchCourselist: any[] = [];
+  batchTrainerlist: any[] = [];
+  trainerNameList: any[] = [];
+  courseNameList: any[] = [];
+  filterCourseNamevalues: any = [];
+  filtercourseNameList: any[] = [];
+  shimmerWidth: any;
+  onetimeCall = false;
+  selectedOptionsnew: any[] = [];
+  firstclick = false;
+  hideBatch: boolean = true;
+  oldNumber: number = 0;
+  viewPeopleinst = false;
+  allboxinter = false;
+  selectedIndices: any[] = [];
+  isAllselect = false;
+  selected_PopupData: any = [];
+  scheduleParams: any;
+  cloneBatchdata: any[] = [];
+  ModalPopup1 = false;
+  AlreadyscheduledEmployees: any[] = [];
+  trainerDropdownData: any[] = [];
+  inputPlaceholderValue: any;
+
+  @ViewChildren(MatAutocompleteTrigger) autoCompleteTriggers: any;
+  @HostListener('window:keydown.esc', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (this.showempComponent == true) {
+      setTimeout(() => {
+        this.showempComponent = false;
+      }, 500);
+    }
+    if(this.historyTableview == true){
+      setTimeout(() => {
+        this.historyTableview = false;
+      }, 500);
+    }
+    if(this.ModalPopup1 == true){
+      setTimeout(() => {
+        this.ModalPopup1 = false;
+      }, 500);
+    }
+  }
 
   dateValues = [
     {
@@ -213,39 +283,23 @@ export class F2fSummaryComponent implements OnInit {
       filterId: 3
     },
   ]
-  f2freportTableheader: any[] = []
-  batchData: any = []
-  username: any;
-  loginEmployeeId: any;
-  loginEmployeeCountry: any;
-  loginEmployeeRoleCode: any;
-  loginMainRoleCode: any;
-  isIncharge: any;
-  loginEmployeeStoreId: any;
-  loginEmployeeRegionId: any;
-  loginEmployeeManager: any;
-  loginEmployeeIstrainer: any;
-  userId:any;
-  viewHistory = false;
-  summaryList: any[] = [];
-  summaryShimmer = false;
-  shimmerCount = 7; // Change this number based on how many shimmer elements you want
 
-  // Generate an array with a length equal to shimmerCount
-  shimmerArray = Array(this.shimmerCount).fill(0).map((x, i) => i);
-
-  batchStatusList = 1
-
-  @ViewChildren(MatAutocompleteTrigger) autoCompleteTriggers: any;
-
-  @HostListener('window:keydown.esc', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
-    if (this.showempComponent == true) {
-      setTimeout(() => {
-        this.showempComponent = false;
-      }, 500);
+  actionList = [
+    {
+      name: "Schedule",
+      type: "Scheduled"
+    },
+    {
+      name: "Draft",
+      type: "Draft"
     }
+  ]
+
+  constructor(public learnutils: leranersutils, public emitservice: learnersCommonservice, public common: CommonService, private datepipe: DatePipe, public utils: Utils,
+    private apiHandler: ApiHandlerService, private http: HttpClient,
+    private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private errorHandler: ErrorHandlerService, public ngxloaderService: NgxUiLoaderService) {
   }
+  
   ngOnInit(): void {
     this.setInitialFromToDate();
     this.searchLabels = this.utils.ddOptions.DD_LABELS.employeeTraineeSearch;
@@ -263,9 +317,6 @@ export class F2fSummaryComponent implements OnInit {
     this.loginEmployeeStoreId = userDetails.storeId;
     this.loginEmployeeManager = userDetails.manager;
     this.loginEmployeeIstrainer = userDetails.isTrainer;
-    // this.getCourseTypes();
-
-    // this.getAllTableFilterData();
     this.filterRequest.employeeStatus = 'Active';
     this.getSummarylist();
     this.getUpcominglist();
@@ -277,12 +328,6 @@ export class F2fSummaryComponent implements OnInit {
     });
   }
   get f() { return this.form.controls; }
-  previousDetailsData: any; // To store previous data
-  detailsData: any = { /* Your initial data here */ };
-
-  batchCourselist: any[] = [];
-  batchTrainerlist: any[] = [];
-  trainerNameList: any[] = [];
 
   scrolling(e: any) {
     this.closebsValue()
@@ -310,6 +355,7 @@ export class F2fSummaryComponent implements OnInit {
       }
     });
   }
+
   //  async getAllTableFilterData(){
   //     this.showShimmer = true;
   //     const response: any = await this.apiHandler.getData(this.utils.API.GET_F2f_FILTER_DATA_LIST, null, this.destroyed$);
@@ -346,10 +392,10 @@ export class F2fSummaryComponent implements OnInit {
       x.checked = false;
     }
   }
+
   async getBatchTrainerlist() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CREATE_BATCH_TRAINER_LIST, null, this.destroyed$);
     this.trainerNameList = response.payload;
-    console.log(this.trainerNameList, "trainerNameList")
   }
 
   getModuleAccess() {
@@ -440,10 +486,8 @@ export class F2fSummaryComponent implements OnInit {
   //   // this.ngxService.stop();
   // }
 
-  courseNameList: any[] = [];
-  filterCourseNamevalues: any = [];
-  filtercourseNameList: any[] = [];
   // /* Get course name */
+  
   async getCourseName() {
     // this.ngxService.start();
     this.showShimmer = true;
@@ -612,8 +656,6 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   /* Get filtered list */
-  shimmerWidth: any;
-  onetimeCall = false
   async getReportList(scrollDirection?: any) {
     // this.ngxService.start();
     if (document.getElementById("reports-container-table")) {
@@ -1011,7 +1053,6 @@ export class F2fSummaryComponent implements OnInit {
       formData.append('request', file);
       formData.append('userId', this.userId);
     }
-    console.log(this.userId, "this.userDetails?.id")
     const apiUrl = this.utils.API.UPLOAD_EXCEL;
     this.upload(apiUrl, formData);
     // const res: any = await this.apiHandler.fileUpload(apiUrl, formData, this.destroyed$);
@@ -1152,6 +1193,7 @@ export class F2fSummaryComponent implements OnInit {
       this.filterwithDate();
     }
   }
+
   toDateChange(event: any) {
     this.toDatevalue = event;
     this.fromMaxDate = this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd');
@@ -1162,8 +1204,8 @@ export class F2fSummaryComponent implements OnInit {
       this.filterwithDate();
     }
   }
+
   async filterwithDate() {
-    console.log(this.loginEmployeeRoleCode)
     this.summaryShimmer = true;
     this.summaryList = [];
     const convertfromdate = this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd');
@@ -1179,12 +1221,12 @@ export class F2fSummaryComponent implements OnInit {
       "toDate": converttodate
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_SUMMARY_LIST_FILTER, param, this.destroyed$);
-    console.log(response.payload, "LIST")
     if(response.payload){
       this.summaryList = response.payload;
       this.summaryShimmer = false;
     }
   }
+
   setInitialFromToDate() {
     let currentDate = new Date();
     let year = currentDate.getFullYear();
@@ -1220,22 +1262,13 @@ export class F2fSummaryComponent implements OnInit {
     this.scheduleminDate.setDate(this.fromMaxDate.getDate());
 
   }
-  selectedCourse(event: any) {
 
-  }
-  selectedTrainer(event: any) {
-
-  }
-
-  selectedOptionsnew: any[] = [];
   toggleSelectionForCourse(event: any, optionName: any) {
     optionName.checked = event.checked;
     this.selectedOptionsnew = this.filtercourseNameList.filter((item: any) => {
       return item.checked == true;
     }).map(item => item.courseName);
   }
-
-
 
   addBatch() {
     this.getWidth();
@@ -1266,18 +1299,16 @@ export class F2fSummaryComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
-  firstclick = false;
-  hideBatch: boolean = true;
+
   hidecreate() {
     this.firstclick = true;
     this.hideBatch = this.hideBatch ? false : true
   }
-  destinationArray: any[] = [];
-  showDragStartedMessage = false;
 
   dragStarted: boolean = false;
   indicatorPositionX: number = 0;
   indicatorPositionY: number = 0;
+
   onDragStart(event: DragEvent, data: any) {
     this.oldNumber = 0;
     this.dragStarted = true;
@@ -1289,60 +1320,27 @@ export class F2fSummaryComponent implements OnInit {
     else {
       event.dataTransfer?.setData('text/plain', JSON.stringify(data)); // Store the dragged data
     }
-    // this.isDragStarted = true;
-    // // Set the text to be displayed during drag
-    // this.dragText = 'Text to display during drag';
-    // this.updateTooltipPosition(event);
-
-    // Handle drag start actions
   }
   onMouseEnter(event: MouseEvent) {
-    // Handle mouse enter logic
-    // This event will be triggered when the mouse enters the draggable area
-    // You can add additional logic if needed
-
     this.setIndicatorPosition(event);
   }
   onMouseLeave() {
-    // Handle mouse leave logic
-    // This event will be triggered when the mouse leaves the draggable area
-    // You can add additional logic if needed
     this.dragStarted = false; // Hide the "Drag started" text when mouse leaves
   }
   onMouseMove(event: MouseEvent) {
-    // Update the position of the indicator based on mouse movement
     if (this.dragStarted) {
       this.setIndicatorPosition(event);
     }
   }
-
   setIndicatorPosition(event: MouseEvent) {
     // Set the position of the indicator based on the mouse coordinates
     this.indicatorPositionX = event.pageX;
     this.indicatorPositionY = event.pageY + 20; // Add an offset to position below the mouse
   }
-  // updateTooltipPosition(event: MouseEvent): void {
-  //   this.mouseX = event.clientX;
-  //   this.mouseY = event.clientY;
-
-  //   this.tooltipStyles = {
-  //     left: `${this.mouseX + 10}px`,
-  //     top: `${this.mouseY + 10}px`,
-  //     // Add other necessary styles here
-  //   };
-  // }
-
-  // onMouseMove(event: MouseEvent): void {
-  //   if (this.isDragStarted) {
-  //     this.updateTooltipPosition(event);
-  //   }
-  // }
-
   onDragOver(event: DragEvent) {
     event.preventDefault(); // Prevent default to allow drop
   }
-  oldNumber: number = 0;
-  viewPeopleinst = false;
+
   onDrop(event: DragEvent, item: any) {
     this.dragStarted = false;
     this.oldNumber = 0;
@@ -1391,6 +1389,7 @@ export class F2fSummaryComponent implements OnInit {
       }
     }
   }
+
   addEmployee(item: any) {
     this.oldNumber = 0;
     for (let i = 0; i < this.selectedIndices.length; i++) {
@@ -1414,6 +1413,7 @@ export class F2fSummaryComponent implements OnInit {
     this.isAllselect = false;
     this.allboxinter = false;
   }
+
   shouldEnableDragCondition1(data: any) {
     return this.selectedIndices.length > 0 && data.checked
   }
@@ -1423,12 +1423,14 @@ export class F2fSummaryComponent implements OnInit {
   deleteAllemp(item) {
     item.employeesList = []
   }
+
   deleteEmployee(item: any, emp: any) {
     const deleteIndex = item.indexOf(emp);
     if (deleteIndex !== -1) {
       item.splice(deleteIndex, 1)
     }
   }
+
   copyBatch(list: any) {
     if (this.batchData.length <= 2) {
       this.batchData.unshift({
@@ -1456,7 +1458,7 @@ export class F2fSummaryComponent implements OnInit {
       this.common.openSnackBar("Already 3 batches there please complete this.", 2, "")
     }
   }
-  allboxinter = false;
+
   checkboxallSelect(event: any) {
     this.selectedIndices = [];
     for (let x of this.generalReportList) {
@@ -1477,8 +1479,7 @@ export class F2fSummaryComponent implements OnInit {
     this.allboxinter = false;
     this.isAllselect = !this.isAllselect;
   }
-  selectedIndices: any[] = [];
-  isAllselect = false;
+ 
   onCheckboxChange(event: any, index: any) {
     index.checked = event.checked;
     if (event.checked) {
@@ -1506,6 +1507,7 @@ export class F2fSummaryComponent implements OnInit {
     }
 
   }
+
   cleardateFilter() {
     this.fromDatevalue = '';
     this.toDatevalue = '';
@@ -1529,10 +1531,10 @@ export class F2fSummaryComponent implements OnInit {
     item.scheduledDate = this.formatDate(eventscheduledDate);
   }
   scheduleDateselect1(event: any, item: any) {
-    console.log(event, "EVENT")
     const originalDate = new Date(event);
     item.scheduledDate = this.datepipe.transform(originalDate, 'dd-MM-yyyy');
   }
+
   formatDate(inputDate: string): string {
     if (!inputDate || isNaN(new Date(inputDate).getTime())) {
       return ''; // Return an empty string when scheduledDate is empty or invalid
@@ -1547,7 +1549,7 @@ export class F2fSummaryComponent implements OnInit {
     const formattedDate = `${day}-${month}-${year}`;
     return formattedDate;
   }
-  selected_PopupData: any = [];
+
   showBatchpopup(item: any, ivalue: any) {
     this.ModalPopup1 = true;
     this.selected_PopupData = item;
@@ -1562,14 +1564,9 @@ export class F2fSummaryComponent implements OnInit {
   }
   changeTypeAction(type: any, item: any) {
     item.batchStatus = type.type;
-    console.log(item.batchStatus, "item.batchStatus")
   }
-  scheduleParams: any;
-  cloneBatchdata: any[] = [];
-  ModalPopup1 = false;
-  AlreadyscheduledEmployees: any[] = []
-  async scheduleBatch(item: any, b: any, type: string) {
 
+  async scheduleBatch(item: any, b: any, type: string) {
     this.scheduleParams = JSON.parse(JSON.stringify(item));
     this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false, isNewEmployee:true }));
     this.scheduleParams.scheduledDate = this.datepipe.transform(this.scheduleParams.scheduledDate, 'yyyy-MM-dd') || '';;
@@ -1604,14 +1601,13 @@ export class F2fSummaryComponent implements OnInit {
       if (response.payload.length == 0) {
         const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
         if (response1.payload) {
-          console.log(response1, "response1")
           this.batchData.splice(b, 1);
           let paylLoad: any = response1.payload
           if (paylLoad.batchStatus == "Draft") {
-            this.common.openSnackBar("Batch Drafted Successfully", 2, "Success")
+            this.common.openSnackBar("Batch drafted successfully", 2, "Success")
           }
           else {
-            this.common.openSnackBar("Batch Created Successfully", 2, "Success")
+            this.common.openSnackBar("Batch created successfully", 2, "Success")
           }
         }
       }
@@ -1633,14 +1629,13 @@ export class F2fSummaryComponent implements OnInit {
           if (response.payload.length == 0) {
             const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
             if (response1.payload) {
-              console.log(response1, "response1")
               this.batchData.splice(b, 1);
               let paylLoad: any = response1.payload
               if (paylLoad.batchStatus == "Draft") {
-                this.common.openSnackBar("Batch Drafted Successfully", 2, "Success")
+                this.common.openSnackBar("Batch drafted successfully", 2, "Success")
               }
               else {
-                this.common.openSnackBar("Batch Created Successfully", 2, "Success")
+                this.common.openSnackBar("Batch created successfully", 2, "Success")
 
               }
             }
@@ -1657,7 +1652,6 @@ export class F2fSummaryComponent implements OnInit {
       }
     }
   }
-
 
   compareObjects(obj1: any, obj2: any): boolean {
     // Check the specified properties for equality
@@ -1685,24 +1679,16 @@ export class F2fSummaryComponent implements OnInit {
     if (employeesList1.length !== employeesList2.length) {
       return false; // If the employeesList lengths are different, return false
     }
-    console.log(employeesList1.length)
-    console.log(employeesList2.length)
     // Sort and stringify the employeesList arrays for comparison
     const sortedEmployeesList1 = JSON.stringify(employeesList1.sort((a: any, b: any) => (a.employeeId > b.employeeId) ? 1 : -1));
     const sortedEmployeesList2 = JSON.stringify(employeesList2.sort((a: any, b: any) => (a.employeeId > b.employeeId) ? 1 : -1));
     return sortedEmployeesList1 === sortedEmployeesList2;
   }
 
-
-  showempComponent = false;
-  addpeopleArray: any;
-  upDatedEmployeeCount: any;
   addPeopleData(item: any) {
     this.addpeopleArray = item;
     this.showempComponent = true;
   }
-
-  receivedpeopleData: any;
 
   receiveDataFromEmp(data: any) {
     this.receivedpeopleData = data;
@@ -1721,28 +1707,20 @@ export class F2fSummaryComponent implements OnInit {
         );
         if (existingEmployee) {
           if (existingEmployee.isDeleted === true) {
-            // Update the isDeleted property to false
             existingEmployee.isDeleted = false;
-            // Update the other properties as needed
             existingEmployee.employeeName = droppedData.employeeName;
-            // ... (update other properties if required)
 
-            // Update the count of non-deleted employees
             const updatedCount = this.addpeopleArray.employeesList.filter(
               (employee: any) => employee.isDeleted === false
             );
             this.upDatedEmployeeCount = updatedCount.length;
             this.updateEmployeeList = updatedCount;
-            console.log(this.updateEmployeeList, "console.log(this.updateEmployeeList)")
           } else {
             this.oldNumber = this.oldNumber + 1;
             this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "");
           }
         } else {
-          // If employee not found, add it to the beginning of the array
           this.addpeopleArray.employeesList.unshift(droppedData);
-
-          // Update the count of non-deleted employees
           const updatedCount = this.addpeopleArray.employeesList.filter(
             (employee: any) => employee.isDeleted === false
           );
@@ -1753,124 +1731,110 @@ export class F2fSummaryComponent implements OnInit {
         if (this.showPopUP) {
           this.compareDataforUpdate();
         }
-        // let oldEployee = this.addpeopleArray.employeesList.filter((name: any) => {
-        //   return name.employeeId == droppedData.employeeId
-        // })
-        // console.log(oldEployee, "oldEployee")
-        // if (oldEployee.length > 0) {
-        //   this.oldNumber = this.oldNumber + 1;
-        //   this.common.openSnackBar(`${this.oldNumber} Employee(s) Already there`, 2, "")
-        // }
-
-        // else {
-        //   this.addpeopleArray.employeesList.unshift(droppedData); // Push the dropped data to the destinationArray
-        //   const Count = this.addpeopleArray.employeesList.filter((count: any) => {
-        //     return count.isDeleted == false
-        //   })
-        //   this.upDatedEmployeeCount = Count.length;
-        // }
-        // console.log(this.addpeopleArray.employeesList, "this.addpeopleArray.employeesList")
+     
       }
     });
   }
+
   batchItem: any;
   deleteBatch(deleteitem: any) {
     this.batchItem = deleteitem
   }
+
   confirmDelete() {
-    this.ModalPopup1 = false;
+    setTimeout(() => {
+      this.ModalPopup1 = false;
+    }, 500);
     this.batchData.splice(this.batchItem, 1)
   }
 
+  // filtercourseList: any[] = [];
+  // filterTrainerNamevalues: any[] = [];
+  // filtertrainerList: any[] = [];
 
-  filtercourseList: any[] = [];
-  filterTrainerNamevalues: any[] = [];
-  filtertrainerList: any[] = [];
+  // filterStoreCodevalues: any[] = [];
+  // filterstorecodeList: any[] = [];
 
-  filterStoreCodevalues: any[] = [];
-  filterstorecodeList: any[] = [];
+  // filterStoreNamevalues: any[] = [];
+  // filterstorenameList: any[] = [];
 
-  filterStoreNamevalues: any[] = [];
-  filterstorenameList: any[] = [];
+  // filterEmployeeRolevalues: any[] = [];
+  // filteremployeeroleList: any[] = [];
 
-  filterEmployeeRolevalues: any[] = [];
-  filteremployeeroleList: any[] = [];
+  // courseChange(event: any, filteritem: any) {
+  //   filteritem.checked = !filteritem.checked;
+  //   this.filtercourseList = this.filterCourseNamevalues.filter((filter: any) => {
+  //     return filter.checked == true
+  //   }).map((item: any) => {
+  //     return item.courseName
+  //   })
+  // }
 
-  courseChange(event: any, filteritem: any) {
-    filteritem.checked = !filteritem.checked;
-    this.filtercourseList = this.filterCourseNamevalues.filter((filter: any) => {
-      return filter.checked == true
-    }).map((item: any) => {
-      return item.courseName
-    })
-  }
+  // trainerChange(event: any, filteritem: any) {
+  //   filteritem.checked = !filteritem.checked;
+  //   this.filtertrainerList = this.filterTrainerNamevalues.filter((filter: any) => {
+  //     return filter.checked == true
+  //   }).map((item: any) => {
+  //     return item.name
+  //   })
+  // }
 
-  trainerChange(event: any, filteritem: any) {
-    filteritem.checked = !filteritem.checked;
-    this.filtertrainerList = this.filterTrainerNamevalues.filter((filter: any) => {
-      return filter.checked == true
-    }).map((item: any) => {
-      return item.name
-    })
-  }
+  // storecodeChange(event: any, filteritem: any) {
+  //   filteritem.checked = !filteritem.checked;
+  //   this.filterstorecodeList = this.filterStoreCodevalues.filter((filter: any) => {
+  //     return filter.checked == true
+  //   }).map((item: any) => {
+  //     return item.name
+  //   })
+  // }
 
-  storecodeChange(event: any, filteritem: any) {
-    filteritem.checked = !filteritem.checked;
-    this.filterstorecodeList = this.filterStoreCodevalues.filter((filter: any) => {
-      return filter.checked == true
-    }).map((item: any) => {
-      return item.name
-    })
-  }
+  // storenameChange(event: any, filteritem: any) {
+  //   filteritem.checked = !filteritem.checked;
+  //   this.filterstorenameList = this.filterStoreNamevalues.filter((filter: any) => {
+  //     return filter.checked == true
+  //   }).map((item: any) => {
+  //     return item.name
+  //   })
+  // }
 
-  storenameChange(event: any, filteritem: any) {
-    filteritem.checked = !filteritem.checked;
-    this.filterstorenameList = this.filterStoreNamevalues.filter((filter: any) => {
-      return filter.checked == true
-    }).map((item: any) => {
-      return item.name
-    })
-  }
-
-  employeeroleChange(event: any, filteritem: any) {
-    filteritem.checked = !filteritem.checked;
-    this.filteremployeeroleList = this.filterEmployeeRolevalues.filter((filter: any) => {
-      return filter.checked == true
-    }).map((item: any) => {
-      return item.name
-    })
-  }
+  // employeeroleChange(event: any, filteritem: any) {
+  //   filteritem.checked = !filteritem.checked;
+  //   this.filteremployeeroleList = this.filterEmployeeRolevalues.filter((filter: any) => {
+  //     return filter.checked == true
+  //   }).map((item: any) => {
+  //     return item.name
+  //   })
+  // }
 
   onPopoverClose(property: any) {
-    if (property == 'trainerName') {
-      if ((this.filterRequest.trainers || this.filtertrainerList.length > 0) && !this.deepCompareArrays(this.filterRequest.trainers, this.filtertrainerList)) {
-        this.resetReportList();
-        this.filterRequest.trainers = this.filtertrainerList;
-        this.getReportList();
-      }
-    }
-    else if (property == 'storeCode') {
-      if ((this.filterRequest.storeIds || this.filterstorecodeList.length > 0) && !this.deepCompareArrays(this.filterRequest.storeIds, this.filterstorecodeList)) {
-        this.resetReportList();
-        this.filterRequest.storeIds = this.filterstorecodeList;
-        this.getReportList();
-      }
-    }
-    else if (property == 'store') {
-      if ((this.filterRequest.storeNames || this.filterstorenameList.length > 0) && !this.deepCompareArrays(this.filterRequest.storeNames, this.filterstorenameList)) {
-        this.resetReportList();
-        this.filterRequest.storeNames = this.filterstorenameList;
-        this.getReportList();
-      }
-    }
-    else if (property == 'role') {
-      if ((this.filterRequest.filterRoles || this.filteremployeeroleList.length > 0) && !this.deepCompareArrays(this.filterRequest.filterRoles, this.filteremployeeroleList)) {
-        this.resetReportList();
-        this.filterRequest.filterRoles = this.filteremployeeroleList;
-        this.getReportList();
-      }
-    }
-
+    // if (property == 'trainerName') {
+    //   if ((this.filterRequest.trainers || this.filtertrainerList.length > 0) && !this.deepCompareArrays(this.filterRequest.trainers, this.filtertrainerList)) {
+    //     this.resetReportList();
+    //     this.filterRequest.trainers = this.filtertrainerList;
+    //     this.getReportList();
+    //   }
+    // }
+    // else if (property == 'storeCode') {
+    //   if ((this.filterRequest.storeIds || this.filterstorecodeList.length > 0) && !this.deepCompareArrays(this.filterRequest.storeIds, this.filterstorecodeList)) {
+    //     this.resetReportList();
+    //     this.filterRequest.storeIds = this.filterstorecodeList;
+    //     this.getReportList();
+    //   }
+    // }
+    // else if (property == 'store') {
+    //   if ((this.filterRequest.storeNames || this.filterstorenameList.length > 0) && !this.deepCompareArrays(this.filterRequest.storeNames, this.filterstorenameList)) {
+    //     this.resetReportList();
+    //     this.filterRequest.storeNames = this.filterstorenameList;
+    //     this.getReportList();
+    //   }
+    // }
+    // else if (property == 'role') {
+    //   if ((this.filterRequest.filterRoles || this.filteremployeeroleList.length > 0) && !this.deepCompareArrays(this.filterRequest.filterRoles, this.filteremployeeroleList)) {
+    //     this.resetReportList();
+    //     this.filterRequest.filterRoles = this.filteremployeeroleList;
+    //     this.getReportList();
+    //   }
+    // }
   }
 
   assignDDvalue(e: any, item: any) {
@@ -1880,7 +1844,6 @@ export class F2fSummaryComponent implements OnInit {
     }
 
   }
-  trainerDropdownData: any[] = [];
   assignChange(e: any, item: any) {
     const dummyArray = JSON.parse(JSON.stringify(this.trainerNameList))
     if (e.srcElement.value !== '') {
@@ -1900,7 +1863,6 @@ export class F2fSummaryComponent implements OnInit {
       this.getAssigneesGenericList(item);
     }
   }
-  multiSelectedTrainerlist: any[] = [];
 
   async getAssigneesGenericList(item: any) {
     item.trainerDropdownData = JSON.parse(JSON.stringify(this.trainerNameList))
@@ -1912,11 +1874,12 @@ export class F2fSummaryComponent implements OnInit {
     }
     item.trainerDropdownData = item.trainerDropdownData;
   }
+  
   optionClicked(event: Event, user: any, item: any) {
     event.stopPropagation();
     this.toggleSelection(event, user, item);
   }
-  inputPlaceholderValue: any;
+
   toggleSelection(e: any, user: any, item: any) {
     user.checked = !user.checked;
     item.trainerName = item.trainerDropdownData.filter((item: any) => {
@@ -1930,6 +1893,7 @@ export class F2fSummaryComponent implements OnInit {
       return name.employeeId;
     })
   }
+
   getinputPlaceholderValue(item: any) {
     this.inputPlaceholderValue = item.trainerName?.map(name => `${name}`).join(', ');
     return this.inputPlaceholderValue;
@@ -1953,28 +1917,21 @@ export class F2fSummaryComponent implements OnInit {
       this.getUpcominglist();
       this.getDraftlist();
       if (response.payload.batchStatus == 'Canceled') {
-        this.common.openSnackBar("Batch Canceled Successfully", 2, "Success")
-
+        this.common.openSnackBar("Batch canceled successfully", 2, "Success")
       }
       else if (response.payload.batchStatus == 'Scheduled') {
-        this.common.openSnackBar("Batch Updated Successfully", 2, "Success")
+        this.common.openSnackBar("Batch updated successfully", 2, "Success")
       }
 
     }
   }
 
   async validateupdateBatch(param: any) {
-    console.log(param.scheduledDate)
     param.batchEmployeesCount = this.upDatedEmployeeCount;
     const paramsToRemove = ['batchHistoryLists'];
     param = this.removeParams(param, paramsToRemove);
     const newParam = JSON.parse(JSON.stringify(param));
-
     newParam.employeesList = param.employeesList.map((employee: any) => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted, isNewEmployee:employee.isNewEmployee }));
-
-
-
-
     const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, newParam, this.destroyed$);
     if (response.payload.length == 0) {
       const updateParam = JSON.parse(JSON.stringify(param));
@@ -1984,16 +1941,10 @@ export class F2fSummaryComponent implements OnInit {
     else {
       this.AlreadyscheduledEmployees = response.payload;
       const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
-      // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
       this.common.openSnackBar(`${emp_names} already in another schedule`, 2, "Invalid")
     }
   }
 
-
-  upcomingListData: any[] = [];
-  draftListData: any[] = [];
-  cardShimmer = false;
-  cardShimmer1 = false;
   async getSummarylist() {
     this.summaryList = [];
     this.summaryShimmer = true;
@@ -2011,12 +1962,13 @@ export class F2fSummaryComponent implements OnInit {
     this.summaryShimmer = false
 
   }
+
   filterbyListstatus(event: any) {
-    console.log(event.filterId)
     this.batchStatusList = event.filterId;
     this.cardShimmer = true;
     this.getUpcominglist();
   }
+
   async getUpcominglist() {
     this.upcomingListData = [];
     this.cardShimmer = true;
@@ -2031,6 +1983,7 @@ export class F2fSummaryComponent implements OnInit {
       this.cardShimmer = false;
     }
   }
+
   async getDraftlist() {
     this.draftListData = [];
     this.cardShimmer1 = true;
@@ -2045,9 +1998,7 @@ export class F2fSummaryComponent implements OnInit {
       this.cardShimmer1 = false;
     }
   }
-  showPopUP = false
-  // detailsData: any;
-  viewDetails = false;
+
   async getscheduledDetails(item: any) {
     this.ngxloaderService.start();
     this.saveButtonshow = false;
@@ -2083,8 +2034,6 @@ export class F2fSummaryComponent implements OnInit {
       }
       this.previousDetailsData = JSON.parse(JSON.stringify(this.detailsData));
       this.ngxloaderService.stop()
-
-      console.log(this.previousDetailsData, "previousDetailsData")
     }
 
   }
@@ -2114,16 +2063,13 @@ export class F2fSummaryComponent implements OnInit {
 
     const paramsToRemove = ['trainerDropdownData'];
     const modifiedParam = this.removeParams(updateParams, paramsToRemove);
-    // modifiedParam.scheduledDate = this.datepipe.transform(modifiedParam.scheduledDate, 'yyyy-MM-dd')
     let dateParts = modifiedParam.scheduledDate.split('-');
-    // Rearrange the date parts to 'yyyy-MM-dd' format
     let formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
     dateParts = modifiedParam.scheduledDate;
     modifiedParam.scheduledDate = formattedDate;
-    console.log(modifiedParam.scheduledDate, "modifiedParam.scheduledDate")
     this.validateupdateBatch(modifiedParam);
   }
-  updateEmployeeList: any[] = [];
+
   deleteEmployeefromUpdate(item: any, emp: any) {
     if (emp.isNewEmployee == false) {
       emp.isDeleted = true
@@ -2138,7 +2084,6 @@ export class F2fSummaryComponent implements OnInit {
     const Count = item.filter((count: any) => {
       return count.isDeleted == false
     })
-    console.log(Count, "count")
     this.upDatedEmployeeCount = Count.length;
     this.updateEmployeeList = Count;
     // let noRemove = this.fixedEmployeeData.filter((item:any)=>{
@@ -2155,6 +2100,7 @@ export class F2fSummaryComponent implements OnInit {
     // }
 
   }
+
   gotoSummarypage() {
     this.createBatch = false;
     this.getSummarylist();
@@ -2169,12 +2115,11 @@ export class F2fSummaryComponent implements OnInit {
     }
     this.resetFilters();
   }
+
   isDetailsDataUpdated(oldData: any, newData: any): boolean {
-    // Compare oldData with newData and return true if they differ
-    // Implement your logic for comparison here based on your requirements
-    // For example, compare individual properties or use a deep comparison method
     return JSON.stringify(oldData) !== JSON.stringify(newData);
   }
+
   compareObjectsFieldsonly(obj1: any, obj2: any): boolean {
     // Check the specified properties for equality
     const scheduledDate1 = this.formatDate(obj1.scheduledDate);
@@ -2197,6 +2142,7 @@ export class F2fSummaryComponent implements OnInit {
       return true
     }
   }
+
   compareEmployeeArrays(array1: any[], array2: any[]): boolean {
     if (array1.length !== array2.length) {
       return false;
@@ -2211,7 +2157,6 @@ export class F2fSummaryComponent implements OnInit {
 
   }
 
-  saveButtonshow = false
   compareDataforUpdate() {
     if (this.updateEmployeeList.length == 0) {
       this.updateEmployeeList = this.previousDetailsData.employeesList
@@ -2226,7 +2171,6 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   async deleteDraft(item: any) {
-    console.log(item, "item")
     let param = {
       batchId: item.batchId,
       courseId: item.courseId
@@ -2235,11 +2179,10 @@ export class F2fSummaryComponent implements OnInit {
     if (response.payload) {
       this.getDraftlist();
       this.showPopUP = false;
-      this.common.openSnackBar("Draft Deleted Successfully", 2, "Success");
+      this.common.openSnackBar("Draft deleted successfully", 2, "Success");
     }
   }
-  historyData: any;
-  historyTableview = false
+
   async viewHistorydata(history: any) {
     this.ngxloaderService.start()
     const param = {
@@ -2248,15 +2191,15 @@ export class F2fSummaryComponent implements OnInit {
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_BATCH_HISTORY, param, this.destroyed$);
     if (response.payload) {
-      console.log(response.payload)
       this.historyData = response.payload;
       this.viewHistory = true;
-      this.historyTableview = false
+      setTimeout(() => {
+        this.historyTableview = false
+      }, 500);
       this.ngxloaderService.stop()
     }
   }
-  mailIdsend = "";
-  Emails: any[] = [];
+
   getMail(e: any) {
     if (this.form.valid) {
       this.mailIdsend = e.target.value;
@@ -2275,7 +2218,6 @@ export class F2fSummaryComponent implements OnInit {
       else {
         this.Emails.push(this.mailIdsend);
         this.mailIdsend = "";
-        console.log(this.Emails, "Emails")
         this.cdr.detectChanges();
       }
     }
@@ -2284,11 +2226,13 @@ export class F2fSummaryComponent implements OnInit {
   removeEmail(m: any) {
     let temp = this.Emails.splice(m, 1);
   }
+
   cancelMail() {
     this.mailIdsend = '';
     this.Emails = [];
     this.cdr.detectChanges();
   }
+
   async sendMail() {
     this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
     this.filterRequest.emailIds = this.Emails;
@@ -2300,11 +2244,13 @@ export class F2fSummaryComponent implements OnInit {
       this.filterRequest.emailIds = [];
     }
   }
+
   closeEmppopup() {
-    this.showempComponent = false;
+    setTimeout(() => {
+      this.showempComponent = false;
+    }, 500);
   }
-  activeShimmer = false;
-  activeData:any[] =[];
+
   async getActivecount() {
     this.activeShimmer = true;
     const intId = this.userId;
@@ -2316,13 +2262,14 @@ export class F2fSummaryComponent implements OnInit {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_ACTIVE_COUNT, param, this.destroyed$);
     if (response.payload) {
       this.activeData = response.payload;
-      console.log(this.activeData.length)
       this.activeShimmer = false
     }
   }
+
   getempHistory(){
 
   }
+
   empHistoryData = [
     {
       courseName:"New Course 1"
@@ -2335,10 +2282,10 @@ export class F2fSummaryComponent implements OnInit {
     },
     
   ]
+  
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
     this.destroyed$.unsubscribe();
-    // document.removeEventListener('mousemove', (event) => this.onMouseMove(event));
   }
 }

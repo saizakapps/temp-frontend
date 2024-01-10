@@ -47,15 +47,19 @@
     color: #3C3F45;
     padding-bottom: 20px;
 
-    .mat-icon{
-        font-size: 22px;
-        font-weight: unset !important;
-        width: unset !important;
-        height: unset !important;
+    .infoIcon{
         margin-left: 10px;
-        margin-top: 2px;
         cursor: pointer;
     }
+    // .mat-icon{
+    //     font-size: 22px;
+    //     font-weight: unset !important;
+    //     width: unset !important;
+    //     height: unset !important;
+    //     margin-left: 10px;
+    //     margin-top: 2px;
+    //     cursor: pointer;
+    // }
 }
 
 .summaryTable {
@@ -539,6 +543,15 @@
     }
 }
 
+
+.updatedemployeeListheight_Draft{
+    height: 280px;
+
+    .employeeList{
+        max-height: 280px !important;
+        overflow-y: auto !important;
+    }
+}
 
 .updatedemployeeListheight1{
     height: 258px;
@@ -1595,4 +1608,8 @@
       }
       .hiddenXflow{
         overflow-x: hidden;
+      }
+      .disablescheduleButton{
+        opacity: 0.5;
+        pointer-events: none;
       }
