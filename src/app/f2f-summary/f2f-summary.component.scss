@@ -541,10 +541,10 @@
 
 
 .updatedemployeeListheight1{
-    height: 308px;
+    height: 258px;
 
     .employeeList{
-        max-height: 308px !important;
+        max-height: 258px !important;
         overflow-y: auto !important;
     }
 }
@@ -628,6 +628,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        margin-top: 23px;
     }
    .greyText{
     opacity: 0.5;
@@ -1421,6 +1422,16 @@
 }
 
 .historyTable{
+
+    max-height: calc(100vh - 200px) !important;
+    overflow: auto;
+    display: block;
+    thead th {
+        background-color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
     th,td{
         padding: 5px 10px;
     }

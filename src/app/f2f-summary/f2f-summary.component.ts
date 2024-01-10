@@ -1262,7 +1262,7 @@ export class F2fSummaryComponent implements OnInit {
       }
     }
     else {
-      this.common.openSnackBar("Already 3 Batches there please complete this.", 2, "")
+      this.common.openSnackBar("Already 3 batches there please complete this.", 2, "")
     }
     this.cdr.detectChanges();
   }
@@ -1358,7 +1358,7 @@ export class F2fSummaryComponent implements OnInit {
           })
           if (oldEployee.length > 0) {
             this.oldNumber = this.oldNumber + 1;
-            this.common.openSnackBar(`${this.oldNumber} Employee(s) Already in this Batch List`, 2, "")
+            this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "")
           }
           else {
             item.employeesList.unshift(droppedData); // Push the dropped data to the destinationArray
@@ -1383,7 +1383,7 @@ export class F2fSummaryComponent implements OnInit {
         })
 
         if (oldEployee.length > 0) {
-          this.common.openSnackBar("Employee Already in this Batch List", 2, "")
+          this.common.openSnackBar("Employee already in this batch list", 2, "")
         }
         else {
           item.employeesList.unshift(droppedData); // Push the dropped data to the destinationArray
@@ -1400,7 +1400,7 @@ export class F2fSummaryComponent implements OnInit {
 
       if (oldEployee.length > 0) {
         this.oldNumber = this.oldNumber + 1;
-        this.common.openSnackBar(`${this.oldNumber} Employee(s) Already in this Batch List`, 2, "")
+        this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "")
       }
       else {
         item.employeesList.unshift(this.selectedIndices[i]); // Push the dropped data to the destinationArray
@@ -1453,7 +1453,7 @@ export class F2fSummaryComponent implements OnInit {
       }
     }
     else {
-      this.common.openSnackBar("Already 3 Batches there please complete this.", 2, "")
+      this.common.openSnackBar("Already 3 batches there please complete this.", 2, "")
     }
   }
   allboxinter = false;
@@ -1618,16 +1618,14 @@ export class F2fSummaryComponent implements OnInit {
       else {
         this.AlreadyscheduledEmployees = response.payload;
         const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
-        console.log(this.AlreadyscheduledEmployees, "AlreadyscheduledEmployees");
-        console.log(emp_names, "emp_names");
-        this.common.openSnackBar(`${emp_names} Already Scheduled`, 2, "Invalid")
+        this.common.openSnackBar(`${emp_names} Already scheduled`, 2, "Invalid")
       }
 
     }
     else {
       for (let i = 0; i < this.cloneBatchdata.length; i++) {
         if (this.compareObjects(this.cloneBatchdata[i], item)) {
-          this.common.openSnackBar("This Batch Data Already in the BatchList", 2, 'Invalid')
+          this.common.openSnackBar("This batch data already in the batchlist", 2, 'Invalid')
           return;
         }
         else {
@@ -1651,10 +1649,9 @@ export class F2fSummaryComponent implements OnInit {
           else {
             this.AlreadyscheduledEmployees = response.payload;
             const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
-        console.log(this.AlreadyscheduledEmployees, "AlreadyscheduledEmployees");
-        console.log(emp_names, "emp_names");
+      
             // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
-            this.common.openSnackBar(`${emp_names} Already Scheduled`, 2, "Invalid")
+            this.common.openSnackBar(`${emp_names} already scheduled`, 2, "Invalid")
           }
         }
       }
@@ -1739,7 +1736,7 @@ export class F2fSummaryComponent implements OnInit {
             console.log(this.updateEmployeeList, "console.log(this.updateEmployeeList)")
           } else {
             this.oldNumber = this.oldNumber + 1;
-            this.common.openSnackBar(`${this.oldNumber} Employee(s) Already in this Batch List`, 2, "");
+            this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "");
           }
         } else {
           // If employee not found, add it to the beginning of the array
@@ -1987,10 +1984,8 @@ export class F2fSummaryComponent implements OnInit {
     else {
       this.AlreadyscheduledEmployees = response.payload;
       const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
-        console.log(this.AlreadyscheduledEmployees, "AlreadyscheduledEmployees");
-        console.log(emp_names, "emp_names");
       // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
-      this.common.openSnackBar(`${emp_names} Already in Another Schedule`, 2, "Invalid")
+      this.common.openSnackBar(`${emp_names} already in another schedule`, 2, "Invalid")
     }
   }
 
@@ -2000,7 +1995,8 @@ export class F2fSummaryComponent implements OnInit {
   cardShimmer = false;
   cardShimmer1 = false;
   async getSummarylist() {
-    this.summaryShimmer = true
+    this.summaryList = [];
+    this.summaryShimmer = true;
     const param = {
       "country": this.loginEmployeeCountry,
       "isManager": this.loginEmployeeManager,
@@ -2022,6 +2018,7 @@ export class F2fSummaryComponent implements OnInit {
     this.getUpcominglist();
   }
   async getUpcominglist() {
+    this.upcomingListData = [];
     this.cardShimmer = true;
     const param = {
       batchStatusList: [this.batchStatusList],
@@ -2035,6 +2032,7 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
   async getDraftlist() {
+    this.draftListData = [];
     this.cardShimmer1 = true;
     const param = {
       batchStatusList: [2],
@@ -2200,6 +2198,9 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
   compareEmployeeArrays(array1: any[], array2: any[]): boolean {
+    if (array1.length !== array2.length) {
+      return false;
+  }
     const employeeIdsArray1 = array1.map(employee => employee.employeeId);
     const employeeIdsArray2 = array2.map(employee => employee.employeeId);
 
@@ -2269,7 +2270,7 @@ export class F2fSummaryComponent implements OnInit {
       })
 
       if (existing.length > 0) {
-        this.common.openSnackBar("Mail Id Already Exists", 2, "Invalid")
+        this.common.openSnackBar("Mail id already exists", 2, "Invalid")
       }
       else {
         this.Emails.push(this.mailIdsend);
@@ -2306,9 +2307,11 @@ export class F2fSummaryComponent implements OnInit {
   activeData:any[] =[];
   async getActivecount() {
     this.activeShimmer = true;
+    const intId = this.userId;
+    const numberValue = parseInt(intId, 10);
     const param = {
-      "userId": this.loginEmployeeId,
-      "isManager": this.loginEmployeeManager
+      "userId": numberValue,
+      "isManager": true
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_ACTIVE_COUNT, param, this.destroyed$);
     if (response.payload) {
@@ -2317,7 +2320,21 @@ export class F2fSummaryComponent implements OnInit {
       this.activeShimmer = false
     }
   }
+  getempHistory(){
 
+  }
+  empHistoryData = [
+    {
+      courseName:"New Course 1"
+    },
+    {
+      courseName:"New Course 2"
+    },
+    {
+      courseName:"New Course 3"
+    },
+    
+  ]
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

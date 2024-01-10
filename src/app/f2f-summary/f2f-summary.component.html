@@ -71,11 +71,11 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="summaryList.length == 0" class="norecordButton">No Record Found</div>
+                    <div *ngIf="summaryList.length == 0" class="norecordButton">No record found</div>
                 </div>
                 <div *ngIf="summaryShimmer"><ng-container *ngFor="let index of shimmerArray">
                     <div class="shimmerCSS">
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                    <shimmer style="margin-top: 10px;" [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
                     </div>
                   </ng-container></div>
             </div>
@@ -106,9 +106,9 @@
                 
             </div>
             <div  *ngIf="upcomingListData.length == 0 && cardShimmer == false">
-                <span *ngIf="batchStatusList == 1">No Scheduled Records Found</span>
-                <span *ngIf="batchStatusList == 0">No Canceled Records Found</span>
-                <span *ngIf="batchStatusList == 3">No Assigned Records Found</span>
+                <span *ngIf="batchStatusList == 1">No scheduled record found</span>
+                <span *ngIf="batchStatusList == 0">No canceled record found</span>
+                <span *ngIf="batchStatusList == 3">No assigned record found</span>
                 </div>
                 <div *ngIf="cardShimmer">
                 <div class="cardShimmer">
@@ -153,7 +153,7 @@
                 </div>
             </div>
             <div  *ngIf="draftListData.length == 0 && cardShimmer1 == false">
-            No Draft Records Found
+            No draft record found
             </div>
             <div *ngIf="cardShimmer1">
                 <div class="cardShimmer">
@@ -186,7 +186,12 @@
             <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
         </div>
         <div *ngIf="activeShimmer == false">
-            <div *ngIf="activeData.length == false" class="norecordButton mt-0">No Record Found</div>
+            <div *ngIf="activeData.length == 0" class="norecordButton mt-0">No record found</div>
+            <div *ngIf="activeData.length > 0">
+            <div *ngFor="let active of this.activeData" class="d-flex align-items-center">
+              <div>{{active.courseName}}</div>&nbsp;<div> - {{active.activeUsersCount}}</div>
+            </div>
+            </div>
         </div>
     </mat-menu>
     <div class="batch-page" id="MainContent" *ngIf="createBatch == true">
@@ -443,7 +448,7 @@
                 </div>
             </div>
 
-            <div class="d-flex align-items-end">
+            <div class="d-flex">
                 <div class="clear_filter"
                     [ngClass]="{'greyText': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && selectedOptionsnew.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal}"
                     (click)="clearFilters()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -667,7 +672,7 @@
                                         (change)="onCheckboxChange($event, data)" required>
                                     </mat-checkbox></td>
                                 <td class="td_overflowtext">{{data.employeeId}}</td>
-
+                                <!--data-toggle="modal" data-target="#emphistoryTable" (click)="getempHistory()"-->
                                 <td class="employeedetails_width" title="{{data.firstName}} {{data.lastName}}">
                                     <div class="name_width">{{data.firstName}} {{data.lastName}}</div>
                                     <!-- <div class="d-flex align-items-center">
@@ -916,6 +921,50 @@
       </div>
 </section>
 
+<!--Modal PopUp for Employee History-->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="emphistoryTable" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-emphistoryTable">
+        <div class="modal-content">
+            <div class="modal-header">
+               Course History
+            </div>
+            <div class="modal-body modal-body-no-radius">
+               <table class="historyTable">
+                <thead>
+                <tr>
+                    <!-- <th class="tablewidth1">Employee Name</th> -->
+                    <th class="tablewidth2">Course Name</th>
+                    <!-- <th class="tablewidth3">Modified By</th>
+                    <th class="tablewidth1">Modified on</th> -->
+                    <th style="width: 100%;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emphistory of this.empHistoryData">
+                    <!-- <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td> -->
+                    <td class="tablewidth2" title="{{emphistory.courseName}}">{{(emphistory.courseName == '' || emphistory.courseName == null)? '-':emphistory.courseName }}</td>
+                    <!-- <td class="tablewidth3">{{history.batchCreatedBy}}</td>
+                    <td class="tablewidth4">{{history.batchCreatedOn}}</td>
+                    <td><div class="viewButton" (click)="viewHistorydata(history)">View</div></td> -->
+                    </tr>
+                   
+                </tbody>
+              
+                </table>
+                <div class="d-flex justify-content-center">
+                    <div *ngIf="this.empHistoryData.length == 0" class="norecordButton">No records found</div>
+                 </div>
+
+                 <div class="d-flex justify-content-end">
+                    <div class="historyCancel" data-dismiss="modal">Cancel</div>
+                 </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
 <!--Modal Popup for Open BatchDetails-->
 <div *ngIf="ModalPopup1" class="modal fade mailBodyPop bootstrapBackground_Pop" id="deatilsModal" data-backdrop="static" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1054,7 +1103,7 @@
                 Delete Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius">
-                Do you want to delete this Batch?
+                Do you want to delete this batch?
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">Cancel</button>
@@ -1289,20 +1338,20 @@
                     </div>
                     </div>
     
-                    <!-- <div class="bottomfooter d-flex align-items-center justify-content-between">
+                    <div class="bottomfooter d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center buttongap">
-                            <div class="button bluebutton"  *ngIf="detailsData.batchStatus == 'Draft'" (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
-                            <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div>
+                            <!-- <div class="button bluebutton"  *ngIf="detailsData.batchStatus == 'Draft'" (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
+                            <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div> -->
                         </div>
     
                         <div class="d-flex align-items-center buttongap">
-                            <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
+                            <!-- <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                                 (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Canceled'">+ Add people</div>
                             <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'" data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
-                            <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft" *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
+                            <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft" *ngIf="detailsData.batchStatus == 'Draft'">Delete</div> -->
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
                         </div>
-                    </div> -->
+                    </div>
                     </div>
             </div>
         </div>
@@ -1333,7 +1382,7 @@
                 Delete Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius">
-                Do you want to delete this Draft Batch?
+                Do you want to delete this draft batch?
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">Cancel</button>
@@ -1353,7 +1402,7 @@
                 Cancel Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius">
-                Do you want to Cancel this Batch?
+                Do you want to cancel this batch?
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
@@ -1395,7 +1444,7 @@
               
                 </table>
                 <div class="d-flex justify-content-center">
-                    <div *ngIf="this.detailsData.batchHistoryLists.length == 0" class="norecordButton">No Records Found</div>
+                    <div *ngIf="this.detailsData.batchHistoryLists.length == 0" class="norecordButton">No record found</div>
                  </div>
 
                  <div class="d-flex justify-content-end">
