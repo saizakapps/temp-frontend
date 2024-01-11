@@ -1565,7 +1565,7 @@ button {
   font-weight: 400;
   font-size: 13px;
   line-height: 16px;
-  margin-bottom: 0px;
+  margin-bottom: 15px !important;
 }
 .addOptionalQuestion {
   border: 1px solid #1f96f4;
@@ -1897,7 +1897,7 @@ button {
   margin-bottom: 0px !important;
 }
 .quizHintCls {
-  height: 40px;
+  height: auto;
 }
 .suggestedCls {
   margin-left: 6px;

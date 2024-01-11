@@ -947,7 +947,9 @@
                           </td>
                           <!-- Delete -->
                           <td>
-                            <button class="certDeleteBtn" [ngClass]="{'disableClass': certItem.name.length === 0}" *ngIf="certItemIndex !== 0" (click)="openAlert('deleteCertItem', certItemIndex, certItem)">
+                            <button class="certDeleteBtn"
+                              [ngClass]="{'disableClass': certItem.name.length === 0 && !(certItem.name.length === 0 && getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') === 0)}"
+                              *ngIf="certItemIndex !== 0" (click)="onDeleteButtonClick(certItemIndex, certItem)">
                               <img src="assets/images/delete-user.svg" height="20px" width="20px">
                             </button>
                           </td>
@@ -957,7 +959,7 @@
                      
                     </tbody>
                   </table>
-                    <button [disabled]="!certificationItems[certificationItems.length - 1].id || !certificates.length || calcSelectedStore() === 1" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
+                    <button [disabled]="(!certificationItems[certificationItems.length - 1].id || !certificates.length || calcSelectedStore() === 1) || (this.getSelectedChildCount(this.certificationItems[0].renderingData.countryList, 0, 'cert') === 1)" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
                 </div>
               </div>              
             </ng-container>
