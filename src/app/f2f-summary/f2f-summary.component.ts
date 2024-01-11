@@ -321,7 +321,9 @@ export class F2fSummaryComponent implements OnInit {
     this.loginEmployeeManager = userDetails.manager;
     this.loginEmployeeIstrainer = userDetails.isTrainer;
     this.filterRequest.employeeStatus = 'Active';
-    this.getActivecount();
+    if(this.loginEmployeeManager){
+      this.getActivecount();
+    }
     this.getSummarylist();
     this.getUpcominglist();
     this.getDraftlist();
@@ -1263,8 +1265,8 @@ export class F2fSummaryComponent implements OnInit {
 
     this.scheduleminDate = today;
     this.scheduleminDate = new Date();
-    this.scheduleminDate.setDate(this.fromMaxDate.getDate());
-
+    this.scheduleminDate.setDate(this.scheduleminDate.getDate());
+    // this.scheduleminDate.setDate(this.scheduleminDate.getDate() + 1);
   }
 
   toggleSelectionForCourse(event: any, optionName: any) {
@@ -1602,11 +1604,13 @@ export class F2fSummaryComponent implements OnInit {
     this.cloneBatchdata.splice(b, 1);
     // Compare objects in the array
     if (this.cloneBatchdata.length == 0) {
+      this.ngxloaderService.start();
       const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, modifiedParam, this.destroyed$);
       if (response.payload.length == 0) {
         const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
         if (response1.payload) {
           this.batchData.splice(b, 1);
+          this.ngxloaderService.stop();
           let paylLoad: any = response1.payload
           if (paylLoad.batchStatus == "Draft") {
             this.common.openSnackBar("Batch drafted successfully", 2, "Success")
@@ -1617,6 +1621,7 @@ export class F2fSummaryComponent implements OnInit {
         }
       }
       else {
+        this.ngxloaderService.stop();
         this.validePopup = true;
         this.AlreadyscheduledEmployees = response.payload;
         const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
@@ -1631,11 +1636,14 @@ export class F2fSummaryComponent implements OnInit {
           return;
         }
         else {
+          this.ngxloaderService.start();
           const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, modifiedParam, this.destroyed$);
           if (response.payload.length == 0) {
             const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
             if (response1.payload) {
               this.batchData.splice(b, 1);
+              this.ngxloaderService.stop();
+
               let paylLoad: any = response1.payload
               if (paylLoad.batchStatus == "Draft") {
                 this.common.openSnackBar("Batch drafted successfully", 2, "Success")
@@ -1648,6 +1656,7 @@ export class F2fSummaryComponent implements OnInit {
 
           }
           else {
+            this.ngxloaderService.stop();
             this.validePopup = true;
             this.AlreadyscheduledEmployees = response.payload;
             const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
@@ -1919,6 +1928,7 @@ export class F2fSummaryComponent implements OnInit {
   async batchUpdate(param: any) {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_UPDATE_BATCH, param, this.destroyed$);
     if (response.payload) {
+      this.ngxloaderService.stop();
       this.showPopUP = false;
       this.getSummarylist();
       this.getUpcominglist();
@@ -1939,6 +1949,7 @@ export class F2fSummaryComponent implements OnInit {
     param = this.removeParams(param, paramsToRemove);
     const newParam = JSON.parse(JSON.stringify(param));
     newParam.employeesList = param.employeesList.map((employee: any) => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted, isNewEmployee:employee.isNewEmployee }));
+    this.ngxloaderService.start();
     const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, newParam, this.destroyed$);
     if (response.payload.length == 0) {
       const updateParam = JSON.parse(JSON.stringify(param));
@@ -1946,6 +1957,7 @@ export class F2fSummaryComponent implements OnInit {
       this.batchUpdate(updateParam)
     }
     else {
+      this.ngxloaderService.stop();
       this.validePopup = true;
       this.AlreadyscheduledEmployees = response.payload;
       const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
@@ -2027,10 +2039,10 @@ export class F2fSummaryComponent implements OnInit {
       this.updateReadonly = false 
     }
     const param = {
-      courseId: item.courseId,
-      batchId: item.batchId,
-      isManager: this.loginEmployeeManager,
-      userEmployeeId: this.loginEmployeeId
+      "courseId": item.courseId,
+      "batchId": item.batchId,
+      "isManager": this.loginEmployeeManager,
+      "userEmployeeId": this.loginEmployeeId
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_BATCH_INFO, param, this.destroyed$);
     let sampleJson: any = response.payload;
@@ -2278,7 +2290,7 @@ export class F2fSummaryComponent implements OnInit {
     const numberValue = parseInt(intId, 10);
     const param = {
       "userId": numberValue,
-      "isManager": true
+      "isManager": this.loginEmployeeManager
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_ACTIVE_COUNT, param, this.destroyed$);
     if (response.payload) {

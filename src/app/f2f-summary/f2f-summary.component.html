@@ -79,7 +79,7 @@
                 </div>
                 <div *ngIf="summaryShimmer"><ng-container *ngFor="let index of shimmerArray">
                         <div class="shimmerCSS">
-                            <shimmer style="margin-top: 10px;" [width]="'100%'" height="9px" borderRadius="25px">
+                            <shimmer style="margin-top: 7px;" [width]="'100%'" height="9px" borderRadius="25px">
                             </shimmer>
                         </div>
                     </ng-container></div>
@@ -91,7 +91,7 @@
                 <div class="activeDtails-header">Total number of certified employees in store</div>
                 <div *ngIf="activeShimmer == false">
                     <div *ngFor="let active of this.activeData">
-                        <div class="activeData">{{active.courseName}} - {{active.activeUsersCount}}</div>
+                        <div class="activeData">{{active.courseName}} - {{active.activeUsersCount == null?0:active.activeUsersCount}}</div>
                     </div>
                 </div>
                 <div *ngIf="activeShimmer">
@@ -843,7 +843,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div (click)="deleteEmployee(item.employeesList,employee)"><svg
+                                    <div class="cursor" (click)="deleteEmployee(item.employeesList,employee)"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             viewBox="0 0 22 22" fill="none">
                                             <path
@@ -1113,7 +1113,7 @@
                                 <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
                             </div>
                         </div>
-                        <div (click)="deleteEmployee(selected_PopupData.employeesList,employee);compareDataforUpdate()">
+                        <div class="cursor" (click)="deleteEmployee(selected_PopupData.employeesList,employee);compareDataforUpdate()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
                                 fill="none">
                                 <path
@@ -1281,7 +1281,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false"
-                                        (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()">
+                                       class="cursor"  (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             viewBox="0 0 22 22" fill="none">
                                             <path
