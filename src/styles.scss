@@ -3356,7 +3356,7 @@ width: 16px !important;
   max-width: 750px !important;
 }
 .summaryngSelect-new1 .ng-select.ng-select-single .ng-select-container{
-  width: 100% !important;
+  width: calc(100% - 5px) !important;
 }
 .modal-dialog-email{
   max-width: 500px !important;

@@ -1,13 +1,13 @@
 <section>
     <div class="summary-page" *ngIf="createBatch == false">
         <div *ngIf="loginEmployeeIstrainer == false">
-            <div class="summarytitle d-flex align-items-center">F2F Expiration Summary 
+            <div class="summarytitle d-flex align-items-center">F2F Expiration Summary
                 <!-- <mat-icon>info</mat-icon> -->
-                <div class="infoIcon" [matMenuTriggerFor]="information" (click) ="getActivecount()">
+                <!-- <div class="infoIcon" [matMenuTriggerFor]="information" (click)="getActivecount()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="21px" height="21px">    <path d="M25,2C12.297,2,2,12.297,2,25s10.297,23,23,23s23-10.297,23-23S37.703,2,25,2z M25,11c1.657,0,3,1.343,3,3s-1.343,3-3,3 s-3-1.343-3-3S23.343,11,25,11z M29,38h-2h-4h-2v-2h2V23h-2v-2h2h4v2v13h2V38z"/></svg>
-                 </div>
+                 </div> -->
             </div>
-                       <div class="summaryTable">
+            <div class="summaryTable">
                 <div class="date-filters">
                     <div class="form-group dataiconrel">
                         <label class="list-filter-title">From Date</label>
@@ -59,7 +59,7 @@
                         <div class="colorbox_text">About to Expire</div>
                     </div>
                 </div>
-                <div class="listData" *ngIf="!summaryShimmer">
+                <div class="listData webkitscrollStyle1" *ngIf="!summaryShimmer">
                     <div *ngFor="let data of this.summaryList; let i = index" class="forData">
                         <div class="d-flex align-items-center justify-content-between rowdata">
                             <div class="list_title" title="{{data.courseName}}">{{data.courseName}}</div>
@@ -69,7 +69,8 @@
                                     {{data.expiryCount}}
                                 </div>
                                 <div class="list_about notification"
-                                    [ngClass]="{'opacity0' : data.aboutToExpireCount == '' || data.aboutToExpireCount == '0' || data.aboutToExpireCount == null}">{{data.aboutToExpireCount}}
+                                    [ngClass]="{'opacity0' : data.aboutToExpireCount == '' || data.aboutToExpireCount == '0' || data.aboutToExpireCount == null}">
+                                    {{data.aboutToExpireCount}}
                                 </div>
                             </div>
                         </div>
@@ -77,113 +78,150 @@
                     <div *ngIf="summaryList.length == 0" class="norecordButton">No record found</div>
                 </div>
                 <div *ngIf="summaryShimmer"><ng-container *ngFor="let index of shimmerArray">
-                    <div class="shimmerCSS">
-                    <shimmer style="margin-top: 10px;" [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    </div>
-                  </ng-container></div>
+                        <div class="shimmerCSS">
+                            <shimmer style="margin-top: 10px;" [width]="'100%'" height="9px" borderRadius="25px">
+                            </shimmer>
+                        </div>
+                    </ng-container></div>
             </div>
             <div class="bottombutton" (click)="gotocreateBatch()">View Report & Create Batch →</div>
         </div>
-        <div class="cardListItems">
-            <div class="summarytitle">Upcoming Events</div>
-            <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
-            <ng-select [items]="upcomingFilterlist" name="searchDateBy" bindLabel="name" bindValue="filterId"
-            [clearable]=false [searchable]="false" [(ngModel)]="batchStatusList" class="dateJoining" (change)="filterbyListstatus($event)">
+        <div style="width: 100%;">
+            <div class="activeDtails" *ngIf="loginEmployeeManager">
+                <div class="activeDtails-header">Total number of certified employees in store</div>
+                <div *ngIf="activeShimmer == false">
+                    <div *ngFor="let active of this.activeData">
+                        <div class="activeData">{{active.courseName}} - {{active.activeUsersCount}}</div>
+                    </div>
+                </div>
+                <div *ngIf="activeShimmer">
+                    <div class="activeData">
+                        <shimmer [width]="'50%'" height="9px" borderRadius="25px"></shimmer>
+                    </div>
+
+                    <div class="activeData">
+                        <shimmer [width]="'50%'" height="9px" borderRadius="25px"></shimmer>
+                    </div>
+                </div>
+            </div>
+            <div class="card-wrap-flex">
+                <div class="cardListItems">
+                    <div class="summarytitle" [ngClass]="{'summarytitle-card' : loginEmployeeManager}">Upcoming Events
+                    </div>
+                    <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
+                        <ng-select [items]="upcomingFilterlist" name="searchDateBy" bindLabel="name"
+                            bindValue="filterId" [clearable]=false [searchable]="false" [(ngModel)]="batchStatusList"
+                            class="dateJoining" (change)="filterbyListstatus($event)">
                         </ng-select>
+                    </div>
+                    <div class="cardData cardDataupcoming webkitscrollStyle"
+                        [ngClass]="{'cardData-manager-upcoming' : !loginEmployeeManager}">
+                        <div *ngFor="let item of this.upcomingListData; let j =index" class="card"
+                            [ngClass]="{'inactiveCard' : item.courseIsActive == false}">
+                            <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
+                            <div class="cardbatch">{{item.batchName}}</div>
+                            <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png"
+                                    alt="">&nbsp;
+                                {{item.batchEmployeesCount}} Employee(s)</div>
+                            <div class="cardtrainer d-flex">
+                                <div class="train">Trainer(s):</div>
+                                <div class="Tname">&nbsp;{{item.trainerName}}</div>
+                            </div>
+                            <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
+                                    alt="">&nbsp;{{item.scheduledDate | date:'dd-MMM-yyyy'}}</div>
+                            <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
+
+                            <div class="detailview" data-toggle="modal" data-target="#detailsModalUpdate"
+                                (click)="getscheduledDetails(item)">View Details</div>
+                            <!-- <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false"></div> -->
                         </div>
-            <div class="cardData cardDataupcoming">
-                <div *ngFor="let item of this.upcomingListData; let j =index" class="card">
-                    <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
-                    <div class="cardbatch">{{item.batchName}}</div>
-                    <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png" alt="">&nbsp;
-                        {{item.batchEmployeesCount}} Employee(s)</div>
-                    <div class="cardtrainer d-flex"><div class="train">Trainer(s):</div> <div class="Tname">&nbsp;{{item.trainerName}}</div></div>
-                    <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
-                            alt="">&nbsp;{{item.scheduledDate  | date:'dd-MMM-yyyy'}}</div>
+
+                    </div>
+                    <div class="nofoundtext" *ngIf="upcomingListData.length == 0 && cardShimmer == false">
+                        <span *ngIf="batchStatusList == 1">No scheduled record found</span>
+                        <span *ngIf="batchStatusList == 0">No canceled record found</span>
+                        <span *ngIf="batchStatusList == 3">No assigned record found</span>
+                    </div>
+                    <div *ngIf="cardShimmer">
+                        <div class="cardShimmer">
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+
+                        </div>
+                        <div class="cardShimmer">
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="cardListItems">
+                    <div class="summarytitle" [ngClass]="{'summarytitle-card' : loginEmployeeManager}">Drafted Events
+                    </div>
+                    <div class="cardData webkitscrollStyle" [ngClass]="{'cardData-manager' : !loginEmployeeManager}">
+                        <div *ngFor="let item of this.draftListData; let j =index" class="card">
+                            <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
+                            <div class="cardbatch">{{item.batchName}}</div>
+                            <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png"
+                                    alt="">&nbsp;
+                                {{item.batchEmployeesCount}} Employees</div>
+                            <div class="cardtrainer d-flex">
+                                <div class="train">Trainer(s):</div>
+                                <div class="Tname">&nbsp;{{item.trainerName}}</div>
+                            </div>
+                            <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
+                                    alt="">&nbsp;{{item.scheduledDate | date:'dd-MMM-yyyy'}}</div>
                             <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
 
-                    <div class="detailview" data-toggle="modal" data-target="#detailsModalUpdate"
-                        (click)="getscheduledDetails(item)">View Details</div>
-                        <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false"></div>
-                     </div>
-                
-            </div>
-            <div  *ngIf="upcomingListData.length == 0 && cardShimmer == false">
-                <span *ngIf="batchStatusList == 1">No scheduled record found</span>
-                <span *ngIf="batchStatusList == 0">No canceled record found</span>
-                <span *ngIf="batchStatusList == 3">No assigned record found</span>
-                </div>
-                <div *ngIf="cardShimmer">
-                <div class="cardShimmer">
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-   
-            </div>
-                <div class="cardShimmer">
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-   
-                    </div>
-                    </div>
-            </div>
-        <div class="cardListItems">
-            <div class="summarytitle">Drafted Events</div>
-            <div class="cardData">
-                <div *ngFor="let item of this.draftListData; let j =index" class="card">
-                    <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
-                    <div class="cardbatch">{{item.batchName}}</div>
-                    <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png" alt="">&nbsp;
-                        {{item.batchEmployeesCount}} Employees</div>
-                    <div class="cardtrainer d-flex"><div class="train">Trainer(s):</div> <div class="Tname">&nbsp;{{item.trainerName}}</div></div>
-                    <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
-                            alt="">&nbsp;{{item.scheduledDate | date:'dd-MMM-yyyy'}}</div>
-                            <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
+                            <div class="detailview detailviewyellow" data-toggle="modal"
+                                data-target="#detailsModalUpdate" (click)="getscheduledDetails(item)">View Details</div>
+                            <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false">
+                            </div>
 
-                    <div class="detailview detailviewyellow"  data-toggle="modal" data-target="#detailsModalUpdate" (click)="getscheduledDetails(item)">View Details</div>
-                    <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false"></div>
+                        </div>
+                    </div>
+                    <div class="nofoundtext" *ngIf="draftListData.length == 0 && cardShimmer1 == false">
+                        No draft record found
+                    </div>
+                    <div *ngIf="cardShimmer1">
+                        <div class="cardShimmer">
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
 
+                        </div>
+                        <div class="cardShimmer">
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div  *ngIf="draftListData.length == 0 && cardShimmer1 == false">
-            No draft record found
-            </div>
-            <div *ngIf="cardShimmer1">
-                <div class="cardShimmer">
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-   
-            </div>
-                <div class="cardShimmer">
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                    <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-   
-                    </div>
-                    </div>
         </div>
     </div>
-    <mat-menu class="statusMenuPanelAudit custom-centered-menu" #information="matMenu">
+    <!-- <mat-menu class="statusMenuPanelAudit custom-centered-menu" #information="matMenu">
         <div *ngIf="activeShimmer == true">               
             <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
             <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
@@ -196,7 +234,7 @@
             </div>
             </div>
         </div>
-    </mat-menu>
+    </mat-menu> -->
     <div class="batch-page" id="MainContent" *ngIf="createBatch == true">
         <div class="filter-header d-flex">
             <div class="form-group">
@@ -625,7 +663,7 @@
                                                             {{filteritem.name}}</div>
                                                     </div>
                                                 </ng-container> -->
-                                            
+
                                             </div>
                                             <!-- select sort section for column -->
                                             <div *ngIf="column.sort" class="filter-popover">
@@ -723,7 +761,8 @@
                             <div class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}"><ng-select
                                     [items]="courseNameList" name="item.courseName" bindLabel="courseName"
                                     bindValue="courseName" [clearable]=false [searchable]="false"
-                                    (change)="batchCoursename($event, item)" [(ngModel)]="item.courseName" title="{{item.courseName}}"></ng-select>
+                                    (change)="batchCoursename($event, item)" [(ngModel)]="item.courseName"
+                                    title="{{item.courseName}}"></ng-select>
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-8">
@@ -733,26 +772,26 @@
                                     [(ngModel)]="item.batchname" name="batch">
                             </div>
                         </div>
-                        <div class="d-flex align-items-center gap-8 f2f_coursename_form" [ngClass]="{'f2f_trainername_form': item.trainerName.length > 0}">
+                        <div class="d-flex align-items-center gap-8 f2f_coursename_form"
+                            [ngClass]="{'f2f_trainername_form': item.trainerName.length > 0}">
                             <div class="batchlabel">Trainer Name</div>
 
-                            <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
-                                <mat-form-field
-                                    class="example-full-width bottomassign"
-                                    [floatLabel]="'never'"  [ngStyle]="{width:getWidth()}">
-                                    <input type="text" [placeholder]="item.trainerName.length == 0 ? 'Select From List':getinputPlaceholderValue(item)" aria-label="" matInput
-                                        [matAutocomplete]="auto2" 
+                            <div
+                                class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                                <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
+                                    [ngStyle]="{width:getWidth()}">
+                                    <input type="text"
+                                        [placeholder]="item.trainerName.length == 0 ? 'Select From List':getinputPlaceholderValue(item)"
+                                        aria-label="" matInput [matAutocomplete]="auto2"
                                         (keyup)="assignChange($event, item)" (click)="assignDDvalue($event,item)"
-                                        class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
-                                        #autoCompleteTrigger3="matAutocompleteTrigger">
-                                    <mat-autocomplete #auto2="matAutocomplete"
-                                        matAutocompletePosition="below"
+                                        class="assignhandletext form-control multselecticon p-0"
+                                        id="autoCompleteTrigger3" #autoCompleteTrigger3="matAutocompleteTrigger">
+                                    <mat-autocomplete #auto2="matAutocomplete" matAutocompletePosition="below"
                                         autoActiveFirstOption>
                                         <mat-option *ngFor="let user of item.trainerDropdownData"
-                                          [value] = "item.trainerName"  class="mat-option-design">
+                                            [value]="item.trainerName" class="mat-option-design">
                                             <div class="optionDivetag" (click)="optionClicked($event, user, item)">
-                                                <mat-checkbox
-                                                    [checked]="user.checked"
+                                                <mat-checkbox [checked]="user.checked"
                                                     (change)="toggleSelection($event,user,item)"
                                                     (click)="$event.stopPropagation()">
                                                     <span for="auto">{{ user.username }}</span>
@@ -761,9 +800,9 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                
-                            
-                        </div>
+
+
+                            </div>
                             <!-- <ng-select [items]="trainerNameList" bindLabel="combinedLabel" bindValue="combinedValue"
                                 [clearable]="true" [searchable]="true" (change)="batchTrainername($event, item)"
                                 [(ngModel)]="item.trainerCombine" multiple="true">
@@ -773,8 +812,8 @@
                             <div class="batchlabel">Schedule Date</div>
                             <div class="relative">
                                 <input type="text" class="form-control scheduleDate" id="scheduleDate{{b}}"
-                                    maxlength="10" placeholder=" " name="scheduleDate{{b}}" [(ngModel)]="item.scheduledDate"
-                                    [ngModelOptions]="{standalone: true}" bsDatepicker
+                                    maxlength="10" placeholder=" " name="scheduleDate{{b}}"
+                                    [(ngModel)]="item.scheduledDate" [ngModelOptions]="{standalone: true}" bsDatepicker
                                     (change)="scheduleDateselect($event, item)" autocomplete="off" bsDatepicker
                                     [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate required>
                                 <div class="data-icon" (click)="scheduleDate.click()">
@@ -794,7 +833,9 @@
                             </svg></div> -->
                             </div>
                             <div *ngFor="let employee of this.item.employeesList; let k = index">
-                                <div class="employeeData" *ngIf="k <= 2" title="{{employee.employeeIsActive == false?'This Employee is Temporarily Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
+                                <div class="employeeData" *ngIf="k <= 2"
+                                    title="{{employee.employeeIsActive == false?'This Employee is Temporarily Inactive':''}}"
+                                    [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                                     <div>
                                         <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                                         <div class="d-flex align-items-center empidposition">
@@ -816,14 +857,16 @@
                         </div>
                         <div class="batchdata_footer d-flex align-items-center justify-content-between">
                             <div class="schedulebutton"
-                                [ngClass]="{'disableButton' : item.coursename == '' || item.trainerName.length == 0 || (item.scheduledDate == '' || item.scheduledDate == null || item.scheduledDate == undefined) || item.employeesList.length == 0}">
-                                <div class="buttonText"  *ngIf="item.batchStatus == 'Draft'" (click)="scheduleBatch(item, b, 'Draft')">
-                                   
+                                [ngClass]="{'disableButton' : item.courseName == '' || item.trainerName.length == 0 || (item.scheduledDate == '') || item.employeesList.length == 0}">
+                                <div class="buttonText" *ngIf="item.batchStatus == 'Draft'"
+                                    (click)="scheduleBatch(item, b, 'Draft')">
+
                                     <span>Draft</span>
                                 </div>
-                                <div class="buttonText" *ngIf="item.batchStatus == 'Scheduled'" (click)="scheduleBatch(item, b, 'Scheduled')">
-                                    <span >Schedule</span>
-                                    
+                                <div class="buttonText" *ngIf="item.batchStatus == 'Scheduled'"
+                                    (click)="scheduleBatch(item, b, 'Scheduled')">
+                                    <span>Schedule</span>
+
                                 </div>
                                 <div class="break-line"></div>
                                 <div class="menuarrow" [matMenuTriggerFor]="typeValue">
@@ -910,12 +953,15 @@
         </div>
     </div>
     <!-- <div class="custom-tooltip" [ngStyle]="tooltipStyles">{{ dragText }}</div> -->
-    <div *ngIf="dragStarted" class="drag-started-indicator" [style.left.px]="indicatorPositionX" [style.top.px]="indicatorPositionY">
+    <div *ngIf="dragStarted" class="drag-started-indicator" [style.left.px]="indicatorPositionX"
+        [style.top.px]="indicatorPositionY">
         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="15" viewBox="0 0 19 15" fill="none">
-            <path d="M10.0076 7.24748C10.4574 6.76559 10.7957 6.22247 11.0226 5.61811C11.2494 5.01374 11.3629 4.39517 11.3629 3.7624C11.3629 3.12218 11.242 2.4943 11.0002 1.87875C10.7584 1.2632 10.4201 0.729404 9.98521 0.277349C10.8962 0.44257 11.6175 0.861209 12.149 1.53327C12.6805 2.20533 12.9462 2.94837 12.9462 3.7624C12.9462 4.60628 12.6767 5.36052 12.1378 6.02513C11.5988 6.68973 10.8887 7.09718 10.0076 7.24748ZM14.5296 14.4035V11.6929C14.5296 11.1135 14.4277 10.5907 14.2241 10.1246C14.0204 9.65849 13.7247 9.23813 13.3369 8.86353C14.1515 9.06374 14.8477 9.39662 15.4253 9.86216C16.003 10.3277 16.2919 10.9379 16.2919 11.6929V14.4035H14.5296ZM16.2583 8.01162V6.39471H14.6414V4.81138H16.2583V3.19448H17.8417V4.81138H19.4586V6.39471H17.8417V8.01162H16.2583ZM6.24372 7.30945C5.26101 7.30945 4.42416 6.96395 3.73317 6.27296C3.04219 5.58196 2.6967 4.74511 2.6967 3.7624C2.6967 2.77971 3.04219 1.94473 3.73317 1.25747C4.42416 0.570199 5.26101 0.226562 6.24372 0.226562C7.22643 0.226562 8.06141 0.570199 8.74867 1.25747C9.43593 1.94473 9.77956 2.77971 9.77956 3.7624C9.77956 4.74511 9.43593 5.58196 8.74867 6.27296C8.06141 6.96395 7.22643 7.30945 6.24372 7.30945ZM-0.469971 14.4035V11.7841C-0.469971 11.2684 -0.337743 10.7926 -0.0732864 10.3569C0.191183 9.92124 0.548297 9.58951 0.998056 9.36176C1.84594 8.94527 2.70889 8.63103 3.58691 8.41907C4.4649 8.2071 5.35051 8.10111 6.24372 8.10111C7.15931 8.10111 8.05423 8.20523 8.9285 8.41347C9.80277 8.62171 10.6527 8.93408 11.4782 9.35056C11.928 9.57831 12.2851 9.90818 12.5495 10.3402C12.814 10.7721 12.9462 11.2535 12.9462 11.7841V14.4035H-0.469971Z" fill="white"/>
-            </svg>&nbsp;&nbsp; <span *ngIf="selectedIndices.length == 0">1 people </span>
+            <path
+                d="M10.0076 7.24748C10.4574 6.76559 10.7957 6.22247 11.0226 5.61811C11.2494 5.01374 11.3629 4.39517 11.3629 3.7624C11.3629 3.12218 11.242 2.4943 11.0002 1.87875C10.7584 1.2632 10.4201 0.729404 9.98521 0.277349C10.8962 0.44257 11.6175 0.861209 12.149 1.53327C12.6805 2.20533 12.9462 2.94837 12.9462 3.7624C12.9462 4.60628 12.6767 5.36052 12.1378 6.02513C11.5988 6.68973 10.8887 7.09718 10.0076 7.24748ZM14.5296 14.4035V11.6929C14.5296 11.1135 14.4277 10.5907 14.2241 10.1246C14.0204 9.65849 13.7247 9.23813 13.3369 8.86353C14.1515 9.06374 14.8477 9.39662 15.4253 9.86216C16.003 10.3277 16.2919 10.9379 16.2919 11.6929V14.4035H14.5296ZM16.2583 8.01162V6.39471H14.6414V4.81138H16.2583V3.19448H17.8417V4.81138H19.4586V6.39471H17.8417V8.01162H16.2583ZM6.24372 7.30945C5.26101 7.30945 4.42416 6.96395 3.73317 6.27296C3.04219 5.58196 2.6967 4.74511 2.6967 3.7624C2.6967 2.77971 3.04219 1.94473 3.73317 1.25747C4.42416 0.570199 5.26101 0.226562 6.24372 0.226562C7.22643 0.226562 8.06141 0.570199 8.74867 1.25747C9.43593 1.94473 9.77956 2.77971 9.77956 3.7624C9.77956 4.74511 9.43593 5.58196 8.74867 6.27296C8.06141 6.96395 7.22643 7.30945 6.24372 7.30945ZM-0.469971 14.4035V11.7841C-0.469971 11.2684 -0.337743 10.7926 -0.0732864 10.3569C0.191183 9.92124 0.548297 9.58951 0.998056 9.36176C1.84594 8.94527 2.70889 8.63103 3.58691 8.41907C4.4649 8.2071 5.35051 8.10111 6.24372 8.10111C7.15931 8.10111 8.05423 8.20523 8.9285 8.41347C9.80277 8.62171 10.6527 8.93408 11.4782 9.35056C11.928 9.57831 12.2851 9.90818 12.5495 10.3402C12.814 10.7721 12.9462 11.2535 12.9462 11.7841V14.4035H-0.469971Z"
+                fill="white" />
+        </svg>&nbsp;&nbsp; <span *ngIf="selectedIndices.length == 0">1 people </span>
         <span *ngIf="selectedIndices.length > 0">{{selectedIndices.length}} People</span>
-      </div>
+    </div>
 </section>
 
 <!--Modal PopUp for Employee History-->
@@ -924,47 +970,48 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-emphistoryTable">
         <div class="modal-content">
             <div class="modal-header">
-               Course History
+                Course History
             </div>
             <div class="modal-body modal-body-no-radius">
-               <table class="historyTable">
-                <thead>
-                <tr>
-                    <!-- <th class="tablewidth1">Employee Name</th> -->
-                    <th class="tablewidth2">Course Name</th>
-                    <!-- <th class="tablewidth3">Modified By</th>
+                <table class="historyTable">
+                    <thead>
+                        <tr>
+                            <!-- <th class="tablewidth1">Employee Name</th> -->
+                            <th class="tablewidth2">Course Name</th>
+                            <!-- <th class="tablewidth3">Modified By</th>
                     <th class="tablewidth1">Modified on</th> -->
-                    <th style="width: 100%;"></th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let emphistory of this.empHistoryData">
-                    <!-- <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td> -->
-                    <td class="tablewidth2" title="{{emphistory.courseName}}">{{(emphistory.courseName == '' || emphistory.courseName == null)? '-':emphistory.courseName }}</td>
-                    <!-- <td class="tablewidth3">{{history.batchCreatedBy}}</td>
+                            <th style="width: 100%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let emphistory of this.empHistoryData">
+                            <!-- <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td> -->
+                            <td class="tablewidth2" title="{{emphistory.courseName}}">{{(emphistory.courseName == '' ||
+                                emphistory.courseName == null)? '-':emphistory.courseName }}</td>
+                            <!-- <td class="tablewidth3">{{history.batchCreatedBy}}</td>
                     <td class="tablewidth4">{{history.batchCreatedOn}}</td>
                     <td><div class="viewButton" (click)="viewHistorydata(history)">View</div></td> -->
-                    </tr>
-                   
-                </tbody>
-              
+                        </tr>
+
+                    </tbody>
+
                 </table>
                 <div class="d-flex justify-content-center">
                     <div *ngIf="this.empHistoryData.length == 0" class="norecordButton">No records found</div>
-                 </div>
+                </div>
 
-                 <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end">
                     <div class="historyCancel" data-dismiss="modal">Cancel</div>
-                 </div>
+                </div>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 <!--Modal Popup for Open BatchDetails-->
-<div *ngIf="ModalPopup1" class="modal fade mailBodyPop bootstrapBackground_Pop" id="deatilsModal" data-backdrop="static" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div *ngIf="ModalPopup1" class="modal fade mailBodyPop bootstrapBackground_Pop" id="deatilsModal" data-backdrop="static"
+    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
@@ -986,26 +1033,28 @@
 
                 </div>
 
-                <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width" [ngClass]="{'f2f_trainername_form': selected_PopupData?.trainerName?.length > 0}">
+                <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width"
+                    [ngClass]="{'f2f_trainername_form': selected_PopupData?.trainerName?.length > 0}">
                     <div class="d-flex align-items-center label-input w-100">
                         <div class="label-name">Trainer Name</div>
-                        <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
-                            <mat-form-field
-                                class="example-full-width bottomassign"
-                                [floatLabel]="'never'" style="width: 330px;">
-                                <input type="text" [placeholder]="selected_PopupData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(selected_PopupData)" aria-label="" matInput
-                                    [matAutocomplete]="auto2" 
-                                    (keyup)="assignChange($event, selected_PopupData)" (click)="assignDDvalue($event,selected_PopupData)"
+                        <div
+                            class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                            <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
+                                style="width: 330px;">
+                                <input type="text"
+                                    [placeholder]="selected_PopupData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(selected_PopupData)"
+                                    aria-label="" matInput [matAutocomplete]="auto2"
+                                    (keyup)="assignChange($event, selected_PopupData)"
+                                    (click)="assignDDvalue($event,selected_PopupData)"
                                     class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
                                     #autoCompleteTrigger3="matAutocompleteTrigger">
-                                <mat-autocomplete #auto2="matAutocomplete"
-                                    matAutocompletePosition="below"
+                                <mat-autocomplete #auto2="matAutocomplete" matAutocompletePosition="below"
                                     autoActiveFirstOption>
                                     <mat-option *ngFor="let user of selected_PopupData.trainerDropdownData"
-                                      [value] = "selected_PopupData.trainerName"  class="mat-option-design">
-                                        <div class="optionDivetag" (click)="optionClicked($event, user, selected_PopupData)">
-                                            <mat-checkbox
-                                                [checked]="user.checked"
+                                        [value]="selected_PopupData.trainerName" class="mat-option-design">
+                                        <div class="optionDivetag"
+                                            (click)="optionClicked($event, user, selected_PopupData)">
+                                            <mat-checkbox [checked]="user.checked"
                                                 (change)="toggleSelection($event,user,selected_PopupData)"
                                                 (click)="$event.stopPropagation()">
                                                 <span for="auto">{{ user.username }}</span>
@@ -1014,9 +1063,9 @@
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
-                            
-                        
-                    </div>
+
+
+                        </div>
                         <!-- <div class="summaryngSelect batchselect1">
                             <ng-select [items]="trainerNameList" name="selected_PopupData.trainerCombine"
                                 bindValue="combinedLabel" [clearable]="true" bindLabel="combinedLabel"
@@ -1030,12 +1079,12 @@
                         <div class="label-name no-width">Schedule Date</div>
                         <div class="selectDD">
                             <div class="relative">
-                                <input type="text" style="width: 130px;" class="form-control selectedscheduleDate " id="scheduleDate"
-                                maxlength="10" placeholder=" " name="scheduleDate"  [(ngModel)]="selected_PopupData.scheduledDate"
-                                    [ngModelOptions]="{standalone: true}" bsDatepicker
-                                    (change)="scheduleDateselect($event, selected_PopupData)" autocomplete="off"
-                                    bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate
-                                    required>
+                                <input type="text" style="width: 130px;" class="form-control selectedscheduleDate "
+                                    id="scheduleDate" maxlength="10" placeholder=" " name="scheduleDate"
+                                    [(ngModel)]="selected_PopupData.scheduledDate" [ngModelOptions]="{standalone: true}"
+                                    bsDatepicker (change)="scheduleDateselect($event, selected_PopupData)"
+                                    autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"
+                                    [minDate]="scheduleminDate" #scheduleDate required>
                                 <div class="data-icon" (click)="scheduleDate.click()">
                                     <img src="assets/healthsafetyimages/field-icon.svg">
                                 </div>
@@ -1055,15 +1104,17 @@
                                     stroke="#E20512" />
                             </svg></div> -->
                     </div>
-                    <div *ngFor="let employee of this.selected_PopupData?.employeesList" class="employeeData" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
+                    <div *ngFor="let employee of this.selected_PopupData?.employeesList" class="employeeData"
+                        title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}"
+                        [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
                         <div>
                             <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
                             <div class="d-flex align-items-center empidposition">
                                 <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
                             </div>
                         </div>
-                        <div (click)="deleteEmployee(selected_PopupData.employeesList,employee);compareDataforUpdate()"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                        <div (click)="deleteEmployee(selected_PopupData.employeesList,employee);compareDataforUpdate()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
                                 fill="none">
                                 <path
                                     d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
@@ -1074,15 +1125,19 @@
 
                 <div class="bottomfooter d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center buttongap">
-                        <div class="button bluebutton" (click)="scheduleBatch(selected_PopupData, b, 'Scheduled')">Schedule training</div>
+                        <div class="button bluebutton"
+                            [ngClass]="{'disablescheduleButton' : selected_PopupData.courseName == '' || selected_PopupData.trainerName.length == 0 || (selected_PopupData.scheduledDate == '' || selected_PopupData.scheduledDate == null || selected_PopupData.scheduledDate == undefined) || selected_PopupData.employeesList.length == 0}"
+                            (click)="scheduleBatch(selected_PopupData, b, 'Scheduled')">Schedule training</div>
                     </div>
 
                     <div class="d-flex align-items-center buttongap">
                         <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                             (click)="addPeopleData(selected_PopupData)">+ Add people</div>
-                        <div class="button blackbutton" (click)="scheduleBatch(selected_PopupData, b, 'Draft')">Save as draft</div>
+                        <div class="button blackbutton"
+                            [ngClass]="{'disablescheduleButton' : selected_PopupData.courseName == '' || selected_PopupData.trainerName.length == 0 || (selected_PopupData.scheduledDate == '' || selected_PopupData.scheduledDate == null || selected_PopupData.scheduledDate == undefined) || selected_PopupData.employeesList.length == 0}"
+                            (click)="scheduleBatch(selected_PopupData, b, 'Draft')">Save as draft</div>
                         <div class="button blackbutton" data-target="#deleteModal" data-toggle="modal"
-                        (click)="deleteBatch(batchItem)">Delete</div>
+                            (click)="deleteBatch(batchItem)">Delete</div>
                         <div class="button blackbutton" data-dismiss="modal">Close</div>
                     </div>
                 </div>
@@ -1119,131 +1174,157 @@
             <div class="modal-body modal-body-height">
                 <div *ngIf="viewDetails && viewHistory == false">
                     <div class="d-flex justify-content-end">
-                    <div class="historyviewtext" *ngIf="detailsData.batchStatus !== 'Draft'" data-toggle="modal" data-target="#historyTable" (click)="historyTableview = true">View History</div>
+                        <div class="historyviewtext" *ngIf="detailsData.batchStatus !== 'Draft'" data-toggle="modal"
+                            data-target="#historyTable" (click)="historyTableview = true">View History</div>
                     </div>
-                <div class="d-flex align-items-center label-input pb-15">
-                    <div class="label-name">F2F Course name</div>
-                    <div class="summaryngSelect batchselect1"><ng-select [items]="courseNameList"
-                            name="detailsData.courseName" bindLabel="courseName" bindValue="courseName"
-                            [clearable]=false [searchable]="false"
-                            (change)="batchCoursename($event, detailsData);compareDataforUpdate()"
-                            [(ngModel)]="detailsData.courseName" [readonly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'"></ng-select></div>
-                </div>
-
-                <div class="d-flex align-items-center label-input pb-15">
-                    <div class="label-name">Batch name</div>
-                    <div class="selectDD">
-                        <input type="text" maxlength="65" (change)="batchName($event, detailsData);compareDataforUpdate()"
-                            [(ngModel)]="detailsData.batchName" [readOnly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name">F2F Course name</div>
+                        <div class="summaryngSelect batchselect1"><ng-select [items]="courseNameList"
+                                name="detailsData.courseName" bindLabel="courseName" bindValue="courseName"
+                                [clearable]=false [searchable]="false"
+                                (change)="batchCoursename($event, detailsData);compareDataforUpdate()"
+                                [(ngModel)]="detailsData.courseName"
+                                [readonly]="detailsData.batchStatus == 'Canceled' || updateReadonly"></ng-select></div>
                     </div>
 
-                </div>
-
-                <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width" [ngClass]="{'f2f_trainername_form': detailsData?.trainerName?.length > 0}">
-                    <div class="d-flex align-items-center label-input w-100">
-                        <div class="label-name">Trainer Name</div>
-                        <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
-                            <mat-form-field
-                                class="example-full-width bottomassign"
-                                [floatLabel]="'never'" style="width: 330px;" [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
-                                <input type="text" [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)" aria-label="" matInput
-                                    [matAutocomplete]="auto2" 
-                                    (keyup)="assignChange($event, detailsData)" (click)="assignDDvalue($event,detailsData)"
-                                    class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
-                                    #autoCompleteTrigger3="matAutocompleteTrigger">
-                                <mat-autocomplete #auto2="matAutocomplete"
-                                    matAutocompletePosition="below"
-                                    autoActiveFirstOption>
-                                    <mat-option *ngFor="let user of detailsData.trainerDropdownData"
-                                      [value] = "detailsData.trainerName"  class="mat-option-design">
-                                        <div class="optionDivetag" (click)="optionClicked($event, user, detailsData)">
-                                            <mat-checkbox
-                                                [checked]="user.checked"
-                                                (change)="toggleSelection($event,user,detailsData);compareDataforUpdate()"
-                                                (click)="$event.stopPropagation()">
-                                                <span for="auto">{{ user.username }}</span>
-                                            </mat-checkbox>
-                                        </div>
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
-                            
-                        
-                    </div>
-                     </div>
-
-                    <div class="d-flex align-items-center label-input">
-                        <div class="label-name no-width">Schedule Date</div>
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name">Batch name</div>
                         <div class="selectDD">
-                            <div class="relative">
-                                <input type="text" style="width: 130px;" class="form-control selectedscheduleDate " id="detailsDatascheduleDate"
-                                maxlength="10" placeholder=" "  name="detailsDatascheduleDate"  [(ngModel)]="detailsData.scheduledDate"
-                                    bsDatepicker
-                                    (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()" autocomplete="off"
-                                    bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate1 [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}"
-                                    required>
-                                <div class="data-icon" (click)="scheduleDate1.click()" [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
-                                    <img src="assets/healthsafetyimages/field-icon.svg">
-                                </div>
-                            </div>
+                            <input type="text" maxlength="65"
+                                (change)="batchName($event, detailsData);compareDataforUpdate()"
+                                [(ngModel)]="detailsData.batchName"
+                                [readOnly]="detailsData.batchStatus == 'Canceled' || updateReadonly">
+                        </div>
 
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width"
+                        [ngClass]="{'f2f_trainername_form': detailsData?.trainerName?.length > 0}">
+                        <div class="d-flex align-items-center label-input w-100">
+                            <div class="label-name">Trainer Name</div>
+                            <div
+                                class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                                <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
+                                    style="width: 330px;"
+                                    [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || updateReadonly}">
+                                    <input type="text"
+                                        [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)"
+                                        aria-label="" matInput [matAutocomplete]="auto2"
+                                        (keyup)="assignChange($event, detailsData)"
+                                        (click)="assignDDvalue($event,detailsData)"
+                                        class="assignhandletext form-control multselecticon p-0"
+                                        id="autoCompleteTrigger3" #autoCompleteTrigger3="matAutocompleteTrigger">
+                                    <mat-autocomplete #auto2="matAutocomplete" matAutocompletePosition="below"
+                                        autoActiveFirstOption>
+                                        <mat-option *ngFor="let user of detailsData.trainerDropdownData"
+                                            [value]="detailsData.trainerName" class="mat-option-design">
+                                            <div class="optionDivetag"
+                                                (click)="optionClicked($event, user, detailsData)">
+                                                <mat-checkbox [checked]="user.checked"
+                                                    (change)="toggleSelection($event,user,detailsData);compareDataforUpdate()"
+                                                    (click)="$event.stopPropagation()">
+                                                    <span for="auto">{{ user.username }}</span>
+                                                </mat-checkbox>
+                                            </div>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+
+
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center label-input">
+                            <div class="label-name no-width">Schedule Date</div>
+                            <div class="selectDD">
+                                <div class="relative">
+                                    <input type="text" style="width: 130px;" class="form-control selectedscheduleDate "
+                                        id="detailsDatascheduleDate" maxlength="10" placeholder=" "
+                                        name="detailsDatascheduleDate" [(ngModel)]="detailsData.scheduledDate"
+                                        bsDatepicker
+                                        (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()"
+                                        autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"
+                                        [minDate]="scheduleminDate" #scheduleDate1
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || updateReadonly}"
+                                        required>
+                                    <div class="data-icon" (click)="scheduleDate1.click()"
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || updateReadonly}">
+                                        <img src="assets/healthsafetyimages/field-icon.svg">
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="updatedemployeeListheight" [ngClass]="{'updatedemployeeListheight_Draft': detailsData.batchStatus == 'Draft'}">
-                <div class="employeeList">
-                    <div class="employeeData">
-                        <div class="font-weight-bold">Employees ({{this.upDatedEmployeeCount}})
-                        </div>
-                        <!-- <div><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
+                    <div class="updatedemployeeListheight"
+                        [ngClass]="{'updatedemployeeListheight_Draft': detailsData.batchStatus == 'Draft'}">
+                        <div class="employeeList">
+                            <div class="employeeData">
+                                <div class="font-weight-bold">Employees ({{this.upDatedEmployeeCount}})
+                                </div>
+                                <!-- <div><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
                                 fill="none">
                                 <path
                                     d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
                                     stroke="#E20512" />
                             </svg></div> -->
-                    </div>
-                    <div *ngFor="let employee of this.detailsData.employeesList">
-                        <div class="employeeData" *ngIf="employee.isDeleted == false" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
-                        <div>
-                            <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
-                            <div class="d-flex align-items-center empidposition">
-                                <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
+                            </div>
+                            <div *ngFor="let employee of this.detailsData.employeesList">
+                                <div class="employeeData" *ngIf="employee.isDeleted == false"
+                                    title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}"
+                                    [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
+                                    <div>
+                                        <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
+                                        <div class="d-flex align-items-center empidposition">
+                                            <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false"
+                                        (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                            viewBox="0 0 22 22" fill="none">
+                                            <path
+                                                d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
+                                                stroke="#E20512" />
+                                        </svg></div>
+                                </div>
                             </div>
                         </div>
-                        <div *ngIf="detailsData.batchStatus !== 'Canceled' && detailsData.batchStatus !== 'Assigned'" (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
-                                fill="none">
-                                <path
-                                    d="M3 7.25H5.5M18 7.25H15.5M5.5 7.25V16C5.5 16.5523 5.94772 17 6.5 17H14.5C15.0523 17 15.5 16.5523 15.5 16V7.25M5.5 7.25H7.16667M15.5 7.25H13.8333M8.83333 14.5625V9.6875M12.1667 14.5625V9.6875M7.16667 7.25V5C7.16667 4.44772 7.61438 4 8.16667 4H12.8333C13.3856 4 13.8333 4.44772 13.8333 5V7.25M7.16667 7.25H13.8333"
-                                    stroke="#E20512" />
-                            </svg></div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-
-                <div class="bottomfooter d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center buttongap">
-                        <div class="button bluebutton"  *ngIf="detailsData.batchStatus == 'Draft'" [ngClass]="{'disablescheduleButton': upDatedEmployeeCount == 0}" (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
-                        <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled' && detailsData.batchStatus !== 'Assigned'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div>
                     </div>
 
-                    <div class="d-flex align-items-center buttongap">
-                        <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
-                            (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Canceled' && detailsData.batchStatus !== 'Assigned'">+ Add people</div>
-                        <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'" data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
-                        <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft" *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
-                        <div class="button blackbutton" data-dismiss="modal">Close</div>
+                    <div class="bottomfooter d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center buttongap">
+                            <div class="button bluebutton" *ngIf="detailsData.batchStatus == 'Draft'"
+                                [ngClass]="{'disablescheduleButton': upDatedEmployeeCount == 0}"
+                                (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
+                            <div class="button bluebutton bluebutton-inactive"
+                                *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false"
+                                [ngClass]="{'active-button' : saveButtonshow == true}"
+                                (click)="updateBatch(detailsData, 'update')">Save</div>
+                        </div>
+
+                        <div class="d-flex align-items-center buttongap">
+                            <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
+                                (click)="addPeopleData(detailsData)"
+                                *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false">+ Add people
+                            </div>
+                            <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'"
+                                data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
+                            <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft"
+                                *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
+                            <div class="button blackbutton" data-dismiss="modal">Close</div>
+                        </div>
                     </div>
-                </div>
                 </div>
 
                 <div *ngIf="viewDetails && viewHistory == true">
                     <div class="d-flex justify-content-between" *ngIf="detailsData.batchStatus !== 'Draft'">
                         <div class="historyviewtext" (click)="viewHistory = false">View Current</div>
-                        <div class="historyviewtext" data-toggle="modal" data-target="#historyTable" (click)="historyTableview = true">View History</div>
-                        </div>
-                    
+                        <div class="historyviewtext" data-toggle="modal" data-target="#historyTable"
+                            (click)="historyTableview = true">View History</div>
+                    </div>
+
                     <div class="d-flex align-items-center label-input pb-15">
                         <div class="label-name no-width">F2F Course name:</div>
                         <div>{{historyData.courseName}}</div>
@@ -1253,7 +1334,7 @@
                                 (change)="batchCoursename($event, detailsData);compareDataforUpdate()"
                                 [(ngModel)]="detailsData.courseName" [readonly]="true"></ng-select></div> -->
                     </div>
-    
+
                     <div class="d-flex align-items-center label-input pb-15">
                         <div class="label-name no-width">Batch name:</div>
                         <div>{{historyData.batchName}}</div>
@@ -1261,13 +1342,13 @@
                             <input type="text" maxlength="65" (change)="batchName($event, detailsData);compareDataforUpdate()"
                                 [(ngModel)]="detailsData.batchName" [readOnly]="true">
                         </div> -->
-    
+
                     </div>
-    
-                        <div class="d-flex align-items-center label-input pb-15">
-                            <div class="label-name no-width">Trainer Name:</div>
-                            <div>{{historyData.trainerName}}</div>
-                            <!-- <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name no-width">Trainer Name:</div>
+                        <div>{{historyData.trainerName}}</div>
+                        <!-- <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                                 <mat-form-field
                                     class="example-full-width bottomassign read-only"
                                     [floatLabel]="'never'" style="width: 330px;">
@@ -1295,12 +1376,12 @@
                                 
                             
                         </div> -->
-                         </div>
-    
-                        <div class="d-flex align-items-center label-input pb-15">
-                            <div class="label-name no-width">Schedule Date:</div>
-                            <div>{{historyData.scheduledDate | date:'dd-MM-yyyy'}}</div>
-                            <!-- <div class="selectDD">
+                    </div>
+
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name no-width">Schedule Date:</div>
+                        <div>{{historyData.scheduledDate | date:'dd-MM-yyyy'}}</div>
+                        <!-- <div class="selectDD">
                                 <div class="relative">
                                     <input type="text" style="width: 130px;" class="form-control selectedscheduleDate read-only" id="detailsDatascheduleDate"
                                     maxlength="10" placeholder=" "  name="detailsDatascheduleDate"  [(ngModel)]="detailsData.scheduledDate"
@@ -1314,33 +1395,36 @@
                                 </div>
     
                             </div> -->
-                        </div>
-                        <div class="updatedemployeeListheight updatedemployeeListheight1">
+                    </div>
+                    <div class="updatedemployeeListheight updatedemployeeListheight1">
 
-                    <div class="employeeList">
-                        <div class="employeeData">
-                            <div class="font-weight-bold">Employees ({{this.historyData.batchEmployeesCount}})
+                        <div class="employeeList">
+                            <div class="employeeData">
+                                <div class="font-weight-bold">Employees ({{this.historyData.batchEmployeesCount}})
+                                </div>
                             </div>
-                            </div>
-                        <div *ngFor="let employee of this.historyData.employeesList">
-                            <div class="employeeData" title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}" [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
-                            <div>
-                                <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
-                                <div class="d-flex align-items-center empidposition">
-                                    <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
+                            <div *ngFor="let employee of this.historyData.employeesList">
+                                <div class="employeeData"
+                                    title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}"
+                                    [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
+                                    <div>
+                                        <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
+                                        <div class="d-flex align-items-center empidposition">
+                                            <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
-                    </div>
-    
+
                     <div class="bottomfooter d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center buttongap">
                             <!-- <div class="button bluebutton"  *ngIf="detailsData.batchStatus == 'Draft'" (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
                             <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div> -->
                         </div>
-    
+
                         <div class="d-flex align-items-center buttongap">
                             <!-- <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                                 (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Canceled'">+ Add people</div>
@@ -1349,7 +1433,7 @@
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
                         </div>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1357,13 +1441,13 @@
 
 
 <!--Modal Popup for Open Epmolyee Details-->
-<div class="modal fade mailBodyPop bootstrapBackground_Pop" *ngIf="showempComponent" id="addPeople" data-backdrop="static" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" *ngIf="showempComponent" id="addPeople"
+    data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
-                <app-employee-details
-                    (sendDatatof2f)="receiveDataFromEmp($event)" (closeEmppopup)="closeEmppopup()"></app-employee-details>
+                <app-employee-details (sendDatatof2f)="receiveDataFromEmp($event)"
+                    (closeEmppopup)="closeEmppopup()"></app-employee-details>
             </div>
         </div>
     </div>
@@ -1384,7 +1468,7 @@
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">Cancel</button>
                 <button type="button" class="cancelBtn deleteBtn" data-dismiss="modal"
-                (click)="deleteDraft(detailsData)">Yes</button>
+                    (click)="deleteDraft(detailsData)">Yes</button>
             </div>
         </div>
     </div>
@@ -1404,58 +1488,63 @@
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
                 <button type="button" class="cancelBtn deleteBtn" data-dismiss="modal"
-                (click)="updateBatch(detailsData, 'Canceled')">Yes</button>
+                    (click)="updateBatch(detailsData, 'Canceled')">Yes</button>
             </div>
         </div>
     </div>
 </div>
 
-<div *ngIf="historyTableview" class="modal fade mailBodyPop bootstrapBackground_Pop" id="historyTable" data-backdrop="static" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div *ngIf="historyTableview" class="modal fade mailBodyPop bootstrapBackground_Pop" id="historyTable"
+    data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-historyTable">
         <div class="modal-content">
             <div class="modal-header">
                 History
             </div>
             <div class="modal-body modal-body-no-radius">
-               <table class="historyTable">
-                <thead>
-                <tr>
-                    <th class="tablewidth1">Batch Name</th>
-                    <th class="tablewidth2">Course Name</th>
-                    <th class="tablewidth3">Modified By</th>
-                    <th class="tablewidth1">Modified on</th>
-                    <th style="width: 100%;"></th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let history of this.detailsData.batchHistoryLists">
-                    <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td>
-                    <td class="tablewidth2" title="{{history.courseName}}">{{(history.courseName == '' || history.courseName == null)? '-':history.courseName }}</td>
-                    <td class="tablewidth3">{{history.batchCreatedBy}}</td>
-                    <td class="tablewidth4">{{history.batchCreatedOn}}</td>
-                    <td><div class="viewButton" (click)="viewHistorydata(history)">View</div></td>
-                    </tr>
-                   
-                </tbody>
-              
+                <table class="historyTable">
+                    <thead>
+                        <tr>
+                            <th class="tablewidth1">Batch Name</th>
+                            <th class="tablewidth2">Course Name</th>
+                            <th class="tablewidth3">Modified By</th>
+                            <th class="tablewidth1">Modified on</th>
+                            <th style="width: 100%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let history of this.detailsData.batchHistoryLists">
+                            <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)?
+                                '-':history.batchName }}</td>
+                            <td class="tablewidth2" title="{{history.courseName}}">{{(history.courseName == '' ||
+                                history.courseName == null)? '-':history.courseName }}</td>
+                            <td class="tablewidth3">{{history.batchCreatedBy}}</td>
+                            <td class="tablewidth4">{{history.batchCreatedOn}}</td>
+                            <td>
+                                <div class="viewButton" (click)="viewHistorydata(history)">View</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
                 </table>
                 <div class="d-flex justify-content-center">
-                    <div *ngIf="this.detailsData.batchHistoryLists.length == 0" class="norecordButton">No record found</div>
-                 </div>
+                    <div *ngIf="this.detailsData.batchHistoryLists.length == 0" class="norecordButton">No record found
+                    </div>
+                </div>
 
-                 <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end">
                     <div class="historyCancel" data-dismiss="modal">Cancel</div>
-                 </div>
+                </div>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="emailModal" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="emailModal" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-email">
         <div class="modal-content">
             <div class="modal-header">
@@ -1470,10 +1559,11 @@
                             <input type="text" formControlName="email" class="form-control mailInput"
                                 (change)="getMail($event)" [(ngModel)]="mailIdsend" maxlength="60"
                                 [ngClass]="{'invalid' : f['email'].errors && mailIdsend !== ''}" />
-                            <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()" type="button"
-                                class="btn btn-primary btn-sm mailAddbtn">Add</button>
+                            <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()"
+                                type="button" class="btn btn-primary btn-sm mailAddbtn">Add</button>
                         </div>
-                        <div class="businessMail" *ngIf="f['email']?.errors && mailIdsend !== ''">Please add only business email Id.</div>
+                        <div class="businessMail" *ngIf="f['email']?.errors && mailIdsend !== ''">Please add only
+                            business email Id.</div>
                         <div class="mailCls pl-0 d-flex flex-wrap">
                             <div *ngFor="let mailId of Emails, let m = index"
                                 class="d-flex align-items-center mr-2 mailTag mb-2">
@@ -1485,23 +1575,22 @@
                     </div>
                 </form>
                 <div class="d-flex justify-content-end">
-                <div type="button" class="cancelMailbtn" data-dismiss="modal"
-                (click)="cancelMail()">Cancel</div>
-            <div type="button" class="cancelMailbtn sendMailbtn" data-dismiss="modal"
-                [ngClass]="{'disabledmailbtn' : Emails.length == 0}" (click)="sendMail()">Send</div>
+                    <div type="button" class="cancelMailbtn" data-dismiss="modal" (click)="cancelMail()">Cancel</div>
+                    <div type="button" class="cancelMailbtn sendMailbtn" data-dismiss="modal"
+                        [ngClass]="{'disabledmailbtn' : Emails.length == 0}" (click)="sendMail()">Send</div>
+                </div>
             </div>
-             </div>
         </div>
     </div>
 </div>
 
 <button style="display: none;" #importProgress data-toggle="modal" data-target="#importProgressModal"></button>
-<div class="modal fade linkedEmployee suggestCourseModal f2fModal bootstrapBackground_Pop" id="importProgressModal" tabindex="-1"
-  role="dialog" aria-labelledby="importProgressModalModalLongTitle" data-keyboard="false" data-backdrop='static'
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-    <div class="modal-content">
-      <!-- <div class="modal-header employee-header">
+<div class="modal fade linkedEmployee suggestCourseModal f2fModal bootstrapBackground_Pop" id="importProgressModal"
+    tabindex="-1" role="dialog" aria-labelledby="importProgressModalModalLongTitle" data-keyboard="false"
+    data-backdrop='static' aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <!-- <div class="modal-header employee-header">
         <span class="modal-title" id="suggestCourseModalLongTitle">
           {{headerSuggestCourseObj?.employeeId}} -> Suggested Course
         </span>
@@ -1509,26 +1598,56 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div> -->
-      <div class="modal-body">
-        <div class="progress" *ngIf="progress < 100">
-          <div class="progress-bar progress-bar-striped" [style.width]="progress + '%'">{{progress}}%</div>
+            <div class="modal-body">
+                <div class="progress" *ngIf="progress < 100">
+                    <div class="progress-bar progress-bar-striped" [style.width]="progress + '%'">{{progress}}%</div>
+                </div>
+                <div *ngIf="progress === 100">
+                    <div>
+                        <span class="successMsg">File imported successfully</span>
+                    </div>
+                    <div class="successData">
+                        <div><b>Note:</b></div>
+                        <div class="successContent pt-2">The data will be verified in the background and will send the
+                            import status success or fail to your email address.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer employee-footer px-3 border-0 w-100 justify-content-end align-items-center">
+                <div class="">
+                    <button (click)="progressDoneClick()" [disabled]="progress !== 100 && progress !== null"
+                        type="button" #progressDone class="btn doneBtn" data-dismiss="modal">Done</button>
+                </div>
+            </div>
         </div>
-        <div *ngIf="progress === 100">
-          <div>
-            <span class="successMsg">File imported successfully</span>
-          </div>
-          <div class="successData">
-            <div><b>Note:</b></div>
-            <div class="successContent pt-2">The data will be verified in the background and will send the import status success or fail to your email address.</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer employee-footer px-3 border-0 w-100 justify-content-end align-items-center">
-        <div class="">
-          <button (click)="progressDoneClick()" [disabled]="progress !== 100 && progress !== null" type="button" #progressDone
-            class="btn doneBtn" data-dismiss="modal">Done</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+
+<div class="validationPopup d-flex align-items-center justify-content-center" *ngIf="validePopup">
+    <div class="validation-alertBox" [ngClass]="{'validation-alertBox-animation' : validePopup}">
+        <div class="validationPopup-Header d-flex justify-content-between">
+            <div>Scheduled Employee List</div>
+            <div><mat-icon (click)="closeAlert()">close</mat-icon></div>
+        </div>
+        <table class="historyTable scheduleTable">
+            <thead>
+                <tr>
+                    <th class="column1">Employee id</th>
+                    <th class="column2">Batch name</th>
+                    <th class="column3">Scheduled date</th>
+                    <th class="column4">Course name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of this.AlreadyscheduledEmployees">
+                    <td class="column1">{{data.employeeId}}</td>
+                    <td class="column2">{{data.batchName}}</td>
+                    <td class="column3">{{data.batchScheduledDate}}</td>
+                    <td class="column4">{{data.courseName}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">These employees are already scheduled in another batch.</div>
+    </div>
 </div>

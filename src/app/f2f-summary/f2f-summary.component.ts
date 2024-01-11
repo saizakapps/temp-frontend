@@ -258,6 +258,9 @@ export class F2fSummaryComponent implements OnInit {
         this.ModalPopup1 = false;
       }, 500);
     }
+    if(this.validePopup == true){
+      this.validePopup = false
+    }
   }
 
   dateValues = [
@@ -318,6 +321,7 @@ export class F2fSummaryComponent implements OnInit {
     this.loginEmployeeManager = userDetails.manager;
     this.loginEmployeeIstrainer = userDetails.isTrainer;
     this.filterRequest.employeeStatus = 'Active';
+    this.getActivecount();
     this.getSummarylist();
     this.getUpcominglist();
     this.getDraftlist();
@@ -1553,6 +1557,7 @@ export class F2fSummaryComponent implements OnInit {
   showBatchpopup(item: any, ivalue: any) {
     this.ModalPopup1 = true;
     this.selected_PopupData = item;
+    console.log(this.selected_PopupData, "selected_PopupData selected_PopupData")
     this.batchItem = ivalue;
   }
 
@@ -1565,7 +1570,7 @@ export class F2fSummaryComponent implements OnInit {
   changeTypeAction(type: any, item: any) {
     item.batchStatus = type.type;
   }
-
+  validePopup = false
   async scheduleBatch(item: any, b: any, type: string) {
     this.scheduleParams = JSON.parse(JSON.stringify(item));
     this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false, isNewEmployee:true }));
@@ -1575,13 +1580,13 @@ export class F2fSummaryComponent implements OnInit {
     this.scheduleParams.batchEmployeesCount = this.scheduleParams.employeesList.length;
     this.scheduleParams.courseId = `"${this.scheduleParams.courseId.toString()}"`;
     this.scheduleParams.courseId = this.scheduleParams.courseId.replace(/\"/g, '');
-    if (this.scheduleParams.hasOwnProperty('coursename')) {
-      delete this.scheduleParams.coursename;
-    }
+    // if (this.scheduleParams.hasOwnProperty('courseName')) {
+    //   delete this.scheduleParams.courseName;
+    // }
 
-    if (this.scheduleParams.hasOwnProperty('batchname')) {
-      delete this.scheduleParams.batchname;
-    }
+    // if (this.scheduleParams.hasOwnProperty('batchname')) {
+    //   delete this.scheduleParams.batchname;
+    // }
 
     const paramsToRemove = ['trainerDropdownData'];
     const modifiedParam = this.removeParams(this.scheduleParams, paramsToRemove);
@@ -1612,9 +1617,10 @@ export class F2fSummaryComponent implements OnInit {
         }
       }
       else {
+        this.validePopup = true;
         this.AlreadyscheduledEmployees = response.payload;
         const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
-        this.common.openSnackBar(`${emp_names} Already scheduled`, 2, "Invalid")
+        // this.common.openSnackBar(`${emp_names} Already scheduled`, 2, "Invalid")
       }
 
     }
@@ -1642,11 +1648,12 @@ export class F2fSummaryComponent implements OnInit {
 
           }
           else {
+            this.validePopup = true;
             this.AlreadyscheduledEmployees = response.payload;
             const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
       
             // const uniqueData = this.removeDuplicates(this.AlreadyscheduledEmployees);
-            this.common.openSnackBar(`${emp_names} already scheduled`, 2, "Invalid")
+            // this.common.openSnackBar(`${emp_names} already scheduled`, 2, "Invalid")
           }
         }
       }
@@ -1939,9 +1946,10 @@ export class F2fSummaryComponent implements OnInit {
       this.batchUpdate(updateParam)
     }
     else {
+      this.validePopup = true;
       this.AlreadyscheduledEmployees = response.payload;
       const emp_names = this.AlreadyscheduledEmployees.map(name => `${name.employeeName}`).join(', ');
-      this.common.openSnackBar(`${emp_names} already in another schedule`, 2, "Invalid")
+      // this.common.openSnackBar(`${emp_names} already in another schedule`, 2, "Invalid")
     }
   }
 
@@ -1999,12 +2007,25 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
+  updateReadonly = false
   async getscheduledDetails(item: any) {
     this.ngxloaderService.start();
+    this.updateReadonly = false;
     this.saveButtonshow = false;
     this.viewDetails = false;
     this.showPopUP = true;
     this.viewHistory = false;
+    const currentDate: Date = new Date();
+    const currentFormatDate = this.datepipe.transform(currentDate,'yyyy-MM-dd')
+    console.log(currentFormatDate, "currentDate currentDate")
+    console.log(item.scheduledDate)
+    console.log(currentFormatDate == item.scheduledDate, "Validation")
+    if(currentFormatDate > item.scheduledDate && item.batchStatus == 'Assigned'){
+      this.updateReadonly = true 
+    }
+    else{
+      this.updateReadonly = false 
+    }
     const param = {
       courseId: item.courseId,
       batchId: item.batchId,
@@ -2053,13 +2074,13 @@ export class F2fSummaryComponent implements OnInit {
     updateParams.batchEmployeesCount = updateParams.employeesList.length;
     updateParams.courseId = `"${updateParams.courseId.toString()}"`;
     updateParams.courseId = updateParams.courseId.replace(/\"/g, '');
-    if (updateParams.hasOwnProperty('coursename')) {
-      delete updateParams.coursename;
-    }
+    // if (updateParams.hasOwnProperty('courseName')) {
+    //   delete updateParams.courseName;
+    // }
 
-    if (updateParams.hasOwnProperty('batchname')) {
-      delete updateParams.batchname;
-    }
+    // if (updateParams.hasOwnProperty('batchname')) {
+    //   delete updateParams.batchname;
+    // }
 
     const paramsToRemove = ['trainerDropdownData'];
     const modifiedParam = this.removeParams(updateParams, paramsToRemove);
@@ -2283,6 +2304,11 @@ export class F2fSummaryComponent implements OnInit {
     
   ]
   
+  closeAlert(){
+    this.validePopup = false;
+    this.AlreadyscheduledEmployees = [];
+  }
+
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

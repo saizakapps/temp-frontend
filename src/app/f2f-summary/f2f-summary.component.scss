@@ -41,6 +41,7 @@
 
 .summarytitle {
     font-family: "Inter";
+    white-space: nowrap;
     font-weight: 600;
     font-size: 20px;
     line-height: 24.2px;
@@ -60,6 +61,9 @@
     //     margin-top: 2px;
     //     cursor: pointer;
     // }
+}
+.summarytitle-card{
+    padding-bottom: 10px;
 }
 
 .summaryTable {
@@ -196,7 +200,7 @@
 
     .forData:last-child {
         .rowdata {
-            border-bottom: 0px solid transparent;
+            // border-bottom: 0px solid transparent;
         }
     }
 
@@ -230,33 +234,40 @@
 }
 
 .cardData {
-    max-height: calc(100vh - 112px);
+    max-height: calc(100vh - 140px);
     overflow-y: auto;
     padding-right: 5px;
-
+    flex: 1;
+    // max-width: 325px;
+    // min-width: 230px;
     .card {
         background-color: #fff;
         padding: 20px 18px;
         padding-bottom: 0px;
         border-radius: 8px;
-        box-shadow: 0px 0px 10px 0px #0000001A;
+        // box-shadow: 0px 0px 10px 0px #0000001A;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         gap: 5px;
         margin-bottom: 15px;
-        min-width: 230px;
+        width: 100%;
+        min-width: 225px;
         position: relative;
+        // border: 2px solid transparent;
+        // .overLay{
+        //     position: absolute;
+        //     top: 0px;
+        //     left: 0px;
+        //     width: 100%;
+        //     background-color: #ffffff9c;
+        //     height: 100%;
+        // }
 
-        .overLay{
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 100%;
-            background-color: #ffffff9c;
-            height: 100%;
-        }
+    }
 
+    .inactiveCard{
+        border: 2px solid red;
     }
     
 
@@ -327,18 +338,19 @@
     .detailviewyellow {
         background-color: #F0BF0F;
     }
-    .inactiveCard{
-        opacity: 0.5;
-
-        .detailview{
-            pointer-events: none !important;
-        }
-    }
+ 
 }
 .cardDataupcoming{
-    max-height: calc(100vh - 126px);
+    max-height: calc(100vh -   190px);
 }
 
+.cardData-manager-upcoming{
+    max-height: calc(100vh -   126px);
+}
+.cardData-manager{
+    max-height: calc(100vh -   76px);
+
+}
 .cardData {
     .card:last-child {
         margin-bottom: 0px;
@@ -1406,17 +1418,17 @@
   }
   .cardListItems{
     flex: 1;
-    max-width: 300px;
+    max-width: 370px;
   }
   .modal-body-height{
     height: 520px;
   }
   .cardShimmer{
-    background-color: #ffffff70;
+    background-color: #ffffff80;
     padding:10px 18px;
     margin-bottom: 15px;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px 0px #0000001A;
+    box-shadow: 0px 0px 3px 0px #0000001A;
     min-width: 240px;
 
   }
@@ -1613,3 +1625,133 @@
         opacity: 0.5;
         pointer-events: none;
       }
+
+      /* For WebKit browsers */
+.webkitscrollStyle::-webkit-scrollbar {
+    margin-left: 12px !important;
+    background-color: #f1f1f1; /* Change this to your desired background color */
+  }
+  
+  .webkitscrollStyle::-webkit-scrollbar-track {
+    background-color: #ffffffcb; /* Change this to your desired track color */
+    border-radius: 5px;  
+}
+  
+  .webkitscrollStyle::-webkit-scrollbar-thumb {
+   border-radius: 5px;
+  }
+  .webkitscrollStyle1::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+   }
+   .webkitscrollStyle1::-webkit-scrollbar-track {
+    border-radius: 5px;  
+}
+
+.validationPopup{
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #00000090;
+    z-index: 999999999;
+
+    .validation-alertBox{
+        max-width: 100%;
+        width: fit-content;
+        background-color: #fff;
+        margin: 10px;
+        border-radius: 6px;
+        overflow: hidden;
+        padding-bottom: 10px;
+        transform: translateY(-100px);
+        opacity: 0.5;
+        transition: all 0.25s ease-in-out;
+    }
+    .validation-alertBox-animation{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+    
+.scheduleTable{
+    .column1{
+        max-width: 105px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .column2{
+        max-width: 175px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .column3{
+        max-width: 135px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .column4{
+        max-width: 325px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.validationPopup-Header{
+    background-color: #1f96f4;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    padding-right: 10px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    
+    .mat-icon{
+        font-size: 22px;
+        color: #fff;
+        width: unset !important;
+        height: unset !important;
+        cursor: pointer;
+        padding-top: 6px;
+    }
+}
+.note{
+   font-family: "Inter"; 
+   font-size: 14px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-top: 10px;
+   color: red;
+   font-weight: 500;
+   word-break: break-all;
+}
+}
+.card-wrap-flex{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+.activeDtails{
+    font-family: "Inter";
+    margin-bottom: 10px;
+    .activeDtails-header{
+        font-weight: 500;
+        color: #000;
+        font-size: 15px;
+
+    }
+    .activeData{
+      color: #1F96F4;
+      font-weight: 500;
+      font-size: 14px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+    }
+}
