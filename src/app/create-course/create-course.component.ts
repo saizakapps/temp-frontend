@@ -1022,13 +1022,15 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
     /* For certification line item data */
     if (ddType === 'location') {
-      if (event === true && this.certificationItems.length > 1) {
-        this.locationSelect.toggle();
-        this.openAlert('clearCertLineItems');
-        return;
-      } else {
-        this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
-        this.setRenderingDataForCertificationItems();
+      if (event === true) {
+        if (this.certificationItems.length > 1) {
+          this.locationSelect.close();
+          this.openAlert('clearCertLineItems');
+          return;
+        } else {
+          this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
+          this.setRenderingDataForCertificationItems();
+        }
       }
     }
     const selectedCountries: any = this.buildSelectedCountries(this.countryList);
