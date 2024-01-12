@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -27,7 +28,7 @@ import { RequestApiService } from '../shared/services/incident-services/request-
   styleUrls: ['./employee-management.component.scss']
 })
 
-export class EmployeeManagementComponent implements OnInit {
+export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   view: boolean = false;
   create: boolean = false;
@@ -208,7 +209,7 @@ export class EmployeeManagementComponent implements OnInit {
   getCourseCallCount: number = 0;
   empSuggestDetail: any = {};
   empCourseList: any = []
-  displayedColumns: string[] = ['id', 'role', 'levels', 'externalName', 'courseType', 'completionDate'];
+  displayedColumns: string[] = ['id', 'role', 'levels', 'externalName', 'courseType', 'completionDate', 'overDue'];
   suggestColumns: string[] = ['id', 'SuggestedCourse', 'suggestedDate', 'Action'];
   managerConfirmColumns: string[] = ['id', 'courseName', 'completionDate', 'Action'];
   empSuggestedLevels: any = [];
@@ -269,7 +270,7 @@ export class EmployeeManagementComponent implements OnInit {
 
   constructor(public utils: Utils, public ngxService: NgxUiLoaderService,
     private modalService: NgbModal, private emitService: CommonService, private router: Router,
-    private apiHandler: ApiHandlerService, private errorHandler: ErrorHandlerService, private incidentApiHandler: RequestApiService) {
+    private apiHandler: ApiHandlerService, private errorHandler: ErrorHandlerService, private incidentApiHandler: RequestApiService, private http: HttpClient) {
     /* get page height */
     setTimeout(() => {
       this.pageContainerHeight = document.getElementsByClassName('page-container')[0].clientHeight;
@@ -1349,6 +1350,10 @@ export class EmployeeManagementComponent implements OnInit {
     this.table.renderRows();
   }
 
+  onTrainerCheck(event) {
+    this.userDetail.trainer = event.checked;
+  }
+
   /* Save/ update user details */
   async saveUserDetail(val) {
 
@@ -2201,5 +2206,76 @@ export class EmployeeManagementComponent implements OnInit {
     this.auditRoleId = undefined;
     this.authRoleId = undefined;
     this.roleIds = [];
+  }
+
+  @ViewChild('uploadFileInput', { static: false }) uploadFileInput!: ElementRef;
+  async import(data) {
+    const response: any = await this.apiHandler.getData(this.utils.API.GET_F2F_STATUS, '', this.destroyed$);
+    if (response.payload === false) {
+      this.uploadFileInput.nativeElement.click()
+    } else {
+      this.errorHandler.handleAlert('Processing an earlier import file, please try again later')
+    }
+  }
+
+  selectedFile: File;
+  onFileBrowse(event, element) {
+    this.selectedFile = event.target.files[0];
+    this.onUpload(element);
+  }
+
+  async onUpload(element) {
+    if (this.selectedFile) {
+      let formData = new FormData();
+      formData.append('request', this.selectedFile);
+      const response: any = await this.apiHandler.fileUpload(this.utils.API.UPLOAD_FILES, formData, this.destroyed$);
+      element.certName = response.payload[0].name;
+      element.certUrl = response.payload[0].url;
+      if (response) {
+        this.updateManualCertificate(response, element);
+      }
+    } else {
+      // Handle case when no file is selected
+    }
+  }
+
+  /* Update manual certificate */
+  async updateManualCertificate(response, element) {
+    const param = {
+      userId: this.userDetail.id,
+      courseId: element.courseId,
+      url: response.payload[0].url
+    }
+    const res = await this.apiHandler.postData(this.utils.API.UPDATE_MANUAL_CERTIFICATE, param, this.destroyed$);
+  }
+
+  @ViewChild('pdfModal', { static: false }) pdfModal!: ElementRef;
+  pdfUrl: string = 'https://smyths360-dev-admin.smythstoys.com/api/web/user/files/';
+  pdfConfig: any = {url: ''};
+  openPdf(element) {
+    this.pdfConfig.url = element.certUrl;
+    this.pdfModal.nativeElement.click();
+  }
+
+  pdfLoader(type: string) {
+    if (type === 'start') {
+      this.ngxService.startLoader('preview-loader');
+    } else {
+      this.ngxService.stopLoader('preview-loader');
+      const pdfElement: any = document.getElementsByClassName('ng2-pdf-viewer-container')[0];
+      if (pdfElement) {
+        pdfElement.style.position = 'relative';
+      }
+    }
+  }
+
+  pageRendered(e: CustomEvent) {
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+    this.destroyed$.unsubscribe();
   }
 }
