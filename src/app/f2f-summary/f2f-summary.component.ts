@@ -298,7 +298,7 @@ export class F2fSummaryComponent implements OnInit {
     }
   ]
 
-  constructor(public learnutils: leranersutils, public emitservice: learnersCommonservice, public common: CommonService, private datepipe: DatePipe, public utils: Utils,
+  constructor(private modalService: NgbModal,public learnutils: leranersutils, public emitservice: learnersCommonservice, public common: CommonService, private datepipe: DatePipe, public utils: Utils,
     private apiHandler: ApiHandlerService, private http: HttpClient,
     private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private errorHandler: ErrorHandlerService, public ngxloaderService: NgxUiLoaderService) {
   }
@@ -2298,8 +2298,22 @@ export class F2fSummaryComponent implements OnInit {
       this.activeShimmer = false
     }
   }
+  recurringcourseData:any[] = [];
+  recurring = false;
+  async getcourseVersion(rowData:any){
+    // this.ngxloaderService.start();
+    // this.recurring = true
+    // console.log(rowData)
+    // const params = {
+    //   "userId" : rowData.userId,
+    //   "courseId" : rowData.courseId
+    // }
 
-  getempHistory(){
+    // const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_RECURRING_COURSE, params, this.destroyed$);
+    // if (response.payload) {
+    //   this.recurringcourseData = response.payload;
+    //   this.ngxloaderService.stop();
+    // }
 
   }
 
@@ -2315,7 +2329,11 @@ export class F2fSummaryComponent implements OnInit {
     },
     
   ]
-  
+  closeRecurring(){
+    setTimeout(() => {
+      this.recurring = false
+    }, 500);
+  }
   closeAlert(){
     this.validePopup = false;
     this.AlreadyscheduledEmployees = [];

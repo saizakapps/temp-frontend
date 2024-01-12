@@ -706,24 +706,24 @@
                                 <td draggable=false><mat-checkbox class="checkboxdivAccess" [checked]="data.checked"
                                         (change)="onCheckboxChange($event, data)" required>
                                     </mat-checkbox></td>
-                                <td class="td_overflowtext">{{data.employeeId}}</td>
+                                <td class="td_overflowtext" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.employeeId}}</td>
                                 <!--data-toggle="modal" data-target="#emphistoryTable" (click)="getempHistory()"-->
-                                <td class="employeedetails_width" title="{{data.firstName}} {{data.lastName}}">
+                                <td class="employeedetails_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.firstName}} {{data.lastName}}">
                                     <div class="name_width">{{data.firstName}} {{data.lastName}}</div>
                                     <!-- <div class="d-flex align-items-center">
                                         <div class="smallfont">{{data.employeeId}} | <span
                                                 title="{{data.role}}">{{data.role}}</span></div>
                                     </div> -->
                                 </td>
-                                <td class="td_overflowtext" title="{{data.courseName}}">{{data.courseName}}</td>
-                                <td class="trainer_width" title="{{data.trainerName}}">{{data.trainerName}}</td>
-                                <td class="completiondate_width">{{data.completionDate | dateUtcToLocal
+                                <td class="td_overflowtext" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.courseName}}">{{data.courseName}}</td>
+                                <td class="trainer_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.trainerName}}">{{data.trainerName}}</td>
+                                <td class="completiondate_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.completionDate | dateUtcToLocal
                                     :utils.FORMAT.DATEM}}</td>
-                                <td class="expiredate_width">{{data.expiredDate | dateUtcToLocal :utils.FORMAT.DATEM}}
+                                <td class="expiredate_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.expiredDate | dateUtcToLocal :utils.FORMAT.DATEM}}
                                 </td>
-                                <td class="storename_width">{{data.storeCode}}</td>
-                                <td class="storename_width" title="{{data.store}}">{{data.store}}</td>
-                                <td class="role_width">{{data.role}}</td>
+                                <td class="storename_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.storeCode}}</td>
+                                <td class="storename_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.store}}">{{data.store}}</td>
+                                <td class="role_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.role}}</td>
                                 <td class="p-0"></td>
                             </tr>
                         </tbody>
@@ -966,7 +966,7 @@
 
 <!--Modal PopUp for Employee History-->
 <div class="modal fade mailBodyPop bootstrapBackground_Pop" id="emphistoryTable" data-backdrop="static" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    aria-labelledby="exampleModalLabel" aria-hidden="true" *ngIf="recurring">
     <div class="modal-dialog modal-dialog-centered modal-dialog-emphistoryTable">
         <div class="modal-content">
             <div class="modal-header">
@@ -984,7 +984,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let emphistory of this.empHistoryData">
+                        <tr *ngFor="let emphistory of this.recurringcourseData">
                             <!-- <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td> -->
                             <td class="tablewidth2" title="{{emphistory.courseName}}">{{(emphistory.courseName == '' ||
                                 emphistory.courseName == null)? '-':emphistory.courseName }}</td>
@@ -997,11 +997,11 @@
 
                 </table>
                 <div class="d-flex justify-content-center">
-                    <div *ngIf="this.empHistoryData.length == 0" class="norecordButton">No records found</div>
+                    <div *ngIf="this.recurringcourseData.length == 0" class="norecordButton">No records found</div>
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <div class="historyCancel" data-dismiss="modal">Cancel</div>
+                    <div class="historyCancel" data-dismiss="modal" (click)="closeRecurring()">Cancel</div>
                 </div>
             </div>
 
@@ -1632,18 +1632,19 @@
         <table class="historyTable scheduleTable">
             <thead>
                 <tr>
-                    <th class="column1">Employee id</th>
+                    <th class="column1">Employee Id</th>
                     <th class="column2">Batch name</th>
                     <th class="column3">Scheduled date</th>
                     <th class="column4">Course name</th>
+                    <th style="width: 100%;"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let data of this.AlreadyscheduledEmployees">
                     <td class="column1">{{data.employeeId}}</td>
-                    <td class="column2">{{data.batchName}}</td>
+                    <td class="column2" title="{{data.batchName}}">{{data.batchName}}</td>
                     <td class="column3">{{data.batchScheduledDate}}</td>
-                    <td class="column4">{{data.courseName}}</td>
+                    <td class="column4" title="{{data.courseName}}">{{data.courseName}}</td>
                 </tr>
             </tbody>
         </table>

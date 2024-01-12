@@ -198,11 +198,11 @@
         }
     }
 
-    .forData:last-child {
-        .rowdata {
-            // border-bottom: 0px solid transparent;
-        }
-    }
+    // .forData:last-child {
+    //     .rowdata {
+    //         // border-bottom: 0px solid transparent;
+    //     }
+    // }
 
 }
 .no-wrap{
@@ -1659,8 +1659,8 @@
     z-index: 999999999;
 
     .validation-alertBox{
-        max-width: 100%;
-        width: fit-content;
+        max-width: 750px;
+        width: 600px;
         background-color: #fff;
         margin: 10px;
         border-radius: 6px;
@@ -1676,6 +1676,9 @@
     }
     
 .scheduleTable{
+    padding: 18px;
+    padding-top: 13px;
+    padding-bottom: 10px;
     .column1{
         max-width: 105px;
         overflow: hidden;
@@ -1706,9 +1709,9 @@
     height: 50px;
     display: flex;
     align-items: center;
-    padding-left: 10px;
-    margin-bottom: 10px;
-    padding-right: 10px;
+    padding-left: 20px;
+   
+    padding-right: 20px;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
     
@@ -1723,10 +1726,10 @@
 }
 .note{
    font-family: "Inter"; 
-   font-size: 14px;
-   padding-left: 10px;
+   font-size: 12px;
+   padding-left: 20px;
    padding-right: 10px;
-   padding-top: 10px;
+//    padding-top: 10px;
    color: red;
    font-weight: 500;
    word-break: break-all;
