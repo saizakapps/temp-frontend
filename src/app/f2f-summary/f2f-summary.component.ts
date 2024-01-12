@@ -2301,19 +2301,19 @@ export class F2fSummaryComponent implements OnInit {
   recurringcourseData:any[] = [];
   recurring = false;
   async getcourseVersion(rowData:any){
-    // this.ngxloaderService.start();
-    // this.recurring = true
-    // console.log(rowData)
-    // const params = {
-    //   "userId" : rowData.userId,
-    //   "courseId" : rowData.courseId
-    // }
+    this.ngxloaderService.start();
+    this.recurring = true
+    console.log(rowData)
+    const params = {
+      "userId" : rowData.userId,
+      "courseId" : rowData.courseId
+    }
 
-    // const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_RECURRING_COURSE, params, this.destroyed$);
-    // if (response.payload) {
-    //   this.recurringcourseData = response.payload;
-    //   this.ngxloaderService.stop();
-    // }
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_RECURRING_COURSE, params, this.destroyed$);
+    if (response.payload) {
+      this.recurringcourseData = response.payload;
+      this.ngxloaderService.stop();
+    }
 
   }
 

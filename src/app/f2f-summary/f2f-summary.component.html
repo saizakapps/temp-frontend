@@ -973,25 +973,53 @@
                 Course History
             </div>
             <div class="modal-body modal-body-no-radius">
-                <table class="historyTable">
+                <table class="historyTable table-container table-container-no-height" [ngClass]="{'table-container-hidden' : recurringcourseData.length == 0}">
                     <thead>
-                        <tr>
-                            <!-- <th class="tablewidth1">Employee Name</th> -->
+                        <ng-container *ngFor="let column of this.f2freportTableheader">
+                            <th>
+                                <span class="tableHeaderpad">{{column.name}}</span>
+                            </th>
+                        </ng-container>
+
+                        <th style="width: 100%;" class="p-0"></th>
+                        <!-- <tr>
+                            <th class="tablewidth1">Employee Name</th>
                             <th class="tablewidth2">Course Name</th>
-                            <!-- <th class="tablewidth3">Modified By</th>
-                    <th class="tablewidth1">Modified on</th> -->
+                            <th class="tablewidth3">Modified By</th>
+                    <th class="tablewidth1">Modified on</th>
                             <th style="width: 100%;"></th>
-                        </tr>
+                        </tr> -->
                     </thead>
                     <tbody>
-                        <tr *ngFor="let emphistory of this.recurringcourseData">
-                            <!-- <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td> -->
+                        <tr *ngFor="let data of this.recurringcourseData">
+                        <td class="td_overflowtext">{{data.employeeId}}</td>
+                        <!--data-toggle="modal" data-target="#emphistoryTable" (click)="getempHistory()"-->
+                        <td class="employeedetails_width" title="{{data.firstName}} {{data.lastName}}">
+                            <div class="name_width">{{data.firstName}} {{data.lastName}}</div>
+                            <!-- <div class="d-flex align-items-center">
+                                <div class="smallfont">{{data.employeeId}} | <span
+                                        title="{{data.role}}">{{data.role}}</span></div>
+                            </div> -->
+                        </td>
+                        <td class="td_overflowtext" title="{{data.courseName}}">{{data.courseName}}</td>
+                        <td class="trainer_width" title="{{data.trainerName}}">{{data.trainerName}}</td>
+                        <td class="completiondate_width">{{data.completionDate | dateUtcToLocal
+                            :utils.FORMAT.DATEM}}</td>
+                        <td class="expiredate_width">{{data.expiredDate | dateUtcToLocal :utils.FORMAT.DATEM}}
+                        </td>
+                        <td class="storename_width">{{data.storeCode}}</td>
+                        <td class="storename_width" title="{{data.store}}">{{data.store}}</td>
+                        <td class="role_width">{{data.role}}</td>
+                        <td class="p-0"></td>
+                    </tr>
+                        <!-- <tr *ngFor="let emphistory of this.recurringcourseData">
+                            <td class="tablewidth1">{{(history.batchName == '' || history.batchName == null)? '-':history.batchName }}</td>
                             <td class="tablewidth2" title="{{emphistory.courseName}}">{{(emphistory.courseName == '' ||
                                 emphistory.courseName == null)? '-':emphistory.courseName }}</td>
-                            <!-- <td class="tablewidth3">{{history.batchCreatedBy}}</td>
+                            <td class="tablewidth3">{{history.batchCreatedBy}}</td>
                     <td class="tablewidth4">{{history.batchCreatedOn}}</td>
-                    <td><div class="viewButton" (click)="viewHistorydata(history)">View</div></td> -->
-                        </tr>
+                    <td><div class="viewButton" (click)="viewHistorydata(history)">View</div></td>
+                        </tr> -->
 
                     </tbody>
 
@@ -1184,7 +1212,7 @@
                                 [clearable]=false [searchable]="false"
                                 (change)="batchCoursename($event, detailsData);compareDataforUpdate()"
                                 [(ngModel)]="detailsData.courseName"
-                                [readonly]="detailsData.batchStatus == 'Canceled' || updateReadonly"></ng-select></div>
+                                [readonly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'"></ng-select></div>
                     </div>
 
                     <div class="d-flex align-items-center label-input pb-15">
@@ -1193,7 +1221,7 @@
                             <input type="text" maxlength="65"
                                 (change)="batchName($event, detailsData);compareDataforUpdate()"
                                 [(ngModel)]="detailsData.batchName"
-                                [readOnly]="detailsData.batchStatus == 'Canceled' || updateReadonly">
+                                [readOnly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
                         </div>
 
                     </div>
@@ -1206,7 +1234,7 @@
                                 class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                                 <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
                                     style="width: 330px;"
-                                    [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || updateReadonly}">
+                                    [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
                                     <input type="text"
                                         [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)"
                                         aria-label="" matInput [matAutocomplete]="auto2"
@@ -1245,10 +1273,10 @@
                                         (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()"
                                         autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"
                                         [minDate]="scheduleminDate" #scheduleDate1
-                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || updateReadonly}"
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}"
                                         required>
                                     <div class="data-icon" (click)="scheduleDate1.click()"
-                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || updateReadonly}">
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
                                         <img src="assets/healthsafetyimages/field-icon.svg">
                                     </div>
                                 </div>

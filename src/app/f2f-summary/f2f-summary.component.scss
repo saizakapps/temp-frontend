@@ -43,7 +43,7 @@
     font-family: "Inter";
     white-space: nowrap;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 24.2px;
     color: #3C3F45;
     padding-bottom: 20px;
@@ -821,7 +821,7 @@
     }
 
     .trainer_width {
-        max-width: 118px;
+        max-width: 120px;
         min-width: 100px;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -849,6 +849,12 @@
         overflow: hidden;
     }
 
+}
+.table-container-no-height{
+    height: unset !important;
+}
+.table-container-hidden{
+    overflow: hidden !important;
 }
 
 .tablebottom {
