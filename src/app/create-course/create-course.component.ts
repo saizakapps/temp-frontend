@@ -1727,7 +1727,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         this.getF2FCompTemplates(true);
         // clearInterval(this.autoSaveInterval);
       }
-    }, 60000); // for testing 1 minute actuall time 10 minutes
+    }, 600000);
   }
 
   /* split slideshow single chapter into multiple chapter */
