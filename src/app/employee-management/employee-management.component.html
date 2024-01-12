@@ -519,6 +519,14 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-sm-6 empDetailsTrainer">
+                  <div class="row ">
+                    <div class="d-block align-items-center">
+                      <mat-checkbox (change)="onTrainerCheck($event)"></mat-checkbox>
+                      <span class="employeeDetails">Trainer</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -571,7 +579,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="p-0">
+                    <div *ngIf="!userDetail.trainer" class="p-0">
                       <div class="">
                         <div class="d-block align-items-center">
                           <span class="employeeDetails mr-3">Manager</span>
@@ -596,74 +604,76 @@
             </div>
           </div>
 
-          <hr class="table-div" />
-          <div *ngIf="userDetail.roleId !== 5" class="profitStore">
-            <div class="d-flex justify-content-between">
-              <span class="currPromemployee">Profit Center</span>
-            </div>
-            <div class="currentEmployee empInfo">
-              <div class="row mt-0">
-                <div class="" [ngClass]="{editDetails: empEditStatus}">
-                  <div class="">
-                    <div class="d-block align-items-center">
-                      <span class="employeeDetails mr-3">Country</span>
-                      <div class="dropdown employeeContent countryContent">
-                        <ng-select class="auto-dd error-input modal-auto-dd" [disabled]='empEditStatus'
-                          (change)="loadRegionList('singleRegion', $event, null)" [items]="countryList" bindLabel="desc"
-                          bindValue="desc" [(ngModel)]="userDetail.country" placeholder="Select Country"
-                          name="countryName" required #countryName="ngModel">
-                          <ng-template ng-option-tmp let-item="item">
-                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
-                            </div>
-                          </ng-template>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- <div class="" [ngClass]="{editDetails: empEditStatus}">
-                  <div class="">
-                    <div class="d-block align-items-center">
-                      <span class="employeeDetails mr-3">Region</span>
-                      <div class="dropdown employeeContent">
-                        <ng-select class="auto-dd error-input" [disabled]='regionEnable || empEditStatus'
-                          (change)="loadStoreList('singleStore',$event, null)" [items]="regionList" bindLabel="desc"
-                          bindValue="desc" [(ngModel)]="userDetail.region" placeholder="Select Region" name="regionName"
-                          required #regionName="ngModel">
-                          <ng-template ng-option-tmp let-item="item">
-                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
-                            </div>
-                          </ng-template>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                <div class="" [ngClass]="{editDetails: empEditStatus}">
-                  <div class="">
-                    <div class="d-block align-items-center">
-                      <span class="employeeDetails mr-3">Store</span>
-                      <div class="dropdown employeeContent storeContent">
-                        <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="storeEnable || empEditStatus"
-                          (change)="getStoresRegion(null); loadManagerList();" [items]="storeList" bindLabel="desc"
-                          bindValue="desc" [(ngModel)]="userDetail.store" placeholder="Select Store" name="storeName"
-                          required #storeName="ngModel">
-                          <ng-template ng-option-tmp let-item="item">
-                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
-                            </div>
-                          </ng-template>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-2 p-0 addProfitEmp d-flex align-items-end">
-                  <button type="button" (click)="addPrieod()" class="btn btn-primary newCourseBtn">Click to add a second
-                    store
-                  </button>
-                </div>
+          <div *ngIf="!userDetail.trainer">
+            <hr class="table-div" />
+            <div *ngIf="userDetail.roleId !== 5" class="profitStore">
+              <div class="d-flex justify-content-between">
+                <span class="currPromemployee">Profit Center</span>
               </div>
-
+              <div class="currentEmployee empInfo">
+                <div class="row mt-0">
+                  <div class="" [ngClass]="{editDetails: empEditStatus}">
+                    <div class="">
+                      <div class="d-block align-items-center">
+                        <span class="employeeDetails mr-3">Country</span>
+                        <div class="dropdown employeeContent countryContent">
+                          <ng-select class="auto-dd error-input modal-auto-dd" [disabled]='empEditStatus'
+                            (change)="loadRegionList('singleRegion', $event, null)" [items]="countryList" bindLabel="desc"
+                            bindValue="desc" [(ngModel)]="userDetail.country" placeholder="Select Country" name="countryName"
+                            required #countryName="ngModel">
+                            <ng-template ng-option-tmp let-item="item">
+                              <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                              </div>
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="" [ngClass]="{editDetails: empEditStatus}">
+                            <div class="">
+                              <div class="d-block align-items-center">
+                                <span class="employeeDetails mr-3">Region</span>
+                                <div class="dropdown employeeContent">
+                                  <ng-select class="auto-dd error-input" [disabled]='regionEnable || empEditStatus'
+                                    (change)="loadStoreList('singleStore',$event, null)" [items]="regionList" bindLabel="desc"
+                                    bindValue="desc" [(ngModel)]="userDetail.region" placeholder="Select Region" name="regionName"
+                                    required #regionName="ngModel">
+                                    <ng-template ng-option-tmp let-item="item">
+                                      <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                                      </div>
+                                    </ng-template>
+                                  </ng-select>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+                  <div class="" [ngClass]="{editDetails: empEditStatus}">
+                    <div class="">
+                      <div class="d-block align-items-center">
+                        <span class="employeeDetails mr-3">Store</span>
+                        <div class="dropdown employeeContent storeContent">
+                          <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="storeEnable || empEditStatus"
+                            (change)="getStoresRegion(null); loadManagerList();" [items]="storeList" bindLabel="desc"
+                            bindValue="desc" [(ngModel)]="userDetail.store" placeholder="Select Store" name="storeName" required
+                            #storeName="ngModel">
+                            <ng-template ng-option-tmp let-item="item">
+                              <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                              </div>
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-2 p-0 addProfitEmp d-flex align-items-end">
+                    <button type="button" (click)="addPrieod()" class="btn btn-primary newCourseBtn">Click to add a second
+                      store
+                    </button>
+                  </div>
+                </div>
+          
+              </div>
             </div>
           </div>
 
@@ -966,8 +976,7 @@
     <div class="modal-content">
       <div class="modal-header employee-header">
         <span class="modal-title" id="suggestCourseModalLongTitle">
-          {{getSelectedTableRow().length === 1 ? headerSuggestCourseObj?.employeeId +' -> Suggested Course' : 'Suggested
-          Course'}}
+          {{getSelectedTableRow().length === 1 ? headerSuggestCourseObj?.employeeId +' -> Suggested Course' : 'Suggested Course'}}
         </span>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -1256,6 +1265,26 @@
                 <td mat-cell *matCellDef="let element"> {{element.completionDate | dateUtcToLocal : utils.FORMAT.DATEM}}
                 </td>
               </ng-container>
+              
+              <ng-container matColumnDef="overDue">
+                <th mat-header-cell *matHeaderCellDef> Certificate upload </th>
+                <td mat-cell *matCellDef="let element">
+                  <div *ngIf="element.overDue || true">
+                    <!--  If there is no certificate -->
+                    <span style="color: blue;" *ngIf="!element.certName" (click)="import($event)">
+                      Upload
+                    </span>
+                    <!-- If there is certificate -->
+                    <span *ngIf="element.certName" (click)="openPdf(element)">
+                      Uploaded
+                    </span>
+                    <!-- Upload area -->
+                    <input type="file" class="fileInputCls" (change)="onFileBrowse($event, element)" hidden #uploadFileInput id="file"
+                      name="file" [accept]="'application/pdf'" />
+                  </div>
+                  <div *ngIf="!element.overDue && false"> - </div>
+                </td>
+              </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -1272,6 +1301,24 @@
   </div>
 </div>
 
+<!-- Pdf -->
+<button data-target="#pdfPopup" data-toggle="modal" style="display: none;" #pdfModal></button>
+<div class="modal fade" id="pdfPopup" tabindex="-1" role="dialog"
+  aria-labelledby="pdfModalTitle" data-keyboard="false" data-backdrop='static' aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header employee-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><mat-icon>close</mat-icon></button>
+      </div>
+      <div style="height: 50vw;" class="modal-body">
+        <pdf-viewer (after-load-complete)="pdfLoader('stop')" [src]="{url: pdfUrl + pdfConfig, withCredentials: true}" [zoom]="1"
+        [rotation]="0" [render-text]="true" [original-size]="false" [fit-to-page]="true"
+        (page-rendered)="pageRendered($event)" class="pdf slidePreview">
+      </pdf-viewer>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade linkedEmployee linkedEmployeeAssignrole" id="assignRolePopup" tabindex="-1" role="dialog"
   aria-labelledby="suggestCourseModalLongTitle" data-keyboard="false" data-backdrop='static' aria-hidden="true">
