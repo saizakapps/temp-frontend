@@ -139,6 +139,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   quizPosition: boolean = true;
   randomLimit: any;
 
+  createCourseCallCount: number = 0;
+
   /* F2F variables */
   categories: any = this.utils.ddOptions.DD_LABELS.period;
   questionTypes: any = this.utils.ddOptions.DD_LABELS.questionTypes;
@@ -1717,7 +1719,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         // this.openAlert('templateSubmitted');
       } */
     }
-    this.hitCourseAPI(type);
+    /* Condition to restrict multi call with null courseId; Bug: Double creation */
+    if (((this.course.courseId === null && this.createCourseCallCount === 0) || this.course.courseId !== null)) {
+      this.hitCourseAPI(type);
+      this.createCourseCallCount++;
+    }
   }
 
   autoSaveCourse() {
@@ -1880,6 +1886,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     let isChapterValid: boolean = true;
     let isQuesValid: boolean = true;
     let isCompValid: boolean = true;
+    let isCertificateValid: boolean = true;
 
     isCourseNameValid = this.course.externalCourseName ? true : false;
     isChapterValid = this.areChaptersValid();
@@ -1910,11 +1917,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       isCompValid = this.completionObject?.content?.length > 0;
     }
 
+    /* Check certification */
+    isCertificateValid = this.certificationItems[this.certificationItems.length - 1].certificateUrl ? true : false;
+
     let condition: boolean = false;
     if (isFreeTextAvailable) {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid;
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid && isCertificateValid;
     } else {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid));
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCertificateValid;
     }
 
     if (condition) {
