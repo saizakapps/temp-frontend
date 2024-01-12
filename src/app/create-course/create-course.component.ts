@@ -1725,10 +1725,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       if (this.course.externalCourseName) {
         this.alertBeforeSubmit(false, 'autoSave');
         this.getF2FCompTemplates(true);
-        this.getCertificationItems();
         // clearInterval(this.autoSaveInterval);
       }
-    }, 600000);
+    }, 60000); // for testing 1 minute actuall time 10 minutes
   }
 
   /* split slideshow single chapter into multiple chapter */
@@ -2616,6 +2615,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         // delete this.publishDraft.draft;
         localStorage.setItem('courseType', JSON.stringify(this.courseTypeDetail));
       }
+    }
+    if (!this.publishCourse.published) {
+      this.getCertificationItems();
     }
   }
 
