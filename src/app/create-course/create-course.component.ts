@@ -2310,7 +2310,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           this.compTemplateObj.id = response.payload.id
         }
       }
-      if (this.completionCategories.length === this.templateCategorySubmittedCount) {
+      if (this.validCompletionCategories.length === this.templateCategorySubmittedCount) {
         this.createUpdateCertificateList(courseId, res);
       }
   }
