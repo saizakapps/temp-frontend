@@ -1918,7 +1918,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
 
     /* Check certification */
-    isCertificateValid = this.certificationItems[this.certificationItems.length - 1].certificateUrl ? true : false;
+    isCertificateValid = this.certificationItems[this.certificationItems.length - 1].name ? true : false;
 
     let condition: boolean = false;
     if (isFreeTextAvailable) {
