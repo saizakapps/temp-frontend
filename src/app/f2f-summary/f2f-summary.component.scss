@@ -32,7 +32,7 @@
 .summary-page {
     padding: 20px 10px;
     display: flex;
-    gap: 40px;
+    gap: 30px;
     background-color: #f2f2f2;
     height: 100vh;
     // border: 1px solid red;
@@ -63,7 +63,21 @@
     // }
 }
 .summarytitle-card{
-    padding-bottom: 10px;
+    padding-bottom: 0px;
+}
+.summarytitle-card-upcoming{
+    padding-bottom: 15px;
+}
+
+.summarytitle1{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.summarytitle2{
+    padding-bottom: 5px;
+}
+.summarytitle-card-draft{
+    padding-bottom: 0px;
 }
 
 .summaryTable {
@@ -87,12 +101,13 @@
         }
 
         .fromToDate {
-            width: 135px;
+            width: 120px;
             height: 35px;
-            padding: 8px, 10px, 8px, 10px;
+            padding: 10px 6px !important;
             border: 1px solid #bdbdbd;
             border-radius: 2px;
-            font-size: 15px;
+            font-size: 14px;
+            color: #000 !important;
         }
 
         .list-filter-title {
@@ -166,7 +181,7 @@
             font-size: 14px;
             font-weight: 400;
             color: #000000;
-            max-width: 45vw;
+            max-width: 28vw;
         }
 
         .notification {
@@ -217,6 +232,10 @@
     right: 10px;
     top: 5px
 }
+.data-icon-new{
+    right: 6px;
+    top: 6px;
+}
 
 .bottombutton {
     background-color: #1F96F4;
@@ -236,7 +255,8 @@
 .cardData {
     max-height: calc(100vh - 140px);
     overflow-y: auto;
-    padding-right: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
     flex: 1;
     // max-width: 325px;
     // min-width: 230px;
@@ -245,14 +265,15 @@
         padding: 20px 18px;
         padding-bottom: 0px;
         border-radius: 8px;
-        // box-shadow: 0px 0px 10px 0px #0000001A;
+        box-shadow: 0px 0px 7px 0px #0000001A;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         gap: 5px;
         margin-bottom: 15px;
+        margin-top: 15px;
         width: 100%;
-        min-width: 225px;
+        min-width: 230px;
         position: relative;
         // border: 2px solid transparent;
         // .overLay{
@@ -267,7 +288,7 @@
     }
 
     .inactiveCard{
-        border: 2px solid red;
+    opacity: 0.5;
     }
     
 
@@ -330,7 +351,7 @@
         padding-left: 20px;
         display: flex;
         align-items: center;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
     }
@@ -338,7 +359,9 @@
     .detailviewyellow {
         background-color: #F0BF0F;
     }
- 
+    .detailview-inactive{
+        background-color: #000000;
+    }
 }
 .cardDataupcoming{
     max-height: calc(100vh -   190px);
@@ -547,29 +570,29 @@
 }
 
 .updatedemployeeListheight{
-    height: 250px;
+    height: 245px;
 
     .employeeList{
-        max-height: 250px !important;
+        max-height: 245px !important;
         overflow-y: auto !important;
     }
 }
 
 
 .updatedemployeeListheight_Draft{
-    height: 280px;
+    height: 275px;
 
     .employeeList{
-        max-height: 280px !important;
+        max-height: 275px !important;
         overflow-y: auto !important;
     }
 }
 
 .updatedemployeeListheight1{
-    height: 258px;
+    height: 253px;
 
     .employeeList{
-        max-height: 258px !important;
+        max-height: 253px !important;
         overflow-y: auto !important;
     }
 }
@@ -1433,9 +1456,12 @@
     background-color: #ffffff80;
     padding:10px 18px;
     margin-bottom: 15px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 8px;
-    box-shadow: 0px 0px 3px 0px #0000001A;
-    min-width: 240px;
+    box-shadow: 0px 0px 7px 0px #0000001A;
+    min-width: 230px;
 
   }
   .bluebutton-inactive{
@@ -1510,11 +1536,15 @@
     cursor: pointer;
 }
 .historyviewtext{
-    color: #1F96F4;
-    font-weight: 500;
+    color: #000;
+    font-weight: 400;
+    font-size: 13px;
     font-family: "Inter";
     margin-bottom: 10px;
     cursor: pointer;
+    border: 1px solid #9A9A9A;
+    padding: 4px 5px 4px 5px;
+    border-radius: 4px;
 }
 .overflow-text {
     /* Required styles */
@@ -1536,7 +1566,9 @@
     border-bottom: 1px solid #cdcdcd;
   }
   .summaryngSelect-new1{
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .norecordButton{
     display: flex;
@@ -1744,7 +1776,7 @@
 .card-wrap-flex{
     display: flex;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 20px;
 }
 .activeDtails{
     font-family: "Inter";
@@ -1763,4 +1795,9 @@
       display: flex;
       align-items: center;
     }
+}
+.nofoundtext{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
 }
