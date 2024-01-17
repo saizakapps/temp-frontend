@@ -1160,7 +1160,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         let temp = categories.slice(0, -2);
         categories = temp;
       }
-      this.alertModal['text'] = `Are you sure you want to proceed without ${categories} completion category?`;
+      this.alertModal['text'] = `Please enter content for ${categories} completion category`;
     } else if (type === 'removeFreeText') {
       this.alertModal['text'] = 'Please remove fill right answer/Free text question type from Questionnaire, Otherwise you will not be able to select both country and role';
     } else if (type === 'clearCertLineItems') {
@@ -1682,12 +1682,13 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     } else {
       this.publishCourse.roleGroups = this.buildSelectedRoleGroups(this.roleGroupList);
     }
-    if (isPublished && (this.publishCourse.countries.length < 1 || this.publishCourse.roleGroups.length < 1)) {
-      this.openAlert('withoutRoleCountry');
-    } else if (isPublished && // check if course is to publish
-      (this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid) && // check if course type is F2F and Comp category content is invalid
-      (this.checkFreeTextQues())) { // check if comp category found in this course
-      this.openAlert('withoutCompCategory');
+    if (isPublished) {
+      if ((this.courseConfig.code === this.courseCode.F2F && !this.checkContentInCompCategory().isAllValid) && // check if course type is F2F and Comp category content is invalid
+        (this.checkFreeTextQues())) { // check if comp category found in this course
+        this.openAlert('withoutCompCategory');
+      } else if ((this.publishCourse.countries.length < 1 || this.publishCourse.roleGroups.length < 1)) {
+        this.openAlert('withoutRoleCountry');
+      }
     } else {
       this.submitCourse(isPublished, type);
     }
@@ -1922,9 +1923,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
     let condition: boolean = false;
     if (isFreeTextAvailable) {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid && isCertificateValid;
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid;
     } else {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCertificateValid;
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid));
     }
 
     if (condition) {
@@ -1980,7 +1981,20 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   checkChapterEmpty() {
     let chapters = $.extend(true, [], this.course.chapters);
-    let copyChapters = $.extend(true, [], this.copyCourseObj.chapters);
+    /* let copyChapters =  [
+      {
+        chapterId: 1,
+        isExpanded: true,
+        activities: [{ activityId: 1, activityType: 'text', content: '' }, { activityId: 2, content: '' }],
+        chapterType: 'text',
+        questions: []
+      },
+      {
+        chapterId: 2,
+        activities: [{ activityId: 1, activityType: 'text', content: '' }, { activityId: 2, content: '' }],
+        questions: []
+      }
+    ];
 
     chapters.forEach(chapter => {
       delete chapter.questions;
@@ -1988,8 +2002,18 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
     copyChapters.forEach(copyChapter => {
       delete copyChapter.questions;
+    }); */
+
+    let isEmpty: boolean = true;
+    chapters.forEach(chapter => {
+      chapter.activities.forEach(activity => {
+        if (activity.content) {
+          isEmpty = false;
+        }
+      });
     });
-    return JSON.stringify(copyChapters) === JSON.stringify(chapters);
+
+    return isEmpty;
   }
 
   quizCount() {
