@@ -1259,9 +1259,8 @@
               [searchable]="false" bindLabel="name" [(ngModel)]="question.questionType">
             </ng-select>
 
-            <span class="pb-3 pr-2 pl-2">|</span>
-
             <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
+              <span style="margin-right: 25px;">|</span>
               <input (change)="updateQuestionLimit()"
                 [name]="'mandatory' + config.chapterData?.chapterId + question.questionId" class="form-check-input "
                 type="checkbox" [(ngModel)]="question.mandatory" required>
