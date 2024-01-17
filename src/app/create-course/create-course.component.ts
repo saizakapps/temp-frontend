@@ -1923,9 +1923,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
     let condition: boolean = false;
     if (isFreeTextAvailable) {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid;
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid && isCertificateValid;
     } else {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid));
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCertificateValid;
     }
 
     if (condition) {
