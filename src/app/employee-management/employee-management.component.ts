@@ -209,7 +209,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   getCourseCallCount: number = 0;
   empSuggestDetail: any = {};
   empCourseList: any = []
-  displayedColumns: string[] = ['id', 'role', 'levels', 'externalName', 'courseType', 'completionDate', 'overDue'];
+  displayedColumns: string[] = ['id', 'role', 'levels', 'externalName', 'courseType', 'completionDate', 'manualUpload'];
   suggestColumns: string[] = ['id', 'SuggestedCourse', 'suggestedDate', 'Action'];
   managerConfirmColumns: string[] = ['id', 'courseName', 'completionDate', 'Action'];
   empSuggestedLevels: any = [];
@@ -1459,6 +1459,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   closeEmpCreatePopup() {
+    this.userDetail.isTrainer = false;
     this.createForm.reset();
   }
 
@@ -1821,7 +1822,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   sortCourses(filterBy: any) {
     let filteredValues: any;
     if (filterBy === 'Level1' || filterBy === 'Level2' || filterBy === 'Level3') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.levelName === filterBy);
+      filteredValues = this.empCourseList.filter((ele: any) => ele.levelName === filterBy && ele.courseType !== 'Face to Face');
     } else if (filterBy === 'checkList') {
       filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA005');
     } else if (filterBy === 'suggested') {
