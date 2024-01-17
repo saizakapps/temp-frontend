@@ -1208,7 +1208,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     } else if(type === 'withoutRoleCountry'){
       this.withoutRoleCountry();
     } else if(type === 'withoutCompCategory'){
-      this.withoutRoleCountry();
+      // this.withoutRoleCountry();
     } else if (type === 'clearCertLineItems') {
       this.certificationItems = [
         {
