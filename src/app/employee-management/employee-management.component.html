@@ -579,7 +579,7 @@
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="!userDetail.trainer" class="p-0">
+                    <div *ngIf="!userDetail.isTrainer" class="p-0">
                       <div class="">
                         <div class="d-block align-items-center">
                           <span class="employeeDetails mr-3">Manager</span>
@@ -604,7 +604,7 @@
             </div>
           </div>
 
-          <div *ngIf="!userDetail.trainer">
+          <div *ngIf="!userDetail.isTrainer">
             <hr class="table-div" />
             <div *ngIf="userDetail.roleId !== 5" class="profitStore">
               <div class="d-flex justify-content-between">

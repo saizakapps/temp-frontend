@@ -1351,7 +1351,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   onTrainerCheck(event) {
-    this.userDetail.trainer = event.checked;
+    this.userDetail.isTrainer = event.checked;
   }
 
   /* Save/ update user details */
