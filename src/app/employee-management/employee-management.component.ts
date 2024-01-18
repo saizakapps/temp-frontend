@@ -1814,9 +1814,15 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
     this.empCourseList = level1Courses.concat(level2Courses, level3Courses, checkListCourses, suggestedCourses, policies, faceToFace);
 
-    this.empCourseList = [...this.empCourseList];
+    this.empCourseList = [...this.uniqBy(this.empCourseList, 'courseId')];
     this.showShimmer1 = false;
 
+  }
+
+  uniqBy(arr, key) {
+    return arr.filter((item, index, self) =>
+      index === self.findIndex((t) => t[key] === item[key])
+    );
   }
 
   sortCourses(filterBy: any) {

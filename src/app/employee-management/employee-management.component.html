@@ -519,10 +519,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-6 empDetailsTrainer">
+                <div [ngClass]="{editDetails: empEditStatus}" class="col-sm-6 empDetailsTrainer">
                   <div class="row ">
                     <div class="d-block align-items-center">
-                      <mat-checkbox (change)="onTrainerCheck($event)"></mat-checkbox>
+                      <mat-checkbox [checked]="userDetail.isTrainer" (change)="onTrainerCheck($event)"></mat-checkbox>
                       <span class="employeeDetails">Trainer</span>
                     </div>
                   </div>
@@ -605,8 +605,8 @@
           </div>
 
           <div *ngIf="!userDetail.isTrainer">
-            <hr class="table-div" />
             <div *ngIf="userDetail.roleId !== 5" class="profitStore">
+              <hr class="table-div" />
               <div class="d-flex justify-content-between">
                 <span class="currPromemployee">Profit Center</span>
               </div>
