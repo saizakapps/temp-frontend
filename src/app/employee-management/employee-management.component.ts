@@ -1352,6 +1352,16 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   onTrainerCheck(event) {
     this.userDetail.isTrainer = event.checked;
+    if (event.checked) {
+      delete this.userDetail.country;
+      delete this.userDetail.countryId;
+      delete this.userDetail.region;
+      delete this.userDetail.regionId;
+      delete this.userDetail.store;
+      delete this.userDetail.storeId ;
+      delete this.userDetail.reportingManager ;
+      this.userDetail.period  = [];
+    }
   }
 
   /* Save/ update user details */
