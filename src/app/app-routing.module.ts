@@ -75,13 +75,14 @@ const routes: Routes = [
         loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
       },
       {
-        path: 'f2f-reports',
+        path: 'f2f',
         canActivate: [AuthGuard],
         data: {
           title: 'F2F-Reports',
           key: 'f2freports'
         },
-        loadChildren: () => import('./f2f-reports/f2f-reports.module').then(m => m.F2fReportsModule)
+        loadChildren: () => import('./f2f-summary/f2f-summary.module').then(m => m.F2fSummaryModule) 
+        // loadChildren: () => import('./f2f-reports/f2f-reports.module').then(m => m.F2fReportsModule)
       },
       { path: 'f2f-summary', 
       data: {

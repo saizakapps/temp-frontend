@@ -64,8 +64,8 @@ export class LeftMenus {
           id: 6,
           moduleCode: 'LA-F2FR',
           key: 'f2freports',
-          name: 'F2F-Reports',
-          routeUrl: '/f2f-reports',
+          name: 'F2F',
+          routeUrl: '/f2f',
           access: false,
           isActive:false
         },

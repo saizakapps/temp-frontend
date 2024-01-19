@@ -419,7 +419,7 @@ export class LoginComponent implements OnInit {
         {
           icon: "assets/images/tile-icon4.png",
           title: "F2F-Reports",
-          url: "/f2f-reports",
+          url: "/f2f",
           isShow: false,
           moduleCode: 'LA-F2FR'
         },

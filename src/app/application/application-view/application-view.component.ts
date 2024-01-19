@@ -75,8 +75,8 @@ export class ApplicationViewComponent implements OnInit {
         }, */
         {
           icon: "assets/images/tile-icon8.png",
-          title: "F2F-Reports",
-          url: "/#/f2f-reports",
+          title: "F2F",
+          url: "/#/f2f",
           isShow: false,
           moduleCode: 'LA-F2FR'
         },

@@ -92,7 +92,7 @@ export class SidenavComponent implements OnInit {
 
   checkUrl() {
     const url: any = this.router.url;
-    if (['/courses', '/employees', '/reports', '/f2f-reports', '/userAccess', '/message'].includes(url)) {
+    if (['/courses', '/employees', '/reports', '/f2f', '/userAccess', '/message'].includes(url)) {
       this.showLA = true;
       this.showHS = false;
     } else {
