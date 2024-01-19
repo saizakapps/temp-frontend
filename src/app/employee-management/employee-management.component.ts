@@ -1438,6 +1438,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       p++;
     });
 
+    if (!this.userDetail.isTrainer) {
+      this.userDetail.isTrainer = false;
+    }
     console.log(this.userDetail, "Save this.userDetail");
 
     const cloneUserDetails = { ...this.userDetail };
@@ -1640,6 +1643,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.userDetail.roleId = data.roleId;
     this.userDetail.reportingManager = data.reportingManager;
     this.userDetail.id = data.id;
+    this.userDetail.isTrainer = data.isTrainer;
 
   }
 

@@ -522,7 +522,7 @@
                 <div [ngClass]="{editDetails: empEditStatus}" class="col-sm-6 empDetailsTrainer">
                   <div class="row ">
                     <div class="d-block align-items-center">
-                      <mat-checkbox [checked]="userDetail.isTrainer" (change)="onTrainerCheck($event)"></mat-checkbox>
+                      <mat-checkbox [checked]="userDetail.isTrainer === true" (change)="onTrainerCheck($event)"></mat-checkbox>
                       <span class="employeeDetails">Trainer</span>
                     </div>
                   </div>

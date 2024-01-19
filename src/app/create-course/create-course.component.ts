@@ -1688,6 +1688,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         this.openAlert('withoutCompCategory');
       } else if ((this.publishCourse.countries.length < 1 || this.publishCourse.roleGroups.length < 1)) {
         this.openAlert('withoutRoleCountry');
+      } else {
+        this.submitCourse(isPublished, type);
       }
     } else {
       this.submitCourse(isPublished, type);
