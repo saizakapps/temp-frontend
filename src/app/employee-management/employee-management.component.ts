@@ -2263,7 +2263,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   /* Update manual certificate */
   async updateManualCertificate(response, element) {
     const param = {
-      userId: this.userDetail.id,
+      userId: this.formSuggestCourseObj.id,
       courseId: element.courseId,
       url: response.payload[0].url
     }
