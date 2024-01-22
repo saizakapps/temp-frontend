@@ -90,7 +90,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="list_expired list_expired_activeCount notification"
                                     [ngClass]="{'opacity0' : data.activeUsersCount == '' || data.activeUsersCount == 0 || data.activeUsersCount == null}">
-                                    {{active.activeUsersCount == null?0:active.activeUsersCount}}
+                                    {{data.activeUsersCount == null?0:data.activeUsersCount}}
                                 </div>
                                
                             </div>
