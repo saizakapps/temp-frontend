@@ -318,7 +318,7 @@ export class F2fSummaryComponent implements OnInit {
     this.isIncharge = userDetails.incharge;
     this.loginEmployeeRegionId = userDetails.regionId;
     this.loginEmployeeStoreId = userDetails.storeId;
-    this.loginEmployeeManager = userDetails.userDetails;
+    this.loginEmployeeManager = userDetails.manager;
     this.loginEmployeeIstrainer = userDetails.isTrainer;
     this.filterRequest.employeeStatus = 'Active';
     // if(this.loginEmployeeManager){
