@@ -350,7 +350,7 @@ export class IncidentCreateComponent implements OnInit {
   storeFilterData: any = [];
   otherinfoData: any = { openWithBuyerVendor: '', incidentInjury: '', incidentCause: '', formFieldAccess: this.formFieldAccess, incidentForm: {}, isclosed: false };
   zipfileUrls = []
-
+  redactDownload = true;
   ngOnInit(): void {
     let userDetails = JSON.parse(localStorage.getItem('userDetails'));
     this.username = localStorage.getItem('username');
@@ -2811,5 +2811,10 @@ async handleSearchText(searchText: string) {
     //   this.zipfileUrls = [this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+this.username]
     //   this.common.downloadAll(this.zipfileUrls)
     // }
+  }
+  changedownloadtype(){
+    setTimeout(() => {
+      this.redactDownload = true
+    }, 500);
   }
 }

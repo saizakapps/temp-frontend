@@ -7,8 +7,13 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="21px" height="21px">    <path d="M25,2C12.297,2,2,12.297,2,25s10.297,23,23,23s23-10.297,23-23S37.703,2,25,2z M25,11c1.657,0,3,1.343,3,3s-1.343,3-3,3 s-3-1.343-3-3S23.343,11,25,11z M29,38h-2h-4h-2v-2h2V23h-2v-2h2h4v2v13h2V38z"/></svg>
                  </div> -->
             </div>
+        
             <div class="summaryTable">
-                <div class="date-filters">
+                <div class="summaryTab">
+                    <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 1}" (click)="changeTable1()">F2F Expiration</div>
+                    <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 2}" *ngIf="!loginEmployeeManager" (click)="changeTable2()">Certified Employees</div>
+                </div>
+                <div class="date-filters" [ngClass]="{'hide-date-filter' : selectedTab == 2}">
                     <div class="form-group dataiconrel">
                         <label class="list-filter-title">From Date</label>
                         <div class="relative">
@@ -49,7 +54,7 @@
                     </div>
 
                 </div>
-                <div class="infoData">
+                <div class="infoData" *ngIf="selectedTab == 1">
                     <div class="d-flex align-items-center">
                         <div class="colorbox"></div>
                         <div class="colorbox_text">Expired</div>
@@ -59,7 +64,7 @@
                         <div class="colorbox_text">About to Expire</div>
                     </div>
                 </div>
-                <div class="listData webkitscrollStyle1" *ngIf="!summaryShimmer">
+                <div class="listData  webkitscrollStyle1" *ngIf="!summaryShimmer && selectedTab == 1">
                     <div *ngFor="let data of this.summaryList; let i = index" class="forData">
                         <div class="d-flex align-items-center justify-content-between rowdata">
                             <div class="list_title" title="{{data.courseName}}">{{data.courseName}}</div>
@@ -77,17 +82,34 @@
                     </div>
                     <div *ngIf="summaryList.length == 0" class="norecordButton">No record found</div>
                 </div>
-                <div *ngIf="summaryShimmer"><ng-container *ngFor="let index of shimmerArray">
+                <div class="total-font" *ngIf="!summaryShimmer && selectedTab == 2">Total number of certified employees in store</div>
+                <div class="listData listDataActive webkitscrollStyle1" *ngIf="!summaryShimmer && selectedTab == 2">
+                    <div *ngFor="let data of this.activeData; let i = index" class="forData">
+                        <div class="d-flex align-items-center justify-content-between rowdata">
+                            <div class="list_title" title="{{data.courseName}}">{{data.courseName}}</div>
+                            <div class="d-flex align-items-center">
+                                <div class="list_expired list_expired_activeCount notification"
+                                    [ngClass]="{'opacity0' : data.activeUsersCount == '' || data.activeUsersCount == 0 || data.activeUsersCount == null}">
+                                    {{active.activeUsersCount == null?0:active.activeUsersCount}}
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="activeData.length == 0" class="norecordButton">No record found</div>
+                </div>
+                <div *ngIf="summaryShimmer " class="setshimmerHeight" [ngClass]="{'setshimmerHeight1' : selectedTab == 2}"><ng-container *ngFor="let index of shimmerArray">
                         <div class="shimmerCSS">
                             <shimmer style="margin-top: 7px;" [width]="'100%'" height="9px" borderRadius="25px">
                             </shimmer>
                         </div>
                     </ng-container></div>
+                    
             </div>
             <div class="bottombutton" (click)="gotocreateBatch()">View Report & Create Batch →</div>
         </div>
         <div style="width: 100%;">
-            <div class="activeDtails" *ngIf="loginEmployeeManager">
+            <!-- <div class="activeDtails" *ngIf="loginEmployeeManager">
                 <div class="activeDtails-header">Total number of certified employees in store</div>
                 <div *ngIf="activeShimmer == false">
                     <div *ngFor="let active of this.activeData">
@@ -103,10 +125,10 @@
                         <shimmer [width]="'50%'" height="9px" borderRadius="25px"></shimmer>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="card-wrap-flex">
                 <div class="cardListItems">
-                    <div class="summarytitle summarytitle1" [ngClass]="{'summarytitle-card summarytitle-card-upcoming' : loginEmployeeManager}">Upcoming Events
+                    <div class="summarytitle summarytitle1">Upcoming Events
                     </div>
                     <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
                         <ng-select [items]="upcomingFilterlist" name="searchDateBy" bindLabel="name"
@@ -114,8 +136,7 @@
                             class="dateJoining" (change)="filterbyListstatus($event)">
                         </ng-select>
                     </div>
-                    <div class="cardData cardDataupcoming webkitscrollStyle"
-                        [ngClass]="{'cardData-manager-upcoming' : !loginEmployeeManager}">
+                    <div class="cardData cardDataupcoming webkitscrollStyle">
                         <div *ngFor="let item of this.upcomingListData; let j =index" class="card"
                             [ngClass]="{'inactiveCard' : item.courseIsActive == false}" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
                             <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
@@ -167,9 +188,9 @@
                     </div>
                 </div>
                 <div class="cardListItems">
-                    <div class="summarytitle summarytitle1 summarytitle2" [ngClass]="{'summarytitle-card summarytitle-card-draft' : loginEmployeeManager}">Drafted Events
+                    <div class="summarytitle summarytitle1 summarytitle2">Drafted Events
                     </div>
-                    <div class="cardData webkitscrollStyle" [ngClass]="{'cardData-manager' : !loginEmployeeManager}">
+                    <div class="cardData webkitscrollStyle">
                         <div *ngFor="let item of this.draftListData; let j =index" class="card"
                         [ngClass]="{'inactiveCard' : item.courseIsActive == false}" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
                             <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
@@ -549,7 +570,7 @@
         <!-- <div class="" (click)="hidecreate()">hidebatch</div> -->
         <div class="d-flex scheduleData">
             <div class="padTable" [ngClass]="{'padTablefullwidth' : hideBatch == false && firstclick == true}">
-                <div class="tableDatta table-container" (scroll)="containerScrollCheck($event)" id="reports-container">
+                <div class="tableDatta table-container table-container-hover" (scroll)="containerScrollCheck($event)" id="reports-container">
                     <table class="emplistTable f2fTableview" id="reports-container-table">
                         <thead>
                             <tr>
@@ -758,7 +779,8 @@
                         (dragover)="onDragOver($event)" (drop)="onDrop($event, item)">
                         <div class="d-flex align-items-center gap-8">
                             <div class="batchlabel">F2F Course name</div>
-                            <div class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}"><ng-select
+                            <div class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}">
+                                <ng-select
                                     [items]="courseNameList" name="item.courseName" bindLabel="courseName"
                                     bindValue="courseName" [clearable]=false [searchable]="false"
                                     (change)="batchCoursename($event, item)" [(ngModel)]="item.courseName"
@@ -773,10 +795,11 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-8 f2f_coursename_form"
-                            [ngClass]="{'f2f_trainername_form': item.trainerName.length > 0}">
+                           >
+                           <!-- [ngClass]="{'f2f_trainername_form': item.trainerName.length > 0}"-->
                             <div class="batchlabel">Trainer Name</div>
 
-                            <div
+                            <!-- <div
                                 class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                                 <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
                                     [ngStyle]="{width:getWidth()}">
@@ -802,11 +825,12 @@
                                 </mat-form-field>
 
 
-                            </div>
-                            <!-- <ng-select [items]="trainerNameList" bindLabel="combinedLabel" bindValue="combinedValue"
-                                [clearable]="true" [searchable]="true" (change)="batchTrainername($event, item)"
-                                [(ngModel)]="item.trainerCombine" multiple="true">
-                            </ng-select> -->
+                            </div> -->
+                            <div class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}">
+                            <ng-select [items]="trainerNameList" name="item.trainerName" bindLabel="username"
+                            bindValue="username" [clearable]=false [searchable]="false" (change)="batchTrainername($event, item)" [(ngModel)]="item.trainerName">
+                            </ng-select>
+                        </div>
                         </div>
                         <div class="d-flex align-items-center gap-8">
                             <div class="batchlabel">Schedule Date</div>
@@ -857,7 +881,7 @@
                         </div>
                         <div class="batchdata_footer d-flex align-items-center justify-content-between">
                             <div class="schedulebutton"
-                                [ngClass]="{'disableButton' : item.courseName == '' || item.trainerName.length == 0 || (item.scheduledDate == '') || item.employeesList.length == 0}">
+                                [ngClass]="{'disableButton' : item.courseName == '' || item.trainerName == '' || (item.scheduledDate == '') || item.employeesList.length == 0}">
                                 <div class="buttonText" *ngIf="item.batchStatus == 'Draft'"
                                     (click)="scheduleBatch(item, b, 'Draft')">
 
@@ -1062,10 +1086,11 @@
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width"
-                    [ngClass]="{'f2f_trainername_form': selected_PopupData?.trainerName?.length > 0}">
+                    >
+                    <!--[ngClass]="{'f2f_trainername_form': selected_PopupData?.trainerName?.length > 0}"-->
                     <div class="d-flex align-items-center label-input w-100">
                         <div class="label-name">Trainer Name</div>
-                        <div
+                        <!-- <div
                             class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                             <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
                                 style="width: 330px;">
@@ -1093,14 +1118,14 @@
                             </mat-form-field>
 
 
-                        </div>
-                        <!-- <div class="summaryngSelect batchselect1">
-                            <ng-select [items]="trainerNameList" name="selected_PopupData.trainerCombine"
-                                bindValue="combinedLabel" [clearable]="true" bindLabel="combinedLabel"
-                                [searchable]="true" (change)="batchTrainername($event, selected_PopupData)"
-                                [(ngModel)]="selected_PopupData.trainerCombine">
-                            </ng-select>
                         </div> -->
+                        <div class="summaryngSelect batchselect1" class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}">
+                            <ng-select [items]="trainerNameList" name="selected_PopupData.trainerName"
+                                bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
+                                 (change)="batchTrainername($event, selected_PopupData)"
+                                [(ngModel)]="selected_PopupData.trainerName">
+                            </ng-select>
+                        </div>
                     </div>
 
                     <div class="d-flex align-items-center label-input">
@@ -1141,7 +1166,7 @@
                                 <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}</div>
                             </div>
                         </div>
-                        <div class="cursor" (click)="deleteEmployee(selected_PopupData.employeesList,employee);compareDataforUpdate()">
+                        <div class="cursor" (click)="deleteEmployee(selected_PopupData.employeesList,employee)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"
                                 fill="none">
                                 <path
@@ -1154,7 +1179,7 @@
                 <div class="bottomfooter d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center buttongap">
                         <div class="button bluebutton"
-                            [ngClass]="{'disablescheduleButton' : selected_PopupData.courseName == '' || selected_PopupData.trainerName.length == 0 || (selected_PopupData.scheduledDate == '' || selected_PopupData.scheduledDate == null || selected_PopupData.scheduledDate == undefined) || selected_PopupData.employeesList.length == 0}"
+                            [ngClass]="{'disablescheduleButton' : selected_PopupData.courseName == '' || selected_PopupData.trainerName == '' || (selected_PopupData.scheduledDate == '' || selected_PopupData.scheduledDate == null || selected_PopupData.scheduledDate == undefined) || selected_PopupData.employeesList.length == 0}"
                             (click)="scheduleBatch(selected_PopupData, b, 'Scheduled')">Schedule training</div>
                     </div>
 
@@ -1162,7 +1187,7 @@
                         <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                             (click)="addPeopleData(selected_PopupData)">+ Add people</div>
                         <div class="button blackbutton"
-                            [ngClass]="{'disablescheduleButton' : selected_PopupData.courseName == '' || selected_PopupData.trainerName.length == 0 || (selected_PopupData.scheduledDate == '' || selected_PopupData.scheduledDate == null || selected_PopupData.scheduledDate == undefined) || selected_PopupData.employeesList.length == 0}"
+                            [ngClass]="{'disablescheduleButton' : selected_PopupData.courseName == '' || selected_PopupData.trainerName == '' || (selected_PopupData.scheduledDate == '' || selected_PopupData.scheduledDate == null || selected_PopupData.scheduledDate == undefined) || selected_PopupData.employeesList.length == 0}"
                             (click)="scheduleBatch(selected_PopupData, b, 'Draft')">Save as draft</div>
                         <div class="button blackbutton" data-target="#deleteModal" data-toggle="modal"
                             (click)="deleteBatch(batchItem)">Delete</div>
@@ -1230,10 +1255,11 @@
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between gap-40 pb-15 wrap-flex-width"
-                        [ngClass]="{'f2f_trainername_form': detailsData?.trainerName?.length > 0}">
+                        >
+                        <!--[ngClass]="{'f2f_trainername_form': detailsData?.trainerName?.length > 0}"-->
                         <div class="d-flex align-items-center label-input w-100">
                             <div class="label-name">Trainer Name</div>
-                            <div
+                            <!-- <div
                                 class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                                 <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
                                     style="width: 330px;"
@@ -1262,6 +1288,13 @@
                                 </mat-form-field>
 
 
+                            </div> -->
+                            <div class="summaryngSelect batchselect1" class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}">
+                                <ng-select [items]="trainerNameList" name="detailsData.trainerName"
+                                    bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
+                                     (change)="batchTrainername($event, detailsData);compareDataforUpdate()"
+                                    [(ngModel)]="detailsData.trainerName">
+                                </ng-select>
                             </div>
                         </div>
 

@@ -972,6 +972,8 @@
 											*ngIf="formFieldAccess.productAge.create || formFieldAccess.productAge.write"
 											[ngClass]="isProductAgeTypeFieldValid('productAgeType','productAge')?'focus-border-error':''">
 											<option value="" class="d-none"></option>
+											<option value="days">
+												Days</option>
 											<option value="weeks">
 												Weeks</option>
 											<option value="months">
@@ -1637,30 +1639,83 @@ this.incidentForm['controls'].evidenceAvailable.status=='VALID'  && (loginEmploy
 			</div>
 			<div class="d-flex align-items-center"
 				*ngIf="(incidentData.isAdd==false && incidentData.incidentRowData.incidentStatus!='Draft')">
-				<button class="btn-download" *ngIf="isDownload">
+				<button class="btn-download" *ngIf="isDownload && isRedacted">
 
-					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+username}}"
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+username+'/'+false}}"
 						target="_blank"
 						*ngIf="incidentEditData && (loginEmployeeRoleCode=='Insurance' || loginEmployeeRoleCode=='SA') && isDownload"
 						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
 						title="Incident details with insurance">
-						<span>Download the incident</span>
+						<span>Download the Incident</span>
 					</a>
-					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/privacy/'+username}}"
-						target="_blank"
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/privacy/'+username+'/'+false}}"
+						target="_blank" 
 						*ngIf="incidentEditData  && (loginEmployeeRoleCode=='PC' || loginEmployeeRoleCode=='Privacy' || loginEmployeeRoleCode=='HR') && isDownload"
 						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
-						title="Download the incident">
-						<span>Download the incident</span>
+						title="Download the Incident">
+						<span>Download the Incident</span>
 					</a>
 				</button>
 			</div>
-
+           
+			<div class="d-flex align-items-center justify-content-center" 
+			*ngIf="(incidentData.isAdd==false && incidentData.incidentRowData.incidentStatus!='Draft')">
+				<button class="btn-download-metmenu" *ngIf="isDownload && !isRedacted" (click)="changedownloadtype()">
+                    <span *ngIf="redactDownload == false">
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+username+'/'+false}}"
+						target="_blank"
+						*ngIf="incidentEditData && (loginEmployeeRoleCode=='Insurance' || loginEmployeeRoleCode=='SA') && isDownload"
+						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
+						title="Incident details with insurance">
+						<span>Download Incident</span>
+					</a>
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/privacy/'+username+'/'+false}}"
+						target="_blank"
+						*ngIf="incidentEditData  && (loginEmployeeRoleCode=='PC' || loginEmployeeRoleCode=='Privacy' || loginEmployeeRoleCode=='HR') && isDownload"
+						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
+						title="Download Incident">
+						<span>Download Incident</span>
+					</a>
+					</span>
+                     <span *ngIf="redactDownload == true">
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/insurance/'+username+'/'+true}}"
+						target="_blank"
+						*ngIf="incidentEditData && (loginEmployeeRoleCode=='Insurance' || loginEmployeeRoleCode=='SA') && isDownload"
+						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
+						title="Incident details with insurance">
+						<span>Download Redacted Incident</span>
+					</a>
+					<a href="{{this.utils.API.GENERATE_PDF_URL+'/'+this.incidentEditData.id+'/privacy/'+username+'/'+true}}"
+						target="_blank"
+						*ngIf="incidentEditData  && (loginEmployeeRoleCode=='PC' || loginEmployeeRoleCode=='Privacy' || loginEmployeeRoleCode=='HR') && isDownload"
+						class=" d-flex justify-content-start  align-items-center atagButton word-wrap"
+						title="Download Redacted Incident">
+						<span>Download Redacted Incident</span>
+					</a>
+					</span>
+                    <div class="break-line"></div>
+					<div class="menuarrow" [matMenuTriggerFor]="typeValue">
+						<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"
+							fill="none">
+							<path d="M4 7.5L0 2.5H8L4 7.5Z" fill="black" />
+						</svg>
+					</div>
+				</button>
+			
+			</div>
+			
 		</div>
 	</footer>
 </div>
 
-
+<mat-menu #typeValue="matMenu" [xPosition]="'before'" [yPosition]="'above'"
+				class="downloadType-metMenu">
+				<div class=" p-0 coursePopup">
+							<button  mat-menu-item *ngIf="!isRedacted" (click)="redactDownload = true" class="dbutton borbottom">Download Redacted Incident</button>
+							<button  mat-menu-item  (click)="redactDownload = false" class="dbutton">Download Incident</button>
+					
+				</div>
+			</mat-menu>
 
 <ng-template #DeleteWitnessconformbox>
 	<div class="popup-view">

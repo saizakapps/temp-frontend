@@ -560,7 +560,7 @@ export class TableHeaders {
     ],
     F2F_REPORTS_TABLE: [
       {
-        name: 'Employee id',
+        name: 'Employee Id',
         property: 'employeeId',
         filter: false,
         sort: true
@@ -682,7 +682,7 @@ export class TableHeaders {
     ],
     F2F_REPORTS_TABLE_SUMMARY:[
       {
-        name: 'Employee id',
+        name: 'Employee Id',
         property: 'employeeId',
         filter: false,
         sort: false

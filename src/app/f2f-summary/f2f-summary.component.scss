@@ -135,12 +135,18 @@
         }
 
     }
+    .hide-date-filter{
+        opacity: 0;
+        height: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
 
     .infoData {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
+        // justify-content: flex-end;
+        gap: 15px;
         padding-top: 20px;
         padding-bottom: 20px;
 
@@ -164,7 +170,7 @@
     }
 
     .listData {
-        height: calc(100vh - 310px);
+        height: calc(100vh - 363px);
         overflow-y: auto;
 
         .rowdata {
@@ -207,17 +213,30 @@
             background-color: #F0BF0F;
             color: #000000;
         }
+        .list_expired_activeCount{
+            background-color: #1F96F4;
+            color: #fff;
+        }
 
         .opacity0 {
             opacity: 0;
         }
     }
-
-    // .forData:last-child {
-    //     .rowdata {
-    //         // border-bottom: 0px solid transparent;
-    //     }
-    // }
+    .listDataActive{
+        height: calc(100vh - 260px);
+    }
+    .setshimmerHeight{
+        height: calc(100vh - 363px);
+        overflow-y: hidden;
+    }
+    .setshimmerHeight1{
+        height: calc(100vh - 239px);
+    }
+  .total-font{
+    font-weight: 600;
+    font-family: "Inter";
+    color: #000;
+  }
 
 }
 .no-wrap{
@@ -364,7 +383,10 @@
     }
 }
 .cardDataupcoming{
-    max-height: calc(100vh -   190px);
+    max-height: calc(100vh -   134px);
+    .card:first-child{
+        margin-top: 0px !important;
+    }
 }
 
 .cardData-manager-upcoming{
@@ -878,6 +900,18 @@
 }
 .table-container-hidden{
     overflow: hidden !important;
+}
+.table-container-hover{
+    tr {
+        border-bottom: 1px solid #c5c5c5;
+
+        &:hover {
+            background-color: #c2c2c267 !important;
+        }
+    }
+    td {
+       cursor: pointer;
+    }
 }
 
 .tablebottom {
@@ -1466,9 +1500,11 @@
   }
   .bluebutton-inactive{
     opacity: 0.5;
+    pointer-events: none;
   }
   .active-button{
   opacity: 1;
+  pointer-events: unset !important;
   }
 .read-only{
     pointer-events: none !important;
@@ -1566,7 +1602,7 @@
     border-bottom: 1px solid #cdcdcd;
   }
   .summaryngSelect-new1{
-    // margin-bottom: 15px;
+    margin-bottom: 15px;
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -1800,4 +1836,22 @@
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
+}
+.summaryTab{
+    display: flex;
+    gap: 30px;
+
+    .summaryTab-title{
+        font-size: 15px;
+        font-family: "Inter";
+        border-bottom: 2px solid transparent;
+        margin-bottom: 20px;
+        cursor: pointer;
+        // transition: border-bottom 0.5s ease-in-out;
+    }
+    .active-title{
+        font-weight: 600;
+        border-bottom: 2px solid #1F96F4;
+
+    }
 }

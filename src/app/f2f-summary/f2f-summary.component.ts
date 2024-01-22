@@ -318,12 +318,12 @@ export class F2fSummaryComponent implements OnInit {
     this.isIncharge = userDetails.incharge;
     this.loginEmployeeRegionId = userDetails.regionId;
     this.loginEmployeeStoreId = userDetails.storeId;
-    this.loginEmployeeManager = userDetails.manager;
+    this.loginEmployeeManager = userDetails.userDetails;
     this.loginEmployeeIstrainer = userDetails.isTrainer;
     this.filterRequest.employeeStatus = 'Active';
-    if(this.loginEmployeeManager){
-      this.getActivecount();
-    }
+    // if(this.loginEmployeeManager){
+    //   this.getActivecount();
+    // }
     this.getSummarylist();
     this.getUpcominglist();
     this.getDraftlist();
@@ -397,11 +397,13 @@ export class F2fSummaryComponent implements OnInit {
     for (let x of this.courseNameList) {
       x.checked = false;
     }
+    console.log(this.courseNameList, "courseNameList")
   }
 
   async getBatchTrainerlist() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CREATE_BATCH_TRAINER_LIST, null, this.destroyed$);
     this.trainerNameList = response.payload;
+    console.log(this.trainerNameList)
   }
 
   getModuleAccess() {
@@ -1283,13 +1285,14 @@ export class F2fSummaryComponent implements OnInit {
         courseId: "",
         courseName: "",
         batchName: "",
-        trainerId: [],
-        trainerName: [],
+        trainerId: "",
+        trainerName: "",
+        // trainerId: [],
+        // trainerName: [],
         batchEmployeesCount: "",
         scheduledDate: '',
         batchStatus: "Scheduled",
         employeesList: [],
-        trainerDropdownData: [],
         batchCreatedBy: this.loginEmployeeId
       })
 
@@ -1317,7 +1320,10 @@ export class F2fSummaryComponent implements OnInit {
 
   onDragStart(event: DragEvent, data: any) {
     this.oldNumber = 0;
-    this.dragStarted = true;
+    setTimeout(() => {
+      this.dragStarted = true;
+
+    }, 300);
     this.setIndicatorPosition(event);
 
     if (this.selectedIndices.length > 0) {
@@ -1443,13 +1449,14 @@ export class F2fSummaryComponent implements OnInit {
         courseId: "",
         courseName: "",
         batchName: "",
-        trainerId: [],
-        trainerName: [],
+        trainerId: "",
+        trainerName: "",
+        // trainerId: [],
+        // trainerName: [],
         batchEmployeesCount: "",
         scheduledDate: '',
         batchStatus: "Scheduled",
         employeesList: [...list],
-        trainerDropdownData: [],
         batchCreatedBy: this.loginEmployeeId
       })
       this.cdr.detectChanges();
@@ -1529,8 +1536,10 @@ export class F2fSummaryComponent implements OnInit {
     item.batchName = event.target.value
   }
   batchTrainername(event: any, item: any) {
-    item.trainerName = event?.name;
-    item.trainerId = event?.id;
+    item.trainerName = event?.username;
+    item.trainerId = event?.employeeId;
+    console.log(item.trainerName,"item trainer name")
+    console.log(item.trainerId,"item trainer ID")
   }
   scheduleDateselect(event: any, item: any) {
     const eventscheduledDate = event;
@@ -1539,6 +1548,7 @@ export class F2fSummaryComponent implements OnInit {
   scheduleDateselect1(event: any, item: any) {
     const originalDate = new Date(event);
     item.scheduledDate = this.datepipe.transform(originalDate, 'dd-MM-yyyy');
+    console.log(item.scheduledDate, "item.scheduledDate")
   }
 
   formatDate(inputDate: string): string {
@@ -1577,8 +1587,8 @@ export class F2fSummaryComponent implements OnInit {
     this.scheduleParams = JSON.parse(JSON.stringify(item));
     this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false, isNewEmployee:true }));
     this.scheduleParams.scheduledDate = this.datepipe.transform(this.scheduleParams.scheduledDate, 'yyyy-MM-dd') || '';;
-    this.scheduleParams.trainerId = this.scheduleParams.trainerId.map(name => `${name}`).join(', ');
-    this.scheduleParams.trainerName = this.scheduleParams.trainerName.map(name => `${name}`).join(', ');
+    // this.scheduleParams.trainerId = this.scheduleParams.trainerId.map(name => `${name}`).join(', ');
+    // this.scheduleParams.trainerName = this.scheduleParams.trainerName.map(name => `${name}`).join(', ');
     this.scheduleParams.batchEmployeesCount = this.scheduleParams.employeesList.length;
     this.scheduleParams.courseId = `"${this.scheduleParams.courseId.toString()}"`;
     this.scheduleParams.courseId = this.scheduleParams.courseId.replace(/\"/g, '');
@@ -1590,8 +1600,7 @@ export class F2fSummaryComponent implements OnInit {
     //   delete this.scheduleParams.batchname;
     // }
 
-    const paramsToRemove = ['trainerDropdownData'];
-    const modifiedParam = this.removeParams(this.scheduleParams, paramsToRemove);
+    const modifiedParam = this.scheduleParams;
     if (type == 'Scheduled') {
       modifiedParam.batchStatus = 'Scheduled'
     }
@@ -1673,16 +1682,17 @@ export class F2fSummaryComponent implements OnInit {
     // Check the specified properties for equality
     const scheduledDate1 = this.formatDate(obj1.scheduledDate);
     const scheduledDate2 = this.formatDate(obj2.scheduledDate);
-    obj1.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
-    obj2.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
+    // obj1.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
+    // obj2.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
 
-    const formatTrainer1 = obj1.trainerId.map(name => `'${name}'`).join(',')
-    const formatTrainer2 = obj2.trainerId.map(name => `'${name}'`).join(',')
+    // const formatTrainer1 = obj1.trainerId.map(name => `'${name}'`).join(',')
+    // const formatTrainer2 = obj2.trainerId.map(name => `'${name}'`).join(',')
 
     const propertiesEqual =
       obj1.courseName === obj2.courseName &&
       scheduledDate1 === scheduledDate2 &&
-      formatTrainer1 === formatTrainer2;
+      obj1.trainerId === obj2.trainerId
+      // formatTrainer1 === formatTrainer2;
     if (!propertiesEqual) {
       return false; // If properties don't match, return false
     }
@@ -1930,6 +1940,7 @@ export class F2fSummaryComponent implements OnInit {
     if (response.payload) {
       this.ngxloaderService.stop();
       this.showPopUP = false;
+      this.selectedTab = 1;
       this.getSummarylist();
       this.getUpcominglist();
       this.getDraftlist();
@@ -2030,7 +2041,6 @@ export class F2fSummaryComponent implements OnInit {
     const currentDate: Date = new Date();
     const currentFormatDate = this.datepipe.transform(currentDate,'yyyy-MM-dd')
     console.log(currentFormatDate, "currentDate currentDate")
-    console.log(item.scheduledDate)
     console.log(currentFormatDate == item.scheduledDate, "Validation")
     if(currentFormatDate > item.scheduledDate && item.batchStatus == 'Assigned'){
       this.updateReadonly = true 
@@ -2048,8 +2058,8 @@ export class F2fSummaryComponent implements OnInit {
     let sampleJson: any = response.payload;
     if (response.payload) {
       this.viewDetails = true;
-      sampleJson.trainerId = sampleJson.trainerId.split(',').map(item => item.trim());
-      sampleJson.trainerName = sampleJson.trainerName.split(',').map(item => item.trim());
+      // sampleJson.trainerId = sampleJson.trainerId.split(',').map(item => item.trim());
+      // sampleJson.trainerName = sampleJson.trainerName.split(',').map(item => item.trim());
 
       this.upDatedEmployeeCount = sampleJson.employeesList?.length;
       sampleJson.employeesList = sampleJson.employeesList?.map((list: any) => {
@@ -2057,14 +2067,15 @@ export class F2fSummaryComponent implements OnInit {
       })
       this.detailsData = sampleJson;
       this.detailsData.scheduledDate = this.datepipe.transform(this.detailsData.scheduledDate, 'dd-MM-yyyy'); // Apply DatePipe to format
-
-      this.detailsData.trainerDropdownData = JSON.parse(JSON.stringify(this.trainerNameList))
-      for (let x of this.detailsData.trainerDropdownData) {
-        let isAlreadySelect = this.detailsData.trainerName.filter((item: any) => {
-          return item == x.username;
-        })
-        x.checked = (isAlreadySelect.length > 0) ? true : false;
-      }
+      this.updateEmployeeList = JSON.parse(JSON.stringify(this.detailsData.employeesList));
+      console.log(this.updateEmployeeList, "updateEmployeeList")
+      // this.detailsData.trainerDropdownData = JSON.parse(JSON.stringify(this.trainerNameList))
+      // for (let x of this.detailsData.trainerDropdownData) {
+      //   let isAlreadySelect = this.detailsData.trainerName.filter((item: any) => {
+      //     return item == x.username;
+      //   })
+      //   x.checked = (isAlreadySelect.length > 0) ? true : false;
+      // }
       this.previousDetailsData = JSON.parse(JSON.stringify(this.detailsData));
       this.ngxloaderService.stop()
     }
@@ -2081,8 +2092,8 @@ export class F2fSummaryComponent implements OnInit {
       updateParams.batchStatus = 'Scheduled'
 
     }
-    updateParams.trainerId = updateParams.trainerId.map(name => `${name}`).join(',');
-    updateParams.trainerName = updateParams.trainerName.map(name => `${name}`).join(',');
+    // updateParams.trainerId = updateParams.trainerId.map(name => `${name}`).join(',');
+    // updateParams.trainerName = updateParams.trainerName.map(name => `${name}`).join(',');
     updateParams.batchEmployeesCount = updateParams.employeesList.length;
     updateParams.courseId = `"${updateParams.courseId.toString()}"`;
     updateParams.courseId = updateParams.courseId.replace(/\"/g, '');
@@ -2094,8 +2105,9 @@ export class F2fSummaryComponent implements OnInit {
     //   delete updateParams.batchname;
     // }
 
-    const paramsToRemove = ['trainerDropdownData'];
-    const modifiedParam = this.removeParams(updateParams, paramsToRemove);
+    // const paramsToRemove = ['trainerDropdownData'];
+    // const modifiedParam = this.removeParams(updateParams, paramsToRemove);
+    const modifiedParam = updateParams;
     let dateParts = modifiedParam.scheduledDate.split('-');
     let formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
     dateParts = modifiedParam.scheduledDate;
@@ -2136,6 +2148,7 @@ export class F2fSummaryComponent implements OnInit {
 
   gotoSummarypage() {
     this.createBatch = false;
+    this.selectedTab = 1;
     this.getSummarylist();
     this.getDraftlist();
     this.getUpcominglist();
@@ -2155,19 +2168,20 @@ export class F2fSummaryComponent implements OnInit {
 
   compareObjectsFieldsonly(obj1: any, obj2: any): boolean {
     // Check the specified properties for equality
-    const scheduledDate1 = this.formatDate(obj1.scheduledDate);
-    const scheduledDate2 = this.formatDate(obj2.scheduledDate);
-    obj1.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
-    obj2.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
+    // const scheduledDate1 = this.formatDate(obj1.scheduledDate);
+    // const scheduledDate2 = this.formatDate(obj2.scheduledDate);
+    // obj1.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
+    // obj2.trainerId.sort((a: any, b: any) => (a > b) ? 1 : -1);
 
-    const formatTrainer1 = obj1.trainerId.map(name => `'${name}'`).join(',')
-    const formatTrainer2 = obj2.trainerId.map(name => `'${name}'`).join(',')
+    // const formatTrainer1 = obj1.trainerId.map(name => `'${name}'`).join(',')
+    // const formatTrainer2 = obj2.trainerId.map(name => `'${name}'`).join(',')
 
     const propertiesEqual =
       obj1.courseName === obj2.courseName &&
       obj1.batchName === obj2.batchName &&
-      scheduledDate1 === scheduledDate2 &&
-      formatTrainer1 === formatTrainer2;
+      obj1.scheduledDate === obj2.scheduledDate &&
+      obj1.trainerId === obj2.trainerId;
+      // formatTrainer1 === formatTrainer2;
     if (!propertiesEqual) {
       return false; // If properties don't match, return false
     }
@@ -2179,27 +2193,26 @@ export class F2fSummaryComponent implements OnInit {
   compareEmployeeArrays(array1: any[], array2: any[]): boolean {
     if (array1.length !== array2.length) {
       return false;
-  }
+    }
+  
     const employeeIdsArray1 = array1.map(employee => employee.employeeId);
     const employeeIdsArray2 = array2.map(employee => employee.employeeId);
-
+  
+    // Sort the arrays
     employeeIdsArray1.sort();
     employeeIdsArray2.sort();
-
+  
+    // Compare the sorted arrays
     return JSON.stringify(employeeIdsArray1) === JSON.stringify(employeeIdsArray2);
 
   }
 
   compareDataforUpdate() {
-    if (this.updateEmployeeList.length == 0) {
-      this.updateEmployeeList = this.previousDetailsData.employeesList
-    }
     if (this.compareObjectsFieldsonly(this.previousDetailsData, this.detailsData) && this.compareEmployeeArrays(this.previousDetailsData.employeesList, this.updateEmployeeList)) {
-      this.saveButtonshow = false
-      return;
+      this.saveButtonshow = false;
     }
     else {
-      this.saveButtonshow = true
+      this.saveButtonshow = true;
     }
   }
 
@@ -2285,7 +2298,7 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   async getActivecount() {
-    this.activeShimmer = true;
+    this.summaryShimmer = true;
     const intId = this.userId;
     const numberValue = parseInt(intId, 10);
     const param = {
@@ -2295,7 +2308,7 @@ export class F2fSummaryComponent implements OnInit {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_ACTIVE_COUNT, param, this.destroyed$);
     if (response.payload) {
       this.activeData = response.payload;
-      this.activeShimmer = false
+      this.summaryShimmer = false
     }
   }
   recurringcourseData:any[] = [];
@@ -2337,6 +2350,19 @@ export class F2fSummaryComponent implements OnInit {
   closeAlert(){
     this.validePopup = false;
     this.AlreadyscheduledEmployees = [];
+  }
+   selectedTab = 1
+   changeTable1(){
+    if(this.selectedTab !== 1){
+    this.selectedTab = 1;
+    this.getSummarylist();
+    }
+  }
+  changeTable2(){
+    if(this.selectedTab !== 2){
+    this.selectedTab = 2;
+    this.getActivecount();
+    }
   }
 
   ngOnDestroy(): void {

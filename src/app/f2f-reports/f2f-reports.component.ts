@@ -271,6 +271,7 @@ export class F2fReportsComponent implements OnInit {
   }
 
   /* Get course name */
+  filterCourseNamevalues:any[] =[];
   async getCourseName() {
     // this.ngxService.start();
     this.showShimmer = true;
@@ -278,7 +279,10 @@ export class F2fReportsComponent implements OnInit {
     this.courseTypes = response.payload;
     this.courseTypes.forEach(category => {
       this.availableFilter.courseName?.push({ name: category?.courseName, key: category?.courseName });
+      this.filterCourseNamevalues?.push({name: category?.courseName, key: category?.courseName, checked:false})
     });
+    console.log(this.filterCourseNamevalues)
+
     // this.ngxService.stop();
   }
 
@@ -829,7 +833,7 @@ export class F2fReportsComponent implements OnInit {
     if (response.payload === false) {
       this.uploadFileInput.nativeElement.click()
     } else {
-      this.errorHandler.handleAlert('Processing an earlier import file, please try again later')
+      this.errorHandler.handleAlert('server is busy, please try again later')
     }
   }
 
@@ -898,6 +902,55 @@ export class F2fReportsComponent implements OnInit {
     }
   }
 
+  filtercourseList:any[] = [];
+  courseChange(event:any, filteritem:any){
+    filteritem.checked = !filteritem.checked;
+    this.filtercourseList = this.filterCourseNamevalues.filter((filter:any)=> {
+      return filter.checked == true
+    }).map((item:any) => {
+      return item.name
+    })
+    console.log(this.filtercourseList, "filtercourseList filtercourseList")
+  }
+
+  onPopoverClose(property:any){
+    console.log(property, "propertypropertyproperty")
+    if(property == 'courseName'){
+      if ((this.filterRequest.courseName || this.filtercourseList.length > 0) && !this.deepCompareArrays(this.filterRequest.courseName, this.filtercourseList)) {
+        this.resetReportList();
+        this.filterRequest.courseName = this.filtercourseList;
+        this.getReportList();
+      }
+    }
+  }
+
+  deepCompareArrays(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    const frequencyCounter1 = {};
+    const frequencyCounter2 = {};
+
+    for (let val of arr1) {
+      frequencyCounter1[val] = (frequencyCounter1[val] || 0) + 1;
+    }
+
+    for (let val of arr2) {
+      frequencyCounter2[val] = (frequencyCounter2[val] || 0) + 1;
+    }
+
+    for (let key in frequencyCounter1) {
+      if (!(key in frequencyCounter2)) {
+        return false;
+      }
+      if (frequencyCounter2[key] !== frequencyCounter1[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
