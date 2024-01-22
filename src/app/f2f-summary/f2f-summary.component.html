@@ -11,7 +11,7 @@
             <div class="summaryTable">
                 <div class="summaryTab">
                     <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 1}" (click)="changeTable1()">F2F Expiration</div>
-                    <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 2}" *ngIf="!loginEmployeeManager" (click)="changeTable2()">Certified Employees</div>
+                    <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 2}" *ngIf="loginEmployeeManager" (click)="changeTable2()">Certified Employees</div>
                 </div>
                 <div class="date-filters" [ngClass]="{'hide-date-filter' : selectedTab == 2}">
                     <div class="form-group dataiconrel">
