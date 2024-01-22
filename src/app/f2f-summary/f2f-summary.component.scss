@@ -30,7 +30,7 @@
 
 
 .summary-page {
-    padding: 20px 10px;
+    padding: 20px 15px;
     display: flex;
     gap: 30px;
     background-color: #f2f2f2;
@@ -140,6 +140,7 @@
         height: 0px;
         padding-top: 0px;
         padding-bottom: 0px;
+        pointer-events: none;
     }
 
     .infoData {
@@ -170,7 +171,7 @@
     }
 
     .listData {
-        height: calc(100vh - 363px);
+        height: calc(100vh - 326px);
         overflow-y: auto;
 
         .rowdata {
@@ -223,15 +224,15 @@
         }
     }
     .listDataActive{
-        height: calc(100vh - 260px);
+        height: calc(100vh - 223px);
         padding-top: 15px;
     }
     .setshimmerHeight{
-        height: calc(100vh - 363px);
+        height: calc(100vh - 326px);
         overflow-y: hidden;
     }
     .setshimmerHeight1{
-        height: calc(100vh - 239px);
+        height: calc(100vh - 223px);
     }
   .total-font{
     font-weight: 600;
@@ -273,7 +274,7 @@
 }
 
 .cardData {
-    max-height: calc(100vh - 140px);
+    max-height: calc(100vh - 68px);
     overflow-y: auto;
     padding-right: 10px;
     padding-left: 10px;
@@ -384,7 +385,7 @@
     }
 }
 .cardDataupcoming{
-    max-height: calc(100vh -   134px);
+    max-height: calc(100vh - 134px);
     .card:first-child{
         margin-top: 0px !important;
     }
@@ -1843,16 +1844,17 @@
     gap: 30px;
 
     .summaryTab-title{
-        font-size: 15px;
+        font-size: 16px;
         font-family: "Inter";
         border-bottom: 2px solid transparent;
-        margin-bottom: 20px;
+        margin-bottom: 27px;
         cursor: pointer;
+        color: #454545;
         // transition: border-bottom 0.5s ease-in-out;
     }
     .active-title{
         font-weight: 600;
         border-bottom: 2px solid #1F96F4;
-
+        color: #000;
     }
 }
