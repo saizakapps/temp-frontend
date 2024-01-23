@@ -1288,7 +1288,8 @@
                                 <ng-select [items]="trainerNameList" name="detailsData.trainerName"
                                     bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
                                      (change)="batchTrainername($event, detailsData);compareDataforUpdate()"
-                                    [(ngModel)]="detailsData.trainerName">
+                                    [(ngModel)]="detailsData.trainerName" 
+                                    [readonly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
                                 </ng-select>
                             </div>
                         </div>
