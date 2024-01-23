@@ -315,7 +315,7 @@
 
     .cardtitle {
         // min-height: 45px;
-        font-size: 15px;
+        font-size: 16px;
         color: #000000;
         font-weight: 600;
         display: -webkit-box;
@@ -341,6 +341,10 @@
         font-size: 14px;
         color: #000000;
         font-weight: 500;
+
+        img{
+            width: 21px;
+        }
     }
 
     .cardtrainer {
@@ -350,17 +354,25 @@
       
         .train {
             color: #575757;
-            font-weight: 400;
+            font-weight: 500;
+            font-size: 14px;
+            font-family: "Inter";
         }
         .Tname{
-            font-size: 13px;
-            padding-top: 2px;
+            font-size: 14px;
+            font-family: "Inter";
+            font-weight: 500;
         }
     }
 
+    .cardbatchstatus{
+        margin-bottom: 5px;
+    }
+
     .carddate {
-        font-weight: 400;
+        font-weight: 500;
         font-size: 14px;
+        color: #000;
     }
 
     .detailview {
@@ -1838,6 +1850,9 @@
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
+}
+.nofoundtextupcoming{
+    padding-top: 0px;
 }
 .summaryTab{
     display: flex;

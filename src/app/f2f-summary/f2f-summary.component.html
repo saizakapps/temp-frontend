@@ -145,7 +145,7 @@
                             </div>
                             <div class="carddate d-flex align-items-center"><img src="assets/images/field_icon.png"
                                     alt="">&nbsp;{{item.scheduledDate | date:'dd-MMM-yyyy'}}</div>
-                            <div class="cardtrainer"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
+                            <div class="cardtrainer cardbatchstatus"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
 
                             <div class="detailview" [ngClass]="{'detailview-inactive' : item.courseIsActive == false}" data-toggle="modal" data-target="#detailsModalUpdate"
                                 (click)="getscheduledDetails(item)">View Details<span *ngIf="item.courseIsActive == false">&nbsp;(inactive)</span></div>
@@ -153,13 +153,13 @@
                         </div>
 
                     </div>
-                    <div class="nofoundtext" *ngIf="upcomingListData.length == 0 && cardShimmer == false">
+                    <div class="nofoundtext nofoundtextupcoming" *ngIf="upcomingListData.length == 0 && cardShimmer == false">
                         <span *ngIf="batchStatusList == 1">No scheduled record found</span>
                         <span *ngIf="batchStatusList == 0">No canceled record found</span>
                         <span *ngIf="batchStatusList == 3">No assigned record found</span>
                     </div>
                     <div *ngIf="cardShimmer">
-                        <div class="cardShimmer">
+                        <div class="cardShimmer mt-0">
                             <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
                             <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
                             <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
