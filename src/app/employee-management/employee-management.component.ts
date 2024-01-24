@@ -1476,6 +1476,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   closeEmpCreatePopup() {
+    this.constructTrainerUserDetail();
     this.userDetail.isTrainer = false;
     this.createForm.reset();
   }
