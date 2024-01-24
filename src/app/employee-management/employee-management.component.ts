@@ -1441,17 +1441,21 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       this.userDetail.period.push(this.periodObj);
       p++;
     });
-
-    if (!this.userDetail.isTrainer || this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
+    if (this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
+      this.userDetail.isTrainer = true;
+    }
+    if (!this.userDetail.isTrainer) {
       this.userDetail.isTrainer = false;
     }
     console.log(this.userDetail, "Save this.userDetail");
 
     const cloneUserDetails = { ...this.userDetail };
 
-    const datechange = moment(cloneUserDetails.dateOfJoining);
-    const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-    cloneUserDetails.dateOfJoining = (datechange?.format(dateFormat));
+    if (this.userDetail.role.replace(' ', '').toLowerCase() !== 'externaltrainer') {
+      const datechange = moment(cloneUserDetails.dateOfJoining);
+      const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+      cloneUserDetails.dateOfJoining = (datechange?.format(dateFormat));
+    }
     if (val == "create" || val == "createInvaite") {
       delete cloneUserDetails.id;
     }
@@ -1478,6 +1482,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   closeEmpCreatePopup() {
     this.constructTrainerUserDetail();
     this.userDetail.role = '';
+    this.userDetail.dateOfJoining = '';
     this.userDetail.isTrainer = false;
     this.createForm.reset();
   }
@@ -1648,14 +1653,17 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.userDetail.store = data.store;
     if (data.role.replace(' ', '').toLowerCase() !== 'externaltrainer') {
       this.getStoresRegion(null);
+      this.userDetail.dateOfJoining = new Date(data.dateOfJoining);
     }
     this.loadManagerList();
-    this.userDetail.dateOfJoining = new Date(data.dateOfJoining);
     this.userDetail.role = data.role;
     this.userDetail.roleId = data.roleId;
     this.userDetail.reportingManager = data.reportingManager;
     this.userDetail.id = data.id;
     this.userDetail.isTrainer = data.isTrainer;
+    if (data.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
+      this.constructTrainerUserDetail();
+    }
   }
 
   async getEmployeePeriodData(userId) {
