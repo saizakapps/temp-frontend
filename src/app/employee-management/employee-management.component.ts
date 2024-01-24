@@ -1353,15 +1353,19 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   onTrainerCheck(event) {
     this.userDetail.isTrainer = event.checked;
     if (event.checked) {
-      delete this.userDetail.country;
-      delete this.userDetail.countryId;
-      delete this.userDetail.region;
-      delete this.userDetail.regionId;
-      delete this.userDetail.store;
-      delete this.userDetail.storeId ;
-      delete this.userDetail.reportingManager ;
-      this.userDetail.period  = [];
+      this.constructTrainerUserDetail();
     }
+  }
+
+  constructTrainerUserDetail() {
+    delete this.userDetail.country;
+    delete this.userDetail.countryId;
+    delete this.userDetail.region;
+    delete this.userDetail.regionId;
+    delete this.userDetail.store;
+    delete this.userDetail.storeId;
+    delete this.userDetail.reportingManager;
+    this.userDetail.period = [];
   }
 
   /* Save/ update user details */
@@ -1636,7 +1640,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.loadRegionList("singleRegion", null, null);
     this.userDetail.region = data.region;
     this.userDetail.store = data.store;
-    this.getStoresRegion(null);
+    if (!data.isTrainer) {
+      this.getStoresRegion(null);
+    }
     this.loadManagerList();
     this.userDetail.dateOfJoining = new Date(data.dateOfJoining);
     this.userDetail.role = data.role;
@@ -1644,7 +1650,6 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.userDetail.reportingManager = data.reportingManager;
     this.userDetail.id = data.id;
     this.userDetail.isTrainer = data.isTrainer;
-
   }
 
   async getEmployeePeriodData(userId) {
