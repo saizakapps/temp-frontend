@@ -865,7 +865,10 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       if (this.userDetail.role === roleList.desc) {
         this.userDetail.roleId = roleList.id;
       }
-    })
+    });
+    if (this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
+      this.constructTrainerUserDetail();
+    }
   }
 
 
@@ -1352,9 +1355,6 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   onTrainerCheck(event) {
     this.userDetail.isTrainer = event.checked;
-    if (event.checked) {
-      this.constructTrainerUserDetail();
-    }
   }
 
   constructTrainerUserDetail() {
@@ -1442,7 +1442,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       p++;
     });
 
-    if (!this.userDetail.isTrainer) {
+    if (!this.userDetail.isTrainer || this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
       this.userDetail.isTrainer = false;
     }
     console.log(this.userDetail, "Save this.userDetail");
@@ -1477,8 +1477,13 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   closeEmpCreatePopup() {
     this.constructTrainerUserDetail();
+    this.userDetail.role = '';
     this.userDetail.isTrainer = false;
     this.createForm.reset();
+  }
+
+  checkExternalTrainer() {
+    return this.userDetail?.role && this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer';
   }
 
   changeStatusAction(event) {
@@ -1641,7 +1646,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.loadRegionList("singleRegion", null, null);
     this.userDetail.region = data.region;
     this.userDetail.store = data.store;
-    if (!data.isTrainer) {
+    if (data.role.replace(' ', '').toLowerCase() !== 'externaltrainer') {
       this.getStoresRegion(null);
     }
     this.loadManagerList();
