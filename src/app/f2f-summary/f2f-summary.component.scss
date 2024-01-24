@@ -1376,9 +1376,9 @@
     z-index: 9999;
   }
   .cancelBtn {
-    width: 85px;
+    width: 75px;
     font-size: 13px;
-    height: 32px;
+    height: 30px;
     border-radius: 6px;
     color: #fff;
     background: #0d0d0d; 
@@ -1526,6 +1526,9 @@
 .modal-body-no-radius{
     border-top-left-radius: 0px !important;
     border-top-right-radius: 0px !important;
+}
+.modal-body-no-radius-allside{
+    border-radius: 0px !important;
 }
 
 .historyTable{

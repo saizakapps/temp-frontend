@@ -3530,6 +3530,7 @@ select:focus {
 
 .summaryngSelect .ng-dropdown-panel {
   font-size: 14px !important;
+  margin-bottom: 12px;
 }
 
 .summaryngSelect .ng-select.ng-select-disabled .ng-select-container,
@@ -3802,6 +3803,9 @@ select:focus {
 .summaryngSelect-new1 .ng-select.ng-select-single .ng-select-container {
   width: calc(100% - 5px) !important;
 }
+.summaryngSelect-new1 .ng-dropdown-panel{
+  width: calc(100% - 5px);
+}
 
 .modal-dialog-email {
   max-width: 500px !important;
@@ -3829,4 +3833,24 @@ select:focus {
 
 .downloadType-metMenu {
   margin-bottom: 2px !important;
+}
+.certificateMatformfield .mat-form-field-wrapper{
+  margin-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.tableMatmenu .mat-menu-content{
+  background-color: #fff !important;
+}
+.tableMatmenu .mat-menu-content:not(:empty){
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.tableMatmenu .mat-menu-item{
+  height: 38px !important;
+  line-height: 38px !important;
+  width: 300px !important;
+  font-size: 15px;
+}
+.tableMatmenu.mat-menu-panel{
+  max-width: 302px !important;
 }

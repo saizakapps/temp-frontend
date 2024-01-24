@@ -1246,6 +1246,7 @@
                                 [(ngModel)]="detailsData.batchName"
                                 [readOnly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
                         </div>
+             <!-- [readonly]="detailsData.batchStatus == 'Canceled' || updateReadonly"-->
 
                     </div>
 
@@ -1288,8 +1289,8 @@
                                 <ng-select [items]="trainerNameList" name="detailsData.trainerName"
                                     bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
                                      (change)="batchTrainername($event, detailsData);compareDataforUpdate()"
-                                    [(ngModel)]="detailsData.trainerName" 
-                                    [readonly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
+                                    [(ngModel)]="detailsData.trainerName"
+                                    [readonly]="detailsData.batchStatus == 'Canceled' || updateReadonly">
                                 </ng-select>
                             </div>
                         </div>
@@ -1340,7 +1341,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false"
+                                    <div *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly"
                                        class="cursor"  (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             viewBox="0 0 22 22" fill="none">
@@ -1359,7 +1360,7 @@
                                 [ngClass]="{'disablescheduleButton': upDatedEmployeeCount == 0}"
                                 (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
                             <div class="button bluebutton bluebutton-inactive"
-                                *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false"
+                                *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly"
                                 [ngClass]="{'active-button' : saveButtonshow == true}"
                                 (click)="updateBatch(detailsData, 'update')">Save</div>
                         </div>
@@ -1367,10 +1368,12 @@
                         <div class="d-flex align-items-center buttongap">
                             <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                                 (click)="addPeopleData(detailsData)"
-                                *ngIf="detailsData.batchStatus !== 'Canceled' && updateReadonly == false">+ Add people
+                                *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly">+ Add people
                             </div>
                             <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'"
                                 data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
+                                <div class="button blackbutton"
+                                data-toggle="modal" data-target="#assignedcancelSchedule" *ngIf="detailsData.batchStatus == 'Assigned' && !updateReadonly">Cancel schedule Assigneee</div>
                             <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft"
                                 *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
@@ -1546,8 +1549,28 @@
             <div class="modal-header">
                 Cancel Confirmation
             </div>
-            <div class="modal-body modal-body-delete modal-body-no-radius">
+            <div class="modal-body modal-body-delete modal-body-no-radius-allside">
                 Do you want to cancel this batch?
+            </div>
+            <div class="modal-footer mail-footer border-0">
+                <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
+                <button type="button" class="cancelBtn deleteBtn" data-dismiss="modal"
+                    (click)="updateBatch(detailsData, 'Canceled')">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Cancel Batch -->
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="assignedcancelSchedule" data-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-delete">
+        <div class="modal-content">
+            <div class="modal-header">
+                Cancel Confirmation
+            </div>
+            <div class="modal-body modal-body-delete modal-body-no-radius-allside">
+                If you Cancel this Batch the Data will be Reverted
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>

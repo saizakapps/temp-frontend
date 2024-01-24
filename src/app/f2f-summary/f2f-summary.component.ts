@@ -2040,14 +2040,14 @@ export class F2fSummaryComponent implements OnInit {
     this.viewHistory = false;
     const currentDate: Date = new Date();
     const currentFormatDate = this.datepipe.transform(currentDate,'yyyy-MM-dd')
-    console.log(currentFormatDate, "currentDate currentDate")
-    console.log(currentFormatDate == item.scheduledDate, "Validation")
-    if(currentFormatDate > item.scheduledDate && item.batchStatus == 'Assigned'){
-      this.updateReadonly = true 
+    // console.log(currentFormatDate, "currentDate currentDate")
+    // console.log((currentFormatDate == item.scheduledDate) && item.batchStatus == 'Assigned', "Validation")
+  
+    if(item.batchStatus == 'Assigned' && (currentFormatDate !== item.scheduledDate)){
+      this.updateReadonly = true
     }
-    else{
-      this.updateReadonly = false 
-    }
+
+    console.log(this.updateReadonly, "this.updateReadonly this.updateReadonly")
     const param = {
       "courseId": item.courseId,
       "batchId": item.batchId,
