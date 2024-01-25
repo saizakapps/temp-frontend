@@ -239,7 +239,7 @@ export class F2fSummaryComponent implements OnInit {
   AlreadyscheduledEmployees: any[] = [];
   trainerDropdownData: any[] = [];
   inputPlaceholderValue: any;
-
+  loginEmployeeAdmin:any;
   @ViewChildren(MatAutocompleteTrigger) autoCompleteTriggers: any;
   @HostListener('window:keydown.esc', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -320,6 +320,7 @@ export class F2fSummaryComponent implements OnInit {
     this.loginEmployeeStoreId = userDetails.storeId;
     this.loginEmployeeManager = userDetails.manager;
     this.loginEmployeeIstrainer = userDetails.isTrainer;
+    this.loginEmployeeAdmin = userDetails.learnerRole;
     this.filterRequest.employeeStatus = 'Active';
     // if(this.loginEmployeeManager){
     //   this.getActivecount();
@@ -674,11 +675,9 @@ export class F2fSummaryComponent implements OnInit {
     this.recordFound = false
     this.filterRequest.page = this.paginationIndex;
     this.filterRequest.allTrainingReport = this.viewType === 'reportView' ? true : false;
-    this.filterRequest.admin = this.userDetails?.learnerRole === 'SA';
+    this.filterRequest.admin = this.loginEmployeeAdmin === 'SA';
     this.filterRequest.coursenameArray = this.selectedOptionsnew;
-    this.filterRequest.courseName = this.filterRequest.coursenameArray
-
-
+    this.filterRequest.courseName = this.filterRequest.coursenameArray;
     // this.filterRequest.trainers = this.filtertrainerList;
     // this.filterRequest.storeIds = this.filterstorecodeList;
     // this.filterRequest.storeNames = this.filterstorenameList;
