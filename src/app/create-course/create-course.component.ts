@@ -2317,7 +2317,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   async templateCategorySubmitted(isPublished, type, courseId, obj, res) {
     const compObj: any = {};
       compObj.content = obj.content;
-      compObj.title = '';
+      compObj.title = obj.title;
       compObj.code = this.courseTypeDetail?.courseTypeCode;
       compObj.typeId = obj.id;
       compObj.courseId = courseId;
