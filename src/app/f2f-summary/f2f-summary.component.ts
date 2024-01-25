@@ -1963,7 +1963,7 @@ export class F2fSummaryComponent implements OnInit {
     const response: any = await this.apiHandler.postData(this.utils.API.POST_VALIDATE_BATCH_EMPLOYEES, newParam, this.destroyed$);
     if (response.payload.length == 0) {
       const updateParam = JSON.parse(JSON.stringify(param));
-      updateParam.employeesList = param.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted }));
+      updateParam.employeesList = param.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: employee.isDeleted, isNewEmployee:employee.isNewEmployee }));
       this.batchUpdate(updateParam)
     }
     else {
