@@ -151,36 +151,36 @@
                                 (click)="getscheduledDetails(item)">View Details<span *ngIf="item.courseIsActive == false">&nbsp;(inactive)</span></div>
                             <!-- <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false"></div> -->
                         </div>
-
+                        <div *ngIf="cardShimmer">
+                            <div class="cardShimmer mt-0">
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+    
+                            </div>
+                            <div class="cardShimmer">
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+    
+                            </div>
+                        </div>
                     </div>
                     <div class="nofoundtext nofoundtextupcoming" *ngIf="upcomingListData.length == 0 && cardShimmer == false">
                         <span *ngIf="batchStatusList == 1">No scheduled record found</span>
                         <span *ngIf="batchStatusList == 0">No canceled record found</span>
                         <span *ngIf="batchStatusList == 3">No assigned record found</span>
                     </div>
-                    <div *ngIf="cardShimmer">
-                        <div class="cardShimmer mt-0">
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-
-                        </div>
-                        <div class="cardShimmer">
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-
-                        </div>
-                    </div>
+                
                 </div>
                 <div class="cardListItems">
                     <div class="summarytitle summarytitle1 summarytitle2">Drafted Events
@@ -206,33 +206,34 @@
                             <!-- <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false"></div> -->
 
                         </div>
+                        <div *ngIf="cardShimmer1">
+                            <div class="cardShimmer">
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+    
+                            </div>
+                            <div class="cardShimmer">
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+                                <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
+    
+                            </div>
+                        </div>
                     </div>
                     <div class="nofoundtext" *ngIf="draftListData.length == 0 && cardShimmer1 == false">
                         No draft record found
                     </div>
-                    <div *ngIf="cardShimmer1">
-                        <div class="cardShimmer">
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-
-                        </div>
-                        <div class="cardShimmer">
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-                            <shimmer [width]="'100%'" height="9px" borderRadius="25px"></shimmer>
-
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>

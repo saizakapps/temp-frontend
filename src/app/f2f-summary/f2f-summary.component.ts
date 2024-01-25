@@ -1642,7 +1642,6 @@ export class F2fSummaryComponent implements OnInit {
       for (let i = 0; i < this.cloneBatchdata.length; i++) {
         if (this.compareObjects(this.cloneBatchdata[i], item)) {
           this.common.openSnackBar("This batch data already in the batchlist", 2, 'Invalid')
-          return;
         }
         else {
           this.ngxloaderService.start();
@@ -2364,6 +2363,21 @@ export class F2fSummaryComponent implements OnInit {
     this.getActivecount();
     }
   }
+
+  // onScroll(event:any){
+  //   console.log(event.target.offsetHeight, "OFFSETHEIGHT")
+  //   console.log(event.target.scrollTop, "SCROLL TOP")
+  //   console.log(event.target.scrollHeight, "SCROLLHEIGHT")
+  //   if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+  //     console.log("End");
+  //     // this.cardShimmer = true
+
+  //     // setTimeout(() => {
+  //     //   // this.cardShimmer = false
+  //     // }, 5000);
+  //   }
+  //   // console.log("Scroll Going on")
+  // }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
