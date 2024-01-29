@@ -1362,7 +1362,7 @@
                                 (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
                             <div class="button bluebutton bluebutton-inactive"
                                 *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly"
-                                [ngClass]="{'active-button' : saveButtonshow == true}"
+                                [ngClass]="{'active-button' : saveButtonshow == true && upDatedEmployeeCount !== 0}"
                                 (click)="updateBatch(detailsData, 'update')">Save</div>
                         </div>
 
