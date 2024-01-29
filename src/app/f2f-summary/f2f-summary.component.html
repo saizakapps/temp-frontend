@@ -101,7 +101,7 @@
                     </ng-container></div>
                     
             </div>
-            <div class="bottombutton" (click)="gotocreateBatch()">View Report & Create Batch →</div>
+            <div class="bottombutton" (click)="gotocreateBatch()"><span>View Report&nbsp;</span><span *ngIf="loginEmployeeManager">& Create Batch&nbsp;</span>→</div>
         </div>
         <div style="width: 100%;">
             <!-- <div class="activeDtails" *ngIf="loginEmployeeManager">
@@ -177,7 +177,7 @@
                     </div>
                     <div class="nofoundtext nofoundtextupcoming" *ngIf="upcomingListData.length == 0 && cardShimmer == false">
                         <span *ngIf="batchStatusList == 1">No scheduled record found</span>
-                        <span *ngIf="batchStatusList == 0">No canceled record found</span>
+                        <span *ngIf="batchStatusList == 0">No cancelled record found</span>
                         <span *ngIf="batchStatusList == 3">No assigned record found</span>
                     </div>
                 
@@ -763,7 +763,7 @@
                 </div>
             </div>
 
-            <div class="batchContent"
+            <div class="batchContent" *ngIf="loginEmployeeManager"
                 [ngClass]="{'batchContenthide' : hideBatch == false && firstclick == true, 'batchContentshow' : hideBatch == true && firstclick == true}">
                 <div class="batch-header" id="selectContainer">
                     <div class="batch_count">Batches ({{batchData.length}})</div>
@@ -1115,7 +1115,7 @@
 
 
                         </div> -->
-                        <div class="summaryngSelect batchselect1" class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}">
+                        <div class="summaryngSelect batchselect1">
                             <ng-select [items]="trainerNameList" name="selected_PopupData.trainerName"
                                 bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
                                  (change)="batchTrainername($event, selected_PopupData)"
@@ -1286,7 +1286,7 @@
 
 
                             </div> -->
-                            <div class="summaryngSelect batchselect1" class="summaryngSelect batchselect" [ngStyle]="{width:getWidth()}">
+                            <div class="summaryngSelect batchselect1" [ngStyle]="{width:getWidth()}">
                                 <ng-select [items]="trainerNameList" name="detailsData.trainerName"
                                     bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
                                      (change)="batchTrainername($event, detailsData);compareDataforUpdate()"
@@ -1551,7 +1551,7 @@
                 Cancel Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius-allside">
-                Do you want to cancel this batch?
+                If you cancel this batch, Scheduled course will be reverted.
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
@@ -1571,7 +1571,7 @@
                 Cancel Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius-allside">
-                If you Cancel this Batch the Data will be Reverted
+                If you cancel this batch, Assigned course will be reverted.
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>

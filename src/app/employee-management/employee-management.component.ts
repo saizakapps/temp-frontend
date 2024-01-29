@@ -1366,6 +1366,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     delete this.userDetail.storeId;
     delete this.userDetail.reportingManager;
     this.userDetail.period = [];
+    delete this.userDetail.dateOfJoining;
   }
 
   /* Save/ update user details */

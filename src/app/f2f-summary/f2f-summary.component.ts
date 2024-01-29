@@ -278,7 +278,7 @@ export class F2fSummaryComponent implements OnInit {
       filterId: 1
     },
     {
-      name: "Canceled",
+      name: "Cancelled",
       filterId: 0
     },
     {
@@ -383,6 +383,10 @@ export class F2fSummaryComponent implements OnInit {
     this.createBatch = true;
     this.ngxloaderService.start();
     this.getUserDetails();
+    if(!this.loginEmployeeManager){
+      this.hideBatch = false;
+      this.firstclick = true;
+    }
   }
 
   async getBatchCourseList() {
@@ -1943,7 +1947,7 @@ export class F2fSummaryComponent implements OnInit {
       this.getUpcominglist();
       this.getDraftlist();
       if (response.payload.batchStatus == 'Canceled') {
-        this.common.openSnackBar("Batch canceled successfully", 2, "Success")
+        this.common.openSnackBar("Batch cancelled successfully", 2, "Success")
       }
       else if (response.payload.batchStatus == 'Scheduled') {
         this.common.openSnackBar("Batch updated successfully", 2, "Success")
