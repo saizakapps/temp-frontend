@@ -131,7 +131,7 @@
                             class="dateJoining" (change)="filterbyListstatus($event)">
                         </ng-select>
                     </div>
-                    <div class="cardData cardDataupcoming webkitscrollStyle">
+                    <div class="cardData cardDataupcoming webkitscrollStyle" (scroll)="onScroll($event)">
                         <div *ngFor="let item of this.upcomingListData; let j =index" class="card"
                             [ngClass]="{'inactiveCard' : item.courseIsActive == false}" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
                             <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
@@ -185,7 +185,7 @@
                 <div class="cardListItems">
                     <div class="summarytitle summarytitle1 summarytitle2">Drafted Events
                     </div>
-                    <div class="cardData webkitscrollStyle">
+                    <div class="cardData webkitscrollStyle" (scroll)="onScrollDraft($event)">
                         <div *ngFor="let item of this.draftListData; let j =index" class="card"
                         [ngClass]="{'inactiveCard' : item.courseIsActive == false}" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
                             <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
@@ -459,10 +459,10 @@
                     <div class="relative">
                         <input #dateRange class="input-group-append" (keypress)="common.allowNumberOnly($event)"
                             [ngModel]="selectedDateLabel" #inputField
-                            [ngClass]="{'whitecolor':filterFromdate == '' && filterTodate == ''}" id="daterangeInput"
+                            [ngClass]="{'whitecolor':reportFromdate == '' && reportTodate == ''}" id="daterangeInput"
                             name="dateOfJoiningRangeInput" daterangepicker (selected)="dateRangeChange($event, false)"
                             [options]="filterDateOption" autocomplete="off">
-                        <div class="topunselectBox" *ngIf="filterRequest.fromDate == '' && filterRequest.toDate == ''"
+                        <div class="topunselectBox" *ngIf="(reportFromdate == '') && (reportTodate == '')"
                             (click)="dateRange.click()"></div>
                         <div class="data-icon" (click)="dateRange.click()">
                             <img src="assets/healthsafetyimages/field-icon.svg">
@@ -705,7 +705,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let data of this.generalReportList"
-                                [draggable]="shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data) ? true : false"
+                                [draggable]="(shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data)) && loginEmployeeManager ? true : false"
                                 (dragstart)="onDragStart($event, data)" (mouseenter)="onMouseEnter($event)"
                                 (mouseleave)="onMouseLeave()" [ngClass]="{'activeTR' : data.checked == true}">
                                 <td class="nopad"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

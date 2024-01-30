@@ -682,6 +682,8 @@ export class F2fSummaryComponent implements OnInit {
     this.filterRequest.admin = this.loginEmployeeAdmin === 'SA';
     this.filterRequest.coursenameArray = this.selectedOptionsnew;
     this.filterRequest.courseName = this.filterRequest.coursenameArray;
+    this.filterRequest.fromDate = this.reportFromdate;
+    this.filterRequest.toDate = this.reportTodate
     // this.filterRequest.trainers = this.filtertrainerList;
     // this.filterRequest.storeIds = this.filterstorecodeList;
     // this.filterRequest.storeNames = this.filterstorenameList;
@@ -850,7 +852,8 @@ export class F2fSummaryComponent implements OnInit {
     });
     return count;
   }
-
+  reportFromdate:any;
+  reportTodate:any
   /* date change event */
   dateRangeChange(event, isPopup) {
     if (isPopup) {
@@ -860,8 +863,8 @@ export class F2fSummaryComponent implements OnInit {
       this.selectedDateLabel = event.label === 'Custom Range' ? event.start.format('DD/MM/yyyy')
         + ' - ' + event.end.format('DD/MM/yyyy') : event.label;
     }
-    this.filterRequest.fromDate = event.start.format('yyyy-MM-DD');
-    this.filterRequest.toDate = event.end.format('yyyy-MM-DD');
+    this.reportFromdate = event.start.format('yyyy-MM-DD');
+    this.reportTodate = event.end.format('yyyy-MM-DD');
     this.filterRequest.searchDateBy = this.searchDateBy;
     this.resetReportList();
     this.getReportList();
@@ -1158,8 +1161,14 @@ export class F2fSummaryComponent implements OnInit {
     this.searchTextModal = null;
     this.searchBy = 'employeeId';
     this.selectedOptionsnew = [];
+   console.log(this.filterRequest, "filterRequest filterRequest")
+    // this.filterRequest.toDate = ''
+    // this.filterRequest.fromDate = ''
     this.picker.datePicker.setStartDate(new Date());
-    this.picker.datePicker.setEndDate(new Date());
+    this.picker.datePicker.setEndDate(new Date());  
+    this.reportTodate = '';
+    this.reportFromdate = '';
+    // this.clearDateField();
     for (let x of this.filtercourseNameList) {
       x.checked = false;
     }
@@ -1721,7 +1730,6 @@ export class F2fSummaryComponent implements OnInit {
   receiveDataFromEmp(data: any) {
     this.receivedpeopleData = data;
     this.oldNumber = 0;
-
     setTimeout(() => {
       this.showempComponent = false;
     }, 500);
@@ -1733,6 +1741,12 @@ export class F2fSummaryComponent implements OnInit {
         const existingEmployee = this.addpeopleArray.employeesList.find(
           (employee: any) => employee.employeeId === droppedData.employeeId
         );
+        // const istrainerAdd = this.addpeopleArray.employeesList.filter(
+        //   (employee: any) => {
+        //   return employee.role === 'External Trainer'
+        //   }
+        // );
+        console.log(data,"data datas")
         if (existingEmployee) {
           if (existingEmployee.isDeleted === true) {
             existingEmployee.isDeleted = false;
@@ -1747,7 +1761,13 @@ export class F2fSummaryComponent implements OnInit {
             this.oldNumber = this.oldNumber + 1;
             this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "");
           }
-        } else {
+        }
+        // else if(istrainerAdd){
+        //   this.trainerNumber = this.trainerNumber + 1;
+        //   console.log(this.trainerNumber)
+        //   this.common.openSnackBar(`You added Trainer`, 2, "");
+        // }
+        else {
           this.addpeopleArray.employeesList.unshift(droppedData);
           const updatedCount = this.addpeopleArray.employeesList.filter(
             (employee: any) => employee.isDeleted === false
@@ -1943,6 +1963,10 @@ export class F2fSummaryComponent implements OnInit {
       this.ngxloaderService.stop();
       this.showPopUP = false;
       this.selectedTab = 1;
+      this.scrollevent = true;
+      this.currentpageNumber = 0;
+      this.scrolleventDraft = true;
+      this.currentpageNumberDraft = 0
       this.getSummarylist();
       this.getUpcominglist();
       this.getDraftlist();
@@ -1997,18 +2021,23 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   filterbyListstatus(event: any) {
+    this.currentpageNumber = 0;
+    this.scrollevent = true;
     this.batchStatusList = event.filterId;
     this.cardShimmer = true;
     this.getUpcominglist();
   }
-
+  currentpageNumber = 0;
+  currentpageNumberDraft = 0
   async getUpcominglist() {
     this.upcomingListData = [];
     this.cardShimmer = true;
     const param = {
       batchStatusList: [this.batchStatusList],
       isTrainer: this.loginEmployeeIstrainer,
-      userEmployeeId: this.loginEmployeeId
+      userEmployeeId: this.loginEmployeeId,
+      pageNo: 0,
+      pageSize: 3
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -2151,6 +2180,10 @@ export class F2fSummaryComponent implements OnInit {
   gotoSummarypage() {
     this.createBatch = false;
     this.selectedTab = 1;
+    this.currentpageNumber = 0;
+    this.scrollevent = true;
+    this.scrolleventDraft = true;
+    this.currentpageNumberDraft = 0
     this.getSummarylist();
     this.getDraftlist();
     this.getUpcominglist();
@@ -2366,21 +2399,62 @@ export class F2fSummaryComponent implements OnInit {
     this.getActivecount();
     }
   }
+  scrollevent = true;
+  async onScroll(event:any){
+    if(this.scrollevent){
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+      this.currentpageNumber = this.currentpageNumber + 3;
+      console.log(this.currentpageNumber,"this.currentpageNumber")
+      const param = {
+        batchStatusList: [this.batchStatusList],
+        isTrainer: this.loginEmployeeIstrainer,
+        userEmployeeId: this.loginEmployeeId,
+        pageNo: this.currentpageNumber,
+        pageSize: 3
+      }
+      const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
+      if (response.payload.length > 0) {
+        const scrollData = response.payload;
+        for(let x of scrollData){
+          this.upcomingListData.push(x)
+        }
+      }
+      else{
+        this.scrollevent = false
 
-  // onScroll(event:any){
-  //   console.log(event.target.offsetHeight, "OFFSETHEIGHT")
-  //   console.log(event.target.scrollTop, "SCROLL TOP")
-  //   console.log(event.target.scrollHeight, "SCROLLHEIGHT")
-  //   if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-  //     console.log("End");
-  //     // this.cardShimmer = true
+      }
+    }
+    }
+    // console.log("Scroll Going on")
+  }
 
-  //     // setTimeout(() => {
-  //     //   // this.cardShimmer = false
-  //     // }, 5000);
-  //   }
-  //   // console.log("Scroll Going on")
-  // }
+  scrolleventDraft = true;
+  async onScrollDraft(event:any){
+    if(this.scrolleventDraft){
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+      this.currentpageNumberDraft = this.currentpageNumberDraft + 3;
+      console.log(this.currentpageNumberDraft,"this.currentpageNumberDraft")
+      const param = {
+        batchStatusList: [2],
+        isTrainer: this.loginEmployeeIstrainer,
+        userEmployeeId: this.loginEmployeeId,
+        pageNo: this.currentpageNumberDraft,
+        pageSize: 3
+      }
+      const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
+      if (response.payload.length > 0) {
+        const scrollData = response.payload;
+        for(let x of scrollData){
+          this.draftListData.push(x)
+        }
+      }
+      else{
+        this.scrolleventDraft = false
+      }
+    }
+    }
+    // console.log("Scroll Going on")
+  }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
