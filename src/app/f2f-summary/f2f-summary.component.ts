@@ -852,8 +852,8 @@ export class F2fSummaryComponent implements OnInit {
     });
     return count;
   }
-  reportFromdate:any;
-  reportTodate:any
+  reportFromdate:any = '';
+  reportTodate:any = '';
   /* date change event */
   dateRangeChange(event, isPopup) {
     if (isPopup) {
@@ -1160,6 +1160,7 @@ export class F2fSummaryComponent implements OnInit {
     this.filterRequest = {};
     this.searchTextModal = null;
     this.searchBy = 'employeeId';
+    this.searchDateBy = 'trainedDate';
     this.selectedOptionsnew = [];
    console.log(this.filterRequest, "filterRequest filterRequest")
     // this.filterRequest.toDate = ''
@@ -2037,7 +2038,7 @@ export class F2fSummaryComponent implements OnInit {
       isTrainer: this.loginEmployeeIstrainer,
       userEmployeeId: this.loginEmployeeId,
       pageNo: 0,
-      pageSize: 3
+      pageSize: 5
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -2052,7 +2053,9 @@ export class F2fSummaryComponent implements OnInit {
     const param = {
       batchStatusList: [2],
       isTrainer: this.loginEmployeeIstrainer,
-      userEmployeeId: this.loginEmployeeId
+      userEmployeeId: this.loginEmployeeId,
+      pageNo: 0,
+      pageSize: 5
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -2403,14 +2406,13 @@ export class F2fSummaryComponent implements OnInit {
   async onScroll(event:any){
     if(this.scrollevent){
     if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-      this.currentpageNumber = this.currentpageNumber + 3;
-      console.log(this.currentpageNumber,"this.currentpageNumber")
+      this.currentpageNumber = this.currentpageNumber + 5;
       const param = {
         batchStatusList: [this.batchStatusList],
         isTrainer: this.loginEmployeeIstrainer,
         userEmployeeId: this.loginEmployeeId,
         pageNo: this.currentpageNumber,
-        pageSize: 3
+        pageSize: 5
       }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
       if (response.payload.length > 0) {
@@ -2432,19 +2434,18 @@ export class F2fSummaryComponent implements OnInit {
   async onScrollDraft(event:any){
     if(this.scrolleventDraft){
     if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-      this.currentpageNumberDraft = this.currentpageNumberDraft + 3;
-      console.log(this.currentpageNumberDraft,"this.currentpageNumberDraft")
+      this.currentpageNumberDraft = this.currentpageNumberDraft + 5;
       const param = {
         batchStatusList: [2],
         isTrainer: this.loginEmployeeIstrainer,
         userEmployeeId: this.loginEmployeeId,
         pageNo: this.currentpageNumberDraft,
-        pageSize: 3
+        pageSize: 5
       }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
       if (response.payload.length > 0) {
-        const scrollData = response.payload;
-        for(let x of scrollData){
+        const scrollDataDraft = response.payload;
+        for(let x of scrollDataDraft){
           this.draftListData.push(x)
         }
       }
@@ -2454,6 +2455,12 @@ export class F2fSummaryComponent implements OnInit {
     }
     }
     // console.log("Scroll Going on")
+  }
+  filterdateValue(event){
+    this.filterRequest.searchDateBy = event.key
+      if((this.reportFromdate!='' && this.reportFromdate!=null && this.reportFromdate!=undefined ) && (this.reportTodate!='' && this.reportTodate!=null && this.reportTodate!=undefined)){
+        this.getReportList();
+      }
   }
 
   ngOnDestroy(): void {

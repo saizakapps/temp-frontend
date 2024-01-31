@@ -16,8 +16,8 @@
                                 placeholder=" " name="fromDate" [(ngModel)]="fromDatevalue"
                                 [ngModelOptions]="{standalone: true}" bsDatepicker
                                 (ngModelChange)="fromDateChange($event)" autocomplete="off" bsDatepicker
-                                [bsConfig]="common.bsConfig" [minDate]="fromMinDate"
-                                [maxDate]="(toDatevalue == '' || toDatevalue == undefined)?toMaxDate:fromMaxDate"
+                                [bsConfig]="common.bsConfig2" [minDate]="fromMinDate"
+                                [maxDate]="(toDatevalue == '' || toDatevalue == undefined)?'':fromMaxDate"
                                 #fromDate required>
                             <div class="data-icon data-icon-new" (click)="fromDate.click()">
                                 <img src="assets/healthsafetyimages/field-icon.svg">
@@ -31,7 +31,7 @@
                                 placeholder=" " name="toDate" [(ngModel)]="toDatevalue"
                                 [ngModelOptions]="{standalone: true}" bsDatepicker
                                 (ngModelChange)="toDateChange($event)" autocomplete="off" bsDatepicker
-                                [bsConfig]="common.bsConfig" [maxDate]="toMaxDate" [minDate]="toMinDate" #toDate
+                                [bsConfig]="common.bsConfig2" [minDate]="toMinDate" #toDate
                                 required>
                             <div class="data-icon data-icon-new" (click)="toDate.click()">
                                 <img src="assets/healthsafetyimages/field-icon.svg">
@@ -453,7 +453,7 @@
                     <div class="searchby-dd summaryngSelect summaryngSelect-new">
                         <label class="list-filter-title">Date Filter</label>
                         <ng-select [items]="searchDateList" name="searchDateBy" bindLabel="name" bindValue="key"
-                            [clearable]=false [searchable]="false" [(ngModel)]="searchDateBy" class="dateJoining">
+                        (change)="filterdateValue($event)" [clearable]=false [searchable]="false" [(ngModel)]="searchDateBy" class="dateJoining">
                         </ng-select>
                     </div>
                     <div class="relative">
@@ -1359,7 +1359,7 @@
                         <div class="d-flex align-items-center buttongap">
                             <div class="button bluebutton" *ngIf="detailsData.batchStatus == 'Draft'"
                                 [ngClass]="{'disablescheduleButton': upDatedEmployeeCount == 0}"
-                                (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
+                                (click)="updateBatch(detailsData, 'Scheduled')">Schedule training</div>
                             <div class="button bluebutton bluebutton-inactive"
                                 *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly"
                                 [ngClass]="{'active-button' : saveButtonshow == true && upDatedEmployeeCount !== 0}"

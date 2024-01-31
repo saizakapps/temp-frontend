@@ -335,6 +335,7 @@
         font-size: 15px;
         color: #000000;
         font-weight: 400;
+        word-break: break-word;
     }
 
     .cardemp {
@@ -1883,7 +1884,7 @@
       top: 1px;
       left: 1px;
       // border: 1px solid red;
-      width: calc(100% - 1px);
+      width: calc(100% - 2px);
       height: 33px;
       background-color: #fff;
     }
