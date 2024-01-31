@@ -158,7 +158,7 @@
                           <!-- <input mat-tree (keyup)="hierarchySearch($event, countryList)"> -->
                           <div [ngClass]="{'viewOnly': (view && !create && !update)}" class="node1 tree">
                             <mat-icon class="invisible"></mat-icon>
-                            <mat-checkbox name="allRole" (change)="allRoleSelect($event)"> All </mat-checkbox>
+                            <mat-checkbox [checked]="levelCount/3 === selectedLevelCount" [indeterminate]="levelCount/3 !== selectedLevelCount && selectedLevelCount > 0" name="allRole" (change)="allRoleSelect($event)"> All </mat-checkbox>
                           </div>
                           <div class="node1 tree " *ngFor="let node1 of roleGroupList; let node1Index = index">
                             <mat-icon *ngIf="node1.child?.length > 1" class="mat-icon-rtl-mirror mt-1 matIconCls"
@@ -246,7 +246,7 @@
                         {{selectedStoreCount + ' stores selected'}} </mat-label>
                       <mat-select #locationSelect class="roleSelectionCls" (openedChange)="checkCountryAndRoleSelected($event, 'location')">
                         <!-- [disabled]="courseConfig.code === courseCode.Policies ? roleNotSelected() : levelNotSelected()" -->
-                        <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
+                        <mat-checkbox [checked]="storeCount === selectedStoreCount" [indeterminate]="storeCount !== selectedStoreCount && selectedStoreCount > 0" [ngClass]="{'viewOnly': (view && !create && !update)}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
                           (change)="selectAll($event, countryList, 'country'); calcSelectedStore();">
                           All</mat-checkbox>
                         <mat-tree [dataSource]="countryList" [treeControl]="roleTreeControl" class="example-tree">
@@ -310,7 +310,7 @@
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field> -->
                   <!-- Temp fix -->
-                  <div class="d-flex align-items-center ml-3 confirmContent" *ngIf="courseConfig.managerConfirmation">
+                  <div class="d-flex align-items-center ml-3 confirmContent" *ngIf="courseConfig.managerConfirmation && courseConfig.code !== courseCode.F2F">
                     <mat-checkbox [(ngModel)]="course.managerConfirmation" name="managerConfirm"
                       [disabled]="[courseCode.Checklist].includes(courseConfig.code) || (view && !create && !update)">
                       <!-- courseCode.F2F,  -->
@@ -389,7 +389,7 @@
                         fill="black" />
                     </svg>
 
-                    <span class="ml-1">History</span>
+                    <!-- <span class="ml-1">History</span> -->
                   </button>
                   <button
                   (click)="courseConfig.code === courseCode.SlideShow || getMediaUrlList().length > 0 ? mediaDownload() : print()"
@@ -522,7 +522,7 @@
                                 <div class="">
                                   <!-- If selected activity type is Text -->
                                   <div *ngIf="selectedActivity.activityType === 'text'">
-                                    <ckeditor [editor]="Editor"
+                                    <ckeditor (change)="previewScrollDown()" [editor]="Editor"
                                       [name]="'editor' + selectedChapter.chapterId + '-'+  selectedActivity.activityId"
                                       [(ngModel)]="selectedActivity.content" class="editorFormatCls">
                                     </ckeditor>
@@ -1341,8 +1341,8 @@
             </div>
             <!-- Fill in the blanks & Free text -->
             <div class="multiAnswer w-100" *ngIf="question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'">
-              <div class="d-flex align-items-center">
-                <mat-checkbox [name]="'charLimitCheckBox' + selectedActivity.activityId" [(ngModel)]="question.characterLimitCheck"
+              <div class="character-limit-container d-flex align-items-center">
+                <mat-checkbox style="margin-bottom: 2px !important;" [name]="'charLimitCheckBox' + selectedActivity.activityId" [(ngModel)]="question.characterLimitCheck"
                   class="pl-3"></mat-checkbox>
                 <label class="mb-0">Character Limit</label>&nbsp;&nbsp;
                 <input class="p-1" [disabled]="!question.characterLimitCheck" type="number" min="0" max="2000" [(ngModel)]="question.characterLimit"
@@ -1526,7 +1526,8 @@
         </ng-container>
         <!-- Free text & Fill right -->
         <ng-container *ngIf="question?.questionType === 'fillRightAnswer' || question?.questionType === 'freeText'">
-          <div *ngIf="question.content" class="freeTextInput" [ngClass]="{'bigfreeTextInput' :  question?.questionType === 'freeText'}"></div>
+          <!-- <div *ngIf="question.content" class="freeTextInput" [ngClass]="{'bigfreeTextInput' :  question?.questionType === 'freeText'}"></div> -->
+          <div *ngIf="question.content" class="freeTextInput"></div>
           <div *ngIf="question.characterLimit > 0" class="freeTextCount">0/{{question.characterLimit}}</div>
         </ng-container>
         <!-- Single correct answer -->

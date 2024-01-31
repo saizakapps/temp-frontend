@@ -106,6 +106,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   policyCategory: any = [];
   countryList: any = [];
   cloneCountryList: any = [];
+  storeCount: any;
+  levelCount: any;
 
   /* Completion message template */
   compTemplates: any = [];
@@ -595,6 +597,18 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     if (this.apiCount === 2) {
       this.getCourseConfig();
     }
+    this.storeCount = this.getCount(this.countryList, 0);
+  }
+
+  getCount(list: any, count: any) {
+    list.forEach(element => {
+      if (element.child && element.child.length > 0) {
+        count = this.getCount(element.child, count);
+      } else {
+        count++;
+      }
+    });
+    return count;
   }
 
   async getRoleGroups() {
@@ -610,6 +624,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     if (this.apiCount === 2) {
       this.getCourseConfig();
     }
+    this.levelCount = this.getCount(this.roleGroupList, 0);
   }
 
   sortRoleGroup(list) {
@@ -679,6 +694,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   addOption(question: any) {
     const increment = question.options[question.options.length - 1].key + 1;
     question.options.push({ key: increment, value: '' });
+    this.previewScrollDown();
+    this.questionScrollDown();
   }
 
   /* Remove Options in quiz */
@@ -700,6 +717,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     questions.push(question);
     this.setQuestionId(questions);
     this.updateQuestionLimit();
+    this.previewScrollDown();
+    this.questionScrollDown();
   }
 
   setQuestionLimit(value: any) {
@@ -1488,6 +1507,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   allRoleSelect(event: any) {
+    console.log(this.levelCount);
+    console.log(this.selectedLevelCount);
     this.roleGroupList?.forEach(roleGroup => {
       roleGroup?.child?.forEach(role => {
         role.checked = event.checked;
@@ -2995,6 +3016,18 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     this.certificates.push(this.copyCertificates.find(c => c.id === certItem.id));
     this.certificates.sort((a, b) => a.id - b.id);
     this.previewData = undefined;
+  }
+
+  previewScrollDown() {
+    setTimeout(() => {
+      document.querySelector(".quizSection").scrollTop = document.querySelector(".quizSection").scrollHeight;
+    }, 300);
+  }
+  
+  questionScrollDown() {
+    setTimeout(() => {
+      document.querySelector(".questionCls").scrollTop = document.querySelector(".questionCls").scrollHeight;
+    }, 300);
   }
 
   ngOnDestroy() {
