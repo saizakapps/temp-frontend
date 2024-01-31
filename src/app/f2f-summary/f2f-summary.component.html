@@ -101,7 +101,7 @@
                     </ng-container></div>
                     
             </div>
-            <div class="bottombutton" (click)="gotocreateBatch()"><span>View Report&nbsp;</span><span *ngIf="loginEmployeeManager">& Create Batch&nbsp;</span>→</div>
+            <div class="bottombutton" (click)="gotocreateBatch()"><span>View Report&nbsp;</span><span *ngIf="(loginEmployeeManager || loginEmployeeAdmin == 'SA')">& Create Batch&nbsp;</span>→</div>
         </div>
         <div style="width: 100%;">
             <!-- <div class="activeDtails" *ngIf="loginEmployeeManager">
@@ -182,7 +182,7 @@
                     </div>
                 
                 </div>
-                <div class="cardListItems">
+                <div class="cardListItems" *ngIf="loginEmployeeManager || loginEmployeeAdmin == 'SA'">
                     <div class="summarytitle summarytitle1 summarytitle2">Drafted Events
                     </div>
                     <div class="cardData webkitscrollStyle" (scroll)="onScrollDraft($event)">
@@ -705,7 +705,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let data of this.generalReportList"
-                                [draggable]="(shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data)) && loginEmployeeManager ? true : false"
+                                [draggable]="(shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data)) && (loginEmployeeManager || loginEmployeeAdmin == 'SA')? true : false"
                                 (dragstart)="onDragStart($event, data)" (mouseenter)="onMouseEnter($event)"
                                 (mouseleave)="onMouseLeave()" [ngClass]="{'activeTR' : data.checked == true}">
                                 <td class="nopad"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -763,7 +763,7 @@
                 </div>
             </div>
 
-            <div class="batchContent" *ngIf="loginEmployeeManager"
+            <div class="batchContent" *ngIf="(loginEmployeeManager || loginEmployeeAdmin == 'SA')"
                 [ngClass]="{'batchContenthide' : hideBatch == false && firstclick == true, 'batchContentshow' : hideBatch == true && firstclick == true}">
                 <div class="batch-header" id="selectContainer">
                     <div class="batch_count">Batches ({{batchData.length}})</div>

@@ -383,7 +383,7 @@ export class F2fSummaryComponent implements OnInit {
     this.createBatch = true;
     this.ngxloaderService.start();
     this.getUserDetails();
-    if(!this.loginEmployeeManager){
+    if(!this.loginEmployeeManager && this.loginEmployeeAdmin !== 'SA'){
       this.hideBatch = false;
       this.firstclick = true;
     }
@@ -1440,7 +1440,7 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   shouldEnableDragCondition1(data: any) {
-    return this.selectedIndices.length > 0 && data.checked
+    return this.selectedIndices.length > 0 && data.checked 
   }
   shouldEnableDragCondition2(data: any) {
     return this.selectedIndices.length == 0
@@ -1587,7 +1587,7 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   getWidth() {
-    const container: any = document.getElementById("selectContainer")?.clientWidth - 210 + 'px';
+    const container: any = document.getElementById("selectContainer")?.clientWidth - 202 + 'px';
     if (container) {
       return container;
     }
@@ -1791,10 +1791,15 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   confirmDelete() {
+    if(this.ModalPopup1 == true){
     setTimeout(() => {
       this.ModalPopup1 = false;
+      this.batchData.splice(this.batchItem, 1)
     }, 500);
+  }
+  else{
     this.batchData.splice(this.batchItem, 1)
+  }
   }
 
   // filtercourseList: any[] = [];
