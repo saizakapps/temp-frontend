@@ -87,7 +87,8 @@ body {
 
 /* course creation css ends */
 .randomTxt .ng-select.ng-select-single .ng-select-container {
-  height: 33px !important;
+  height: 30px !important;
+  width: 50px !important;
   margin-top: 5px;
 }
 
@@ -177,6 +178,10 @@ body {
 
 .chapterOptions .ng-select.ng-select-single .ng-select-container {
   width: 135px !important;
+}
+
+.questionOptions .ng-select.ng-select-single .ng-select-container {
+  width: 168px !important;
 }
 
 .ng-select.ng-select-focused .ng-select-container .ng-arrow-wrapper .ng-arrow {
@@ -310,7 +315,7 @@ body {
   background-color: #fff !important;
   outline: none;
   border: 1px solid #ccc !important;
-  height: calc(100vh - 400px) !important;
+  height: calc(100vh - 415px) !important;
   line-height: 1.1;
 }
 
@@ -325,7 +330,7 @@ body {
   background-color: #fff !important;
   outline: none;
   border: 1px solid #ccc !important;
-  height: calc(100vh - 400px) !important;
+  height: calc(100vh - 405px) !important;
 }
 
 /* .questionaire .angular-editor-textarea {

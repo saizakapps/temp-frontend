@@ -535,10 +535,10 @@
           <div class="">
             <div class="d-flex justify-content-between align-items-center">
               <span class="currPromemployee">Other Info</span>
-
+          
             </div>
             <div class="currentEmployee otherInfoCls">
-
+          
               <div class="row mt-0">
                 <div class="pl-3">
                   <div class="row flex-nowrap">
@@ -547,10 +547,9 @@
                         <div class="d-block align-items-center">
                           <span class="employeeDetails mr-3">Role</span>
                           <div class="dropdown employeeContent roleContent">
-                            <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="empEditStatus"
-                              [items]="allRoleList" (change)="setRoleValue()" bindLabel="desc" bindValue="desc"
-                              [(ngModel)]="userDetail.role" placeholder="Select Role" name="roleName" required
-                              #roleName="ngModel">
+                            <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="empEditStatus" [items]="allRoleList"
+                              (change)="setRoleValue()" bindLabel="desc" bindValue="desc" [(ngModel)]="userDetail.role"
+                              placeholder="Select Role" name="roleName" required #roleName="ngModel">
                               <ng-template ng-option-tmp let-item="item">
                                 <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
                                 </div>
@@ -597,86 +596,84 @@
                         </div>
                       </div>
                     </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="!checkExternalTrainer()">
-            <div *ngIf="userDetail.roleId !== 5" class="profitStore">
-              <hr class="table-div" />
-              <div class="d-flex justify-content-between">
-                <span class="currPromemployee">Profit Center</span>
-              </div>
-              <div class="currentEmployee empInfo">
-                <div class="row mt-0">
-                  <div class="" [ngClass]="{editDetails: empEditStatus}">
-                    <div class="">
-                      <div class="d-block align-items-center">
-                        <span class="employeeDetails mr-3">Country</span>
-                        <div class="dropdown employeeContent countryContent">
-                          <ng-select class="auto-dd error-input modal-auto-dd" [disabled]='empEditStatus'
-                            (change)="loadRegionList('singleRegion', $event, null)" [items]="countryList" bindLabel="desc"
-                            bindValue="desc" [(ngModel)]="userDetail.country" placeholder="Select Country" name="countryName"
-                            required #countryName="ngModel">
-                            <ng-template ng-option-tmp let-item="item">
-                              <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
-                              </div>
-                            </ng-template>
-                          </ng-select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- <div class="" [ngClass]="{editDetails: empEditStatus}">
-                            <div class="">
-                              <div class="d-block align-items-center">
-                                <span class="employeeDetails mr-3">Region</span>
-                                <div class="dropdown employeeContent">
-                                  <ng-select class="auto-dd error-input" [disabled]='regionEnable || empEditStatus'
-                                    (change)="loadStoreList('singleStore',$event, null)" [items]="regionList" bindLabel="desc"
-                                    bindValue="desc" [(ngModel)]="userDetail.region" placeholder="Select Region" name="regionName"
-                                    required #regionName="ngModel">
-                                    <ng-template ng-option-tmp let-item="item">
-                                      <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
-                                      </div>
-                                    </ng-template>
-                                  </ng-select>
-                                </div>
-                              </div>
-                            </div>
-                          </div> -->
-                  <div class="" [ngClass]="{editDetails: empEditStatus}">
-                    <div class="">
-                      <div class="d-block align-items-center">
-                        <span class="employeeDetails mr-3">Store</span>
-                        <div class="dropdown employeeContent storeContent">
-                          <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="storeEnable || empEditStatus"
-                            (change)="getStoresRegion(null); loadManagerList();" [items]="storeList" bindLabel="desc"
-                            bindValue="desc" [(ngModel)]="userDetail.store" placeholder="Select Store" name="storeName" required
-                            #storeName="ngModel">
-                            <ng-template ng-option-tmp let-item="item">
-                              <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
-                              </div>
-                            </ng-template>
-                          </ng-select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-2 p-0 addProfitEmp d-flex align-items-end">
-                    <button type="button" (click)="addPrieod()" class="btn btn-primary newCourseBtn">Click to add a second
-                      store
-                    </button>
-                  </div>
-                </div>
           
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
+          
+          <div *ngIf="!checkExternalTrainer()" class="profitStore">
+            <hr class="table-div" />
+            <div class="d-flex justify-content-between">
+              <span class="currPromemployee">Profit Center</span>
+            </div>
+            <div class="currentEmployee empInfo">
+              <div class="row mt-0">
+                <div class="" [ngClass]="{editDetails: empEditStatus}">
+                  <div class="">
+                    <div class="d-block align-items-center">
+                      <span class="employeeDetails mr-3">Country</span>
+                      <div class="dropdown employeeContent countryContent">
+                        <ng-select class="auto-dd error-input modal-auto-dd" [disabled]='empEditStatus'
+                          (change)="loadRegionList('singleRegion', $event, null)" [items]="countryList" bindLabel="desc"
+                          bindValue="desc" [(ngModel)]="userDetail.country" placeholder="Select Country" name="countryName"
+                          required #countryName="ngModel">
+                          <ng-template ng-option-tmp let-item="item">
+                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                            </div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="" [ngClass]="{editDetails: empEditStatus}">
+                                      <div class="">
+                                        <div class="d-block align-items-center">
+                                          <span class="employeeDetails mr-3">Region</span>
+                                          <div class="dropdown employeeContent">
+                                            <ng-select class="auto-dd error-input" [disabled]='regionEnable || empEditStatus'
+                                              (change)="loadStoreList('singleStore',$event, null)" [items]="regionList" bindLabel="desc"
+                                              bindValue="desc" [(ngModel)]="userDetail.region" placeholder="Select Region" name="regionName"
+                                              required #regionName="ngModel">
+                                              <ng-template ng-option-tmp let-item="item">
+                                                <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                                                </div>
+                                              </ng-template>
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div> -->
+                <div class="" [ngClass]="{editDetails: empEditStatus}">
+                  <div class="">
+                    <div class="d-block align-items-center">
+                      <span class="employeeDetails mr-3">Store</span>
+                      <div class="dropdown employeeContent storeContent">
+                        <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="storeEnable || empEditStatus"
+                          (change)="getStoresRegion(null); loadManagerList();" [items]="storeList" bindLabel="desc"
+                          bindValue="desc" [(ngModel)]="userDetail.store" placeholder="Select Store" name="storeName" required
+                          #storeName="ngModel">
+                          <ng-template ng-option-tmp let-item="item">
+                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                            </div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2 p-0 addProfitEmp d-flex align-items-end">
+                  <button type="button" (click)="addPrieod()" class="btn btn-primary newCourseBtn">Click to add a second
+                    store
+                  </button>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+          
           <hr class="table-div" />
           <div class="">
             <div class="profitCenterCls secondaryProfit">
@@ -811,8 +808,9 @@
         </form>
       </div>
       <div class="modal-footer justify-content-start p-0 border-0">
-        <button type="button" #closeUserCreateModal (click)="closeEmpCreatePopup()"
-          class="btn userDlgBtn cancelBtn saveDraft" data-dismiss="modal">Cancel</button>
+        <button #closeUserCreateModal data-dismiss="modal" class="d-none" ></button>
+        <button type="button" (click)="closeEmpCreatePopup()"
+          class="btn userDlgBtn cancelBtn saveDraft">Cancel</button>
         <ng-container *ngIf="userDetailValue.manager === false">
           <!-- <ng-container *ngIf="[utils.portalRole.superAdmin, utils.portalRole.hr].includes(userDetailValue.portalRole)"> -->
           <button type="button" class="btn btn-primary newCourseBtn newCourseBtn1" *ngIf="this.isButtonCreate"

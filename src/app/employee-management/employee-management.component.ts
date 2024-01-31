@@ -674,9 +674,10 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     if (event === undefined && index === null) {
       this.regionList = [];
       this.storeList = [];
-      this.userDetail = {};
+      this.userDetail.store = null;
+      /* this.userDetail = {};
       this.regionEnable = true;
-      this.storeEnable = true;
+      this.storeEnable = true; */
       return;
     }
     if (event === undefined && index !== null) {
@@ -1473,7 +1474,6 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     if (this.createForm.valid) {
       const res: any = await this.apiHandler.postData(this.utils.API.POST_EMPLOYEE_CREATE, cloneUserDetails, this.destroyed$,
         `Employee ${successMsg}  successfully`);
-      this.closeUserCreateModal.nativeElement.click();
       this.closeEmpCreatePopup();
       this.resetEmployeeList();
       this.getEmployeeList();
@@ -1481,11 +1481,14 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   closeEmpCreatePopup() {
-    this.constructTrainerUserDetail();
-    this.userDetail.role = '';
-    this.userDetail.dateOfJoining = '';
-    this.userDetail.isTrainer = false;
-    this.createForm.reset();
+    this.closeUserCreateModal.nativeElement.click();
+    setTimeout(() => {
+      this.constructTrainerUserDetail();
+      this.userDetail.role = '';
+      this.userDetail.dateOfJoining = '';
+      this.userDetail.isTrainer = false;
+      this.createForm.reset();
+    }, 300);
   }
 
   checkExternalTrainer() {
@@ -1662,9 +1665,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.userDetail.reportingManager = data.reportingManager;
     this.userDetail.id = data.id;
     this.userDetail.isTrainer = data.isTrainer;
-    if (data.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
+    /* if (data.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
       this.constructTrainerUserDetail();
-    }
+    } */
   }
 
   async getEmployeePeriodData(userId) {

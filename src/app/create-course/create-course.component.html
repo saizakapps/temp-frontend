@@ -769,7 +769,7 @@
                         (change)="quizPositionChange()" [clearable]=false [searchable]="false" [(ngModel)]="quizPosition"> </ng-select>
                     </ng-container>
                   </span>
-                  <label class="randomQuestion randomCls"> Random question</label>
+                  <label class="randomQuestion randomCls"> Optional questions</label>
                   <ng-select (click)="policyGroupOnClick()" [items]="questionLimit" name="randomQuestion" (change)="setQuestionLimit($event)" [clearable]=false
                     [searchable]="false" [(ngModel)]="randomLimit"> </ng-select>
                 </div>
@@ -851,9 +851,9 @@
                       <tr *ngFor="let certItem of certificationItems; let certItemIndex = index">
                         <ng-container>
                           <!-- Default -->
-                          <td class="tdDefault">
+                          <!-- <td class="tdDefault">
                             <mat-icon *ngIf="certItemIndex === 0" alt="default" title="default">check_circle_outline</mat-icon>
-                          </td>
+                          </td> -->
                           <!-- Locations -->
                           <td>
 
@@ -1247,7 +1247,7 @@
   <div class="questionCls">
     <div *ngFor="let question of config.activityData.questions; let questionIndex = index" class="questionaire">
       <div [ngClass]="{'viewOnly': (view && !create && !update)}">
-        <div class="chapterOptions  mt-0">
+        <div class="chapterOptions questionOptions  mt-0">
           <div class="float-left">
             <span class="chapterList">Question {{question.questionId}}</span>
           </div>
@@ -1260,13 +1260,20 @@
             </ng-select>
 
             <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
-              <span style="margin-right: 25px;">|</span>
+              <span style="margin-right: 25px;" *ngIf="courseConfig.code === courseCode.F2F">|</span>
               <input (change)="updateQuestionLimit()"
-                [name]="'mandatory' + config.chapterData?.chapterId + question.questionId" class="form-check-input "
+                [name]="'mandatory' + config.chapterData?.chapterId + question.questionId" class="mandatory-check"
                 type="checkbox" [(ngModel)]="question.mandatory" required>
               <label class="form-check-label randomQuestion mb-3 mr-2 mandatoryLbl">
                 Mandatory
               </label>
+            </span>
+            <span class="form-check quesDelContainer">
+              <span>|</span>
+              <button class="deleteQuestion"
+                (click)="removeQuestion(config.activityData.questions, questionIndex)">
+                <img src="assets/images/delete-user.svg" height="22px" width="22px" class=" ml-2 m-0 closeActivity answerDeleteCls">
+              </button>
             </span>
             <!-- <ng-select (change)="quizTypeOnChange(question)" [items]="quizTypes"
               [name]="'qType' + config.chapterData?.chapterId + question.questionId" bindValue="key" [clearable]=false
@@ -1338,16 +1345,18 @@
                 <mat-checkbox [name]="'charLimitCheckBox' + selectedActivity.activityId" [(ngModel)]="question.characterLimitCheck"
                   class="pl-3"></mat-checkbox>
                 <label class="mb-0">Character Limit</label>&nbsp;&nbsp;
-                <input class="p-1" [disabled]="!question.characterLimitCheck" type="number" [(ngModel)]="question.characterLimit"
+                <input class="p-1" [disabled]="!question.characterLimitCheck" type="number" min="0" max="2000" [(ngModel)]="question.characterLimit"
                 [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
               </div>
             </div>
             <div class="addDeleteQuestion w-100">
-              <button *ngIf="!(question.questionType === 'fillRightAnswer' || question.questionType === 'freeText')" (click)="addOption(question)" class="addBtn float-left"
-                [disabled]="disableAddOption(question)">ADD</button>
-              <button class="mb-4 float-right btn-danger deleteQuestionBtn"
+              <!-- <button *ngIf="!(question.questionType === 'fillRightAnswer' || question.questionType === 'freeText')" (click)="addOption(question)" class="addBtn float-left"
+                [disabled]="disableAddOption(question)">ADD</button> -->
+              <a style="color: #1F96F4; font-weight: 500;" *ngIf="!(question.questionType === 'fillRightAnswer' || question.questionType === 'freeText')" (click)="addOption(question)" class="float-left"
+                [ngClass]="{viewOnly: disableAddOption(question)}">Add a option</a>
+              <!-- <button class="mb-4 float-right btn-danger deleteQuestionBtn"
                 (click)="removeQuestion(config.activityData.questions, questionIndex)">
-                Delete</button>
+                Delete</button> -->
             </div>
           </div>
         </div>
@@ -1355,9 +1364,31 @@
     </div>
 
     <!-- Add questions -->
-    <button [ngClass]="{'viewOnly': (view && !create && !update)}" class="mb-3 mt-3 addBtn addOptionalQuestion" (click)="addQuestion(config.activityData.questions)"
+    <div *ngIf="courseConfig.code !== courseCode.F2F">
+      <button [ngClass]="{'viewOnly': (view && !create && !update)}" class="mb-3 mt-3 addBtn addOptionalQuestion" (click)="addQuestion(config.activityData.questions)"
       [disabled]="!areQuestionnaireValid(config.activityData.questions)">
       Add a question (optional)</button>
+    </div>
+    <div *ngIf="courseConfig.code === courseCode.F2F">
+      <button [matMenuTriggerFor]="addQues" [ngClass]="{'viewOnly': (view && !create && !update)}"
+      class="mb-3 mt-3 addBtn addQuestionBtn statusBtn"
+      [disabled]="!areQuestionnaireValid(config.activityData.questions)">
+      +  Add Question </button>
+
+      <mat-menu #addQues="matMenu" class="newCoursePopup statusPopup">
+
+        <div class=" p-0 coursePopup">
+          <!-- <div class="arrow1"></div> -->
+          <div>
+            <div *ngFor="let type of questionTypes"
+              class="d-flex justify-content-start  align-items-center courseMenu" style="height: 40px !important; width: 173px !important;" mat-menu-item>
+              <button (click)="addQuestion(config.activityData.questions, type.key)" class="mb-2 d-flex justify-content-start"
+                mat-menu-item>{{type.name}}</button>
+            </div>
+          </div>
+        </div>
+      </mat-menu>
+    </div>
   </div>
 </ng-template>
 
@@ -1511,6 +1542,7 @@
             </ng-container>
           </div>
         </mat-radio-group> -->
+        <hr *ngIf="question.content" [ngClass]="{'freeTextUnderLine': question?.questionType === 'fillRightAnswer' || question?.questionType === 'freeText'}" class="table-div" />
       </ng-container>
       <span *ngIf="quizConfig.type === 'chapterQuiz' && quizConfig.questions?.length <= 1"> No Quiz
         available</span>

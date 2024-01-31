@@ -687,12 +687,17 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   /* Add questions in quiz */
-  addQuestion(questions: any) {
-    questions.push({
+  addQuestion(questions: any, type?: string) {
+    const question = {
       content: '',
       options: [{ key: 1 }, { key: 2 }],
       questionType: 'multiAnswer'
-    });
+    }
+    if (type === 'fillRightAnswer' || type === 'freeText') {
+      question.questionType = type;
+      delete questions.options;
+    }
+    questions.push(question);
     this.setQuestionId(questions);
     this.updateQuestionLimit();
   }
@@ -1033,6 +1038,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
           this.setRenderingDataForCertificationItems();
         }
+      } else {
+        this.certificationItems[0].renderingData.countryList = this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList): this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0);
       }
     }
     const selectedCountries: any = this.buildSelectedCountries(this.countryList);
@@ -1794,7 +1801,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
     const res: any = await this.apiHandler.postData(this.utils.API.CREATE_UPDATE_COURSE, this.publishCourse, this.destroyed$,
       this.courseConfig.courseCode !== this.courseCode.F2F && type ? 'Course Auto Saved' : 'Course updated successfully');
-    if (this.courseConfig.code === this.courseCode.F2F && res) {
+    if (this.courseConfig.code === this.courseCode.F2F && res) { // check if the course type is F2F, If it is then first call templateSubmission and certificateSubmission
       this.validCompletionCategories = this.completionCategories.filter(comp => comp.content.length > 0);
       for (let category of this.validCompletionCategories) {
         if (category.content.length > 0) this.templateCategorySubmitted(isPublished, type, res.payload.courseId, category, res);
@@ -1802,7 +1809,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       if (this.validCompletionCategories.length === 0) {
         this.createUpdateCertificateList(res.payload.courseId, res);
       }
-    } else {
+    } else { // If the course is not F2F continue with existing flow
       if (this.publishCourse.published) {
         localStorage.setItem('canDeactivate', 'true');
         this.router.navigate(['/courses']);
@@ -2315,6 +2322,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   templateCategorySubmittedCount: number = 0;
   async templateCategorySubmitted(isPublished, type, courseId, obj, res) {
+    this.ngxService.start();
     const compObj: any = {};
       compObj.content = obj.content;
       compObj.title = obj.title;
@@ -2614,14 +2622,17 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   certificates: any= [];
   copyCertificates: any= [];
   async getCertificates() {
+    this.ngxService.start();
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CERTIFICATES_LIST, null, this.destroyed$);
     this.certificates = response.payload;
     this.certificates = this.certificates.filter(certificate => certificate.id !== this.certificationItems.find(certItem => certItem.id === certificate.id)?.id);
-    this.copyCertificates = $.extend(true, [], response.payload)
+    this.copyCertificates = $.extend(true, [], response.payload);
+    this.ngxService.stop();
   }
 
   /* Create update certificate list API, Once called with courseId after course creation */
   async createUpdateCertificateList(courseId, res) {
+    this.ngxService.start();
     const certItems = $.extend(true, [], this.certificationItems);
     certItems.forEach(certItem => {
       certItem.countries = [...this.buildCertCountries(certItem.renderingData.countryList)];
@@ -2655,10 +2666,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     if (!this.publishCourse.published) {
       this.getCertificationItems();
     }
+    this.ngxService.stop();
   }
 
   /* Get certification items from created F2F course, Once called with courseId after got course detail */
   async getCertificationItems() {
+    this.ngxService.start();
     const params: any = {
       courseId: this.courseTypeDetail.courseId,
     }
@@ -2671,6 +2684,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
     console.log('Certified countries', this.certificationItems);
     this.getCertificates();
+    this.ngxService.stop();
   }
 
   /* Construct renderingData */

@@ -239,6 +239,7 @@
   font-size: 16px;
   padding: 10px 15px 11px;
   line-height: 10px;
+  border: none;
 }
 .modalPopup .saveDraft {
   width: fit-content;
@@ -301,7 +302,7 @@
 .chapterList {
   font-weight: 600;
   font-size: 20px;
-  line-height: 24px;
+  // line-height: 24px;
 }
 .questionNumber {
   font-size: 16px !important;
@@ -1625,7 +1626,7 @@ button {
   gap: 10px;
 }
 .textEditorArea {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 310px);
   min-height: 250px;
 }
 
@@ -1659,7 +1660,7 @@ button {
 .questionCls {
   display: block;
   overflow: hidden auto;
-  height: calc(100vh - 350px);
+  height: calc(100vh - 360px);
   padding-right: 0px;
   margin-top: -3px;
 }
@@ -1784,7 +1785,7 @@ button {
   margin-top: 16px !important;
 }
 .quizPortion .previewQuestionforFill.question{
-  margin-top: 48px !important;
+  margin-top: 16px !important;
 }
 .courseVideo {
   position: relative;
@@ -1968,13 +1969,13 @@ button {
     max-width: 217px;
   }
 }
-@media screen and (max-width: 1366px) {
+@media screen and (max-width: 1300px) {
   .courseQuesDiv {
     flex-wrap: wrap;
     grid-gap: 10px;
   }
   .textEditorArea {
-    height: calc(100vh - 325px);
+    height: calc(100vh - 315px);
   }
 }
 .courseCretionDiv {
@@ -2514,7 +2515,7 @@ button.pdfDownload:disabled {
 }
 
 .cert-container {
-  height: calc(100vh - 172px);
+  height: calc(100vh - 330px);
   background: #fff;
   position: relative;
   overflow: auto;
@@ -2601,4 +2602,76 @@ tr{
 }
 .mat-tree-node:hover .locMasterNode {
   color: #fff;
+}
+
+.table-div {
+  background-color: #c5c5c5;
+  height: 0px;
+  margin-top: 30px;
+  border-top: 0.5px solid #c5c5c5 !important;
+}
+.freeTextUnderLine {
+  margin-top: 20px !important;
+}
+
+.deleteQuestion {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  border: none;
+  background: none;
+}
+
+.statusBtn:after {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+  margin-top: 4px;
+}
+
+.addQuestionBtn {
+  border: 1px solid #1f96f4;
+  background: #2f96f4;
+  color: #fff;
+  font-size: 16px;
+  font-family: Inter;
+  font-weight: 600;
+  word-wrap: break-word;
+  width: 173px;
+  height: 40px;
+  padding: 15px;
+}
+
+.quesDelContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 13px;
+  padding-left: 1px !important;
+}
+.mandatory-check {
+  width: 12px !important;
+  height: 12px !important;
+  position: absolute;
+  margin-top: 6px;
+  margin-left: -18px
+}
+.mandatory-check:checked {
+  background-color: #1f96f4 !important;
+  border-color: #1f96f4 !important;
+}
+
+/* Hide the up and down arrows for number input */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
