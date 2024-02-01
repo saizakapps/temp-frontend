@@ -1260,16 +1260,16 @@
             </ng-select>
 
             <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
-              <span style="margin-right: 25px;" *ngIf="courseConfig.code === courseCode.F2F">|</span>
+              <span style="margin-right: 25px; color: #AAAAAA" *ngIf="courseConfig.code === courseCode.F2F">|</span>
               <input (change)="updateQuestionLimit()"
                 [name]="'mandatory' + config.chapterData?.chapterId + question.questionId" class="mandatory-check"
                 type="checkbox" [(ngModel)]="question.mandatory" required>
-              <label class="form-check-label randomQuestion mb-3 mr-2 mandatoryLbl">
+              <label class="form-check-label mb-3 mandatoryLbl">
                 Mandatory
               </label>
             </span>
             <span class="form-check quesDelContainer">
-              <span>|</span>
+              <span style="color: #AAAAAA">|</span>
               <button class="deleteQuestion"
                 (click)="removeQuestion(config.activityData.questions, questionIndex)">
                 <img src="assets/images/delete-user.svg" height="22px" width="22px" class=" ml-2 m-0 closeActivity answerDeleteCls">
@@ -1342,10 +1342,10 @@
             <!-- Fill in the blanks & Free text -->
             <div class="multiAnswer w-100" *ngIf="question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'">
               <div class="character-limit-container d-flex align-items-center">
-                <mat-checkbox style="margin-bottom: 2px !important;" [name]="'charLimitCheckBox' + selectedActivity.activityId" [(ngModel)]="question.characterLimitCheck"
+                <mat-checkbox style="margin-bottom: 2px !important;" [name]="'charLimitCheckBox' + selectedActivity.activityId" (change)="characterLimitCheck($event, question)" [(ngModel)]="question.characterLimitCheck"
                   class="pl-3"></mat-checkbox>
                 <label class="mb-0">Character Limit</label>&nbsp;&nbsp;
-                <input class="p-1" [disabled]="!question.characterLimitCheck" type="number" min="0" max="2000" [(ngModel)]="question.characterLimit"
+                <input style="width: 72px;" (keypress)="allowNumberOnly($event, question);" maxlength="3" class="p-1" [disabled]="!question.characterLimitCheck" [(ngModel)]="question.characterLimit"
                 [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
               </div>
             </div>

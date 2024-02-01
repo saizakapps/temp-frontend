@@ -2365,8 +2365,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           this.compTemplateObj.id = response.payload.id
         }
       }
+      console.log('Validation categories: ', this.validCompletionCategories);
+      console.log('templateCategorySubmittedCount: ', this.templateCategorySubmittedCount);
       if (this.validCompletionCategories.length === this.templateCategorySubmittedCount) {
         this.createUpdateCertificateList(courseId, res);
+        this.templateCategorySubmittedCount = 0;
       }
   }
 
@@ -3028,6 +3031,35 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       document.querySelector(".questionCls").scrollTop = document.querySelector(".questionCls").scrollHeight;
     }, 300);
+  }
+
+  characterLimitCheck(event, question) {
+    question.characterLimitCheck = event.checked;
+    if (event.checked === false) {
+      delete question.characterLimit;
+      delete question.characterLimitCheck;
+    }
+  }
+
+  allowNumberOnly(event: any, question): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    } else {
+      this.validateCharacterimit(question);
+    }
+    return true;
+  }
+
+  validateCharacterimit(question) {
+    setTimeout(() => {
+      if (question.characterLimit <= 500) {
+
+      } else {
+        this.errorHandler.handleAlert('Only 500 characters are allowed');
+        delete question.characterLimit;
+      }
+    }, 100);
   }
 
   ngOnDestroy() {
