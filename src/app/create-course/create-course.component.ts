@@ -326,7 +326,6 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       code: this.courseConfig.code
     }
     const response: any = await this.apiHandler.postData(this.utils.API.GET_COMP_TEMPLATES, param, this.destroyed$);
-
     if (isGetCourseDetails) {
       this.completionCategories.forEach(category => {
         let res = response.payload.find(c => c.typeId === category.id);
@@ -335,7 +334,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.compCategoryTemplates = response.payload.filter(ele => ele.title !== '') || [];
+      this.compCategoryTemplates = response.payload.filter(c => c.title !== null && c.title !== undefined && c.title !== '') || [];
       this.compCategoryTemplates.unshift({ id: 'new', title: 'New' });
       this.selectedCompletionType.templateId = 'new';
     }
@@ -714,6 +713,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       question.questionType = type;
       delete questions.options;
     }
+    if (type === 'reArrangeOrder') question.questionType = type;
     questions.push(question);
     this.setQuestionId(questions);
     this.updateQuestionLimit();
