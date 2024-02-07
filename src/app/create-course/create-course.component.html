@@ -961,16 +961,15 @@
                               </div>
                             </div>
             
-                            <mat-menu #certificatesDD="matMenu" panelClass="table-menu-class" class="tableMatmenu">
-                    
+                            <mat-menu #certificatesDD="matMenu" panelClass="table-menu-class" class="tableMatmenu">                            
                               <div class=" p-0 coursePopup">
-                                <div>
-                                  <div *ngFor="let certificate of certificates"
-                                    class=" d-flex justify-content-start  align-items-center courseMenu" mat-menu-item>
+                                <ng-container *ngFor="let certificate of certificates">
+                                  <div class=" d-flex justify-content-start  align-items-center courseMenu" mat-menu-item
+                                    *ngIf="!(certificate.id === 9 && this.buildSelectedRoleGroups(this.roleGroupList).length > 0 && this.buildSelectedCountries(this.countryList).length > 0)">
                                     <button (click)="onCertificateChange(certificate, certItem)" class="overFlowmatmenutext"
                                       mat-menu-item>{{certificate.name}}</button>
                                   </div>
-                                </div>
+                                </ng-container>
                               </div>
                             </mat-menu>
                           </td>

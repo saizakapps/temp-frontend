@@ -2793,8 +2793,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   copyCertificates: any = [];
   async getCertificates() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CERTIFICATES_LIST, null, this.destroyed$);
-    this.certificates = response.payload;
-    this.certificates = this.certificates.filter(certificate => certificate.id !== this.certificationItems.find(certItem => certItem.id === certificate.id)?.id);
+    const certificates = _.sortBy(response.payload, 'id').reverse();
+    this.certificates = certificates.filter(certificate => certificate.id !== this.certificationItems.find(certItem => certItem.id === certificate.id)?.id);
     this.copyCertificates = $.extend(true, [], response.payload);
   }
 
