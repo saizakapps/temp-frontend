@@ -77,7 +77,7 @@ span.input-group-text {
 
 /*--------------------------------Body Css Start----------------------------------*/
 .employee-management-page-container {
-  height: calc(100vh - 265px);
+  height: calc(100vh - 215px);
   background: #fff;
   width: 100%;
   border-radius: 5px;
@@ -90,7 +90,7 @@ span.input-group-text {
 
 .table-responsive {
   min-height: 300px;
-  // height: calc(100vh - 245px);
+  height: calc(100vh - 245px);
   overflow: auto;
 }
 
@@ -987,8 +987,6 @@ tbody td {
   width: fit-content;
   border-radius: 4px;
   cursor: pointer;
-  width: 65px;
-  text-align: center;
 }
 .closebutton{
   background-color: #000;
@@ -1003,12 +1001,7 @@ tbody td {
   margin-bottom: 7px;
 }
 .name-table-width{
-  max-width: 250px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.role-table-width{
-  max-width: 160px;
+  max-width: 300px;
   text-overflow: ellipsis;
   overflow: hidden;
 }

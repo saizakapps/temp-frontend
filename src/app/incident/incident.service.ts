@@ -773,7 +773,7 @@ reportedDate:any){
       genderType:data.genderType,
       calculatedAge: data.calculatedAge,
       appropriateAge: data.appropriateAge,
-      injuredPersonContactNumber: (data.injuredPersonContactNumber!=null)?data.injuredPersonContactNumber.toString():'',
+      injuredPersonContactNumber: data.injuredPersonContactNumber.toString(),
       injuredPersonEmail: data.injuredPersonEmail,
       parantsContactNo: (data.injuredParentsContactNo!=null)?data.injuredParentsContactNo.toString():'',
       injuredPersonAddress: data.injuredPersonAddress,
@@ -785,7 +785,7 @@ reportedDate:any){
       : "",
       eventTime:
       data.eventActualDate != "" && data.eventActualDate != null
-      ? this.datepipe.transform(data.eventActualDate, "HH:mm")
+      ? this.datepipe.transform(data.eventActualDate, "hh:mm")
       : "",
       eventActualDate: data.eventActualDate,
       approximateDate: data.approximateDate,
@@ -795,7 +795,7 @@ reportedDate:any){
       : "",
       reportedTime:
       data.eventReportedDate != "" && data.eventReportedDate != null
-      ? this.datepipe.transform(data.eventReportedDate, "HH:mm")
+      ? this.datepipe.transform(data.eventReportedDate, "hh:mm")
       : "",
       eventReportedDate: data.eventReportedDate,
       storeComments: data.storeComments,

@@ -11,8 +11,8 @@
 		<div class="d-flex createBy">
 			<label class="">Created by:</label>
 			<div class="createdDetails createdText" [ngClass]="(isRedacted)?'redacted-background':''">
-				<div [ngClass]="{'createdText-width' : !isRedacted}" *ngIf="(basicInfoData.showData.createdBy !== '' && basicInfoData.showData.createdBy !== null)">{{(!isRedacted)?basicInfoData.showData.createdBy:'REDACTED'}}</div>
-						<div [ngClass]="{'createdText-width' : !isRedacted}" *ngIf="(basicInfoData.showData.createdBy == '' || basicInfoData.showData.createdBy == null)">{{(!isRedacted)?'-':'REDACTED'}}</div>
+				<span *ngIf="(basicInfoData.showData.createdBy !== '' && basicInfoData.showData.createdBy !== null)">{{(!isRedacted)?basicInfoData.showData.createdBy:'REDACTED'}}</span>
+						<span *ngIf="(basicInfoData.showData.createdBy == '' || basicInfoData.showData.createdBy == null)">{{(!isRedacted)?'-':'REDACTED'}}</span>
 				<!-- {{(!isRedacted)?basicInfoData.showData.createdBy:'REDACTED'}} -->
 			</div>
 		</div>
