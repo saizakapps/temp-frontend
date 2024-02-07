@@ -297,6 +297,7 @@ export class ReportsComponent implements OnInit {
   }
 
   /* Get course name */
+  filterCourseNamevalues:any[] =[];
   async getCourseName() {
     // this.ngxService.start();
     this.showShimmer = true;
@@ -304,7 +305,9 @@ export class ReportsComponent implements OnInit {
     this.courseTypes = response.payload;
     this.courseTypes.forEach(category => {
       this.availableFilter.courseName?.push({ name: category?.courseName, key: category?.courseName });
+      this.filterCourseNamevalues?.push({name: category?.courseName, key: category?.courseName, checked:false})
     });
+    console.log(this.filterCourseNamevalues);
     // this.ngxService.stop();
   }
 
@@ -1114,6 +1117,56 @@ export class ReportsComponent implements OnInit {
     if (this.popovers && this.popovers.length > index) {
       this.popovers.toArray()[index].close();
     }
+  }
+
+  filtercourseList:any[] = [];
+  courseChange(event:any, filteritem:any){
+    filteritem.checked = !filteritem.checked;
+    this.filtercourseList = this.filterCourseNamevalues.filter((filter:any)=> {
+      return filter.checked == true
+    }).map((item:any) => {
+      return item.name
+    })
+    console.log(this.filtercourseList, "filtercourseList filtercourseList")
+  }
+
+  onPopoverClose(property:any){
+    console.log(property, "propertypropertyproperty")
+    if(property == 'courseName'){
+      if ((this.filterRequest.courseName || this.filtercourseList.length > 0) && !this.deepCompareArrays(this.filterRequest.courseName, this.filtercourseList)) {
+        this.resetReportList();
+        this.filterRequest.courseName = this.filtercourseList;
+        this.getReportList();
+      }
+    }
+  }
+
+  deepCompareArrays(arr1, arr2) {
+    if (arr1 === undefined || arr2 === undefined || arr1.length !== arr2.length) {
+      return false;
+    }
+
+    const frequencyCounter1 = {};
+    const frequencyCounter2 = {};
+
+    for (let val of arr1) {
+      frequencyCounter1[val] = (frequencyCounter1[val] || 0) + 1;
+    }
+
+    for (let val of arr2) {
+      frequencyCounter2[val] = (frequencyCounter2[val] || 0) + 1;
+    }
+
+    for (let key in frequencyCounter1) {
+      if (!(key in frequencyCounter2)) {
+        return false;
+      }
+      if (frequencyCounter2[key] !== frequencyCounter1[key]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   ngOnDestroy(): void {

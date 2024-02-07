@@ -163,22 +163,22 @@ export class ApplicationViewComponent implements OnInit {
       }
     }
 
+    if(hsModules.length > 0){
     accessApps.push(hs);
-
+    }
     accessApps.forEach(accessApp => {
       const appObj: any = this.productData.find(app => app.appCode === accessApp.app.appCode);
       if (appObj) {
         appObj.isShow = true;
-        accessApp.app.modules.forEach(accessModule => {
+            accessApp.app.modules.forEach(accessModule => {
           const moduleObj: any = appObj.modules.find(module => module.moduleCode === accessModule.moduleCode);
           if (moduleObj) {
             moduleObj.isShow = true;
           }
-        });
+          });
       }
     });
-
-
+  
     /* let allAccessData = JSON.parse(localStorage.getItem('accessApps'));
     if (allAccessData.length > 0) {
       for (let x of this.productData) {

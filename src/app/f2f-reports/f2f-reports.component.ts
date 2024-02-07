@@ -833,7 +833,7 @@ export class F2fReportsComponent implements OnInit {
     if (response.payload === false) {
       this.uploadFileInput.nativeElement.click()
     } else {
-      this.errorHandler.handleAlert('server is busy, please try again later')
+      this.errorHandler.handleAlert('Processing an earlier import file, please try again later')
     }
   }
 

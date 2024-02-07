@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, TemplateRef, OnDestroy  } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Subject } from 'rxjs';
@@ -18,7 +18,7 @@ import { IncidentService } from "../../incident/incident.service";
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnInit,OnDestroy  {
 
   fillerNav: any = [];
   userDetails: any = {};
@@ -30,7 +30,7 @@ export class SidenavComponent implements OnInit {
   destroyed$: Subject<void> = new Subject<void>();
   public finalSideNav: any = [];
   @Input() leftMenuURL: any;
-
+  
   constructor(public router: Router,
     private utils: Utils,
     private ngxService: NgxUiLoaderService,
@@ -43,7 +43,7 @@ export class SidenavComponent implements OnInit {
     /* checking the navigation start, end */
     this.router.events.subscribe((event: Event) => {
       if (this.router.url != '/login') {
-        this.getSideMenu()
+        this.getSideMenu();
       }
 
       if (event instanceof NavigationStart) {
@@ -78,7 +78,7 @@ export class SidenavComponent implements OnInit {
     }
     let username = localStorage.getItem('username');
     this.ngxservice.userId = username;
-    let HealthSafetyAccessData = JSON.parse(localStorage.getItem('HealthSafetyAccessData'));
+    // let HealthSafetyAccessData = JSON.parse(localStorage.getItem('HealthSafetyAccessData'));
     // if(HealthSafetyAccessData.length>0){
     //   this.ngxservice.AccessdataAudit = HealthSafetyAccessData[0].app.modules[1];
     // }
@@ -105,7 +105,7 @@ export class SidenavComponent implements OnInit {
 
   /* get side menu details */
   getSideMenu() {
-    this.fillerNav = this.utils.LEFT_MENU;
+    this.fillerNav = [...this.utils.LEFT_MENU];
     this.fillerNav.forEach(item => item.isCollapsed = true);
     const accessAppsList: any = JSON.parse(localStorage.getItem('accessApps'));
     const hsApps = (accessAppsList!=null)?accessAppsList.filter(app => app.app.appCode === 'IT' || app.app.appCode === 'AT'):[];
@@ -114,7 +114,6 @@ export class SidenavComponent implements OnInit {
     hsApps.forEach(app => {
       hsModules.concat(app.app.modules);
     });
-
     const accessApps =(accessAppsList!=null)? accessAppsList.filter(app => app.app.appCode !== 'IT' && app.app.appCode !== 'AT'):[];
 
     const hs = {
@@ -123,13 +122,18 @@ export class SidenavComponent implements OnInit {
         appCode: "HS"
       }
     }
-
-    accessApps.push(hs);
+    if(hsModules.length > 0){
+      accessApps.push(hs);
+      }    
     // const access = (accessApps!=null)?this.constructByGroupName(accessApps.map(app => app.app)):[];
     this.fillerNav.forEach(item => {
       const accessObj = accessApps.find(app => app.app.appCode === item.appCode);
       if (accessObj) {
-        item.access = true;
+       let moduleaccessLength = (accessObj.app.modules.filter((item:any) => {
+          item.access == true
+        })).length;
+        item.access = moduleaccessLength !== accessObj.app.modules.length?true:false;
+        // item.access = true
         for (let nav of item.modules) {
           nav.access = accessObj.app.modules.find(module => module.moduleCode === nav.moduleCode) !== undefined ? true : false;
           if (nav.routeUrl == this.router.url) {
@@ -145,7 +149,6 @@ export class SidenavComponent implements OnInit {
         }
       }
     });
-
     /* if (access) {
       for (let nav of this.fillerNav) {
         nav.access = access[nav.key] ? true : false;
@@ -225,8 +228,7 @@ export class SidenavComponent implements OnInit {
     } else {
       localStorage.clear();
     }
-
-
+    
     this.router.navigate(['/login']);
   }
   @ViewChild('leavepagepopup', { read: TemplateRef }) leavepagepopup: TemplateRef<any>;
@@ -250,8 +252,15 @@ compareIncidentSubscript:any;
     // }
     // else {
     this.router.navigate([path]);
+    if(this.router.url == '/f2f'){
+    this.updateMainComponent();
+    }
    // }
 
+  }
+  updateMainComponent() {
+    // Update data in the shared service
+    this.emitService.updateData({ someValue: 'change same url' });
   }
   confirmnavigate() {
     if(this.incidentservice.compareIncidentSubscript !== undefined){
@@ -265,4 +274,12 @@ compareIncidentSubscript:any;
       this.incidentservice.compareIncidentSubscript.unsubscribe();
       }
       }
-}
+
+      ngOnDestroy(): void {
+        for(let x of this.fillerNav){
+          x.isCollapsed = false;
+          x.access = false;
+        }       
+        // Perform cleanup tasks here
+        // Any other cleanup tasks
+      }}

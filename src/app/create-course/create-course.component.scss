@@ -14,6 +14,10 @@
   resize: none !important;
 } */
 
+* ::-webkit-scrollbar {
+  width: 2px!important;
+}
+
 
 .activeList,
 .accordion:hover {
@@ -1513,15 +1517,15 @@ button {
 }
 
 .answersubSection{
-  border: 1px solid #808080;
+  border: 1px solid #808080b3;
   padding: 5px 5px;
   border-radius: 6px;
 }
-.answersubSectionContent{
- color: black; 
- font-size: 16px; 
- font-family: "Inter"; 
- font-weight: 400; 
+.answersubSectionContent {
+  color: black;
+  font-size: 14px;
+  font-family: "Calibri";
+  font-weight: 400;
 }
 .newyellowBG{
   background-color: #FFF7D3;
@@ -1663,6 +1667,7 @@ button {
   height: calc(100vh - 360px);
   padding-right: 0px;
   margin-top: -3px;
+  scroll-behavior: smooth;
 }
 
 .modalPopup {
@@ -1844,7 +1849,7 @@ button {
 .videoContent {
   border: 0;
   border-radius: 6px;
-  margin: 2px 0px 8px;
+  margin: 12px 0px 12px;
 }
 .courseParentDiv {
   position: relative;
@@ -1880,7 +1885,6 @@ button {
   margin-left: 3px;
   width: 335px;
   padding: 10px 15px 0px !important;
-  padding-left: 0px !important;
 }
 .createRoleCls :disabled {
   opacity: 0.5;
@@ -1899,7 +1903,7 @@ button {
   margin-bottom: 0px !important;
 }
 .quizHintCls {
-  height: auto;
+  height: 40px;
 }
 .suggestedCls {
   margin-left: 6px;
@@ -1908,6 +1912,8 @@ button {
   background: rgba(31, 150, 244, 0.05);
   padding: 16px;
   border-radius: 10px;
+  margin: 10px 0px 10px 0px;
+  bottom: 0px !important;
 }
 .exampleDivCls {
   margin: 5px 0px 6px;
@@ -2478,19 +2484,23 @@ button.pdfDownload:disabled {
   position: relative;
   margin-bottom: 10px;
   max-width: 302px !important;
+  width: 280px;
 }
 
 .cert-select {
   border: 1px solid #616161;
   padding: 5px 10px;
+  padding-bottom: 6px;
   height: 32px;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  background-color: #ffffff;
+
 }
 
 .selected-cert-options {
-  flex: 1;
+ text-overflow: ellipsis;
   overflow: hidden;
 }
 
@@ -2680,4 +2690,37 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+.overFlowmatmenutext{
+    white-space: nowrap;      /* Prevent text from wrapping */
+  overflow: hidden;          /* Hide any content that overflows the box */
+  text-overflow: ellipsis;   /* Display ellipsis (...) for overflowed text */
+
+}
+.quizSection{
+ scroll-behavior: smooth;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99998!important;
+  opacity: 0.5;
+  background-color: #282828cc;
+  cursor: progress;
+}
+.questionTypeMenu {
+  margin-top: 10px;
+  margin-left: 3px;
+  font-family: unset;
+  font-size: 15px;
+}
+.defaultHighlight {
+  background-color: #e1e1e1;
+}
+.recurring .ng-select {
+  padding-bottom: 19px!important;
 }

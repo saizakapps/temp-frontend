@@ -81,16 +81,18 @@ const routes: Routes = [
           title: 'F2F-Reports',
           key: 'f2freports'
         },
-        loadChildren: () => import('./f2f-summary/f2f-summary.module').then(m => m.F2fSummaryModule) 
+        loadChildren: () => import('./f2f-summary/f2f-summary.module').then(m => m.F2fSummaryModule)
         // loadChildren: () => import('./f2f-reports/f2f-reports.module').then(m => m.F2fReportsModule)
       },
-      { path: 'f2f-summary', 
-      data: {
-        title: 'F2F-summary',
-        key: 'f2fsummary'
-      },
-      loadChildren: () => import('./f2f-summary/f2f-summary.module').then(m => m.F2fSummaryModule) 
-    },
+      // {
+      //   path: 'f2f-summary',
+      //   data: {
+      //     title: 'F2F-Summary',
+      //     key: 'f2fsummary'
+      //   },
+      //   loadChildren: () => import('./f2f-summary/f2f-summary.module').then(m => m.F2fSummaryModule)
+      // },
+
       {
         path: 'userAccess',
         canActivate: [AuthGuard],
@@ -136,6 +138,15 @@ const routes: Routes = [
       },
       {
         path: 'incident-create',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./incident/incident-create/incident-create.module').then(m => m.IncidentCreateModule),
+        data: {
+          title: 'Incident-Create',
+          key: 'incidentCreate'
+        }
+      },
+      {
+        path: 'incident-create/:incidentdetails',
         canActivate: [AuthGuard],
         loadChildren: () => import('./incident/incident-create/incident-create.module').then(m => m.IncidentCreateModule),
         data: {

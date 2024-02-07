@@ -20,8 +20,8 @@
           
         <!-- placement="top" ngbTooltip  (click)="onTableRowDataClick(element)"-->
         <span >
-           <span class="textcase" *ngIf="x.indexName!='createdBy'" title="{{element[x.indexName]}}" >{{(element[x.indexName]!='' && element[x.indexName]!=null)?element[x.indexName]:'-'}}</span>
-           <button class="restoreBtn" *ngIf="x.indexName=='createdBy'" (click)="restoreClick(element)">View</button>
+           <span class="textcase" *ngIf="x.indexName!='createdById'" title="{{element[x.indexName]}}" >{{(element[x.indexName]!='' && element[x.indexName]!=null)?element[x.indexName]:'-'}}</span>
+           <button class="restoreBtn" *ngIf="x.indexName=='createdById'" (click)="restoreClick(element)">View</button>
         </span>
 
        

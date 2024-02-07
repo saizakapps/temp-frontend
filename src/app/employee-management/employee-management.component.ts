@@ -790,6 +790,14 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  userModalScrollDown() {
+    setTimeout(() => {
+      if (document.querySelector("#userModal")) {
+        document.querySelector("#userModal").scrollTop = document.querySelector("#userModal").scrollHeight;
+      }
+    }, 100);
+  }
+
   /* loadStoreList(data, event, index) {
     console.log(index, event, data, 'country index data');
 
@@ -867,7 +875,8 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
         this.userDetail.roleId = roleList.id;
       }
     });
-    if (this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer') {
+    if (this.userDetail.role && (this.userDetail.role.replace(' ', '').toLowerCase() === 'externaltrainer')) {
+      this.userDetail.isTrainer = false;
       this.constructTrainerUserDetail();
     }
   }
@@ -1820,10 +1829,10 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       suggested: true
     }
 
-    const [api1Response, api2Response, api3Response]: any = await Promise.all([
+    const [api1Response, api2Response]: any = await Promise.all([
       this.apiHandler.postData(this.utils.API.POST_USER_COURSE, param1, this.destroyed$),
       this.apiHandler.postData(this.utils.API.POST_USER_COURSE, param2, this.destroyed$),
-      this.apiHandler.postData(this.utils.API.GET_FF_COURSES, { userId: data.id }, this.destroyed$)
+      // this.apiHandler.postData(this.utils.API.GET_FF_COURSES, { userId: data.id }, this.destroyed$)
     ]);
 
     api1Response.payload.data?.forEach((userCourse) => {
@@ -1839,7 +1848,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       this.empCourseList.push(policy);
     });
 
-    this.empCourseList = this.empCourseList.concat(api3Response.payload);
+    // this.empCourseList = this.empCourseList.concat(api3Response.payload);
 
     level1Courses = this.sortCourses('Level1');
     level2Courses = this.sortCourses('Level2');

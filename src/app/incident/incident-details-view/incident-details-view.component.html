@@ -3,14 +3,14 @@
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.eventDateTime.view">
 		<label class="label-name">Incident Date:</label>
 		<div class="data-view ">
-			<span>{{incidentDetailsData.showData.eventActualDate | date:'dd-MM-yyyy, h:mm '}}</span>
+			<span>{{incidentDetailsData.showData.eventActualDate | date:'dd-MM-yyyy, HH:mm '}}</span>
 			<span>{{(incidentDetailsData.showData.IsAprroximate)?'; Approximate':''}}</span>
 		</div>
 	</div>
 	<div class="labelView d-flex" *ngIf="incidentDetailsData.formFieldAccess.reportedDateTime.view">
 		<label class="label-name ">Reported Date:</label>
 		<div class="data-view">
-			<span *ngIf="incidentDetailsData.showData.eventReportedDate !== null && incidentDetailsData.showData.eventReportedDate !== ''">{{incidentDetailsData.showData.eventReportedDate | date:'dd-MM-yyyy, h:mm '}}</span>
+			<span *ngIf="incidentDetailsData.showData.eventReportedDate !== null && incidentDetailsData.showData.eventReportedDate !== ''">{{incidentDetailsData.showData.eventReportedDate | date:'dd-MM-yyyy, HH:mm '}}</span>
 			<span *ngIf="incidentDetailsData.showData.eventReportedDate == null || incidentDetailsData.showData.eventReportedDate == ''">-</span>
 		</div>
 	</div>

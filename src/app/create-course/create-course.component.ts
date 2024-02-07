@@ -137,7 +137,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   policyGroupEvent: any;
 
-  quizPositionItems: any = [{name: 'End of course', key: true}, {name: 'Each chapter', key: false}];
+  quizPositionItems: any = [{ name: 'End of course', key: true }, { name: 'Each chapter', key: false }];
   quizPosition: boolean = true;
   randomLimit: any;
 
@@ -147,6 +147,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   categories: any = this.utils.ddOptions.DD_LABELS.period;
   questionTypes: any = this.utils.ddOptions.DD_LABELS.questionTypes;
   completionCategories: any = [];
+  cloneCompletionCategories: any = [];
   validCompletionCategories: any = [];
 
   /* Second country region store DD variables */
@@ -162,11 +163,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       name: '',
       certificateUrl: '',
       renderingData: {
-        countryList: this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList): this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0),
+        countryList: this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0),
         selectedStoreCount: 0
       }
     }
   ];
+  cloneCertificationItems: any[] = [...this.certificationItems];
 
   destroyed$: Subject<void> = new Subject<void>();
 
@@ -199,6 +201,19 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     this.getRoleGroups();
     this.getPolicyCategories();
     this.autoSaveCourse();
+    // Call a method to expand nodes by default
+    this.expandNodesByDefault();
+  }
+
+  expandNodesByDefault(certItem?) {
+    // Example: Expand the first node
+    let certItemData = certItem ? certItem : this.certificationItems[0];
+    certItemData.renderingData.countryList.forEach(country => {
+      this.treeControl.expand(country);
+      country.child.forEach(region => {
+        this.treeControl.expand(region);
+      });
+    });
   }
 
   getModuleAccess() {
@@ -290,14 +305,16 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       }
       // this.ngxService.stop();
       this.clonedCourse = $.extend(true, {}, this.course);
-      this.showShimmer = false;
+      if (this.courseConfig.code !== this.courseCode.F2F) {
+        this.showShimmer = false;
+      }
     }
-    if(this.courseConfig.courseTypeDesc == 'Policies'){
-      this.chapterTypes = this.chapterTypes.filter((x:any) => {
-       return x.name !== 'Slide'
+    if (this.courseConfig.courseTypeDesc == 'Policies') {
+      this.chapterTypes = this.chapterTypes.filter((x: any) => {
+        return x.name !== 'Slide'
       })
-      this.activityTypes = this.activityTypes.filter((x:any) => {
-       return x.name == 'Text' || x.name == 'Expandable'
+      this.activityTypes = this.activityTypes.filter((x: any) => {
+        return x.name == 'Text' || x.name == 'Expandable'
       })
     }
     /* Set selected countries for cert items */
@@ -308,6 +325,17 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
   }
 
+  /* On completion category DD change (Only for F2F) */
+  selectedCompletionType: any = { id: 1, name: 'Evaluated', content: '', templateId: 'new' };
+  compCategoryChange(event) {
+    console.log('Categories', this.completionCategories);
+    this.selectedCompletionType = {};
+    this.selectedCompletionType = event;
+    this.compCategoryTemplates = this.masterTemplates.find(template => template.id === event.id).data;
+    this.selectedCompletionType.templateId = 'new';
+  }
+
+  masterTemplates: any = [];
   async getCompletionTypeTemplate() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_COMP_TEMPLATE_TYPES, '', this.destroyed$);
     this.completionCategories = response.payload || [];
@@ -315,17 +343,21 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       element.content = '';
     });
     this.selectedCompletionType = this.completionCategories[0];
-    this.getF2FCompTemplates(false);
+    for (let i = 1; i <= response.payload.length; i++) {
+      this.getF2FCompTemplates(false, i);
+    }
   }
 
   compCategoryTemplates: any = [];
-  async getF2FCompTemplates(isGetCourseDetails: boolean) {
+  getF2FCompTemplatesApiCount: number = 0;
+  async getF2FCompTemplates(isGetCourseDetails: boolean, type?: any, element?: any) {
     const param = {
-      typeId: !isGetCourseDetails ? this.selectedCompletionType.id : null,
-      courseId: isGetCourseDetails ? this.courseTypeDetail.courseId : null,
+      typeId: !isGetCourseDetails ? type : null,
+      courseId: isGetCourseDetails ? element ? element.id : this.courseTypeDetail.courseId : null,
       code: this.courseConfig.code
     }
     const response: any = await this.apiHandler.postData(this.utils.API.GET_COMP_TEMPLATES, param, this.destroyed$);
+    this.getF2FCompTemplatesApiCount++;
     if (isGetCourseDetails) {
       this.completionCategories.forEach(category => {
         let res = response.payload.find(c => c.typeId === category.id);
@@ -333,13 +365,21 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           category.content = res.content;
         }
       });
+      this.cloneCompletionCategories = $.extend(true, [], this.completionCategories);
     } else {
-      this.compCategoryTemplates = response.payload.filter(c => c.title !== null && c.title !== undefined && c.title !== '') || [];
-      this.compCategoryTemplates.unshift({ id: 'new', title: 'New' });
-      this.selectedCompletionType.templateId = 'new';
+      let template: any = response.payload.filter(c => c.title !== null && c.title !== undefined && c.title !== '') || [];
+      template.unshift({ id: 'new', title: 'New' });
+      const obj = {
+        id: type,
+        data: template
+      }
+      this.masterTemplates.push(obj);
     }
-    this.disableTemplateDD = false;
-    console.log('Categories: ', this.completionCategories);
+    if ((this.getF2FCompTemplatesApiCount === this.completionCategories.length) || element) {
+      this.compCategoryTemplates = this.masterTemplates.find(template => template.id === 1).data;
+      this.selectedCompletionType.templateId = 'new';
+      this.getCertificationItems(element);
+    }
   }
 
   async getCompTemplates() {
@@ -364,8 +404,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     };
     const response: any = await this.apiHandler.postData(this.utils.API.GET_COURSE_DETAILS, payload, this.destroyed$);
     if (response) {
-      this.getF2FCompTemplates(true);
-      this.getCertificationItems();
+      this.getF2FCompTemplates(true, '', element);
     }
     this.quizPosition = response.payload[0].quizPosition;
     if (element) {
@@ -426,7 +465,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     });
     console.log('course course', this.course);
     // this.ngxService.stop();
-    this.showShimmer = false;
+    if (this.courseConfig.code !== this.courseCode.F2F) {
+      this.showShimmer = false;
+    }
   }
 
   setPredefinedVal(courseData) {
@@ -769,7 +810,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
               if (question.mandatory) {
                 mandatoryCount++;
               }
-  
+
             }
           }
         }
@@ -875,7 +916,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       activity.questions = [{
         questionId: 1,
         options: [{ key: 1 }, { key: 2 }],
-        // questionType: 'singleAnswer'
+        questionType: 'multiAnswer'
       }];
       activity.content = '';
     } else {
@@ -1034,31 +1075,33 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       });
       if (question.correctAnswer) {
         delete question['correctAnswer'];
-      }  
+      }
     } else if (question.questionType === 'fillRightAnswer' || question.questionType === 'freeText') {
       delete question.options;
     }
     this.updateQuestionLimit()
   }
 
-  @ViewChild ('locationSelect') locationSelect;
-  @ViewChild ('selector1') selector1;
-  @ViewChild ('selector2') selector2;
+  @ViewChild('locationSelect') locationSelect;
+  @ViewChild('selector1') selector1;
+  @ViewChild('selector2') selector2;
   checkCountryAndRoleSelected(event, ddType) {
 
     /* For certification line item data */
     if (ddType === 'location') {
       if (event === true) {
-        if (this.certificationItems.length > 1) {
+        /* if (this.certificationItems.length > 1) {
           this.locationSelect.close();
           this.openAlert('clearCertLineItems');
           return;
         } else {
           this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
           this.setRenderingDataForCertificationItems();
-        }
+        } */
       } else {
-        this.certificationItems[0].renderingData.countryList = this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList): this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0);
+        if (this.certificationItems.length === 1) {
+          this.certificationItems[0].renderingData.countryList = this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0);
+        }
       }
     }
     const selectedCountries: any = this.buildSelectedCountries(this.countryList);
@@ -1076,20 +1119,20 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.questionTypes = this.utils.ddOptions.DD_LABELS.questionTypes;
     }
 
-    if (event === true && (selectedCountries.length > 0 || selectedRoles.length > 0)) {
+    /* if (event === true && (selectedCountries.length > 0 || selectedRoles.length > 0)) {
       if (this.checkFreeTextQues()) {
         if (ddType === 'location' && selectedCountries.length === 0 && selectedRoles.length > 0) {
           this.locationSelect.toggle();
-          this.openAlert('removeFreeText');  
+          this.openAlert('removeFreeText');
         } else if (ddType === 'role1' && selectedCountries.length > 0 && selectedRoles.length === 0) {
           this.selector1.toggle();
-          this.openAlert('removeFreeText');  
+          this.openAlert('removeFreeText');
         } else if (ddType === 'role2' && selectedCountries.length > 0 && selectedRoles.length === 0) {
           this.selector2.toggle();
-          this.openAlert('removeFreeText');  
+          this.openAlert('removeFreeText');
         }
       }
-    }
+    } */
   }
 
   /* Toggle Quiz option */
@@ -1231,9 +1274,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.switchPulishDraft(index);
     } else if (type === 'templateSubmitted') {
       this.templateSubmitted(true);
-    } else if(type === 'withoutRoleCountry'){
+    } else if (type === 'withoutRoleCountry') {
       this.withoutRoleCountry();
-    } else if(type === 'withoutCompCategory'){
+    } else if (type === 'withoutCompCategory') {
       // this.withoutRoleCountry();
     } else if (type === 'clearCertLineItems') {
       this.certificationItems = [
@@ -1243,7 +1286,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           name: '',
           certificateUrl: '',
           renderingData: {
-            countryList: this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList): this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0),
+            countryList: this.setSelected(this.cloneCountryList, this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList)), 0),
             selectedStoreCount: 0
           }
         }
@@ -1473,6 +1516,25 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   selectAll(event: any, list: any, type: any) {
+    if (this.certificationItems.length > 1 && type === 'country') {
+      this.countryList = $.extend(true, [], this.countryList);
+      this.locationSelect.close();
+      this.openAlert('clearCertLineItems');
+      return;
+    } else {
+      /* this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
+      this.setRenderingDataForCertificationItems(); */
+    }
+
+    const selectedCountries: any = this.buildSelectedCountries(this.countryList);
+    const selectedRoles: any = this.buildSelectedRoleGroups(this.roleGroupList);
+
+    if (type === 'country' && this.checkFreeTextQues() && selectedCountries.length === 0 && selectedRoles.length > 0) {
+      this.countryList = $.extend(true, [], this.countryList);
+      this.locationSelect.toggle();
+      this.openAlert('removeFreeText');
+    }
+
     list.forEach(element => {
       this.selectionToggle(event.checked, element, type);
     });
@@ -1480,6 +1542,25 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   disableSelection: boolean = true;
   selectionToggleLeaf(isChecked, node, type, certItem?: any) {
+    if (this.certificationItems.length > 1 && type === 'country') {
+      this.countryList = $.extend(true, [], this.countryList);
+      this.locationSelect.close();
+      this.openAlert('clearCertLineItems');
+      return;
+    } else {
+      /* this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
+      this.setRenderingDataForCertificationItems(); */
+    }
+
+    const selectedCountries: any = this.buildSelectedCountries(this.countryList);
+    const selectedRoles: any = this.buildSelectedRoleGroups(this.roleGroupList);
+
+    if (type === 'country' && this.checkFreeTextQues() && selectedCountries.length === 0 && selectedRoles.length > 0) {
+      this.countryList = $.extend(true, [], this.countryList);
+      this.locationSelect.toggle();
+      this.openAlert('removeFreeText');
+    }
+
     node.selectStatus = isChecked ? 'checked' : 'unchecked';
     this.updateSelectionstatus(type, certItem);
     if (type === 'certCountry') {
@@ -1497,6 +1578,24 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   selectionToggle(isChecked, node, type) {
+    if (this.certificationItems.length > 1 && type === 'country') {
+      this.countryList = $.extend(true, [], this.countryList);
+      this.locationSelect.close();
+      this.openAlert('clearCertLineItems');
+      return;
+    } else {
+      /* this.certificationItems[0].countries = this.calcSelectedStore() > 0 ? this.buildSelectedCountries(this.countryList) : this.setCountryStatusChecked($.extend(true, [], this.countryList));
+      this.setRenderingDataForCertificationItems(); */
+    }
+
+    const selectedCountries: any = this.buildSelectedCountries(this.countryList);
+    const selectedRoles: any = this.buildSelectedRoleGroups(this.roleGroupList);
+
+    if (type === 'country' && this.checkFreeTextQues() && selectedCountries.length === 0 && selectedRoles.length > 0) {
+      this.countryList = $.extend(true, [], this.countryList);
+      this.openAlert('removeFreeText');
+    }
+
     node.selectStatus = isChecked ? 'checked' : 'unchecked';
     if (node.child) {
       node.child.forEach(child => {
@@ -1504,6 +1603,16 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       });
     }
     this.updateSelectionstatus(type);
+  }
+
+  roleLevelSelect() {
+    const selectedCountries: any = this.buildSelectedCountries(this.countryList);
+    const selectedRoles: any = this.buildSelectedRoleGroups(this.roleGroupList);
+
+    if (this.checkFreeTextQues() && selectedCountries.length > 0 && selectedRoles.length === 0) {
+      this.roleGroupList = $.extend(true, [], this.roleGroupList);
+      this.openAlert('removeFreeText');
+    }
   }
 
   allRoleSelect(event: any) {
@@ -1816,12 +1925,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     });
   }
 
+  overlay:boolean = false;
   async hitCourseAPI(type?, isPublished?) {
     if (!type) {
       this.ngxService.start();
+      this.overlay = true;
     }
     const res: any = await this.apiHandler.postData(this.utils.API.CREATE_UPDATE_COURSE, this.publishCourse, this.destroyed$,
-      this.courseConfig.courseCode !== this.courseCode.F2F && type ? 'Course Auto Saved' : 'Course updated successfully');
+      this.courseConfig.courseCode !== this.courseCode.F2F && type ? 'Course Auto Saved' : this.publishCourse.status === 'Draft' ? 'Course drafted successfully' : 'Course updated successfully');
     if (this.courseConfig.code === this.courseCode.F2F && res) { // check if the course type is F2F, If it is then first call templateSubmission and certificateSubmission
       this.validCompletionCategories = this.completionCategories.filter(comp => comp.content.length > 0);
       for (let category of this.validCompletionCategories) {
@@ -1847,9 +1958,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           localStorage.setItem('courseType', JSON.stringify(this.courseTypeDetail));
         }
       }
+      // this.ngxService.stop();
+      this.overlay = false;
     }
-    
-    this.ngxService.stop();
   }
 
   /*
@@ -1912,7 +2023,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   enableSubmitButtonForF2F() {
     let isValid: boolean = true;
-    
+
     let isCourseNameValid: boolean = true;
     let isChapterValid: boolean = true;
     let isQuesValid: boolean = true;
@@ -1923,7 +2034,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     isChapterValid = this.areChaptersValid();
 
     let noQuiz: boolean = this.quizCount() === 0 ? true : false;
-    let isFreeTextAvailable: boolean = this.checkFreeTextQues();   
+    let isFreeTextAvailable: boolean = this.checkFreeTextQues();
 
     isQuesValid = !noQuiz;
     if (isQuesValid) {
@@ -1934,11 +2045,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
             break;
           }
         }
-      } 
+      }
     }
 
     /* Check completion message valid based on condition */
-    if (isFreeTextAvailable) {      
+    if (isFreeTextAvailable) {
       if (this.checkContentInCompCategory().isAnyValid) {
         isCompValid = true
       } else {
@@ -1949,13 +2060,13 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
 
     /* Check certification */
-    isCertificateValid = this.certificationItems[this.certificationItems.length - 1].name ? true : false;
+    isCertificateValid = !this.checkInValidCertItems();
 
     let condition: boolean = false;
     if (isFreeTextAvailable) {
       condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid && isCertificateValid;
     } else {
-      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCertificateValid;
+      condition = isCourseNameValid && ((isChapterValid && noQuiz) || (this.checkChapterEmpty() && isQuesValid) || (this.course.chapters.length > 1 && isChapterValid && !noQuiz && isQuesValid)) && isCompValid && isCertificateValid;
     }
 
     if (condition) {
@@ -1967,11 +2078,36 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
+  checkInValidCertItems() {
+    let isValid: boolean = false;
+    for (let item of this.certificationItems) {
+      if (item.name === '' || this.getSelectedChildCount(item.renderingData.countryList, 0, 'cert') === 0) {
+        isValid = true;
+        break;
+      }
+    }
+    return isValid;
+  }
+
+  checkCheckedItems(items) {
+    let isValid: boolean = false;
+    for (let item of items) {
+      if (item.checked === 'true') { 
+        isValid = true;
+        break;
+      }
+      if (item.child && item.child.length > 0) {
+        this.checkCheckedItems(item.child);
+      }
+    }
+    return isValid;
+  }
+
   checkContentInCompCategory() {
-    let evaluate: any = {isValid: false};
-    let passed: any = {isValid: false};
-    let failed: any = {isValid: false};
-    let redo: any = {isValid: false};
+    let evaluate: any = { isValid: false };
+    let passed: any = { isValid: false };
+    let failed: any = { isValid: false };
+    let redo: any = { isValid: false };
     for (let type of this.completionCategories) {
       switch (type.id) {
         case 1:
@@ -1998,8 +2134,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    let obj = { 
-      isAnyValid: evaluate.isValid || passed.isValid || failed.isValid || redo.isValid, 
+    let obj = {
+      isAnyValid: evaluate.isValid || passed.isValid || failed.isValid || redo.isValid,
       isAllValid: evaluate.isValid && passed.isValid && failed.isValid && redo.isValid,
       evaluate: evaluate,
       passed: passed,
@@ -2172,7 +2308,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         areQuesValid = this.isQuestionValid(question);
         if (areQuesValid === false) {
           break;
-        }  
+        }
       } else if (question.questionType === 'fillRightAnswer' || question.questionType === 'freeText') {
         if (question.content) {
           if (question.characterLimitCheck === true) {
@@ -2287,17 +2423,6 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* On completion category DD change (Only for F2F) */
-  selectedCompletionType: any = {id: 1, name: 'Evaluated', content: '', templateId: 'new'};
-  disableTemplateDD: boolean = false;
-  compCategoryChange(event) {
-    this.disableTemplateDD = true;
-    console.log('Categories', this.completionCategories);
-    this.selectedCompletionType = {};
-    this.selectedCompletionType = event;
-    this.getF2FCompTemplates(false);
-  }
-
   templateChange(event, type) {
     if (type === 'normal') {
       if (event.id !== 'new') {
@@ -2305,7 +2430,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         this.compTemplateObj.title = event.title;
       } else {
         this.compTemplateObj.title = '';
-      }  
+      }
     } else if (type === 'freeText') {
       if (event.id !== 'new') {
         this.selectedCompletionType.content = event.content;
@@ -2345,32 +2470,32 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   async templateCategorySubmitted(isPublished, type, courseId, obj, res) {
     this.ngxService.start();
     const compObj: any = {};
-      compObj.content = obj.content;
-      compObj.title = obj.title;
-      compObj.code = this.courseTypeDetail?.courseTypeCode;
-      compObj.typeId = obj.id;
-      compObj.courseId = courseId;
-      if (obj.templateId !== 'new') {
-        compObj.id = obj.templateId;
+    compObj.content = obj.content;
+    compObj.title = obj.title;
+    compObj.code = this.courseTypeDetail?.courseTypeCode;
+    compObj.typeId = obj.id;
+    compObj.courseId = courseId;
+    if (obj.templateId !== 'new') {
+      compObj.id = obj.templateId;
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_COMP_TEMPLATES, compObj, this.destroyed$);
+    this.templateCategorySubmittedCount++;
+    if (!isPublished) {
+      let changedTemplateIndex = this.compTemplates.findIndex(element => element.id === response.payload.id);
+      if (changedTemplateIndex !== -1) {
+        // this.compTemplates[changedTemplateIndex] = response.payload;
+        this.compTemplates = this.compTemplates.slice(0, changedTemplateIndex).concat(response.payload, this.compTemplates.slice(changedTemplateIndex + 1))
+      } else {
+        this.compTemplates = this.compTemplates.concat(response.payload);
+        this.compTemplateObj.id = response.payload.id
       }
-      const response: any = await this.apiHandler.postData(this.utils.API.POST_COMP_TEMPLATES, compObj, this.destroyed$);
-      this.templateCategorySubmittedCount++;
-      if (!isPublished) {
-        let changedTemplateIndex = this.compTemplates.findIndex(element => element.id === response.payload.id);
-        if (changedTemplateIndex !== -1) {
-          // this.compTemplates[changedTemplateIndex] = response.payload;
-          this.compTemplates = this.compTemplates.slice(0, changedTemplateIndex).concat(response.payload, this.compTemplates.slice(changedTemplateIndex + 1))
-        } else {
-          this.compTemplates = this.compTemplates.concat(response.payload);
-          this.compTemplateObj.id = response.payload.id
-        }
-      }
-      console.log('Validation categories: ', this.validCompletionCategories);
-      console.log('templateCategorySubmittedCount: ', this.templateCategorySubmittedCount);
-      if (this.validCompletionCategories.length === this.templateCategorySubmittedCount) {
-        this.createUpdateCertificateList(courseId, res);
-        this.templateCategorySubmittedCount = 0;
-      }
+    }
+    console.log('Validation categories: ', this.validCompletionCategories);
+    console.log('templateCategorySubmittedCount: ', this.templateCategorySubmittedCount);
+    if (this.validCompletionCategories.length === this.templateCategorySubmittedCount) {
+      this.createUpdateCertificateList(courseId, res);
+      this.templateCategorySubmittedCount = 0;
+    }
   }
 
   checkCourseMod() {
@@ -2431,6 +2556,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     this.sortIds(selectedCntry);
     modified = !this.deepCompare(this.clonedCourse.countries || [], selectedCntry);
     if (modified === true) return modified;
+    
+    modified = this.deepCompare(this.cloneCompletionCategories, this.completionCategories);
+    if (modified === true) return modified;
+
+    modified = this.deepCompare(this.cloneCertificationItems, this.certificationItems);
+    if (modified === true) return modified;
 
     if (modified) {
       localStorage.removeItem('canDeactivate');
@@ -2442,14 +2573,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   sortIds(array) {
     array?.sort((a, b) => a.id - b.id);
-    for(let ele of array) {
+    for (let ele of array) {
       if (ele?.children?.length > 0) {
         this.sortIds(ele.children)
       }
     }
   }
 
-  handleScroll(){
+  handleScroll() {
     const divscroll = document.getElementById('targetscroll');
     setTimeout(() => {
       divscroll.scrollTop = divscroll.scrollHeight
@@ -2599,14 +2730,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       allFile = true;
     }
     /* Check if text activity found */
-    for(let chapter of tempCourse) {
-      for(let activity of chapter.activities) {
+    for (let chapter of tempCourse) {
+      for (let activity of chapter.activities) {
         if (activity.activityType === 'text') {
           isTextActivity = true;
           break;
         }
       }
-      if(isTextActivity) {
+      if (isTextActivity) {
         break;
       }
     }
@@ -2622,6 +2753,21 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   enableDownloadDropDown() {
     return !this.isAllFileContent() && this.getMediaUrlList().length > 0
+  }
+
+  disableRandomDD() {
+    let noQuestions: boolean = true;
+    for (let chapter of this.course.chapters) {
+      for (let question of chapter.questions) {
+        if (question.content) {
+          noQuestions = false;
+          question.questionType === 'freeText' || question.questionType === 'fillRightAnswer' ? noQuestions = true : false;
+        } else {
+          noQuestions = true;
+        }
+      }
+    }
+    return noQuestions;
   }
 
   /* Check if free text is present in quiz */
@@ -2643,24 +2789,23 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
 
   /* Certification methods */
-  certificates: any= [];
-  copyCertificates: any= [];
+  certificates: any = [];
+  copyCertificates: any = [];
   async getCertificates() {
-    this.ngxService.start();
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CERTIFICATES_LIST, null, this.destroyed$);
     this.certificates = response.payload;
     this.certificates = this.certificates.filter(certificate => certificate.id !== this.certificationItems.find(certItem => certItem.id === certificate.id)?.id);
     this.copyCertificates = $.extend(true, [], response.payload);
-    this.ngxService.stop();
   }
 
   /* Create update certificate list API, Once called with courseId after course creation */
   async createUpdateCertificateList(courseId, res) {
     this.ngxService.start();
     const certItems = $.extend(true, [], this.certificationItems);
+    this.constructSelectedArray(certItems);
     certItems.forEach(certItem => {
       certItem.countries = [...this.buildCertCountries(certItem.renderingData.countryList)];
-      delete certItem.renderingData;
+      delete certItem.renderingData.countryList;
     });
     const params = {
       courseId: courseId,
@@ -2691,115 +2836,101 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       this.getCertificationItems();
     }
     this.ngxService.stop();
+    this.overlay = false;
   }
 
-  /* Get certification items from created F2F course, Once called with courseId after got course detail */
-  async getCertificationItems() {
-    this.ngxService.start();
-    const params: any = {
-      courseId: this.courseTypeDetail.courseId,
-    }
-    const response: any = await this.apiHandler.plainPostData(this.utils.API.GET_CERTIFICATE, params, this.destroyed$);
-    if (response.payload && response.payload.data.length > 0) {
-      this.certificationItems = this.constructRenderingData($.extend(true, [], JSON.parse(response.payload.data)));
-    } else {
-      this.certificationItems[0].countries = this.setCountryStatusChecked($.extend(true, [], this.countryList));
-      this.setRenderingDataForCertificationItems();
-    }
-    console.log('Certified countries', this.certificationItems);
-    this.getCertificates();
-    this.ngxService.stop();
+  /* Construct Cert items */
+  constructSelectedArray(certItems) {
+    certItems.forEach(item => {
+      item.renderingData.checkedArray = this.constructCheckedStatusArray(item.renderingData.countryList, 'checked');
+      item.renderingData.showArray = this.constructCheckedStatusArray(item.renderingData.countryList, 'show');
+    })
   }
 
-  /* Construct renderingData */
-  constructRenderingData(certificationItems) {
-    let crsIds = [];
-    certificationItems.forEach((item, index) => {
-      item.renderingData = { countryList: [] };
-      item.renderingData.countryList = $.extend(true, [], this.cloneCountryList);
-
-      if (index === 0) {
-        item.renderingData.countryList.forEach(country => {
-          const selectedCountry = item.countries.find(selectedCountry => selectedCountry.id === country.id);
-          if (selectedCountry) {
-            country.selectStatus = 'checked';
-            country.show = true;
-            country.child.forEach(region => {
-              let selectedRegion;
-              if (selectedCountry.children !== undefined && selectedCountry.children.length > 0) {
-                selectedRegion = selectedCountry.children.find(selectedRegion => selectedRegion.id === region.id);
-                if (selectedRegion) {
-                  region.selectStatus = 'checked';
-                  region.show = true;
-                  region.child.forEach(store => {
-                    let selectedStore;
-                    if (selectedRegion.children !== undefined && selectedRegion.children.length > 0) {
-                      selectedStore = selectedRegion.children.find(selectedStore => selectedStore.id === store.id);
-                      if (selectedStore) {
-                        store.selectStatus = 'checked';
-                        store.show = true;
-                      } else {
-                        store.selectStatus = 'unchecked';
-                        store.show = false;
-                      }
-                      const obj = {
-                        id: `${country.id}|${region.id}|${store.id}`,
-                        store: store
-                      }
-                      crsIds.push(obj);
-                    }
-                  });
-                }
-              }
-            });
-          }
-        });
-      } else {
-        item.renderingData.countryList.forEach(country => {
-          const selectedCountry = item.countries.find(selectedCountry => selectedCountry.id === country.id);
-          if (selectedCountry) {
-            country.selectStatus = 'checked';
-            country.show = true;
-            country.child.forEach(region => {
-              let selectedRegion;
-              if (selectedCountry.children !== undefined && selectedCountry.children.length > 0) {
-                selectedRegion = selectedCountry.children.find(selectedRegion => selectedRegion.id === region.id);
-                if (selectedRegion) {
-                  region.selectStatus = 'checked';
-                  region.show = true;
-                  region.child.forEach(store => {
-                    const crsIdCurrent = `${country.id}|${region.id}|${store.id}`;
-                    let selectedStore;
-                    if (selectedRegion.children !== undefined && selectedRegion.children.length > 0) {
-                      selectedStore = selectedRegion.children.find(selectedStore => selectedStore.id === store.id);
-                      if (selectedStore) {
-                        store.selectStatus = 'checked';
-                        store.show = true;
-                      } else {
-                        store.selectStatus = 'unchecked';
-                        store.show = false;
-                      }
-                      const defaultCrsId = crsIds.find(crsid => crsid.id === crsIdCurrent);
-                      if (defaultCrsId && (defaultCrsId.store.show === true) && (defaultCrsId.store.selectStatus === 'checked')) {
-                        store.show = true;
-                      }
-                    }
-                  });
-                }
+  constructCheckedStatusArray(countryList, property) {
+    let array = [];
+    countryList.forEach(country => {
+      if ((property === 'checked' && (country.selectStatus === 'checked' || country.selectStatus === 'mixed')) || (property === 'show' && country.show === true)) {
+        country.child.forEach(region => {
+          if ((property === 'checked' && (region.selectStatus === 'checked' || region.selectStatus === 'mixed')) || (property === 'show' && region.show === true)) {
+            region.child.forEach(store => {
+              if ((property === 'checked' && (store.selectStatus === 'checked' || store.selectStatus === 'mixed')) || (property === 'show' && store.show === true)) {
+                array.push(`${country.id}|${region.id}|${store.id}`);
               }
             });
           }
         });
       }
-      item.renderingData.countryList.forEach(country => {
-        country.child.forEach(region => {
-          this.updateParentShowProperty(region.child);
-        });
-        this.updateParentShowProperty(country.child);
-      });
-      this.updateParentShowProperty(item.renderingData.countryList);
     });
-    return certificationItems;
+    return array;
+  }
+
+  constructRenderingCountryList(certItems) {
+    certItems.forEach(item => {
+      item.renderingData.countryList = this.checkSelectStatus(item.renderingData);
+    });
+    return certItems;
+  }
+
+  checkSelectStatus(renderingData) {
+    let countryList = $.extend(true, [], this.cloneCountryList);
+    renderingData.checkedArray.forEach(check => {
+      countryList.forEach(country => {
+        if (country.id == check.split('|')[0]) {
+          country.selectStatus = 'mixed';
+          country.child.forEach(region => {
+            if (region.id == check.split('|')[1]) {
+              region.selectStatus = 'mixed';
+              region.child.forEach(store => {
+                if (store.id == check.split('|')[2]) {
+                  store.selectStatus = 'checked';
+                }
+              });
+            }
+          });
+        }
+      });
+    });
+    renderingData.showArray.forEach(check => {
+      countryList.forEach(country => {
+        if (country.id == check.split('|')[0]) {
+          country.show = true;
+          country.child.forEach(region => {
+            if (region.id == check.split('|')[1]) {
+              region.show = true;
+              region.child.forEach(store => {
+                if (store.id == check.split('|')[2]) {
+                  store.show = true;
+                }
+              });
+            }
+          });
+        }
+      });
+    });
+    return countryList;
+  }
+
+  /* Get certification items from created F2F course, Once called with courseId after got course detail */
+  async getCertificationItems(element?) {
+    const params: any = {
+      courseId: element ? element.id : this.courseTypeDetail.courseId,
+    }
+    const response: any = await this.apiHandler.plainPostData(this.utils.API.GET_CERTIFICATE, params, this.destroyed$);
+    if (response.payload && response.payload.data.length > 0) {
+      this.certificationItems = this.constructRenderingCountryList($.extend(true, [], JSON.parse(response.payload.data)));
+      this.expandNodesByDefault();
+      this.cloneCertificationItems = $.extend(true, [], this.certificationItems);
+    } else {
+      this.certificationItems[0].countries = this.setCountryStatusChecked($.extend(true, [], this.countryList));
+      this.setRenderingDataForCertificationItems();
+    }
+    this.certificationItems.forEach(certItem => {
+      this.expandNodesByDefault(certItem);
+    })
+    console.log('Certified countries', this.certificationItems);
+    this.getCertificates();
+    this.showShimmer = false;
   }
 
   /* test */
@@ -2844,7 +2975,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   updateSelectionStatusOnCertItemChange(event, selectedItem, selectedItemIndex) {
 
     const changeOccurs = JSON.stringify(this.preCertList) !== JSON.stringify(this.certificationItems);
-    if (event === false && selectedItemIndex !== 0) {
+    if (selectedItemIndex !== 0) {
       const selectedCountries: any = selectedItem.renderingData.countryList;
 
       this.certificationItems.forEach((certItem, index) => {
@@ -2882,7 +3013,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     });
     this.preCertList = $.extend(true, [], this.certificationItems);
   }
-  
+
   /* Update parent show property based on its child show property */
   updateParentShowProperty(list: any) {
     list.forEach((location) => {
@@ -2900,19 +3031,19 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     function filterRecursive(items: any, selectedItems: any) {
       for (const item of items) {
         const selected = selectedItems.find((selectedItem) => selectedItem.id === item.id);
-  
+
         if ((update && selected.selectStatus === 'unchecked') || (!update && selected)) {
           const filteredItem: any = { ...item };
-          if (selected[update ? 'child': 'children'] && selected[update ? 'child': 'children'].length && item.child) {
-            filteredItem.child = that.filterList(item.child, selected[update ? 'child': 'children'], update);
+          if (selected[update ? 'child' : 'children'] && selected[update ? 'child' : 'children'].length && item.child) {
+            filteredItem.child = that.filterList(item.child, selected[update ? 'child' : 'children'], update);
           }
           filteredList.push(filteredItem);
         }
       }
     }
-  
+
     filterRecursive(list, selectedList);
-  
+
     return filteredList;
   }
 
@@ -2953,7 +3084,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         }
       }
     )
-    
+    this.expandNodesByDefault(this.certificationItems[this.certificationItems.length - 1]);
   }
 
   /* Set all status checked for initial countryList data */
@@ -3026,7 +3157,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       document.querySelector(".quizSection").scrollTop = document.querySelector(".quizSection").scrollHeight;
     }, 300);
   }
-  
+
   questionScrollDown() {
     setTimeout(() => {
       document.querySelector(".questionCls").scrollTop = document.querySelector(".questionCls").scrollHeight;
@@ -3053,10 +3184,10 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   validateCharacterimit(question) {
     setTimeout(() => {
-      if (question.characterLimit <= 500) {
+      if (question.characterLimit <= 1000) {
 
       } else {
-        this.errorHandler.handleAlert('Only 500 characters are allowed');
+        this.errorHandler.handleAlert('Only 1000 characters are allowed');
         delete question.characterLimit;
       }
     }, 100);

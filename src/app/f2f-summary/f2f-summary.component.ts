@@ -7,7 +7,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, QueryList, OnChanges, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Subject, catchError, map, takeUntil, throwError } from 'rxjs';
+import { Subject, Subscription, catchError, map, takeUntil, throwError } from 'rxjs';
 import { ErrorHandlerService } from '../shared/services/error-handler.service';
 import { Utils } from '../shared/utils';
 import _ from 'underscore';
@@ -17,6 +17,7 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { NgbPopover, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DaterangepickerComponent } from 'ng2-daterangepicker';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { ngxService } from '../shared/services/incident-services/ngxservice';
 
 @Component({
   selector: 'app-f2f-summary',
@@ -68,7 +69,7 @@ export class F2fSummaryComponent implements OnInit {
 
   /* date picker variables */
   searchByDatelist: any = [{ name: 'Creation Date' }];
-  filterDateOption: any = { ...this.utils.DateRangePickerConfig }
+  filterDateOption: any = { ...this.utils.DateRangePickerConfigf2f }
   selectedDateLabel: any;
   selectedPopupDateLabel: any;
 
@@ -175,7 +176,8 @@ export class F2fSummaryComponent implements OnInit {
   filtercourseName: any;
   scheduleminDate: any;
 
-  f2freportTableheader: any[] = []
+  f2freportTableheader: any[] = [];
+  f2freportTableheaderrecurring:any[] = [];
   batchData: any = []
   username: any;
   loginEmployeeId: any;
@@ -240,6 +242,9 @@ export class F2fSummaryComponent implements OnInit {
   trainerDropdownData: any[] = [];
   inputPlaceholderValue: any;
   loginEmployeeAdmin:any;
+  todayDate:any;
+  private subscription: Subscription;
+
   @ViewChildren(MatAutocompleteTrigger) autoCompleteTriggers: any;
   @HostListener('window:keydown.esc', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -299,15 +304,22 @@ export class F2fSummaryComponent implements OnInit {
   ]
 
   constructor(private modalService: NgbModal,public learnutils: leranersutils, public emitservice: learnersCommonservice, public common: CommonService, private datepipe: DatePipe, public utils: Utils,
-    private apiHandler: ApiHandlerService, private http: HttpClient,
+    private apiHandler: ApiHandlerService, private http: HttpClient, private ngxservice:ngxService,
     private cdr: ChangeDetectorRef, private formBuilder: FormBuilder, private errorHandler: ErrorHandlerService, public ngxloaderService: NgxUiLoaderService) {
+      this.subscription = this.emitservice.data$.subscribe((data) => {
+        if(this.createBatch == true){
+          this.gotoSummarypage();
+        }
+      });
   }
   
   ngOnInit(): void {
+    this.getModuleAccess();
     this.setInitialFromToDate();
     this.searchLabels = this.utils.ddOptions.DD_LABELS.employeeTraineeSearch;
     this.searchDateList = this.utils.ddOptions.DD_LABELS.searchF2FDateList;
     this.f2freportTableheader = this.utils.TABLE_HEADERS.F2F_REPORTS_TABLE_SUMMARY;
+    this.f2freportTableheaderrecurring = this.utils.TABLE_HEADERS.F2F_RECURRING_TABLE_SUMMARY;
     let userDetails = JSON.parse(localStorage.getItem('userDetails'));
     this.username = localStorage.getItem('username');
     this.userId = userDetails.id;
@@ -325,14 +337,20 @@ export class F2fSummaryComponent implements OnInit {
     // if(this.loginEmployeeManager){
     //   this.getActivecount();
     // }
+    // this.setsummaryDateValues();
     this.getSummarylist();
+    this.setsummaryDateValues();
     this.getUpcominglist();
     this.getDraftlist();
     this.getBatchCourseList();
     this.getBatchTrainerlist();
+    this.getCourseName();
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]]
     });
+    const todaydate = new Date();
+    this.todayDate = this.datepipe.transform(todaydate, 'yyyy-MM-dd')
+
   }
   get f() { return this.form.controls; }
 
@@ -383,7 +401,7 @@ export class F2fSummaryComponent implements OnInit {
     this.createBatch = true;
     this.ngxloaderService.start();
     this.getUserDetails();
-    if(!this.loginEmployeeManager && this.loginEmployeeAdmin !== 'SA'){
+    if(!this.loginEmployeeManager && this.loginEmployeeAdmin !== 'SA' && this.loginEmployeeAdmin !== 'HR'){
       this.hideBatch = false;
       this.firstclick = true;
     }
@@ -402,13 +420,11 @@ export class F2fSummaryComponent implements OnInit {
     for (let x of this.courseNameList) {
       x.checked = false;
     }
-    console.log(this.courseNameList, "courseNameList")
   }
 
   async getBatchTrainerlist() {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CREATE_BATCH_TRAINER_LIST, null, this.destroyed$);
     this.trainerNameList = response.payload;
-    console.log(this.trainerNameList)
   }
 
   getModuleAccess() {
@@ -423,6 +439,10 @@ export class F2fSummaryComponent implements OnInit {
     this.view = module.view;
     this.create = module.create;
     this.update = module.update;
+    console.log(this.view, "VIEW");
+    console.log(this.create, "CREATE")
+    console.log(this.update, "UPDATE")
+
   }
 
   /* Get user details */
@@ -516,11 +536,13 @@ export class F2fSummaryComponent implements OnInit {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_ROLE_GROUPS, '', this.destroyed$);
     let roleGroup = _.sortBy(response?.payload || [], 'sequenceId');
     let roleLevel = [];
+    
     roleGroup.forEach(element => {
-      if (element.child) {
+      if (element.child && element.id !== 7) {
         roleLevel = roleLevel.concat(_.sortBy(element.child, 'sequenceId'));
       }
     });
+   
     const res: any = roleLevel.map((ele: any) => {
       return {
         id: ele.id,
@@ -597,6 +619,7 @@ export class F2fSummaryComponent implements OnInit {
       this.resetReportList();
       this.filterRequest.searchText = this.searchTextModal;
       this.filterRequest.searchBy = this.searchBy;
+      this.cleardisable = false;
       this.getReportList();
     }
     /* Call API after filter closed */
@@ -716,7 +739,7 @@ export class F2fSummaryComponent implements OnInit {
 
     if (response.payload && this.onetimeCall == false) {
       this.getRoleGroup();
-      this.getCourseName();
+      // this.getCourseName();
       if (!this.isManager) {
         this.getAllCountries();
       }
@@ -857,8 +880,8 @@ export class F2fSummaryComponent implements OnInit {
   /* date change event */
   dateRangeChange(event, isPopup) {
     if (isPopup) {
-      this.selectedPopupDateLabel = event.label === 'Custom Range' ? event.start.format('DD-MM-yyyy')
-        + ' to ' + event.end.format('DD-MM-yyyy') : event.label;
+      this.selectedPopupDateLabel = event.label === 'Custom Range' ? event.start.format('DD/MM/yyyy')
+        + ' to ' + event.end.format('DD/MM/yyyy') : event.label;
     } else {
       this.selectedDateLabel = event.label === 'Custom Range' ? event.start.format('DD/MM/yyyy')
         + ' - ' + event.end.format('DD/MM/yyyy') : event.label;
@@ -1159,12 +1182,10 @@ export class F2fSummaryComponent implements OnInit {
     this.filters = this.viewType === 'reportView' ? $.extend(true, [], this.utils.ddOptions.DD_LABELS.filters) : $.extend(true, [], this.utils.ddOptions.DD_LABELS.filters).filter(ele => ele.key === 'inactive');
     this.filterRequest = {};
     this.searchTextModal = null;
+    this.cleardisable = true;
     this.searchBy = 'employeeId';
     this.searchDateBy = 'trainedDate';
     this.selectedOptionsnew = [];
-   console.log(this.filterRequest, "filterRequest filterRequest")
-    // this.filterRequest.toDate = ''
-    // this.filterRequest.fromDate = ''
     this.picker.datePicker.setStartDate(new Date());
     this.picker.datePicker.setEndDate(new Date());  
     this.reportTodate = '';
@@ -1551,8 +1572,6 @@ export class F2fSummaryComponent implements OnInit {
   batchTrainername(event: any, item: any) {
     item.trainerName = event?.username;
     item.trainerId = event?.employeeId;
-    console.log(item.trainerName,"item trainer name")
-    console.log(item.trainerId,"item trainer ID")
   }
   scheduleDateselect(event: any, item: any) {
     const eventscheduledDate = event;
@@ -1561,7 +1580,6 @@ export class F2fSummaryComponent implements OnInit {
   scheduleDateselect1(event: any, item: any) {
     const originalDate = new Date(event);
     item.scheduledDate = this.datepipe.transform(originalDate, 'dd-MM-yyyy');
-    console.log(item.scheduledDate, "item.scheduledDate")
   }
 
   formatDate(inputDate: string): string {
@@ -1582,7 +1600,6 @@ export class F2fSummaryComponent implements OnInit {
   showBatchpopup(item: any, ivalue: any) {
     this.ModalPopup1 = true;
     this.selected_PopupData = item;
-    console.log(this.selected_PopupData, "selected_PopupData selected_PopupData")
     this.batchItem = ivalue;
   }
 
@@ -1747,7 +1764,6 @@ export class F2fSummaryComponent implements OnInit {
         //   return employee.role === 'External Trainer'
         //   }
         // );
-        console.log(data,"data datas")
         if (existingEmployee) {
           if (existingEmployee.isDeleted === true) {
             existingEmployee.isDeleted = false;
@@ -1976,7 +1992,7 @@ export class F2fSummaryComponent implements OnInit {
       this.getSummarylist();
       this.getUpcominglist();
       this.getDraftlist();
-      if (response.payload.batchStatus == 'Canceled') {
+      if (response.payload.batchStatus == 'Cancelled') {
         this.common.openSnackBar("Batch cancelled successfully", 2, "Success")
       }
       else if (response.payload.batchStatus == 'Scheduled') {
@@ -2023,7 +2039,6 @@ export class F2fSummaryComponent implements OnInit {
       this.summaryList = response.payload;
     }
     this.summaryShimmer = false
-
   }
 
   filterbyListstatus(event: any) {
@@ -2041,9 +2056,10 @@ export class F2fSummaryComponent implements OnInit {
     const param = {
       batchStatusList: [this.batchStatusList],
       isTrainer: this.loginEmployeeIstrainer,
+      userRoleCode:this.loginEmployeeRoleCode,
       userEmployeeId: this.loginEmployeeId,
       pageNo: 0,
-      pageSize: 5
+      pageSize: 7
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -2060,7 +2076,7 @@ export class F2fSummaryComponent implements OnInit {
       isTrainer: this.loginEmployeeIstrainer,
       userEmployeeId: this.loginEmployeeId,
       pageNo: 0,
-      pageSize: 5
+      pageSize: 7
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
     if (response.payload) {
@@ -2077,16 +2093,14 @@ export class F2fSummaryComponent implements OnInit {
     this.viewDetails = false;
     this.showPopUP = true;
     this.viewHistory = false;
+    this.inactiveChanged = false;
     const currentDate: Date = new Date();
     const currentFormatDate = this.datepipe.transform(currentDate,'yyyy-MM-dd')
-    // console.log(currentFormatDate, "currentDate currentDate")
-    // console.log((currentFormatDate == item.scheduledDate) && item.batchStatus == 'Assigned', "Validation")
-  
+
     if(item.batchStatus == 'Assigned' && (currentFormatDate !== item.scheduledDate)){
       this.updateReadonly = true
     }
 
-    console.log(this.updateReadonly, "this.updateReadonly this.updateReadonly")
     const param = {
       "courseId": item.courseId,
       "batchId": item.batchId,
@@ -2107,7 +2121,6 @@ export class F2fSummaryComponent implements OnInit {
       this.detailsData = sampleJson;
       this.detailsData.scheduledDate = this.datepipe.transform(this.detailsData.scheduledDate, 'dd-MM-yyyy'); // Apply DatePipe to format
       this.updateEmployeeList = JSON.parse(JSON.stringify(this.detailsData.employeesList));
-      console.log(this.updateEmployeeList, "updateEmployeeList")
       // this.detailsData.trainerDropdownData = JSON.parse(JSON.stringify(this.trainerNameList))
       // for (let x of this.detailsData.trainerDropdownData) {
       //   let isAlreadySelect = this.detailsData.trainerName.filter((item: any) => {
@@ -2124,8 +2137,8 @@ export class F2fSummaryComponent implements OnInit {
   updateBatch(value: any, type: string) {
     const updateParams = JSON.parse(JSON.stringify(value));
 
-    if (type == "Canceled") {
-      updateParams.batchStatus = 'Canceled'
+    if (type == "Cancelled") {
+      updateParams.batchStatus = 'Cancelled'
     }
     else if (type == "Scheduled") {
       updateParams.batchStatus = 'Scheduled'
@@ -2356,10 +2369,14 @@ export class F2fSummaryComponent implements OnInit {
   }
   recurringcourseData:any[] = [];
   recurring = false;
+  recurringEmpId:any;
+  recurringEmpName:any
   async getcourseVersion(rowData:any){
+    this.recurringcourseData = [];
     this.ngxloaderService.start();
-    this.recurring = true
-    console.log(rowData)
+    this.recurring = true;
+    this.recurringEmpId = rowData.employeeId;
+    this.recurringEmpName = rowData.userName;
     const params = {
       "userId" : rowData.userId,
       "courseId" : rowData.courseId
@@ -2411,13 +2428,14 @@ export class F2fSummaryComponent implements OnInit {
   async onScroll(event:any){
     if(this.scrollevent){
     if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-      this.currentpageNumber = this.currentpageNumber + 5;
+      this.currentpageNumber = this.currentpageNumber + 7;
       const param = {
         batchStatusList: [this.batchStatusList],
         isTrainer: this.loginEmployeeIstrainer,
+        userRoleCode:this.loginEmployeeRoleCode,
         userEmployeeId: this.loginEmployeeId,
         pageNo: this.currentpageNumber,
-        pageSize: 5
+        pageSize: 7
       }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
       if (response.payload.length > 0) {
@@ -2439,13 +2457,13 @@ export class F2fSummaryComponent implements OnInit {
   async onScrollDraft(event:any){
     if(this.scrolleventDraft){
     if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-      this.currentpageNumberDraft = this.currentpageNumberDraft + 5;
+      this.currentpageNumberDraft = this.currentpageNumberDraft + 7;
       const param = {
         batchStatusList: [2],
         isTrainer: this.loginEmployeeIstrainer,
         userEmployeeId: this.loginEmployeeId,
         pageNo: this.currentpageNumberDraft,
-        pageSize: 5
+        pageSize: 7
       }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
       if (response.payload.length > 0) {
@@ -2464,13 +2482,63 @@ export class F2fSummaryComponent implements OnInit {
   filterdateValue(event){
     this.filterRequest.searchDateBy = event.key
       if((this.reportFromdate!='' && this.reportFromdate!=null && this.reportFromdate!=undefined ) && (this.reportTodate!='' && this.reportTodate!=null && this.reportTodate!=undefined)){
+        this.resetReportList();
         this.getReportList();
       }
+  }
+  cleardisable = true;
+  inactiveChanged = false;
+  valueChanged(){
+    this.inactiveChanged = true
+  }
+
+  setsummaryDateValues(){
+    const currentDatebefore = new Date();
+    currentDatebefore.setDate(currentDatebefore.getDate() - 30);
+
+    const currentDateafter = new Date();
+    currentDateafter.setDate(currentDateafter.getDate() + 30);
+    
+     this.fromDatevalue = currentDatebefore;
+     this.toDatevalue = currentDateafter;
+    //  this.filterwithDate();
+    // this.filterwithDate();
+  }
+
+  gotof2fReports(summaryData:any){
+    // this.reportFromdate = this.fromDatevalue;
+    // this.reportTodate = this.toDatevalue;
+    this.ngxloaderService.start();
+    this.searchDateBy = 'expiredDate';
+    this.filterRequest.searchDateBy = 'expiredDate';
+    this.reportFromdate = this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd');
+    this.reportTodate = this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd')
+    this.filtercourseNameList = this.filtercourseNameList.map((item:any)=>
+    item.courseName == summaryData.courseName ? { ...item,checked:true }:item
+    )  
+ 
+
+  this.selectedOptionsnew = this.filtercourseNameList.filter((item: any) => {
+    return item.checked == true;
+  }).map(item => item.courseName);
+
+  this.createBatch = true;
+  this.resetReportList();
+  this.getReportList();
+  setTimeout(() => {
+    this.picker.datePicker.setStartDate(this.fromDatevalue);
+    this.picker.datePicker.setEndDate(this.toDatevalue); 
+
+    this.selectedDateLabel = this.datepipe.transform(this.fromDatevalue, 'dd/MM/yyyy')
+    + ' - ' + this.datepipe.transform(this.toDatevalue, 'dd/MM/yyyy');
+  }, 500);
+
   }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
     this.destroyed$.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

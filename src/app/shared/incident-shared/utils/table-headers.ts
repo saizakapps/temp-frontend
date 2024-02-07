@@ -76,16 +76,20 @@ export class TableHeaders {
     ],
     INCIDENT_HISTORY_TABLE: [
       {
-        showName: 'Date Published',
-        indexName: 'convertedCreatedDate',
-      },
-      {
-        showName: 'Incidents',
+        showName: 'Incident Id',
         indexName: 'incidentId'
       },
       {
-        showName: 'Restore version',
-        indexName: 'createdBy',
+        showName: 'Modified Date',
+        indexName: 'convertedCreatedDate',
+      },
+      {
+        showName: 'Modified By',
+        indexName: 'modifiedBy'
+      },
+      {
+        showName: 'Restore Version',
+        indexName: 'createdById',
       }    
     ],
     PRIORITY_TABLE:[

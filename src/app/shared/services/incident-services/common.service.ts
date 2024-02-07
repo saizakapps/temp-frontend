@@ -17,9 +17,15 @@ import { ngxService } from "./ngxservice";
   providedIn: "root",
 })
 export class CommonService {
-  public bsConfig ={dateInputFormat: 'DD-MM-YYYY',containerClass: 'theme-dark-blue',
+  public bsConfig ={dateInputFormat: 'DD/MM/YYYY',containerClass: 'theme-dark-blue',
       showWeekNumbers: false,isAnimated:true, adaptivePosition: true
     }
+    public bsConfig1 ={dateInputFormat: 'YYYY-MM-DD',containerClass: 'theme-dark-blue',
+    showWeekNumbers: false,isAnimated:true, adaptivePosition: true
+  }
+  public bsConfig2 ={dateInputFormat: 'DD-MM-YYYY',containerClass: 'theme-dark-blue',
+  showWeekNumbers: false,isAnimated:true, adaptivePosition: true
+}
    public showMenu = false;
    public showLoader = false;
   public privilege: any = "";
@@ -255,6 +261,228 @@ async downloadFilesAsZip(fileUrls: string[], zipFileName: string): Promise<void>
   zip.generateAsync({ type: 'blob' }).then((blob) => {
     saveAs(blob, zipFileName || 'downloaded_files.zip');
   });
+}
+
+public defaultInitialData(id:any,inciId:any,inciType:any){
+  return {
+    "isAdd":false,
+    "idIncident":inciId,
+    "id":id,
+    "incidentSelectedTypeData":{
+       "id":0,
+       "name":inciType,
+       "isShow":false
+    },
+    "incidentRowData":{
+       "id":id,
+       "incidentId":inciId,
+       "reporterName":null,
+       "store":"",
+       "complainant":"",
+       "injuredPersonFullName":"",
+       "injuredPersonContactNumber":"",
+       "injuredParentsContactNo":null,
+       "injuredPersonEmail":"",
+       "ageType":"",
+       "ageValue":"",
+       "calculatedAge":"",
+       "injuredPersonAddress":"",
+       "storeComments":"",
+       "significantOthers":"",
+       "eventActualDate":"",
+       "eventReportedDate":"",
+       "injurySustained":"",
+       "injuryCircumstances":"",
+       "evidenceTakenBy":"",
+       "caseType":"Adult",
+       "incidentStatus":"",
+       "priorityCode":"",
+       "otherComments":"",
+       "csdNumber":"",
+       "photoStatusCode":"",
+       "cctvStatusCode":"",
+       "initials":"",
+       "incidentPrimaryCode":"",
+       "incidentSecondaryCode":"",
+       "severity":"",
+       "preventability":"",
+       "legalStatus":"",
+       "claimDate":null,
+       "claimReference":"",
+       "incidentType":inciType,
+       "incidentCountry":"",
+       "incidentRegion":"",
+       "articleId":"",
+       "productDescription":"",
+       "productAge":"",
+       "childRecommendedAge":"",
+       "batchNo":"",
+       "productReturnToStore":null,
+       "productReturnToHeadOffice":null,
+       "problemReportedBefore":"",
+       "proofOfPurchaseFilePath":"",
+       "productCircumstances":"",
+       "faultCode":"",
+       "createdOn":"",
+       "createdBy":"",
+       "isActive":1,
+       "createdByRole":"",
+       "isViewed":false,
+       "lockedUserName":null,
+       "noFootageAvailable":"",
+       "handlingTeams":[
+          
+       ],
+       "witnessList":[
+          
+       ],
+       "resolveActions":[
+          
+       ],
+       "evidences":[
+          
+       ],
+       "editVersion":null,
+       "proofOfPurchaseFile":null,
+       "deletionDate":"",
+       "photoStatusInfo":null,
+       "cctvStatusInfo":null,
+       "incidentCodesInfo":null,
+       "severityInfo":null,
+       "preventabilityInfo":null,
+       "faultCodesInfo":null,
+       "incidentDetailsHistory":{
+          "id":id,
+          "revision":0,
+          "revType":false,
+          "incidentId":inciId,
+          "reporterName":null,
+          "store":"",
+          "complainant":"",
+          "injuredPersonFullName":"",
+          "injuredPersonContactNumber":"",
+          "injuredParentsContactNo":null,
+          "injuredPersonEmail":"",
+          "ageType":"Year",
+          "ageValue":0,
+          "calculatedAge":0,
+          "injuredPersonAddress":"",
+          "storeComments":"",
+          "significantOthers":"",
+          "eventActualDate":"",
+          "eventReportedDate":"",
+          "injurySustained":"",
+          "injuryCircumstances":"",
+          "evidenceTakenBy":"",
+          "caseType":"Adult",
+          "incidentStatus":"",
+          "priorityCode":"",
+          "otherComments":"",
+          "csdNumber":"",
+          "photoStatusCode":"",
+          "cctvStatusCode":"",
+          "initials":"",
+          "incidentPrimaryCode":"",
+          "incidentSecondaryCode":"",
+          "severity":"",
+          "preventability":"",
+          "legalStatus":"",
+          "claimDate":null,
+          "claimReference":"",
+          "incidentType":inciType,
+          "incidentCountry":"",
+          "incidentRegion":"",
+          "articleId":"",
+          "productDescription":"",
+          "productAge":"",
+          "childRecommendedAge":"",
+          "batchNo":"",
+          "returnToStoreDate":null,
+          "returnToHeadOfficeDate":null,
+          "problemReportedBefore":"",
+          "proofOfPurchaseFilePath":"",
+          "productCircumstances":"",
+          "faultCode":"",
+          "createdOn":"",
+          "createdBy":"",
+          "modifiedBy":"",
+          "isActive":1,
+          "createdByRole":"",
+          "convertedCreatedDate":"",
+          "createdById":"",
+          "noFootageAvailable":"",
+          "witnessList":[
+             
+          ],
+          "evidencesList":[
+             
+          ],
+          "handlingTeams":[
+             
+          ],
+          "resolveActions":[
+             
+          ],
+          "deletionDate":null,
+          "photoStatusInfo":null,
+          "cctvStatusInfo":null,
+          "incidentCodesInfo":null,
+          "severityInfo":null,
+          "preventabilityInfo":null,
+          "faultCodesInfo":null,
+          "priorityInfo":null,
+          "storeName":"Cardiff",
+          "legalStatusInfo":null,
+          "productAgeType":"",
+          "evidenceSelected":"",
+          "witnessSelected":"",
+          "incidentCountryName":null,
+          "incidentRegionName":null,
+          "openWithBuyerVendor":"",
+          "incidentInjury":"",
+          "incidentCause":"",
+          "priorityName":null,
+          "genderType":"",
+          "incidentInjuryDropDownInfo":null,
+          "incidentCauseDropDownInfo":null,
+          "witnessAvailable":false,
+          "evidenceAvailable":false,
+          "appropriateAge":true,
+          "viewed":false,
+          "approximateDate":false
+       },
+       "priorityInfo":null,
+       "storeName":"",
+       "convertedCreatedDate":"",
+       "createdById":"",
+       "incidentVersionLists":[
+          
+       ],
+       "legalStatusInfo":null,
+       "userName":null,
+       "productAgeType":"",
+       "evidenceSelected":"",
+       "witnessSelected":"",
+       "incidentCountryName":"",
+       "incidentRegionName":"",
+       "openWithBuyerVendor":"",
+       "incidentInjury":"",
+       "incidentCause":"",
+       "incidentInjuryDropDownInfo":null,
+       "historySaveFlag":null,
+       "incidentCauseDropDownInfo":null,
+       "priorityName":null,
+       "genderType":"",
+       "userRole":null,
+       "userCountry":null,
+       "incidentFlag":"",
+       "requestBaseUrl":null,
+       "witnessAvailable":false,
+       "evidenceAvailable":false,
+       "appropriateAge":true,
+       "approximateDate":false
+    }
+ }
 }
 // forceDownload1(url:any, fileName:any){
 // //   var xhr = new XMLHttpRequest();

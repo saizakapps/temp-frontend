@@ -2,8 +2,8 @@ export class UrlUtils {
   /*   public browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
       window.location.hostname : 'smyths360-dev-admin.smythstoys.com'); */
 
-    private browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
-     window.location.hostname : 'smyths360-dev-admin.smythstoys.com');
+  private browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
+    window.location.hostname : 'smyths360-dev-admin.smythstoys.com');
   //private browserHostName = 'smyths360-dev-admin.smythstoys.com';
   public AUTH_BASE_URL = `//${this.browserHostName}/`;
 
@@ -17,7 +17,7 @@ export class UrlUtils {
   public AUTH_URL_SSO = `${this.AUTH_BASE_URL}api/auth/`;
   public INCIDENT_USER = `${this.AUTH_BASE_URL}api/web/incident/user/`;
 
-  constructor() {}
+  constructor() { }
 
   public API = {
     LOGIN_SSO: `${this.AUTH_URL_SSO}login`,
@@ -113,26 +113,25 @@ export class UrlUtils {
     GET_CERTIFICATES_LIST: `${this.USER_URL}get-default-certificates`,
     CREATE_UPDATE_CERTIFICATE: `${this.USER_URL}create-ff-certificate`,
     GET_CERTIFICATE: `${this.USER_URL}get-ff-course-certificate`,
-
-
-     /* Create Batch APIs */
-     
-     GET_F2f_FILTER_DATA_LIST : `${this.USER_URL}ff-master-data`,
-     POST_CREATE_BATCH_COURSE_LIST : `${this.USER_URL}batch-creation-f2f-courses-list`,
-     GET_CREATE_BATCH_TRAINER_LIST : `${this.USER_URL}batch-creation-f2f-trainers-list`,
-     POST_VALIDATE_BATCH_EMPLOYEES : `${this.USER_URL}f2f-create-batch-validate-employees`,   
-     POST_CREATE_NEW_BATCH:`${this.USER_URL}f2f-create-batch`,
-     POST_UPDATE_BATCH: `${this.USER_URL}f2f-update-batch-info`,
-     POST_EVENT_UPCOMING_BATCH_LIST: `${this.USER_URL}f2f-course-batch-list`,
-     POST_EVENT_DRAFT_BATCH_LIST: `${this.USER_URL}f2f-course-batch-list`,
-     POST_GET_BATCH_INFO: `${this.USER_URL}get-f2f-course-batch-info`,
-     POST_DELETE_DRAFT_BATCH: `${this.USER_URL}f2f-delete-draft-batch`,
-     POST_GET_BATCH_HISTORY: `${this.USER_URL}get-f2f-course-batch-history-info`,
-     POST_SUMMARY_LIST_FILTER: `${this.USER_URL}filter-f2f-course-summary-info`,
-     POST_GET_SUMMARY_LIST: `${this.USER_URL}get-f2f-course-expiration-summary`,
-     POST_EXPORT_MAIL_F2F: `${this.USER_URL}export-ff-list`,
-     POST_GET_ACTIVE_COUNT: `${this.USER_URL}show-f2f-active-users-count`,
-     POST_GET_RECURRING_COURSE: `${this.USER_URL}get-ff-courses-recurring`,
     UPDATE_MANUAL_CERTIFICATE: `${this.USER_URL}update-manual-certificate`,
+
+    /* Create Batch APIs */
+
+    GET_F2f_FILTER_DATA_LIST: `${this.USER_URL}ff-master-data`,
+    POST_CREATE_BATCH_COURSE_LIST: `${this.USER_URL}batch-creation-f2f-courses-list`,
+    GET_CREATE_BATCH_TRAINER_LIST: `${this.USER_URL}batch-creation-f2f-trainers-list`,
+    POST_VALIDATE_BATCH_EMPLOYEES: `${this.USER_URL}f2f-create-batch-validate-employees`,
+    POST_CREATE_NEW_BATCH: `${this.USER_URL}f2f-create-batch`,
+    POST_UPDATE_BATCH: `${this.USER_URL}f2f-update-batch-info`,
+    POST_EVENT_UPCOMING_BATCH_LIST: `${this.USER_URL}f2f-course-batch-list`,
+    POST_EVENT_DRAFT_BATCH_LIST: `${this.USER_URL}f2f-course-batch-list`,
+    POST_GET_BATCH_INFO: `${this.USER_URL}get-f2f-course-batch-info`,
+    POST_DELETE_DRAFT_BATCH: `${this.USER_URL}f2f-delete-draft-batch`,
+    POST_GET_BATCH_HISTORY: `${this.USER_URL}get-f2f-course-batch-history-info`,
+    POST_SUMMARY_LIST_FILTER: `${this.USER_URL}filter-f2f-course-summary-info`,
+    POST_GET_SUMMARY_LIST: `${this.USER_URL}get-f2f-course-expiration-summary`,
+    POST_EXPORT_MAIL_F2F: `${this.USER_URL}export-ff-list`,
+    POST_GET_ACTIVE_COUNT: `${this.USER_URL}show-f2f-active-users-count`,
+    POST_GET_RECURRING_COURSE: `${this.USER_URL}get-ff-courses-recurring`,
   };
 }

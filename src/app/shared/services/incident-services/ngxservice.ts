@@ -40,5 +40,8 @@ import { Subject } from "rxjs";
    activesort:any;
    auditReadonly:boolean = false
    dateSortValue = '';
-   disableFilter = false 
+   disableFilter = false;
+   reviewpdfData:any[] = [];
+   updatepdfData:any[] = [];
+   storenameData:any[] = [];
 }

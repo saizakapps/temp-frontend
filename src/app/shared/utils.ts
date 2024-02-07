@@ -29,6 +29,7 @@ export class Utils {
   public FORMAT = {
     DATE_TIME: 'DD-MM-yyyy HH:mm:ss',
     DATE: 'DD-MM-yyyy',
+    DATESlace: 'DD/MM/yyyy',
     DATEM: 'DD-MM-yyyy',
     TIME: 'HH:mm:ss',
     DATEYMD: 'yyyy-MM-DD',
@@ -46,6 +47,23 @@ export class Utils {
   /*date pick config */
   public DateRangePickerConfig = {
     locale: { format: this.FORMAT.DATE },
+    alwaysShowCalendars: true,
+    // maxDate: moment(new Date()).set({ hours: 23, minutes: 59, seconds: 59 }),
+    // startDate: moment(this.currentDate).subtract(1, 'month').set({ hours: 0, minutes: 0, seconds: 0 }),
+    opens: 'center',
+    ranges: {
+      'Last 7 days': [moment().subtract(7, 'day'), moment()],
+      'Last 14 days': [moment().subtract(14, 'day'), moment()],
+      'Last 1 Month': [moment().subtract(1, 'month'), moment()],
+      'Next 7 days': [moment(), moment().add(7, 'day')],
+      'Next 14 days': [moment(), moment().add(14, 'day')],
+      'Next 1 Month': [moment(), moment().add(1, 'month')]
+    }
+  };
+
+  
+  public DateRangePickerConfigf2f = {
+    locale: { format: this.FORMAT.DATESlace },
     alwaysShowCalendars: true,
     // maxDate: moment(new Date()).set({ hours: 23, minutes: 59, seconds: 59 }),
     // startDate: moment(this.currentDate).subtract(1, 'month').set({ hours: 0, minutes: 0, seconds: 0 }),

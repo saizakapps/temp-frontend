@@ -12,7 +12,12 @@
               <!-- drop down portion -->
               <div class="searchby-dd pl-1 mr-2">
                 <ng-select [items]="searchEmployee" name="searchBy" bindLabel="name" bindValue="key" [clearable]=false
-                  [searchable]="false" (change)="clearSearchText()" [(ngModel)]="searchBy" class="mt-1"></ng-select>
+                  [searchable]="false" (change)="clearSearchText()" [(ngModel)]="searchBy" class="mt-1">
+                  <ng-template ng-option-tmp let-item="item">
+                    <span data-toggle="tooltip" [title]="item.name">
+                      {{ item.name }}
+                    </span>
+                  </ng-template></ng-select>
               </div>
               <!-- input portion -->
               <div class="searchInputemp">
@@ -28,7 +33,13 @@
                 <!-- drop down portion -->
                 <div class="searchby-dd pl-1 mr-2">
                   <ng-select [items]="searchByDatelist" name="searchBy" bindLabel="name" bindValue="key"
-                    [clearable]=false [searchable]="false" [(ngModel)]="dateBy"></ng-select>
+                    [clearable]=false [searchable]="false" [(ngModel)]="dateBy">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span data-toggle="tooltip" [title]="item.name">
+                        {{ item.name }}
+                      </span>
+                    </ng-template>
+                  </ng-select>
                 </div>
                 <!-- date picker portion -->
                 <div class="input-group-append" name="daterangeInput" daterangepicker [options]="filterDateOption"
@@ -304,13 +315,13 @@
                   {{element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'country'">
-                  {{element[column.property] || '-'}}
+                  {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'region'">
-                  {{element[column.property] || '-'}}
+                  {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'store'">
-                  {{element[column.property] || '-'}}
+                  {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'levelName'">
                   {{element[column.property] || '-'}}
@@ -376,13 +387,13 @@
                   {{element[column.property] | dateUtcToLocal : utils.FORMAT.DATEM || '-'}}
                 </span>
                 <span *ngIf="column.property === 'country'">
-                  {{element[column.property] || '-'}}
+                  {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'region'">
-                  {{element[column.property] || '-'}}
+                  {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'store'">
-                  {{element[column.property] || '-'}}
+                  {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'active'">
                   {{element[column.property] === true ? 'Active' : 'Temporarily disabled' || '-'}}
@@ -449,7 +460,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body pb-3" [ngClass]="{'emp-overlay': userDetailValue.manager === true}">
+      <div id="userModal" style="scroll-behavior: smooth;" class="modal-body pb-3" [ngClass]="{'emp-overlay': userDetailValue.manager === true}">
         <!-- [ngClass]="{'emp-overlay': ![utils.portalRole.superAdmin, utils.portalRole.hr].includes(userDetailValue.portalRole)}"> -->
         <form #createForm="ngForm" validate>
           <div>
@@ -547,11 +558,11 @@
                         <div class="d-block align-items-center">
                           <span class="employeeDetails mr-3">Role</span>
                           <div class="dropdown employeeContent roleContent">
-                            <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="empEditStatus" [items]="allRoleList"
+                            <ng-select dropdownPosition="bottom" (click)="userModalScrollDown()" [searchable]="false" class="auto-dd error-input modal-auto-dd" [disabled]="empEditStatus" [items]="allRoleList"
                               (change)="setRoleValue()" bindLabel="desc" bindValue="desc" [(ngModel)]="userDetail.role"
                               placeholder="Select Role" name="roleName" required #roleName="ngModel">
                               <ng-template ng-option-tmp let-item="item">
-                                <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                                <div data-toggle="tooltip" for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
                                 </div>
                               </ng-template>
                             </ng-select>
@@ -583,12 +594,12 @@
                         <div class="d-block align-items-center">
                           <span class="employeeDetails mr-3">Manager</span>
                           <div class="dropdown employeeContent managerContent">
-                            <ng-select class="auto-dd error-input managerContent modal-auto-dd" [items]="managerList"
+                            <ng-select dropdownPosition="bottom" [searchable]="false" [disabled]="!userDetail.store" class="auto-dd error-input managerContent modal-auto-dd" [items]="managerList"
                               bindLabel="name" bindValue="employeeId" [(ngModel)]="userDetail.reportingManager"
                               placeholder="Select Manager" name="manager" #managerName="ngModel">
                               <!-- required -->
                               <ng-template ng-option-tmp let-item="item">
-                                <div for="title" class="ng-option-label" [title]="item.name">{{item.name}}
+                                <div data-toggle="tooltip" for="title" class="ng-option-label" [title]="item.name">{{item.name}}
                                 </div>
                               </ng-template>
                             </ng-select>
@@ -615,12 +626,12 @@
                     <div class="d-block align-items-center">
                       <span class="employeeDetails mr-3">Country</span>
                       <div class="dropdown employeeContent countryContent">
-                        <ng-select class="auto-dd error-input modal-auto-dd" [disabled]='empEditStatus'
+                        <ng-select dropdownPosition="bottom"  [searchable]="false" (click)="userModalScrollDown()" class="auto-dd error-input modal-auto-dd" [disabled]='empEditStatus'
                           (change)="loadRegionList('singleRegion', $event, null)" [items]="countryList" bindLabel="desc"
                           bindValue="desc" [(ngModel)]="userDetail.country" placeholder="Select Country" name="countryName"
                           required #countryName="ngModel">
                           <ng-template ng-option-tmp let-item="item">
-                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                            <div data-toggle="tooltip" for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
                             </div>
                           </ng-template>
                         </ng-select>
@@ -650,13 +661,13 @@
                   <div class="">
                     <div class="d-block align-items-center">
                       <span class="employeeDetails mr-3">Store</span>
-                      <div class="dropdown employeeContent storeContent">
-                        <ng-select class="auto-dd error-input modal-auto-dd" [disabled]="storeEnable || empEditStatus"
+                      <div class="dropdown employeeContent storeContent store-container">
+                        <ng-select dropdownPosition="bottom" [searchable]="false" (click)="userModalScrollDown()" class="auto-dd error-input modal-auto-dd" [disabled]="storeEnable || empEditStatus"
                           (change)="getStoresRegion(null); loadManagerList();" [items]="storeList" bindLabel="desc"
                           bindValue="desc" [(ngModel)]="userDetail.store" placeholder="Select Store" name="storeName" required
                           #storeName="ngModel">
                           <ng-template ng-option-tmp let-item="item">
-                            <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                            <div data-toggle="tooltip" for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
                             </div>
                           </ng-template>
                         </ng-select>
@@ -695,12 +706,12 @@
                               <!-- <input type="text" class="form-control error-input-box" id="periodId" maxlength="30"
                       [(ngModel)]="periodId[i]" name="id"> -->
 
-                              <ng-select class="auto-dd error-input modal-auto-dd"
+                              <ng-select [searchable]="false" class="auto-dd error-input modal-auto-dd"
                                 (change)="loadRegionList('singleRegion', $event, i)" [disabled]='regionEnable[i]'
                                 [items]="countryList" bindLabel="desc" bindValue="desc" placeholder="Select Country"
                                 [(ngModel)]="periodCountry[i]" [name]="'countryPeriodName' + i" required>
                                 <ng-template ng-option-tmp let-item="item">
-                                  <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                                  <div data-toggle="tooltip" for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
                                   </div>
                                 </ng-template>
                               </ng-select>
@@ -732,12 +743,12 @@
                           <div class="d-block align-items-center">
                             <span class="employeeDetails mr-3">Store</span>
                             <div class="dropdown employeeContent storeContent">
-                              <ng-select class="auto-dd error-input modal-auto-dd" (change)="getStoresRegion(i)"
+                              <ng-select [searchable]="false" class="auto-dd error-input modal-auto-dd" (change)="getStoresRegion(i)"
                                 [disabled]="periodStoreList[i]?.length > 0 ? false : true" [items]="periodStoreList[i]"
                                 bindLabel="desc" bindValue="desc" [(ngModel)]="periodStore[i]"
                                 placeholder="Select Store" [name]="'periodStoreName' + i" required>
                                 <ng-template ng-option-tmp let-item="item">
-                                  <div for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
+                                  <div data-toggle="tooltip" for="title" class="ng-option-label" [title]="item.desc">{{item.desc}}
                                   </div>
                                 </ng-template>
                               </ng-select>
@@ -907,6 +918,11 @@
                     [clearable]="true" placeholder="Select Employee Id" name="employeeId"
                     [(ngModel)]="proEmployeeDetailLink.promotedEmployeeId"
                     (change)="getPromotedEmployeeId(null); resetPromotedEmployee($event)" #promotedEmpId="ngModel">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span data-toggle="tooltip" [title]="item.employeeId">
+                        {{ item.employeeId }}
+                      </span>
+                    </ng-template>
                   </ng-select>
                 </div>
               </div>
@@ -924,6 +940,11 @@
                     [clearable]="true" placeholder="Select Employee Name" name="username"
                     [(ngModel)]="proEmployeeDetailLink.promotedEmployeeName"
                     (change)="getPromotedEmployeeName(); resetPromotedEmployee($event)" #promotedEmpName="ngModel">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span data-toggle="tooltip" [title]="item.username">
+                        {{ item.username }}
+                      </span>
+                    </ng-template>
                   </ng-select>
                 </div>
               </div>
@@ -1338,26 +1359,50 @@
           <div class="tablePanel_right">
             <ng-select [items]="learnerRoleList" name="searchBy" bindLabel="roleName" bindValue="id" [clearable]=true
               [(ngModel)]="learnerRoleId" [searchable]="false" (change)="roleChange('LA', $event)"
-              class="mt-1"></ng-select>
+              class="mt-1">
+              <ng-template ng-option-tmp let-item="item">
+                <span data-toggle="tooltip" [title]="item.roleName">
+                  {{ item.roleName }}
+                </span>
+              </ng-template>
+            </ng-select>
           </div>
         </div>
         <div class="tablePanel">
           <div class="tablePanel_left"><label class="mb-3 mr-3 fontBold roleLbl">Incident Role</label></div>
           <div class="tablePanel_right"><ng-select [items]="incidentRoleList" name="searchBy" bindLabel="roleName"
               bindValue="id" [clearable]=true [(ngModel)]="incidentRoleId" [searchable]="false"
-              (change)="roleChange('IT', $event)" class="mt-1"></ng-select></div>
+              (change)="roleChange('IT', $event)" class="mt-1">
+              <ng-template ng-option-tmp let-item="item">
+                <span data-toggle="tooltip" [title]="item.roleName">
+                  {{ item.roleName }}
+                </span>
+              </ng-template>
+            </ng-select></div>
         </div>
         <div class="tablePanel">
           <div class="tablePanel_left"><label class="mb-3 mr-3 fontBold roleLbl">Audit Role</label></div>
           <div class="tablePanel_right"><ng-select [items]="auditRoleList" name="searchBy" bindLabel="roleName"
               bindValue="id" [clearable]=true [(ngModel)]="auditRoleId" [searchable]="false"
-              (change)="roleChange('AT', $event)" class="mt-1"></ng-select></div>
+              (change)="roleChange('AT', $event)" class="mt-1">
+              <ng-template ng-option-tmp let-item="item">
+                <span data-toggle="tooltip" [title]="item.roleName">
+                  {{ item.roleName }}
+                </span>
+              </ng-template>
+            </ng-select></div>
         </div>
         <div class="tablePanel">
           <div class="tablePanel_left"><label class="mb-3 mr-3 fontBold roleLbl">App Auth Role</label></div>
           <div class="tablePanel_right"><ng-select [items]="authRoleList" name="searchBy" bindLabel="roleName"
               bindValue="id" [clearable]=true [(ngModel)]="authRoleId" [searchable]="false"
-              (change)="roleChange('AA', $event)" class="mt-1"></ng-select></div>
+              (change)="roleChange('AA', $event)" class="mt-1">
+              <ng-template ng-option-tmp let-item="item">
+                <span data-toggle="tooltip" [title]="item.roleName">
+                  {{ item.roleName }}
+                </span>
+              </ng-template>
+            </ng-select></div>
         </div>
 
         <!-- <table>

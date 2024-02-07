@@ -59,4 +59,15 @@ export class CommonService {
     }
     return true;
   }
+
+  private dataSubject = new Subject<any>();
+
+// Observable to subscribe to changes
+data$ = this.dataSubject.asObservable();
+
+// Method to update data
+updateData(data: any) {
+  this.dataSubject.next(data);
+}
+
 }

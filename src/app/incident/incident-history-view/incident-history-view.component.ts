@@ -739,7 +739,7 @@ export class IncidentHistoryViewComponent implements OnInit {
           : "",
       eventTime:
         data.eventActualDate != "" && data.eventActualDate != null
-          ? this.datepipe.transform(data.eventActualDate, "hh:mm")
+          ? this.datepipe.transform(data.eventActualDate, "HH:mm")
           : "",
       eventActualDate: data.eventActualDate,
       isApproximateDate: data.approximateDate,
@@ -749,7 +749,7 @@ export class IncidentHistoryViewComponent implements OnInit {
           : "",
       reportedTime:
         data.eventReportedDate != "" && data.eventReportedDate != null
-          ? this.datepipe.transform(data.eventReportedDate, "hh:mm")
+          ? this.datepipe.transform(data.eventReportedDate, "HH:mm")
           : "",
       eventReportedDate: data.eventReportedDate,
       storeComments: data.storeComments,

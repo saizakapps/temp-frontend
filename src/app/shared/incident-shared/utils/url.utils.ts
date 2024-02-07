@@ -97,7 +97,8 @@ export class UrlUtils {
     GET_INCIDENT_EXPORT_STATUS : `${this.WEB_URL}view/getExportStatus`,
     GET_INCIDENT_LISTDD_VALUES : `${this.WEB_URL}view/getListDropDownValues`,
     GET_EXPORT_INCIDENT_DOWNLOAD_STATUS_WITH_FILTER : `${this.WEB_URL}view/exportIncidentByFilters`,
-
+    GET_DECRYPT_DETAILS: `${this.WEB_URL}getValues`,
+    
     /* AUDIT API URLS */
     STORE_LIST : `${this.AUDIT_WEB_URL}storeList`,
     UPLOAD_FILE : `${this.AUDIT_WEB_URL}createAudit`,

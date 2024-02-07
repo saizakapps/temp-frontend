@@ -3,6 +3,7 @@
   <mat-checkbox (change)="create = !create">Create</mat-checkbox>
   <mat-checkbox (change)="update = !update">Update</mat-checkbox> -->
   <!-- GhostLoader -->
+  <div *ngIf="overlay" class="loader-overlay"></div>
   <div class="showShimmer" *ngIf="showShimmer">
     <div class="d-flex justify-content-between">
     <shimmer [width]="'30%'" height="10px" borderRadius="25px"></shimmer>
@@ -153,7 +154,7 @@
                       <mat-label *ngIf="selectedLevelCount > 0" class="levelSelected">
                         {{selectedLevelCount + ' role selected'}}
                       </mat-label>
-                      <mat-select #selector1 (openedChange)="checkCountryAndRoleSelected($event, 'role1')">
+                      <mat-select panelClass="rolePanel" #selector1 (openedChange)="checkCountryAndRoleSelected($event, 'role1')">
                         <mat-option (click)="selector1.open()" class="createRoleCls">
                           <!-- <input mat-tree (keyup)="hierarchySearch($event, countryList)"> -->
                           <div [ngClass]="{'viewOnly': (view && !create && !update)}" class="node1 tree">
@@ -165,12 +166,12 @@
                               (click)="toggleRole($event, node1);$event.stopPropagation();">
                               {{node1.isCollapsed ? 'chevron_right' : 'expand_more'}}
                             </mat-icon>
-                            {{node1.desc}}
+                            <span data-toggle="tooltip" [title]="node1.desc">{{node1.desc}}</span>                            
                             <ng-container *ngIf="!node1.isCollapsed">
                               <div [ngClass]="{'viewOnly': (view && !create && !update)}" class="node2 policiesSelect"
                                 *ngFor="let node2 of node1.child; let node2Index = index">
                                 <mat-checkbox [name]="node1Index + '-' + node2Index" [(ngModel)]="node2.checked">
-                                  {{node2.desc}}</mat-checkbox>
+                                  <span data-toggle="tooltip" [title]="node2.desc">{{node2.desc}}</span></mat-checkbox>
                               </div>
                             </ng-container>
                           </div>
@@ -185,7 +186,7 @@
                       <mat-label *ngIf="selectedLevelCount > 0 && !isSuggestedCourse" class="levelSelected">
                         {{selectedLevelCount + ' level selected'}}
                       </mat-label>
-                      <mat-select #selector2 (openedChange)="checkCountryAndRoleSelected($event, 'role2')">
+                      <mat-select panelClass="rolePanel" #selector2 (openedChange)="checkCountryAndRoleSelected($event, 'role2')">
                         <mat-option (click)="selector2.open()" class="createRoleCls">
                           <!-- <input mat-tree (keyup)="hierarchySearch($event, countryList)"> -->
                           <div [ngClass]="{opacityCheck: isSuggestedCourse && node1.desc !== 'Suggested'}"
@@ -197,7 +198,7 @@
                             </mat-icon>
                             <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}" class="suggestedCls" [(ngModel)]="isSuggestedCourse" name="suggested"
                               *ngIf="node1.code === 'LAS'" (change)="clickSuggestedCourse($event)"></mat-checkbox>
-                            {{node1.desc}}
+                            <span data-toggle="tooltip" [title]="node1.desc">{{node1.desc}}</span>
                             <ng-container *ngIf="!node1.isCollapsed && node1.code !== 'LAS'">
                               <div class="node2" *ngFor="let node2 of node1.child; let node2Index = index">
                                 <mat-icon [ngClass]="{invisible: !node2.child || node2.child?.length < 1}"
@@ -205,7 +206,7 @@
                                   (click)="toggleRole($event, node2);$event.stopPropagation();">
                                   {{node2.isCollapsed ? 'chevron_right' : 'expand_more'}}
                                 </mat-icon>
-                                {{node2.desc}}
+                                <span data-toggle="tooltip" [title]="node2.desc">{{node2.desc}}</span>
                                 <ng-container *ngIf="!node2.isCollapsed">
                                   <div [ngClass]="{'viewOnly': (view && !create && !update)}" class="roleRadioBtn">
                                     <mat-radio-group [name]="node1.id + node2.id"
@@ -217,9 +218,9 @@
                                         </mat-icon>
                                         <ng-container *ngFor="let node3 of node2.child">
                                           <div *ngIf="node3.desc !== 'Suggested'" class="treeCloseIcon d-flex">
-                                            <mat-radio-button class="node3" [value]="node3.id"
+                                            <mat-radio-button (click)="roleLevelSelect()" class="node3" [value]="node3.id"
                                               [disabled]="isSuggestedCourse">
-                                              {{node3.desc}}
+                                              <span data-toggle="tooltip" [title]="node3.desc">{{node3.desc}}</span>
                                             </mat-radio-button>
                                             <a *ngIf="node2.selectedLevel && node2.selectedLevel === node3.id" (click)="node2.selectedLevel = undefined;">X</a>
                                           </div>
@@ -244,7 +245,7 @@
                       <mat-label *ngIf="selectedStoreCount < 1"> Select Countries / Regions / Stores </mat-label>
                       <mat-label *ngIf="selectedStoreCount > 0" class="levelSelected">
                         {{selectedStoreCount + ' stores selected'}} </mat-label>
-                      <mat-select #locationSelect class="roleSelectionCls" (openedChange)="checkCountryAndRoleSelected($event, 'location')">
+                      <mat-select panelClass="countryPanel" #locationSelect class="roleSelectionCls" (openedChange)="checkCountryAndRoleSelected($event, 'location')">
                         <!-- [disabled]="courseConfig.code === courseCode.Policies ? roleNotSelected() : levelNotSelected()" -->
                         <mat-checkbox [checked]="storeCount === selectedStoreCount" [indeterminate]="storeCount !== selectedStoreCount && selectedStoreCount > 0" [ngClass]="{'viewOnly': (view && !create && !update)}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
                           (change)="selectAll($event, countryList, 'country'); calcSelectedStore();">
@@ -256,9 +257,9 @@
                               <li class="mat-tree-node">
                                 <!-- use a disabled button to provide padding for tree leaf -->
                                 <button mat-icon-button disabled></button>
-                                <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}" class="ml-3"
+                                <mat-checkbox [id]="node.id + 'leaf-check-box'" [ngClass]="{'viewOnly': (view && !create && !update)}" class="ml-3"
                                   (change)="selectionToggleLeaf($event.checked, node, 'country'); calcSelectedStore();"
-                                  [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                  [checked]="node.selectStatus === 'checked'"><span data-toggle="tooltip" [title]="node.desc">{{node.desc}}</span></mat-checkbox>
                               </li>
                             </mat-nested-tree-node>
                             <!-- This is the tree node template for expandable nodes -->
@@ -273,9 +274,9 @@
                                     </button>
                                     <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update)}"
                                       (change)="selectionToggle($event.checked, node, 'country'); calcSelectedStore();"
-                                      [indeterminate]="node.selectStatus === 'mixed'"
-                                      [checked]="node.selectStatus === 'checked'">
-                                      {{node.desc}}</mat-checkbox>
+                                      [indeterminate]="node.selectStatus === 'mixed'" [checked]="node.selectStatus === 'checked'">
+                                      <span data-toggle="tooltip" [title]="node.desc">{{node.desc}}</span>
+                                    </mat-checkbox>
                                   </div>
                                   <ul [class.example-tree-invisible]="!roleTreeControl.isExpanded(node)">
                                     <ng-container matTreeNodeOutlet></ng-container>
@@ -295,11 +296,16 @@
                     [searchable]=false placeholder="Select group" class="periodSelectCls" (change)="setPolicyCategory($event)"></ng-select>
                   </div>
 
-                  <div *ngIf="courseConfig.expiryDate">
+                  <div class="recurring" *ngIf="courseConfig.expiryDate">
                     <label class="pl-2">Recurring</label>
-                    <ng-select (click)="policyGroupOnClick()" [items]="periodItems" name="period" bindValue="key" bindLabel="name" [clearable]=true
+                    <ng-select [ngClass]="{appliedFilter: course.period}" (click)="policyGroupOnClick()" [items]="periodItems" name="period" bindValue="key" bindLabel="name" [clearable]=true
                       [searchable]=false [(ngModel)]="course.period" placeholder="period" class="periodSelectCls">
                       <!-- [disabled]="selectedLevelCount < 1"  -->
+                      <ng-template ng-option-tmp let-item="item">
+                        <span data-toggle="tooltip" [title]="item.name">
+                          {{ item.name }}
+                        </span>
+                      </ng-template>
                     </ng-select>
                   </div>
 
@@ -348,7 +354,7 @@
                   <ng-container *ngIf="courseConfig.code === courseCode.F2F">
                     <button type="button" [ngClass]="{active: selectedForm === 'pdfCertification'}" class="btn courseContentDetails"
                     (click)="changeForm('pdfCertification')" *ngIf="courseConfig.pdfCertification">
-                    Certification</button>
+                    Certificates</button>
                   </ng-container>
                 </div>
 
@@ -449,6 +455,11 @@
                               [appendTo]="'body'" [items]="chapterTypes" [name]="'chapter' + chapter.chapterId"
                               bindValue="key" [clearable]=false [searchable]="false" bindLabel="name"
                               [(ngModel)]="chapter.chapterType">
+                              <ng-template ng-option-tmp let-item="item">
+                                <span data-toggle="tooltip" [title]="item.name">
+                                  {{ item.name }}
+                                </span>
+                              </ng-template>
                             </ng-select>
                             <img src="assets/images/delete-user.svg" height="13px" width="13px"
                               (click)="openAlert('deleteChapter', chapterIndex, chapter)"
@@ -484,6 +495,11 @@
                               [appendTo]="'body'" [name]="'activityType' + activity.activityId"
                               (change)="activityChange($event, activity)" bindValue="key" [clearable]=false
                               [searchable]="false" bindLabel="name" [(ngModel)]="activity.activityType">
+                              <ng-template ng-option-tmp let-item="item">
+                                <span data-toggle="tooltip" [title]="item.name">
+                                  {{ item.name }}
+                                </span>
+                              </ng-template>
                             </ng-select>
 
                             <img src="assets/images/delete-user.svg" height="13px" width="13px"
@@ -766,11 +782,17 @@
                     <ng-container *ngIf="courseTypeDetail.courseTypeCode !== courseCode.SlideShow && courseConfig.code !== courseCode.F2F">
                       <label class="randomQuestion randomCls"> Quiz at</label>
                       <ng-select (click)="policyGroupOnClick()" class="" [items]="quizPositionItems" name="quizPosition" bindLabel="name" bindValue="key"
-                        (change)="quizPositionChange()" [clearable]=false [searchable]="false" [(ngModel)]="quizPosition"> </ng-select>
+                        (change)="quizPositionChange()" [clearable]=false [searchable]="false" [(ngModel)]="quizPosition">
+                        <ng-template ng-option-tmp let-item="item">
+                          <span data-toggle="tooltip" [title]="item.name">
+                            {{ item.name }}
+                          </span>
+                        </ng-template>
+                      </ng-select>
                     </ng-container>
                   </span>
-                  <label class="randomQuestion randomCls"> Optional questions</label>
-                  <ng-select (click)="policyGroupOnClick()" [items]="questionLimit" name="randomQuestion" (change)="setQuestionLimit($event)" [clearable]=false
+                  <label class="randomQuestion randomCls"> Random questions</label>
+                  <ng-select [disabled]="disableRandomDD()" (click)="policyGroupOnClick()" [items]="questionLimit" name="randomQuestion" (change)="setQuestionLimit($event)" [clearable]=false
                     [searchable]="false" [(ngModel)]="randomLimit"> </ng-select>
                 </div>
               </div>
@@ -805,7 +827,13 @@
                   *ngIf="courseConfig.code !== courseCode.F2F || !(courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues())">
                   <ng-select (click)="policyGroupOnClick()" [items]="compTemplates" name="templateName" [searchable]=true
                     [clearable]=false [(ngModel)]="compTemplateObj.id" bindLabel="title" bindValue="id"
-                    (change)="templateChange($event, 'normal')" class="completionSelect mt-3 mr-2"></ng-select>
+                    (change)="templateChange($event, 'normal')" class="completionSelect mt-3 mr-2">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span data-toggle="tooltip" [title]="item.title">
+                        {{ item.title }}
+                      </span>
+                    </ng-template>
+                  </ng-select>
                   <input [ngClass]="{'viewOnly': (view && !create && !update)}" class="completeInput p-1"
                     [(ngModel)]="compTemplateObj.title" />
                 </ng-container>
@@ -813,7 +841,13 @@
                 <ng-container *ngIf="courseConfig.code === courseCode.F2F && quizCount() > 0 && checkFreeTextQues()">
                   <ng-select [disabled]="disableTemplateDD" (click)="policyGroupOnClick()" [items]="compCategoryTemplates" name="templateName" [searchable]=true
                     [clearable]=false [(ngModel)]="selectedCompletionType.templateId" bindLabel="title" bindValue="id"
-                    (change)="templateChange($event, 'freeText')" class="completionSelect mt-3 mr-2"></ng-select>
+                    (change)="templateChange($event, 'freeText')" class="completionSelect mt-3 mr-2">
+                    <ng-template ng-option-tmp let-item="item">
+                      <span data-toggle="tooltip" [title]="item.title">
+                        {{ item.title }}
+                      </span>
+                    </ng-template>
+                  </ng-select>
                   <input [ngClass]="{'viewOnly': (view && !create && !update)}" class="completeInput p-1"
                     [(ngModel)]="selectedCompletionType.title" />
                 </ng-container>
@@ -848,7 +882,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let certItem of certificationItems; let certItemIndex = index">
+                      <tr [ngClass]="{'viewOnly': (view && !create && !update), 'defaultHighlight': certItemIndex === 0}" *ngFor="let certItem of certificationItems; let certItemIndex = index">
                         <ng-container>
                           <!-- Default -->
                           <!-- <td class="tdDefault">
@@ -857,7 +891,7 @@
                           <!-- Locations -->
                           <td>
 
-                            <div>
+                            <div class="certificateLocation">
                               <mat-form-field appearance="fill" class="roleDropdown certificateMatformfield" [ngClass]="{appliedFilter: getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0}">
                                 
                                 <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') < 1"> Select Countries / Regions / Stores </mat-label>
@@ -865,7 +899,8 @@
                                 <mat-label *ngIf="getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') > 0" class="levelSelected">
                                   {{getSelectedChildCount(certItem.renderingData.countryList, 0, 'cert') + ' stores selected'}} </mat-label>
             
-                                <mat-select class="roleSelectionCls" (openedChange)=" updateSelectionStatusOnCertItemChange($event, certItem, certItemIndex)">
+                                <!-- <mat-select class="roleSelectionCls" (openedChange)=" updateSelectionStatusOnCertItemChange($event, certItem, certItemIndex)"> -->
+                                <mat-select panelClass="certCountryListPanel" class="roleSelectionCls" (openedChange)="expandNodesByDefault(certItem)">
             
                                   <!-- <mat-checkbox [ngClass]="{'viewOnly': (view && !create && !update) && certItemIndex === 0}" id="all" class="w-100 allCheckbox countryCheckbox" name="allCountries"
                                     (change)="selectAll($event, certItem.renderingData.countryList, 'certCountry'); calcSelectedStore();">
@@ -876,12 +911,12 @@
                                     <mat-option class="disableRipple">
                                       <!-- This is the tree node template for leaf nodes -->
                                       <mat-nested-tree-node *matTreeNodeDef="let node">
-                                        <li *ngIf="node.show" class="mat-tree-node">
+                                        <li style="margin-left: 30px !important;" *ngIf="node.show" class="mat-tree-node">
                                           <!-- use a disabled button to provide padding for tree leaf -->
-                                          <button mat-icon-button disabled></button>
+                                          <!-- <button mat-icon-button disabled></button> -->
                                           <mat-checkbox [disabled]="this.getSelectedChildCount(this.certificationItems[0].renderingData.countryList, 0, 'cert') === 1 && node.selectStatus === 'unchecked'" [ngClass]="{'viewOnly': (view && !create && !update) || certItemIndex === 0}" class="ml-3"
-                                            (change)="selectionToggleLeaf($event.checked, node, 'certCountry', certItem); calcSelectedStore();"
-                                            [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                            (change)="selectionToggleLeaf($event.checked, node, 'certCountry', certItem); updateSelectionStatusOnCertItemChange($event, certItem, certItemIndex); calcSelectedStore();"
+                                            [checked]="node.selectStatus === 'checked'"></mat-checkbox><span data-toggle="tooltip" [title]="node.desc">{{node.desc}}</span>
                                         </li>
                                       </mat-nested-tree-node>
                                       <!-- This is the tree node template for expandable nodes -->
@@ -899,7 +934,7 @@
                                                 [indeterminate]="node.selectStatus === 'mixed'"
                                                 [checked]="node.selectStatus === 'checked'">
                                                 {{node.desc}}</mat-checkbox> -->
-                                                <div class="locMasterNode">{{node.desc}}</div>
+                                                <div data-toggle="tooltip" [title]="node.desc" style="font-size: 10px !important;" class="locMasterNode">{{node.desc}}</div>
                                             </div>
                                             <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
                                               <ng-container matTreeNodeOutlet></ng-container>
@@ -920,7 +955,7 @@
                                 <div *ngIf="certItem.name.length === 0" class="selected-cert-options placeholder d-flex justify-content-between">
                                   Select certificate...
                                 </div>
-                                <div *ngIf="certItem.name.length > 0" class="selected-cert-options d-flex justify-content-between">
+                                <div title="{{certItem.name}}" *ngIf="certItem.name.length > 0" class="selected-cert-options">
                                   {{certItem.name}}
                                 </div>
                               </div>
@@ -932,7 +967,7 @@
                                 <div>
                                   <div *ngFor="let certificate of certificates"
                                     class=" d-flex justify-content-start  align-items-center courseMenu" mat-menu-item>
-                                    <button (click)="onCertificateChange(certificate, certItem)" class="d-flex justify-content-start"
+                                    <button (click)="onCertificateChange(certificate, certItem)" class="overFlowmatmenutext"
                                       mat-menu-item>{{certificate.name}}</button>
                                   </div>
                                 </div>
@@ -959,7 +994,7 @@
                      
                     </tbody>
                   </table>
-                    <button [disabled]="(!certificationItems[certificationItems.length - 1].id || !certificates.length || calcSelectedStore() === 1) || (this.getSelectedChildCount(this.certificationItems[0].renderingData.countryList, 0, 'cert') === 1)" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
+                    <button [disabled]="checkInValidCertItems() || !certificates.length || (view && !create && !update)" (click)="addCertItem()" class="btn btn-primary mt-2">Add</button>
                 </div>
               </div>              
             </ng-container>
@@ -973,7 +1008,7 @@
         <div class="">
           <!-- selectedLevelCount < 1 || !areCountriesSelected() ||  -->
           <!-- selectedLevelCount < 1 || !areCountriesSelected() ||  -->
-          <button class="saveDraft float-left" [disabled]="!course.externalCourseName || (view && !create && !update)"
+          <button class="saveDraft float-left" [disabled]="!course.externalCourseName || (view && !create && !update) || (courseConfig.code === courseCode.F2F && checkInValidCertItems())"
             (click)="alertBeforeSubmit(false)" [title]="!course.externalCourseName ? 'Please fill name' : ''">
             Save Draft </button>
           <button class="submitCourse ml-2" [disabled]="submitButton() || (view && !create && !update)" (click)="alertBeforeSubmit(true)"
@@ -1088,7 +1123,7 @@
                   <!-- Quiz -->
                   <ng-container *ngIf="activity.activityType === 'quiz'">{{setTotalQuestions()}}
                     <div [ngClass]="{'activityQuestion': activity.questions[0]?.content}">
-                      <ng-container *ngTemplateOutlet="quizPreview; context: { config: activity}">
+                      <ng-container  *ngTemplateOutlet="quizPreview; context: { config: activity}" class="removeBottom">
                       </ng-container>
                     </div>
                   </ng-container>
@@ -1125,7 +1160,7 @@
                   </ng-container>
 
                   <!-- slideshow -->
-                  <div class="slideShowImg">
+                  <div *ngIf="activity.activityType === 'slideShow'" class="slideShowImg">
                     <ng-container *ngIf="activity.activityType === 'slideShow'">
                       <ng-container *ngTemplateOutlet="slidePreview; context: { config : activity }">
                       </ng-container>
@@ -1134,7 +1169,7 @@
                   </div>
 
                   <!-- Checklist -->
-                  <div class="checklistPreview">
+                  <div *ngIf="activity.activityType === 'checklist'" class="checklistPreview">
                     <ng-container *ngIf="activity.activityType === 'checklist'">
                       <ng-container *ngTemplateOutlet="checklistPreview; context: { config :activity}">
                       </ng-container>
@@ -1148,7 +1183,7 @@
                 <div class="quizHintCls">
                   <h3 *ngIf="!checkFreeTextQues()" class="quizTimeHeading">Quiz time!</h3>
                   <h3 *ngIf="checkFreeTextQues()" class="quizTimeHeading">Write up assesment</h3>
-                  <p *ngIf="checkFreeTextQues()" class=" hintCls">Hint: you can always reference the course for clues!</p>
+                  <!-- <p *ngIf="checkFreeTextQues()" class=" hintCls">Hint: you can always reference the course for clues!</p> -->
                 </div>{{setTotalQuestions()}}
                 <ng-container *ngIf="course.quizPosition">
                   <ng-container *ngFor="let chapter of course.chapters">
@@ -1212,7 +1247,7 @@
                 <button class="nextChapBtn my-2" *ngIf="!course.quizPosition && selectedForm === 'questionaire'"> Submit </button>
                 <button class="doneChapterBtn my-2" *ngIf="course.quizPosition && currentPage === course.chapters.length - 1"> Done </button>
                 <button class="submitChapterBtn mt-2" *ngIf="currentPage === course.chapters.length"> Confirm </button>
-                <button class="confirmChapterBtn mt-2" *ngIf="currentPage === course.chapters.length + 1"> Confirm
+                <button class="confirmChapterBtn mt-2" *ngIf="currentPage === course.chapters.length + 1"> Confirm & Get Certificate
                 </button>
               </ng-container>
               <ng-container *ngIf="courseConfig.code === courseCode.Checklist && selectedChapter.activities[0].content">
@@ -1254,9 +1289,14 @@
 
           <div class="float-right d-flex align-items-center">
             <!-- Question Type DD(Available only for F2F) -->
-            <ng-select *ngIf="courseConfig.code === courseCode.F2F" (change)="quizTypeOnChange(question)" [items]="questionTypes"
+            <ng-select *ngIf="courseConfig.code === courseCode.F2F && config.type !== 'activityQuiz'" (change)="quizTypeOnChange(question)" [items]="questionTypes"
               [name]="'qType' + config.chapterData?.chapterId + question.questionId" bindValue="key" [clearable]=false
               [searchable]="false" bindLabel="name" [(ngModel)]="question.questionType">
+              <ng-template ng-option-tmp let-item="item">
+                <span data-toggle="tooltip" [title]="item.name">
+                  {{ item.name }}
+                </span>
+              </ng-template>
             </ng-select>
 
             <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
@@ -1315,7 +1355,7 @@
                 <mat-checkbox [name]="'optionCheckBox' + selectedActivity.activityId" [(ngModel)]="option.correctAnswer"
                   class="pl-3">
                 </mat-checkbox>
-                <input class="form-control calibri" type="text" [(ngModel)]="option.content"
+                <input maxlength="1000" class="form-control calibri" type="text" [(ngModel)]="option.content"
                   [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
                 <button *ngIf="question.options.length > 2" class="col-4" (click)="removeOption(question, optionIndex)"
                   class="removeBtn">
@@ -1330,7 +1370,7 @@
               <div class="row align-items-center mt-2 mb-3 flex-nowrap "
                 *ngFor="let option of question.options; let optionIndex = index">
                 <span>{{optionIndex + 1}}</span>
-                <input class="form-control calibri" type="text" [(ngModel)]="option.content"
+                <input maxlength="1000" class="form-control calibri" type="text" [(ngModel)]="option.content"
                   [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
                 <button *ngIf="question.options.length > 2" class="col-4" (click)="removeOption(question, optionIndex)"
                   class="removeBtn">
@@ -1345,7 +1385,7 @@
                 <mat-checkbox style="margin-bottom: 2px !important;" [name]="'charLimitCheckBox' + selectedActivity.activityId" (change)="characterLimitCheck($event, question)" [(ngModel)]="question.characterLimitCheck"
                   class="pl-3"></mat-checkbox>
                 <label class="mb-0">Character Limit</label>&nbsp;&nbsp;
-                <input style="width: 72px;" (keypress)="allowNumberOnly($event, question);" maxlength="3" class="p-1" [disabled]="!question.characterLimitCheck" [(ngModel)]="question.characterLimit"
+                <input style="width: 72px;" (keypress)="allowNumberOnly($event, question);" maxlength="4" class="p-1" [disabled]="!question.characterLimitCheck" [(ngModel)]="question.characterLimit"
                 [name]="'value' + config.chapterData?.chapterId + question.questionId + optionIndex">
               </div>
             </div>
@@ -1369,7 +1409,7 @@
       [disabled]="!areQuestionnaireValid(config.activityData.questions)">
       Add a question (optional)</button>
     </div>
-    <div *ngIf="courseConfig.code === courseCode.F2F">
+    <div *ngIf="courseConfig.code === courseCode.F2F && config.type !== 'activityQuiz'">
       <button [matMenuTriggerFor]="addQues" [ngClass]="{'viewOnly': (view && !create && !update)}"
       class="mb-3 mt-3 addBtn addQuestionBtn statusBtn"
       [disabled]="!areQuestionnaireValid(config.activityData.questions)">
@@ -1382,7 +1422,7 @@
           <div>
             <div *ngFor="let type of questionTypes"
               class="d-flex justify-content-start  align-items-center courseMenu" style="height: 40px !important; width: 173px !important;" mat-menu-item>
-              <button (click)="addQuestion(config.activityData.questions, type.key)" class="mb-2 d-flex justify-content-start"
+              <button [disabled]="type.disabled" (click)="addQuestion(config.activityData.questions, type.key)" class="mb-2 d-flex justify-content-start questionTypeMenu"
                 mat-menu-item>{{type.name}}</button>
             </div>
           </div>
@@ -1543,7 +1583,7 @@
             </ng-container>
           </div>
         </mat-radio-group> -->
-        <hr *ngIf="question.content" [ngClass]="{'freeTextUnderLine': question?.questionType === 'fillRightAnswer' || question?.questionType === 'freeText'}" class="table-div" />
+        <hr *ngIf="question.content && currentPage === course.chapters.length - 1" [ngClass]="{'freeTextUnderLine': question?.questionType === 'fillRightAnswer' || question?.questionType === 'freeText'}" class="table-div" />
       </ng-container>
       <span *ngIf="quizConfig.type === 'chapterQuiz' && quizConfig.questions?.length <= 1"> No Quiz
         available</span>
@@ -1555,7 +1595,7 @@
 <ng-template #slidePreview let-sliderConfig="config">
   <div class="slidePreview pdfImgSlide" *ngIf="sliderConfig?.content?.length > 0">
     <span [ngClass]="{'viewPresentationCls': courseConfig.code === courseCode.SlideShow}"
-      class="fontBold d-flex justify-content-center align-items-center mb-1 mt-2"
+      class="fontBold d-flex justify-content-center align-items-center mb-1 mt-1"
       *ngIf="sliderConfig.content?.length > 0">
       {{courseConfig.code === courseCode.SlideShow ? 'Tap the image to start presentation' : 'Swipe the image to continue presentation'}}
     </span>
@@ -1607,7 +1647,7 @@
 
 <!-- Audio section -->
 <ng-template #audioPreview let-audioConfig="config">
-  <audio class="w-100 mb-1" controls controlsList="nodownload" *ngIf="audioConfig?.content[0]?.url">
+  <audio style="margin: 5px 0px 5px 0px;" class="w-100 mb-1" controls controlsList="nodownload" *ngIf="audioConfig?.content[0]?.url">
     <source [src]="imagePath + audioConfig?.content[0]?.url">
     Your browser does not support the audio element.
   </audio>

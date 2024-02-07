@@ -245,7 +245,8 @@
                   </span>
                   <span id="pop-{{colIndex}}" #filterPopover="ngbPopover" *ngIf="(column.filter || column.sort) && !['select'].includes(column.property)"
                     [ngbPopover]="menu" [placement]="column.property === 'courseName' ? 'bottom-start' : 'bottom'" [autoClose]="'outside'" #statusPopover="ngbPopover"
-                    [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property) || (currentFilters[column.property] !== 'All' && column.filter)}">
+                    [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property) || ((currentFilters[column.property] !== 'All' || (column.property === 'courseName' && filtercourseList.length)) && column.filter)}" 
+                    (hidden)="onPopoverClose(column.property)">
                     {{column.name}}
                     <ng-container *ngTemplateOutlet="filter_icon">
                     </ng-container>
@@ -271,12 +272,25 @@ fill="#000000" stroke="none">
                     <span *ngIf="column.sort" class="fw-600 cursor-pointer ut-filter-status-pointer"> &#8645; </span>
                   </ng-template>
                   <ng-template #menu>
-                    <!-- select filter section -->
-                    <div *ngIf="column.filter" class="filter-popover">
+                    <!-- Single select filter section -->
+                    <div *ngIf="column.filter && column.property !== 'courseName'" class="filter-popover">
                       <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
                         [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
                         (click)="updateFilter(item, column); closePopover(colIndex)" (keyup)="updateFilter(item, column)">
                         <span>{{item.name }}</span>
+                      </div>
+                      <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                      </div>
+                    </div>
+                    <!-- Multi select filter section-->
+                    <div *ngIf="column.filter && column.property === 'courseName'" class="filter-popover">
+                      <div *ngFor="let filteritem of filterCourseNamevalues" class="d-flex align-items-center cursor-pointer pt-2 pb-2">
+                        <div>
+                          <mat-checkbox class="checkboxdivAccess" [checked]="filteritem.checked" (change)="courseChange($event, filteritem)"
+                            required>                      
+                          </mat-checkbox>
+                        </div>
+                        <div class="pl-2 ngbtextWidth" title="{{filteritem.name}}">{{filteritem.name}}</div>                      
                       </div>
                       <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
                       </div>

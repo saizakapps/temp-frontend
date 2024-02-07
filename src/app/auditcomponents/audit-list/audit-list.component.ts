@@ -231,7 +231,7 @@ export class AuditListComponent implements OnInit, OnDestroy {
    }
    this.ngxservice.selectedassignedManagerType = [];
    this.ngxservice.selectedviewedNameBy = [];
-     
+  
      
      this.getAuditlist()
 
@@ -361,12 +361,59 @@ export class AuditListComponent implements OnInit, OnDestroy {
      }
      else{
       if (this.tableData.data.length > 0){
-      // if (this.tableData.data.every((name: any) => (name.fileName == null || name.fileName == ''))) {
-      //   this.ngxservice.donwloadHide = true
-      // }
-      // else {
-      //   this.ngxservice.donwloadHide = false;
-      // }
+
+        this.ngxservice.assignedManagerData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+          return item.assignedManager != '' && item.assignedManager != null;
+        }).map((role: any) => role.assignedManager))).map(rl => {
+          return { name: rl, checked: false }
+        });
+        let finalassignedManagerData = []
+        this.ngxservice.assignedManagerData.forEach(element => {
+         let data = element.name.split(',');
+         if(data.length>0){
+          finalassignedManagerData = finalassignedManagerData.concat(data);
+         } 
+        });
+        let finalOriginalData = [];
+    
+        for(let x of finalassignedManagerData){
+          if(finalOriginalData.includes(x)==false){
+  
+            finalOriginalData.push(x.trim());
+          }
+        
+        }
+        finalOriginalData = Array.from(new Set(finalOriginalData));
+        this.ngxservice.assignedManagerData = finalOriginalData.map(rl => {
+          return { name: rl, checked: false }
+        })
+        /* Last Viewed Persion Filter */
+        this.ngxservice.viewednameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+          return item.reviewByName != '' && item.reviewByName != null;
+        }).map((role: any) => role.reviewByName))).map(rl => {
+          return { name: rl, checked: false }
+        });
+  
+        /* Store Name Filter Data */
+        this.ngxservice.storenameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+          return item.storeDescription != '' && item.storeDescription != null;
+        }).map((role: any) => role.storeDescription))).map(rl => {
+          return { name: rl, checked: false }
+        });
+  
+        /* Upload Date Filter Data */
+        this.ngxservice.updatepdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+          return item.updatedAt != '' && item.updatedAt != null;
+        }).map((role: any) => role.updatedAt))).map(rl => {
+          return { name: rl, checked: false }
+        });
+  
+        /* View Date Filter Data */
+        this.ngxservice.reviewpdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+          return item.reviewAt != '' && item.reviewAt != null;
+        }).map((role: any) => role.reviewAt))).map(rl => {
+          return { name: rl, checked: false }
+        });
       
       let fileavailableTable = this.tableData.data.filter((x: any) => (x.files !== null && x.files !== ''))
       if (fileavailableTable.length > 0) {

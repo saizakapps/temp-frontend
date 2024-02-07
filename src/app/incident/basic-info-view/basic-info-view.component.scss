@@ -50,6 +50,11 @@
     display: block;
     text-transform: capitalize !important;
 }
+.createdText-width{
+ width: 180px;
+ text-overflow: ellipsis;
+ overflow: hidden;
+}
 .redacted-background{
   background: yellow;
   padding-left: 3px;

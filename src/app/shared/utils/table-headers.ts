@@ -688,8 +688,14 @@ export class TableHeaders {
         sort: false
       },
       {
-        name: 'Employee name',
+        name: 'First Name',
         property: 'firstName',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Last name',
+        property: 'lastName',
         filter: false,
         sort: false
       },
@@ -732,6 +738,62 @@ export class TableHeaders {
       {
         name: 'Employee role',
         property: 'role',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Status',
+        property: 'employeeStatus',
+        filter: true,
+        sort: false
+      },
+    ],
+    F2F_RECURRING_TABLE_SUMMARY:[
+      {
+        name: 'F2F Training name',
+        property: 'courseName',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Trainer name',
+        property: 'trainerName',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Trained Date',
+        property: 'completionDate',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Expired date',
+        property: 'expiredDate',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Store Id',
+        property: 'storeCode',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Store name',
+        property: 'store',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Employee role',
+        property: 'role',
+        filter: false,
+        sort: false
+      },
+      {
+        name: 'Status',
+        property: 'employeeStatus',
         filter: false,
         sort: false
       },

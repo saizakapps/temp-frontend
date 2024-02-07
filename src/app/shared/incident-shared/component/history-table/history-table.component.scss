@@ -257,3 +257,37 @@ display: none;
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
+.historyincidentListTblView td:nth-child(2){
+ width: 170px !important;
+ max-width: 170px !important;
+}
+.historyincidentListTblView th:nth-child(2){
+  width: 170px !important;
+  max-width: 170px !important;
+ }
+.historyincidentListTblView td:nth-child(2) .emptyContentDiv{
+  width: 155px !important;
+  max-width: 155px !important;
+ }
+ .historyincidentListTblView th:nth-child(2) span{
+  width: 155px !important;
+  max-width: 155px !important;
+ }
+
+ .historyincidentListTblView td:nth-child(3){
+  max-width: 170px !important;
+  width: 170px;
+ }
+ .historyincidentListTblView th:nth-child(3){
+  max-width: 170px !important;
+  width: 170px;
+ }
+ .historyincidentListTblView td:nth-child(3) .emptyContentDiv{
+  max-width: 155px !important;
+ }
+ .historyincidentListTblView td:nth-child(3) span{
+  max-width: 155px !important;
+ }
+ .historyincidentListTblView th:nth-child(3) span{
+  max-width: 155px !important;
+ }

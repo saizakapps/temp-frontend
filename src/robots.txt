@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /#/incident-create/*
+X-Robots-Tag: noindex, nofollow

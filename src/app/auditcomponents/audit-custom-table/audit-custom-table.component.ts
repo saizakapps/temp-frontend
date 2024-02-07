@@ -22,9 +22,6 @@ export class AuditCustomTableComponent {
   dataSource: any;
   updateByNameDataHistory: any = [];
   viewednameDataHistory: any = [];
-  storenameData: any = [];
-  updatepdfData: any = [];
-  reviewpdfData: any = [];
   // dateSortValue = '';
   recordData = false;
   pdfHttpHeader: any = {};
@@ -149,21 +146,21 @@ export class AuditCustomTableComponent {
       });
 
       /* Store Name Filter Data */
-      this.storenameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+      this.ngxservice.storenameData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.storeDescription != '' && item.storeDescription != null;
       }).map((role: any) => role.storeDescription))).map(rl => {
         return { name: rl, checked: false }
       });
 
       /* Upload Date Filter Data */
-      this.updatepdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+      this.ngxservice.updatepdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.updatedAt != '' && item.updatedAt != null;
       }).map((role: any) => role.updatedAt))).map(rl => {
         return { name: rl, checked: false }
       });
 
       /* View Date Filter Data */
-      this.reviewpdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+      this.ngxservice.reviewpdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
         return item.reviewAt != '' && item.reviewAt != null;
       }).map((role: any) => role.reviewAt))).map(rl => {
         return { name: rl, checked: false }
@@ -171,6 +168,7 @@ export class AuditCustomTableComponent {
     }
 
   }
+
 
   async getAuditlist() {
     this.ngxservice.shimmerTable = true;
@@ -675,7 +673,7 @@ export class AuditCustomTableComponent {
                 this.ngxservice.donwloadHide = false;
                 this.retryText = false;
                 /* Upload Date Filter Data */
-                this.updatepdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+                this.ngxservice.updatepdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
                   return item.updatedAt != '' && item.updatedAt != null;
                 }).map((role: any) => role.updatedAt))).map(rl => {
                   return { name: rl, checked: false }
@@ -880,7 +878,7 @@ export class AuditCustomTableComponent {
           return { name: rl, checked: false }
         });
 
-        this.reviewpdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
+        this.ngxservice.reviewpdfData = Array.from(new Set(this.tableData.data.filter(function (item: any) {
           return item.reviewAt != '' && item.reviewAt != null;
         }).map((role: any) => role.reviewAt))).map(rl => {
           return { name: rl, checked: false }

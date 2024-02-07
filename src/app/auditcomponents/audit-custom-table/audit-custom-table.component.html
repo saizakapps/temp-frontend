@@ -21,7 +21,7 @@
                         <span *ngIf="i>0 && x.indexName == 'isClear'"  class="tableClear d-flex justify-content-end"><span (click)="clearTablefilter()" class="tableCleartext" [ngClass]="{'disabledClear' : this.ngxservice.selectedassignedManagerType.length > 0 || this.ngxservice.selectedviewedNameBy.length > 0 || ngxservice.dateSortValue !== '' || this.ngxservice.selectedRowLength > 0}">{{x.showName}}</span></span>
                         <!--Sort Icon for Store name-->
                         <span *ngIf="x.isSort && x.indexName == 'storeDescription'"
-                            [ngClass]="{'d-none' : storenameData.length == 0, 'activeFiltericon' : this.ngxservice.activesort == 2 || this.ngxservice.activesort == 3}"
+                            [ngClass]="{'d-none' : ngxservice.storenameData.length == 0, 'activeFiltericon' : this.ngxservice.activesort == 2 || this.ngxservice.activesort == 3}"
                             class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" (click)="getFilterData(x.indexName)"
                             [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
                             <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
@@ -29,35 +29,35 @@
 
                         <!--dummy Sort Icon for Store name When length = 0-->
                         <span *ngIf="x.isSort && x.indexName == 'storeDescription'"
-                            [ngClass]="{'d-none' : storenameData.length > 0}"
+                            [ngClass]="{'d-none' : ngxservice.storenameData.length > 0}"
                             class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
                             <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
                         </span>
 
                         <!--Sort Icon for Upload date-->
                         <span *ngIf="x.isSort && x.indexName == 'updatedAt'"
-                            [ngClass]="{'d-none' : updatepdfData.length == 0, 'activeFiltericon' : this.ngxservice.activesort == 5 || this.ngxservice.activesort == 6}"
+                            [ngClass]="{'d-none' : ngxservice.updatepdfData.length == 0, 'activeFiltericon' : this.ngxservice.activesort == 5 || this.ngxservice.activesort == 6}"
                             class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" (click)="getFilterData(x.indexName)"
                             [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
                             <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
                         </span>
                         <!--dummy Sort Icon for Upload date When length = 0-->
                         <span *ngIf="x.isSort && x.indexName == 'updatedAt'"
-                            [ngClass]="{'d-none' : updatepdfData.length > 0}"
+                            [ngClass]="{'d-none' : ngxservice.updatepdfData.length > 0}"
                             class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
                             <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
                         </span>
 
                         <!--Sort Icon for Review date-->
                         <span *ngIf="x.isSort && x.indexName == 'reviewAt'"
-                            [ngClass]="{'d-none' : reviewpdfData.length == 0, 'activeFiltericon' : this.ngxservice.activesort == 8 || this.ngxservice.activesort == 9}"
+                            [ngClass]="{'d-none' : ngxservice.reviewpdfData.length == 0, 'activeFiltericon' : this.ngxservice.activesort == 8 || this.ngxservice.activesort == 9}"
                             class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad" (click)="getFilterData(x.indexName)"
                             [ngbPopover]="menu" placement="bottom" [autoClose]="'outside'" #statusPopover="ngbPopover">
                             <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
                         </span>
                         <!--dummy Sort Icon for Review date When length = 0-->
                         <span *ngIf="x.isSort && x.indexName == 'reviewAt'"
-                            [ngClass]="{'d-none' : reviewpdfData.length > 0}"
+                            [ngClass]="{'d-none' : ngxservice.reviewpdfData.length > 0}"
                             class="fw-600 cursor ut-filter-status-pointer ps-1 showIconpad">
                             <span class="fw-600 cursor ut-filter-status-pointer"> &#8645; </span>
                         </span>
