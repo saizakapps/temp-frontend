@@ -1,8 +1,7 @@
 <section>
     <div class="summary-page" *ngIf="createBatch == false">
-        <div *ngIf="loginEmployeeIstrainer == false">
+        <div *ngIf="create && update && view">
             <!-- <div class="summarytitle d-flex align-items-center">F2F Expiration Summary</div> -->
-        
             <div class="summaryTable">
                 <div class="summaryTab">
                     <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 1}" (click)="changeTable1()">F2F Expiration</div>
@@ -64,11 +63,11 @@
                         <div class="d-flex align-items-center justify-content-between rowdata">
                             <div class="list_title" title="{{data.courseName}}">{{data.courseName}}</div>
                             <div class="d-flex align-items-center">
-                                <div class="list_expired notification"
+                                <div class="list_expired notification" (click)="gotof2fReports(data)"
                                     [ngClass]="{'opacity0' : data.expiryCount == '' || data.expiryCount == 0 || data.expiryCount == null}">
                                     {{data.expiryCount}}
                                 </div>
-                                <div class="list_about notification"
+                                <div class="list_about notification" (click)="gotof2fReports(data)"
                                     [ngClass]="{'opacity0' : data.aboutToExpireCount == '' || data.aboutToExpireCount == '0' || data.aboutToExpireCount == null}">
                                     {{data.aboutToExpireCount}}
                                 </div>
@@ -101,7 +100,7 @@
                     </ng-container></div>
                     
             </div>
-            <div class="bottombutton" (click)="gotocreateBatch()"><span>View Report&nbsp;</span><span *ngIf="(loginEmployeeManager || loginEmployeeAdmin == 'SA')">& Create Batch&nbsp;</span>→</div>
+            <div class="bottombutton" (click)="gotocreateBatch()"><span>View Report&nbsp;</span><span *ngIf="create">& Create Batch&nbsp;</span>→</div>
         </div>
         <div style="width: 100%;">
             <!-- <div class="activeDtails" *ngIf="loginEmployeeManager">
@@ -126,15 +125,15 @@
                     <div class="summarytitle summarytitle1">Upcoming Events
                     </div>
                     <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
-                        <ng-select [items]="upcomingFilterlist" name="searchDateBy" bindLabel="name"
+                        <ng-select [items]="upcomingFilterlist" name="searchDateByList" bindLabel="name"
                             bindValue="filterId" [clearable]=false [searchable]="false" [(ngModel)]="batchStatusList"
                             class="dateJoining" (change)="filterbyListstatus($event)">
                         </ng-select>
                     </div>
                     <div class="cardData cardDataupcoming webkitscrollStyle" (scroll)="onScroll($event)">
                         <div *ngFor="let item of this.upcomingListData; let j =index" class="card"
-                            [ngClass]="{'inactiveCard' : item.courseIsActive == false}" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
-                            <div class="cardtitle" title="{{item.courseName}}">{{item.courseName}}</div>
+                            [ngClass]="{'assignedinactive' : (item.batchStatus == 'Assigned' && (item.scheduledDate < todayDate)) }" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
+                            <div class="cardtitle" title="{{item.courseName}}" [ngClass]="{'inactiveCard' : item.courseIsActive == false}">{{item.courseName}}</div>
                             <div class="cardbatch">{{item.batchName}}</div>
                             <div class="cardemp d-flex align-items-center"><img src="assets/images/groups_2.png"
                                     alt="">&nbsp;
@@ -148,7 +147,7 @@
                             <div class="cardtrainer cardbatchstatus"><span class="train">Batch Status:</span> {{item.batchStatus}}</div>
 
                             <div class="detailview" [ngClass]="{'detailview-inactive' : item.courseIsActive == false}" data-toggle="modal" data-target="#detailsModalUpdate"
-                                (click)="getscheduledDetails(item)">View Details<span *ngIf="item.courseIsActive == false">&nbsp;(inactive)</span></div>
+                                (click)="getscheduledDetails(item)">View Details<span *ngIf="item.courseIsActive == false">&nbsp;(Course inactive)</span></div>
                             <!-- <div class="overLay" title="This Course is Inactive" *ngIf="item.courseIsActive == false"></div> -->
                         </div>
                         <div *ngIf="cardShimmer">
@@ -182,7 +181,7 @@
                     </div>
                 
                 </div>
-                <div class="cardListItems" *ngIf="loginEmployeeManager || loginEmployeeAdmin == 'SA'">
+                <div class="cardListItems" *ngIf="create && update && view">
                     <div class="summarytitle summarytitle1 summarytitle2">Drafted Events
                     </div>
                     <div class="cardData webkitscrollStyle" (scroll)="onScrollDraft($event)">
@@ -294,6 +293,7 @@
                                 <mat-option>
                                     <!-- This is the tree node template for leaf nodes -->
                                     <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                                        
                                         <li class="mat-tree-node storeList node1 reportsRole">
                                             <!-- use a disabled button to provide padding for tree leaf -->
                                             <!-- <button mat-icon-button disabled></button> -->
@@ -458,7 +458,7 @@
                     </div>
                     <div class="relative">
                         <input #dateRange class="input-group-append" (keypress)="common.allowNumberOnly($event)"
-                            [ngModel]="selectedDateLabel" #inputField
+                            [ngModel]="selectedDateLabel" #inputField 
                             [ngClass]="{'whitecolor':reportFromdate == '' && reportTodate == ''}" id="daterangeInput"
                             name="dateOfJoiningRangeInput" daterangepicker (selected)="dateRangeChange($event, false)"
                             [options]="filterDateOption" autocomplete="off">
@@ -498,7 +498,7 @@
                             <mat-option *ngFor="let option of filtercourseNameList" class="removecheckbox">
                                 <mat-checkbox [checked]="option.checked" [value]="option.courseName"
                                     (change)="toggleSelectionForCourse($event, option)" class="f2fcheckboxstatus">
-                                    <div style="white-space: pre-line; line-height: 16px;">{{ option.courseName }}</div>
+                                    <div class="coursename-option" title="{{option.courseName}}">{{ option.courseName }}</div>
                                 </mat-checkbox>
                             </mat-option>
                         </mat-select>
@@ -508,7 +508,7 @@
 
             <div class="d-flex">
                 <div class="clear_filter"
-                    [ngClass]="{'greyText': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && selectedOptionsnew.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal}"
+                    [ngClass]="{'greyText': selectedRoleGroupDropDown.length === 0 && selectedCountryDropDown.length === 0 && selectedOptionsnew.length === 0 && !selectedDateLabel && filter.length === 0 && !searchTextModal && cleardisable}"
                     (click)="clearFilters()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         viewBox="0 0 16 16" fill="none">
                         <mask id="mask0_430_7303" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
@@ -550,18 +550,6 @@
                     </div>
                 </div>
             </div> -->
-
-            <div class="d-flex align-items-end clear_filter_absolute">
-                <div class="pl-1">
-                    <button [disabled]="view && !create && !update" (click)="import()" type="button"
-                        class="mat-menu-trigger btn btn-primary btn-sm statusBtn importBtn">Import
-                    </button>
-                    <input type="file" class="fileInputCls" (change)="onFileBrowse($event, xlsContent)" hidden
-                        #uploadFileInput id="file" name="file"
-                        [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" />
-                </div>
-
-            </div>
         </div>
         <!-- <div class="" (click)="hidecreate()">hidebatch</div> -->
         <div class="d-flex scheduleData">
@@ -579,7 +567,7 @@
                                         <span *ngIf="column.filter" [ngbPopover]="menu" class="normal-column"
                                             [placement]="'bottom'" [autoClose]="'outside'" #statusPopover="ngbPopover"
                                             (hidden)="onPopoverClose(column.property)"
-                                            [ngClass]="{'filtered-column': (sortByField === column.property)}">
+                                            [ngClass]="{'filtered-column': (sortBy?.toLowerCase() !== 'reset' && sortByField === column.property) || (currentFilters[column.property] !== 'All' && column.filter)}">
                                             <ng-container *ngTemplateOutlet="filter_icon">
                                             </ng-container>
                                         </span>
@@ -621,6 +609,15 @@
                                         <ng-template #menu>
                                             <!-- select filter section -->
                                             <div *ngIf="column.filter" class="filter-popover">
+                                                <div *ngIf="column.filter && column.property !== 'courseName'" class="filter-popover">
+                                                    <div *ngFor="let item of availableFilter[column.property]" class="cursor-pointer p-2"
+                                                      [ngClass]="currentFilters[column.property] === item.key ? 'active-status' : 'active-filter-Options'"
+                                                      (click)="updateFilter(item, column); closePopover(colIndex)" (keyup)="updateFilter(item, column)">
+                                                      <span>{{item.name }}</span>
+                                                    </div>
+                                                    <div *ngIf="availableFilter[column.property]?.length === 0">{{'No filter found'}}.
+                                                    </div>
+                                                  </div> 
                                                 <!-- <ng-container *ngIf="column.property == 'courseName'">
                                                     <div *ngFor="let filteritem of this.filterCourseNamevalues"
                                                         class="p-2 pl-3 d-flex align-items-center">
@@ -705,7 +702,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let data of this.generalReportList"
-                                [draggable]="(shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data)) && (loginEmployeeManager || loginEmployeeAdmin == 'SA')? true : false"
+                                [draggable]="(shouldEnableDragCondition1(data) || shouldEnableDragCondition2(data)) && create? true : false"
                                 (dragstart)="onDragStart($event, data)" (mouseenter)="onMouseEnter($event)"
                                 (mouseleave)="onMouseLeave()" [ngClass]="{'activeTR' : data.checked == true}">
                                 <td class="nopad"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -725,8 +722,15 @@
                                     </mat-checkbox></td>
                                 <td class="td_overflowtext" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.employeeId}}</td>
                                 <!--data-toggle="modal" data-target="#emphistoryTable" (click)="getempHistory()"-->
-                                <td class="employeedetails_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.firstName}} {{data.lastName}}">
-                                    <div class="name_width">{{data.firstName}} {{data.lastName}}</div>
+                                <td class="employeedetails_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.firstName}}">
+                                    <div class="name_width">{{data.firstName}}</div>
+                                    <!-- <div class="d-flex align-items-center">
+                                        <div class="smallfont">{{data.employeeId}} | <span
+                                                title="{{data.role}}">{{data.role}}</span></div>
+                                    </div> -->
+                                </td>
+                                <td class="employeedetails_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.lastName}}">
+                                    <div class="name_width">{{(data.lastName == null || data.lastName == '')?"-":data.lastName}}</div>
                                     <!-- <div class="d-flex align-items-center">
                                         <div class="smallfont">{{data.employeeId}} | <span
                                                 title="{{data.role}}">{{data.role}}</span></div>
@@ -738,9 +742,10 @@
                                     :utils.FORMAT.DATEM}}</td>
                                 <td class="expiredate_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.expiredDate | dateUtcToLocal :utils.FORMAT.DATEM}}
                                 </td>
-                                <td class="storename_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.storeCode}}</td>
+                                <td class="storeid_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.storeCode}}</td>
                                 <td class="storename_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.store}}">{{data.store}}</td>
-                                <td class="role_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.role}}</td>
+                                <td class="role_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)" title="{{data.role}}">{{data.role}}</td>
+                                <td class="status_width" data-toggle="modal" data-target="#emphistoryTable" (click)="getcourseVersion(data)">{{data.employeeStatus}}</td>
                                 <td class="p-0"></td>
                             </tr>
                         </tbody>
@@ -755,15 +760,24 @@
                     </div>
                 </div>
                 <div class="tablebottom">
-                    <div class="buttons align-items-center">
-                        <div class="commonbutton blackbutton" (click)="gotoSummarypage()">Back</div>
-                        <div class="commonbutton blackbutton" data-toggle="modal" data-target="#emailModal">Export</div>
+                        <div class="commonbutton blackbutton commonbutton-footer" (click)="gotoSummarypage()">Back</div>
+                        <div class="buttons">
+                        <div class="">
+                            <button [disabled]="view && !create && !update" (click)="import()" type="button"
+                                class="mat-menu-trigger commonbutton commonbutton-whitebg commonbutton-footer">Import
+                            </button>
+                            <input type="file" class="fileInputCls" (change)="onFileBrowse($event, xlsContent)" hidden
+                                #uploadFileInput id="file" name="file"
+                                [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" />
+                        </div>
+                        <div class="commonbutton blackbutton commonbutton-footer" data-toggle="modal" data-target="#emailModal">Export</div>
                     </div>
+                
                     <!-- <div>{{generalReportList.length}} records found</div> -->
                 </div>
             </div>
 
-            <div class="batchContent" *ngIf="(loginEmployeeManager || loginEmployeeAdmin == 'SA')"
+            <div class="batchContent" *ngIf="create"
                 [ngClass]="{'batchContenthide' : hideBatch == false && firstclick == true, 'batchContentshow' : hideBatch == true && firstclick == true}">
                 <div class="batch-header" id="selectContainer">
                     <div class="batch_count">Batches ({{batchData.length}})</div>
@@ -785,7 +799,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-8">
                             <div class="batchlabel">Batch Name</div>
-                            <div class="tabletW-100">
+                            <div class="tabletW-100" [ngStyle]="{width:getWidth()}">
                                 <input type="text" maxlength="65" (change)="batchName($event, item)"
                                     [(ngModel)]="item.batchname" name="batch">
                             </div>
@@ -830,7 +844,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-8">
                             <div class="batchlabel">Schedule Date</div>
-                            <div class="relative">
+                            <div class="relative" [ngStyle]="{width:getWidth()}">
                                 <input type="text" class="form-control scheduleDate" id="scheduleDate{{b}}"
                                     maxlength="10" placeholder=" " name="scheduleDate{{b}}"
                                     [(ngModel)]="item.scheduledDate" [ngModelOptions]="{standalone: true}" bsDatepicker
@@ -990,12 +1004,12 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-emphistoryTable">
         <div class="modal-content">
             <div class="modal-header">
-                Course History
+                Course History ({{recurringEmpId}} - {{recurringEmpName}})
             </div>
             <div class="modal-body modal-body-no-radius">
                 <table class="historyTable table-container table-container-no-height" [ngClass]="{'table-container-hidden' : recurringcourseData.length == 0}">
                     <thead>
-                        <ng-container *ngFor="let column of this.f2freportTableheader">
+                        <ng-container *ngFor="let column of this.f2freportTableheaderrecurring">
                             <th>
                                 <span class="tableHeaderpad">{{column.name}}</span>
                             </th>
@@ -1012,24 +1026,17 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let data of this.recurringcourseData">
-                        <td class="td_overflowtext">{{data.employeeId}}</td>
-                        <!--data-toggle="modal" data-target="#emphistoryTable" (click)="getempHistory()"-->
-                        <td class="employeedetails_width" title="{{data.firstName}} {{data.lastName}}">
-                            <div class="name_width">{{data.firstName}} {{data.lastName}}</div>
-                            <!-- <div class="d-flex align-items-center">
-                                <div class="smallfont">{{data.employeeId}} | <span
-                                        title="{{data.role}}">{{data.role}}</span></div>
-                            </div> -->
-                        </td>
+                        
                         <td class="td_overflowtext" title="{{data.courseName}}">{{data.courseName}}</td>
                         <td class="trainer_width" title="{{data.trainerName}}">{{data.trainerName}}</td>
                         <td class="completiondate_width">{{data.completionDate | dateUtcToLocal
                             :utils.FORMAT.DATEM}}</td>
                         <td class="expiredate_width">{{data.expiredDate | dateUtcToLocal :utils.FORMAT.DATEM}}
                         </td>
-                        <td class="storename_width">{{data.storeCode}}</td>
+                        <td class="storeid_width">{{data.storeCode}}</td>
                         <td class="storename_width" title="{{data.store}}">{{data.store}}</td>
                         <td class="role_width">{{data.role}}</td>
+                        <td class="status_width">{{data.employeeStatus}}</td>
                         <td class="p-0"></td>
                     </tr>
                         <!-- <tr *ngFor="let emphistory of this.recurringcourseData">
@@ -1231,12 +1238,12 @@
                     </div>
                     <div class="d-flex align-items-center label-input pb-15">
                         <div class="label-name">F2F Course name</div>
-                        <div class="summaryngSelect batchselect1"><ng-select [items]="courseNameList"
+                        <div class="summaryngSelect batchselect1" [ngClass]="{'inactiveCoursename' : detailsData.courseIsActive == false && !inactiveChanged}"><ng-select [items]="courseNameList"
                                 name="detailsData.courseName" bindLabel="courseName" bindValue="courseName"
                                 [clearable]=false [searchable]="false"
-                                (change)="batchCoursename($event, detailsData);compareDataforUpdate()"
+                                (change)="batchCoursename($event, detailsData);compareDataforUpdate();valueChanged()"
                                 [(ngModel)]="detailsData.courseName"
-                                [readonly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'"></ng-select></div>
+                                [readonly]="detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || update == false"></ng-select></div>
                     </div>
 
                     <div class="d-flex align-items-center label-input pb-15">
@@ -1245,9 +1252,9 @@
                             <input type="text" maxlength="65"
                                 (change)="batchName($event, detailsData);compareDataforUpdate()"
                                 [(ngModel)]="detailsData.batchName"
-                                [readOnly]="detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'">
+                                [readOnly]="detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || update == false">
                         </div>
-             <!-- [readonly]="detailsData.batchStatus == 'Canceled' || updateReadonly"-->
+             <!-- [readonly]="detailsData.batchStatus == 'Cancelled' || updateReadonly"-->
 
                     </div>
 
@@ -1260,7 +1267,7 @@
                                 class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
                                 <mat-form-field class="example-full-width bottomassign" [floatLabel]="'never'"
                                     style="width: 330px;"
-                                    [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
+                                    [ngClass]="{'read-only' : detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned'}">
                                     <input type="text"
                                         [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)"
                                         aria-label="" matInput [matAutocomplete]="auto2"
@@ -1291,7 +1298,7 @@
                                     bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
                                      (change)="batchTrainername($event, detailsData);compareDataforUpdate()"
                                     [(ngModel)]="detailsData.trainerName"
-                                    [readonly]="detailsData.batchStatus == 'Canceled' || updateReadonly">
+                                    [readonly]="detailsData.batchStatus == 'Cancelled' || updateReadonly || update == false">
                                 </ng-select>
                             </div>
                         </div>
@@ -1307,10 +1314,10 @@
                                         (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()"
                                         autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"
                                         [minDate]="scheduleminDate" #scheduleDate1
-                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}"
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || !update}"
                                         required>
                                     <div class="data-icon" (click)="scheduleDate1.click()"
-                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Canceled' || detailsData.batchStatus == 'Assigned'}">
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || update}">
                                         <img src="assets/healthsafetyimages/field-icon.svg">
                                     </div>
                                 </div>
@@ -1342,7 +1349,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly"
+                                    <div *ngIf="detailsData.batchStatus !== 'Cancelled' && !updateReadonly && update"
                                        class="cursor"  (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             viewBox="0 0 22 22" fill="none">
@@ -1361,7 +1368,7 @@
                                 [ngClass]="{'disablescheduleButton': upDatedEmployeeCount == 0}"
                                 (click)="updateBatch(detailsData, 'Scheduled')">Schedule training</div>
                             <div class="button bluebutton bluebutton-inactive"
-                                *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly"
+                                *ngIf="detailsData.batchStatus !== 'Cancelled' && !updateReadonly && update"
                                 [ngClass]="{'active-button' : saveButtonshow == true && upDatedEmployeeCount !== 0}"
                                 (click)="updateBatch(detailsData, 'update')">Save</div>
                         </div>
@@ -1369,12 +1376,12 @@
                         <div class="d-flex align-items-center buttongap">
                             <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                                 (click)="addPeopleData(detailsData)"
-                                *ngIf="detailsData.batchStatus !== 'Canceled' && !updateReadonly">+ Add people
+                                *ngIf="detailsData.batchStatus !== 'Cancelled' && !updateReadonly && update">+ Add people
                             </div>
-                            <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'"
+                            <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled' && update"
                                 data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
                                 <div class="button blackbutton"
-                                data-toggle="modal" data-target="#assignedcancelSchedule" *ngIf="detailsData.batchStatus == 'Assigned' && !updateReadonly">Cancel schedule</div>
+                                data-toggle="modal" data-target="#assignedcancelSchedule" *ngIf="detailsData.batchStatus == 'Assigned' && !updateReadonly && update">Cancel schedule</div>
                             <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft"
                                 *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
@@ -1413,58 +1420,62 @@
 
                     </div>
 
-                    <div class="d-flex align-items-center label-input pb-15">
-                        <div class="label-name no-width">Trainer Name:</div>
-                        <div>{{historyData.trainerName}}</div>
-                        <!-- <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
-                                <mat-form-field
-                                    class="example-full-width bottomassign read-only"
-                                    [floatLabel]="'never'" style="width: 330px;">
-                                    <input type="text" [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)" aria-label="" matInput
-                                        [matAutocomplete]="auto2" 
-                                        (keyup)="assignChange($event, detailsData)" (click)="assignDDvalue($event,detailsData)"
-                                        class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
-                                        #autoCompleteTrigger3="matAutocompleteTrigger">
-                                    <mat-autocomplete #auto2="matAutocomplete"
-                                        matAutocompletePosition="below"
-                                        autoActiveFirstOption>
-                                        <mat-option *ngFor="let user of detailsData.trainerDropdownData"
-                                          [value] = "detailsData.trainerName"  class="mat-option-design">
-                                            <div class="optionDivetag" (click)="optionClicked($event, user, detailsData)">
-                                                <mat-checkbox
-                                                    [checked]="user.checked"
-                                                    (change)="toggleSelection($event,user,detailsData);compareDataforUpdate()"
-                                                    (click)="$event.stopPropagation()">
-                                                    <span for="auto">{{ user.username }}</span>
-                                                </mat-checkbox>
-                                            </div>
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
+                    <div class="d-flex justify-content-between historyGap">
+                        <div class="d-flex align-items-center label-input pb-15">
+                            <div class="label-name no-width">Trainer Name:</div>
+                            <div>{{historyData.trainerName}}</div>
+                            <!-- <div class="auditFormsLbl auditFormsLbl1 incidentContents auditFormsLbl-new auditFormsLbl-AH f2fFormsLbl">
+                                    <mat-form-field
+                                        class="example-full-width bottomassign read-only"
+                                        [floatLabel]="'never'" style="width: 330px;">
+                                        <input type="text" [placeholder]="detailsData?.trainerName?.length == 0 ? 'Select From List':getinputPlaceholderValue(detailsData)" aria-label="" matInput
+                                            [matAutocomplete]="auto2" 
+                                            (keyup)="assignChange($event, detailsData)" (click)="assignDDvalue($event,detailsData)"
+                                            class="assignhandletext form-control multselecticon p-0" id="autoCompleteTrigger3"
+                                            #autoCompleteTrigger3="matAutocompleteTrigger">
+                                        <mat-autocomplete #auto2="matAutocomplete"
+                                            matAutocompletePosition="below"
+                                            autoActiveFirstOption>
+                                            <mat-option *ngFor="let user of detailsData.trainerDropdownData"
+                                              [value] = "detailsData.trainerName"  class="mat-option-design">
+                                                <div class="optionDivetag" (click)="optionClicked($event, user, detailsData)">
+                                                    <mat-checkbox
+                                                        [checked]="user.checked"
+                                                        (change)="toggleSelection($event,user,detailsData);compareDataforUpdate()"
+                                                        (click)="$event.stopPropagation()">
+                                                        <span for="auto">{{ user.username }}</span>
+                                                    </mat-checkbox>
+                                                </div>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                    
                                 
-                            
-                        </div> -->
+                            </div> -->
+                        </div>
+    
+                        <div class="d-flex align-items-center label-input pb-15">
+                            <div class="label-name no-width">Schedule Date:</div>
+                            <div>{{historyData.scheduledDate | date:'dd-MM-yyyy'}}</div>
+                            <!-- <div class="selectDD">
+                                    <div class="relative">
+                                        <input type="text" style="width: 130px;" class="form-control selectedscheduleDate read-only" id="detailsDatascheduleDate"
+                                        maxlength="10" placeholder=" "  name="detailsDatascheduleDate"  [(ngModel)]="detailsData.scheduledDate"
+                                            bsDatepicker
+                                            (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()" autocomplete="off"
+                                            bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate1
+                                            required>
+                                        <div class="data-icon read-only" (click)="scheduleDate1.click()">
+                                            <img src="assets/healthsafetyimages/field-icon.svg">
+                                        </div>
+                                    </div>
+        
+                                </div> -->
+                        </div>
                     </div>
 
-                    <div class="d-flex align-items-center label-input pb-15">
-                        <div class="label-name no-width">Schedule Date:</div>
-                        <div>{{historyData.scheduledDate | date:'dd-MM-yyyy'}}</div>
-                        <!-- <div class="selectDD">
-                                <div class="relative">
-                                    <input type="text" style="width: 130px;" class="form-control selectedscheduleDate read-only" id="detailsDatascheduleDate"
-                                    maxlength="10" placeholder=" "  name="detailsDatascheduleDate"  [(ngModel)]="detailsData.scheduledDate"
-                                        bsDatepicker
-                                        (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()" autocomplete="off"
-                                        bsDatepicker [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate1
-                                        required>
-                                    <div class="data-icon read-only" (click)="scheduleDate1.click()">
-                                        <img src="assets/healthsafetyimages/field-icon.svg">
-                                    </div>
-                                </div>
-    
-                            </div> -->
-                    </div>
-                    <div class="updatedemployeeListheight updatedemployeeListheight1">
+           
+                    <div class="updatedemployeeListheight updatedemployeeListheight1" [ngClass]="{'updatedemployeeListheight1-history' : viewHistory == true}">
 
                         <div class="employeeList">
                             <div class="employeeData">
@@ -1490,12 +1501,12 @@
                     <div class="bottomfooter d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center buttongap">
                             <!-- <div class="button bluebutton"  *ngIf="detailsData.batchStatus == 'Draft'" (click)="updateBatch(detailsData, 'Scheduled')">Schedule</div>
-                            <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Canceled'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div> -->
+                            <div class="button bluebutton bluebutton-inactive" *ngIf="detailsData.batchStatus !== 'Cancelled'" [ngClass]="{'active-button' : saveButtonshow == true}" (click)="updateBatch(detailsData, 'update')">Save</div> -->
                         </div>
 
                         <div class="d-flex align-items-center buttongap">
                             <!-- <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
-                                (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Canceled'">+ Add people</div>
+                                (click)="addPeopleData(detailsData)" *ngIf="detailsData.batchStatus !== 'Cancelled'">+ Add people</div>
                             <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled'" data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
                             <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft" *ngIf="detailsData.batchStatus == 'Draft'">Delete</div> -->
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
@@ -1556,7 +1567,7 @@
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
                 <button type="button" class="cancelBtn deleteBtn" data-dismiss="modal"
-                    (click)="updateBatch(detailsData, 'Canceled')">Yes</button>
+                    (click)="updateBatch(detailsData, 'Cancelled')">Yes</button>
             </div>
         </div>
     </div>
@@ -1576,7 +1587,7 @@
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
                 <button type="button" class="cancelBtn deleteBtn" data-dismiss="modal"
-                    (click)="updateBatch(detailsData, 'Canceled')">Yes</button>
+                    (click)="updateBatch(detailsData, 'Cancelled')">Yes</button>
             </div>
         </div>
     </div>

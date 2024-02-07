@@ -3292,7 +3292,7 @@ select:focus {
 
 .viewOnly {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.9;
 }
 
 .otherInfoCls .date-range .mat-form-field-flex {
@@ -3464,26 +3464,6 @@ select:focus {
   padding-bottom: 0px !important;
 }
 
-.tableMatmenu .mat-menu-content {
-  background-color: #fff !important;
-}
-
-.tableMatmenu .mat-menu-content:not(:empty) {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-.tableMatmenu .mat-menu-item {
-  height: 38px !important;
-  line-height: 38px !important;
-  width: 300px !important;
-  font-size: 15px;
-}
-
-.tableMatmenu.mat-menu-panel {
-  max-width: 302px !important;
-}
-
 .summaryngSelect .ng-select.ng-select-single .ng-select-container {
   width: 150px !important;
   height: 35px !important;
@@ -3590,7 +3570,7 @@ select:focus {
   .mat-form-field-infix {
     border-top: 0px !important;
     padding: 0px !important;
-    width: 330px;
+    width: 250px;
   }
 
   .mat-select-min-line {
@@ -3623,9 +3603,10 @@ select:focus {
   margin-left: 25px;
   margin-top: 5px;
   margin-bottom: 5px;
-  width: 330px;
-  max-width: 330px !important;
+  width: 250px;
+  max-width: 250px !important;
   min-width: unset !important;
+  max-height: 245px !important;
 }
 
 .f2fcheckboxstatus .mat-checkbox-layout .mat-checkbox-label {
@@ -3828,7 +3809,7 @@ select:focus {
 }
 
 .modal-dialog-emphistoryTable {
-  max-width: 800px !important;
+  max-width: 980px !important;
 }
 
 .downloadType-metMenu .mat-menu-content:not(:empty) {
@@ -3851,11 +3832,50 @@ select:focus {
   padding-bottom: 5px;
 }
 .tableMatmenu .mat-menu-item{
-  height: 38px !important;
-  line-height: 38px !important;
-  width: 300px !important;
-  font-size: 15px;
+  height: 30px !important;
+  line-height: 30px !important;
+  width: 280px !important;
+  font-size: 13px;
+  padding-right: 5px !important;
 }
 .tableMatmenu.mat-menu-panel{
-  max-width: 302px !important;
+  max-width: 282px !important;
+}
+
+.store-container .ng-dropdown-panel {
+  width: 210px !important;
+}
+.certificateLocation .mat-form-field-flex {
+  width: 230px !important;
+}
+.inactiveCoursename .ng-select.ng-select-single .ng-select-container{
+  border: 1px solid #81818150 !important;
+}
+
+.inactiveCoursename .ng-select.ng-select-single .ng-select-container .ng-value-container{
+  opacity: 0.5;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 50px white inset;
+}  
+
+.employeeContent .ng-select.ng-select-focused .ng-select-container .ng-value-container .ng-placeholder {
+  transform: translateY(-1.48125em) scale(0.75) perspective(100px) translateZ(0.001px) !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+  color: #000000;
+}
+
+.certCountryListPanel {
+  max-height: 200PX !important;
+  min-width: calc(100% + 26px)!important;
+}
+
+.rolePanel,.countryPanel {
+  min-width: calc(100% + 26px)!important;
 }

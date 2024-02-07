@@ -1035,7 +1035,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -1050,7 +1050,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -1075,7 +1075,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventReportedDate: this.datepipe.transform(
           reportedDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -1090,7 +1090,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2363,7 +2363,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2378,7 +2378,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2403,7 +2403,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventReportedDate: this.datepipe.transform(
           reportedDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2418,7 +2418,7 @@ export class IncidentMobileCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     }

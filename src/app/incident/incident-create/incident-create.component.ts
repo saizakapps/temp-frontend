@@ -5,10 +5,10 @@ import {
   HostListener,
   ViewChild, ViewChildren,
   ChangeDetectorRef, OnDestroy,
-  ChangeDetectionStrategy, QueryList, TemplateRef, ElementRef
+  ChangeDetectionStrategy, QueryList, TemplateRef, ElementRef, AfterViewInit
 } from "@angular/core";
 import { IncidentService } from "../incident.service";
-import { NavigationStart, Router } from "@angular/router";
+import { ActivatedRoute, NavigationStart, Router } from "@angular/router";
 import { FormControl } from "@angular/forms";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CommonService } from "../../shared/services/incident-services/common.service";
@@ -29,14 +29,15 @@ import * as moment from "moment";
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { Subject, debounceTime } from "rxjs";
-
+import { AESEncryptDecryptServiceService } from "../../shared/services/incident-services/aesencrypt-decrypt-service.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Component({
   selector: "app-incident-create",
   templateUrl: "./incident-create.component.html",
   styleUrls: ["./incident-create.component.scss"]
 })
-export class IncidentCreateComponent implements OnInit {
+export class IncidentCreateComponent implements OnInit, AfterViewInit {
   @ViewChild(MatAutocompleteTrigger, { read: MatAutocompleteTrigger }) autoCompleteTrigger: any;
   @ViewChild(MatAutocompleteTrigger, { read: MatAutocompleteTrigger }) autoCompleteTrigger1: any;
   @ViewChild(MatAutocompleteTrigger, { read: MatAutocompleteTrigger }) autoCompleteTrigger2: any;
@@ -144,7 +145,29 @@ export class IncidentCreateComponent implements OnInit {
   isIncidentClosed: boolean = false;
   isLegalInfoView: boolean = false;
   public ageTypeLabel = "";
-  public fileInPutData: any;
+  public fileInPutData = {
+    allowedFileType: [
+      "image/jpeg",
+      "image/jpg",
+      "video/mp4",
+      "video/mov",
+      "video/wmv",
+      "video/webm",
+      "video/avi",
+      "video/wmv",
+      "video/x-ms-wmv",
+      "application/msword",
+      "video/quicktime",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ],
+    id:0,
+    isEvidence: true,
+    incidentId: '',
+    fileTypeMessage: "jpg,jpeg,mp4,mov,wmv,webm,avi,doc",
+    oldEvidenceData: [],
+    oldIncidentData: [],
+    isAdd: true,responsefile:[]
+  };
   public personAge: number = 0;
   public ageMessage: string = "";
   public proofOfPurchaseFileInPutData: any = {};
@@ -323,7 +346,13 @@ export class IncidentCreateComponent implements OnInit {
   isStoreDisable = false;
   tableHistoryData: any = [];
   bsConfigValue = 1
-  username: any
+  username: any;
+  id:any = 0;
+  inciType:any
+  inciID:any;
+  invalidUrl = false;
+  noDetails= false;
+  urlDetails:any;
   public isDownload: boolean = false;
   public isOtherInfoBoxShow: boolean = false;
   public isOtherInfoFormShow: boolean = false;
@@ -337,14 +366,107 @@ export class IncidentCreateComponent implements OnInit {
     private datepipe: DatePipe,
     public utils: Utils,
     private dialog: MatDialog,
-    private cdref: ChangeDetectorRef,
-    private validation: IncidentFormValidationService, private ngxService: NgxUiLoaderService
+    private cdref: ChangeDetectorRef,private route: ActivatedRoute,
+    private validation: IncidentFormValidationService, private ngxService: NgxUiLoaderService,
+    public AESEncryptDecryptService: AESEncryptDecryptServiceService,private http:HttpClient
   ) { 
+    this.route.params.subscribe((params) => {
+      this.urlDetails = params['incidentdetails']
+      if(this.urlDetails !== undefined){
+        this.ngxService.start();
+       // this.incidentSelectedTypeData={id:0,name:this.inciType}
+        this.getEncrptyKeyIncident()
+      }
+    });
+    // const token = localStorage.getItem('authenticationToken'); 
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // this.http.get(this.utils.API.GET_DECRYPT_DETAILS + "?userName=" + localStorage.getItem('username'), { headers }).subscribe((res: any) => {
+    //   if(res.payLoad){
+    //     const resp = res.payLoad;
+    //     this.route.params.subscribe((params) => {
+    //     const details:any = params['incidentdetails']
+    //     let decryptedText:any = this.AESEncryptDecryptService.decrypt(details,resp.k,resp.s,resp.iv);
+    //     let words = decryptedText.split(' ');
+    //     this.id = words[0];
+    //     this.inciType = words[1];
+    //     this.inciID = words.slice(2).join(' '); 
+    //     this.id = this.id>0?this.id:0;
+    //     console.log(this.id, "this.id")
+    //     console.log(this.inciType, "this.incisType")
+    //     console.log(this.inciID, "this.inciID")
+    //     if(details !== undefined){
+    //    this.incidentData = this.common.defaultInitialData(this.id,this.inciID,this.inciType)
+    //    this.setAuthAccess();
+    //     }
+    //     else if(details == undefined){
+    //       this.noDetails = true
+    //     }
+        
+    //    if(this.id>0){
+    //     this.getFieldAccessData();
+    //     this.getIncidentDetailsByIncidentID(this.id);
+    //     // let incidentCreateData ={isAdd:false,idIncident:this.inciID,id:this.id,incidentSelectedTypeData:{id:0,name:this.inciType,isShow:false},incidentRowData:{}};
+    //     //   this.incidentService.subject$.next(incidentCreateData);
+    //   }
+    //   else 
+    //   if(details !== undefined && this.id == 0){
+    //     this.common.openSnackBar("Invalid URL",2,"Invalid")
+    //     this.invalidUrl = true;
+    //     this.router.navigate(["incident-list"]);
+    //   }
+    //   });
+      
+    //   }
+    // });
+    // if(response){
+    //   console.log(response)
+   
+    // }
+    
     // this.searchTextSubject
     // .pipe(debounceTime(500)) // Adjust the delay time (in milliseconds) as needed
     // .subscribe(async (searchText: string) => {
     //   await this.handleSearchText(searchText);
     // });
+  }
+  public async getEncrptyKeyIncident(){
+   let response:any= await this.requestapi.getData(this.utils.API.GET_DECRYPT_DETAILS + "?userName=" + localStorage.getItem('username'));
+  //  subscribe((res: any) => {
+      if(response.payLoad){
+        const resp = response.payLoad;
+        this.route.params.subscribe((params) => {
+        const details:any = params['incidentdetails']
+        let decryptedText:any = this.AESEncryptDecryptService.decrypt(details,resp.k,resp.s,resp.iv);
+        let words = decryptedText.split(' ');
+        this.id = words[0];
+        this.inciType = words[1];
+        this.inciID = words.slice(2).join(' '); 
+        this.id = this.id>0?this.id:0;
+        if(details !== undefined){
+       this.incidentData = this.common.defaultInitialData(this.id,this.inciID,this.inciType)
+       this.setAuthAccess();
+       this.incidentSelectedTypeData={id:0,name:this.inciType} 
+      }
+        else if(details == undefined){
+          this.noDetails = true
+        }
+        
+       if(this.id>0){
+        // this.getFieldAccessData();
+        // this.getIncidentDetailsByIncidentID(this.id);
+        let incidentCreateData ={isAdd:false,idIncident:this.inciID,id:this.id,incidentSelectedTypeData:{id:0,name:this.inciType,isShow:false},incidentRowData:{}};
+          this.incidentService.subject$.next(incidentCreateData);
+      }
+      else 
+      if(details !== undefined && this.id == 0){
+        this.common.openSnackBar("Invalid URL",2,"Invalid")
+        this.invalidUrl = true;
+        this.router.navigate(["incident-list"]);
+      }
+      // });
+      
+      }
+    )}
   }
   isFormValueChanged = false;
   storeFilterData: any = [];
@@ -451,18 +573,28 @@ export class IncidentCreateComponent implements OnInit {
       incidentInjury: [''],
       incidentCause: [''],
       userRole: this.loginEmployeeRoleCode,
-      userCountry : this.loginEmployeeCountry
+      userCountry : this.loginEmployeeCountry,
+      requestBaseUrl : window.location.protocol + this.utils.urlUtils.HOSTNAME
     });
-
+    
     this.witnessDataList = this.incidentForm.get("witnessList") as FormArray;
     this.toolTipData = this.utils.tooltipMessage.toolTipData;
     this.formFieldAccess = this.utils.formAccess.allFormAccess;
     let currentIncident = localStorage.getItem("currentIncident");
-    if (
+    if(this.id>0){
+     // this.getFieldAccessData();
+      //this.getIncidentDetailsByIncidentID(this.id);
+      let incidentCreateData ={isAdd:false,idIncident:this.inciID,id:this.id,incidentSelectedTypeData:{id:0,name:this.inciType,isShow:false},incidentRowData:{}};
+        this.incidentService.subject$.next(incidentCreateData);
+        this.incidentSelectedTypeData = {id:0,name:this.inciType,isShow:false};
+
+    }
+   else if(
       currentIncident != "" &&
       currentIncident != null &&
       currentIncident != undefined &&
       currentIncident != "undefined"
+      && this.urlDetails===undefined
     ) {
       this.incidentSelectedTypeData =
         JSON.parse(currentIncident).incidentSelectedTypeData;
@@ -510,7 +642,9 @@ export class IncidentCreateComponent implements OnInit {
           incidentId: '',
           fileTypeMessage: "jpg,jpeg,mp4,mov,wmv,webm,avi,doc",
           oldEvidenceData: [],
-          isAdd: true,responsefile:[]
+          isAdd: true,responsefile:[],
+          oldIncidentData: [],
+          id:0,
         };
         for (let x in this.formFieldAccess) {
           const hasKey = x in this.incidentFormAccess.customer;
@@ -527,7 +661,9 @@ export class IncidentCreateComponent implements OnInit {
           incidentId: '',
           fileTypeMessage: "jpg,jpeg,mp4,mov,wmv,webm,avi,doc",
           oldEvidenceData: [],
-          isAdd: true,responsefile:[]
+          isAdd: true,responsefile:[],
+          oldIncidentData: [],
+          id:0,
         };
         for (let x in this.formFieldAccess) {
           const hasKey = x in this.incidentFormAccess.employee;
@@ -544,7 +680,9 @@ export class IncidentCreateComponent implements OnInit {
           incidentId: '',
           fileTypeMessage: "jpg,jpeg,mp4,mov,wmv,webm,avi,doc",
           oldEvidenceData: [],
-          isAdd: true,responsefile:[]
+          isAdd: true,responsefile:[],
+          oldIncidentData: [],
+          id:0,
         };
 
         for (let x in this.formFieldAccess) {
@@ -561,7 +699,9 @@ export class IncidentCreateComponent implements OnInit {
           incidentId: '',
           fileTypeMessage: "jpg,jpeg,mp4,mov,wmv,webm,avi,doc",
           oldEvidenceData: [],
-          isAdd: true,responsefile:[]
+          isAdd: true,responsefile:[],
+          oldIncidentData: [],
+          id:0,
         };
         this.proofOfPurchaseFileInPutData = {
           allowedFileType: this.allowedProofOfPurchaseFile,
@@ -569,7 +709,9 @@ export class IncidentCreateComponent implements OnInit {
           incidentId: '',
           fileTypeMessage: "pdf,jpg,jpeg",
           oldEvidenceData: [],
-          isAdd: true,responsefile:[]
+          isAdd: true,responsefile:[],
+          oldIncidentData: [],
+          id:0,
         };
         for (let x in this.formFieldAccess) {
           const hasKey = x in this.incidentFormAccess.product;
@@ -578,9 +720,11 @@ export class IncidentCreateComponent implements OnInit {
           }
         }
       }
+      if(this.noDetails == false){
       this.incidentForm.patchValue({
         incidentType: this.incidentSelectedTypeData.name.toLowerCase(),
       });
+    }
     }
 
     //this.getFieldAccessData();
@@ -624,7 +768,10 @@ export class IncidentCreateComponent implements OnInit {
 
       witnessList.updateValueAndValidity();
     });
+   if(this.incidentData!==undefined){
     this.setAuthAccess();
+   }
+    
     this.incidentHistoryOldForm = this.incidentForm.value;
     this.incidentForm.valueChanges.subscribe((value) => {
       this.isFormValueChanged = true;
@@ -934,6 +1081,7 @@ export class IncidentCreateComponent implements OnInit {
         oldIncidentData: (!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
         isAdd: this.incidentData.isAdd,
         oldEvidenceData: [],responsefile:(!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
+        id:0,
       };
 
       for (let x in this.formFieldAccess) {
@@ -954,6 +1102,7 @@ export class IncidentCreateComponent implements OnInit {
         oldIncidentData: (!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
         isAdd: this.incidentData.isAdd,
         oldEvidenceData: [],responsefile:(!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
+        id:0,
       };
       for (let x in this.formFieldAccess) {
         const hasKey = x in employeeAccess;
@@ -973,6 +1122,7 @@ export class IncidentCreateComponent implements OnInit {
         oldIncidentData: (!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
         isAdd: this.incidentData.isAdd,
         oldEvidenceData: [],responsefile:(!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
+        id:0,
       };
 
       for (let x in this.formFieldAccess) {
@@ -991,6 +1141,7 @@ export class IncidentCreateComponent implements OnInit {
         oldIncidentData: (!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
         isAdd: this.incidentData.isAdd,
         oldEvidenceData: [],responsefile:(!this.incidentData.isAdd && this.incidentEditData) ? this.incidentEditData.evidences : [],
+        id:0,
       };
       this.proofOfPurchaseFileInPutData = {
         allowedFileType: this.allowedProofOfPurchaseFile,
@@ -1043,7 +1194,7 @@ export class IncidentCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -1058,7 +1209,7 @@ export class IncidentCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -1067,6 +1218,7 @@ export class IncidentCreateComponent implements OnInit {
       this.incidentForm.value.eventTime != ""
     ) {
       this.common.openSnackBar("Please select incident date", 2, "Required");
+      
     }
 
     if (
@@ -1083,9 +1235,10 @@ export class IncidentCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventReportedDate: this.datepipe.transform(
           reportedDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
+
     } else if (
       this.incidentForm.value.reportedDate != "" &&
       this.incidentForm.value.reportedDate != null &&
@@ -1098,9 +1251,10 @@ export class IncidentCreateComponent implements OnInit {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
+
     } else if (
       (this.incidentForm.value.reportedDate == "" ||
         this.incidentForm.value.reportedDate == null) &&
@@ -1137,6 +1291,7 @@ export class IncidentCreateComponent implements OnInit {
           "yyyy-MM-dd"
         ),
       });
+
     }
 
     let isSave = false;
@@ -2136,9 +2291,19 @@ async handleSearchText(searchText: string) {
     let response: any = await this.requestapi.getData(
       this.utils.API.GET_INCIDENT_DETAILS + "?id=" + incidentId + '&userName=' + this.username
     );
-    if (response) {
+    if(response){
+      const errorresponse = response.payLoad;
+      if(errorresponse.access == 'unauthorized'){
+      this.common.openSnackBar("Unauthorized access",2,"Invalid")
+      this.ngxService.stop();
+      this.router.navigate(['/incident-list']);
+      }
+    }
+
+     if (response) {
       let incidentData = response.payLoad;
       this.incidentEditData = incidentData;
+      this.incidentData.idIncident=this.incidentEditData.incidentId;
       this.fileInPutData.incidentId = this.incidentEditData.id;
       this.proofOfPurchaseFileInPutData.incidentId = this.incidentEditData.id;
       this.fileInPutData.oldEvidenceData = this.setEvidenceFormat();
@@ -2173,6 +2338,7 @@ async handleSearchText(searchText: string) {
   setFormValue(data: any) {
     let eventDate = new Date(data.eventActualDate);
     eventDate.setDate(eventDate.getDate());
+    
     let reportedDate = new Date(this.incidentEditData.eventReportedDate);
     reportedDate.setDate(reportedDate.getDate())
     let productReturnToHeadOffice: any;
@@ -2386,7 +2552,7 @@ async handleSearchText(searchText: string) {
     });
   }
   async releaseIncidentLock() {
-    if (this.incidentData.isAdd == false) {
+    if (this.incidentData?.isAdd == false) {
       let incidentId = (this.incidentEditData && this.incidentEditData.incidentStatus != 'Draft') ? this.incidentEditData.id : this.incidentData.id;
 
       if (incidentId > 0 && this.incidentEditData.incidentStatus != 'Draft') {
@@ -2465,7 +2631,7 @@ async handleSearchText(searchText: string) {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2480,7 +2646,7 @@ async handleSearchText(searchText: string) {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2505,7 +2671,7 @@ async handleSearchText(searchText: string) {
       this.incidentForm.patchValue({
         eventReportedDate: this.datepipe.transform(
           reportedDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     } else if (
@@ -2520,7 +2686,7 @@ async handleSearchText(searchText: string) {
       this.incidentForm.patchValue({
         eventActualDate: this.datepipe.transform(
           actualDateString,
-          "yyyy-MM-dd h:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         ),
       });
     }
@@ -2691,12 +2857,16 @@ async handleSearchText(searchText: string) {
         this.isProductDetailsFormHidden = true;
         this.isShowInsuranceVerification = false;
       } else {
+        // if(this.id > 0){
         this.common.openSnackBar('Invalid access', 2, 'Unauthorized')
-        this.router.navigate(['incident-list']);
+       this.router.navigate(['incident-list']);
+        // }
       }
     } else {
+      // if(this.id > 0){
       this.common.openSnackBar('Invalid access', 2, 'Unauthorized')
       this.router.navigate(['incident-list']);
+      // }
     }
 
   }
@@ -2769,8 +2939,10 @@ async handleSearchText(searchText: string) {
         this.common.openSnackBar("This Incident was editing by " + response.payLoad.lockedUser, 2, '');
         this.router.navigate(['incident-list']);
       } else {
-        this.router.navigate(['incident-create']);
-      }
+          if(this.id == 0 && this.invalidUrl == false){
+          this.router.navigate(['incident-create']);
+          }
+    }
     }
   }
   storeType(e: any) {
