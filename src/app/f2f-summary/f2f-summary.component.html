@@ -5,7 +5,7 @@
             <div class="summaryTable">
                 <div class="summaryTab">
                     <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 1}" (click)="changeTable1()">F2F Expiration</div>
-                    <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 2}" *ngIf="loginEmployeeManager" (click)="changeTable2()">Certified Employees</div>
+                    <div class="summaryTab-title" [ngClass]="{'active-title' : selectedTab == 2}" *ngIf="loginEmployeeManager && loginMainRoleCode !== 'OM'" (click)="changeTable2()">Certified Employees</div>
                 </div>
                 <div class="date-filters" [ngClass]="{'hide-date-filter' : selectedTab == 2}">
                     <div class="form-group dataiconrel">
@@ -17,7 +17,7 @@
                                 (ngModelChange)="fromDateChange($event)" autocomplete="off" bsDatepicker
                                 [bsConfig]="common.bsConfig2" [minDate]="fromMinDate"
                                 [maxDate]="(toDatevalue == '' || toDatevalue == undefined)?'':fromMaxDate"
-                                #fromDate required>
+                                #fromDate required [readonly]="true">
                             <div class="data-icon data-icon-new" (click)="fromDate.click()">
                                 <img src="assets/healthsafetyimages/field-icon.svg">
                             </div>
@@ -31,7 +31,7 @@
                                 [ngModelOptions]="{standalone: true}" bsDatepicker
                                 (ngModelChange)="toDateChange($event)" autocomplete="off" bsDatepicker
                                 [bsConfig]="common.bsConfig2" [minDate]="toMinDate" #toDate
-                                required>
+                                required [readonly]="true">
                             <div class="data-icon data-icon-new" (click)="toDate.click()">
                                 <img src="assets/healthsafetyimages/field-icon.svg">
                             </div>
@@ -40,8 +40,9 @@
                     </div>
 
                     <div class="clear-filter-text">
+                        <!--(fromDatevalue == '' || fromDatevalue == undefined) && (toDatevalue == '' || toDatevalue == undefined) && !-->
                         <button type="button" title="Clear Filter"
-                            [ngClass]="{'disabledateClear' :(fromDatevalue == '' || fromDatevalue == undefined) && (toDatevalue == '' || toDatevalue == undefined)}"
+                            [ngClass]="{'disabledateClear' : !datefilterActive && !datefilterActive1}"
                             (click)="cleardateFilter()" class="clearFilterButton">
                             <img height="22px" width="22px" src="assets/images/clear-filter.png" alt="clear-filter">
                         </button>

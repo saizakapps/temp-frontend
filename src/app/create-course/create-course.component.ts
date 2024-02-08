@@ -2756,18 +2756,26 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   disableRandomDD() {
-    let noQuestions: boolean = true;
+    let quesCount: number = 0;
+    let freeTxtQuesCount: number = 0;
+    let totalQuesCount: number = 0;
     for (let chapter of this.course.chapters) {
       for (let question of chapter.questions) {
+        totalQuesCount++;
         if (question.content) {
-          noQuestions = false;
-          question.questionType === 'freeText' || question.questionType === 'fillRightAnswer' ? noQuestions = true : false;
-        } else {
-          noQuestions = true;
+          quesCount++;
+        }
+        if (question.questionType === 'freeText' || question.questionType === 'fillRightAnswer') {
+          freeTxtQuesCount++;
         }
       }
     }
-    return noQuestions;
+    let disableDD: boolean = true;
+    if (quesCount > 0) {
+      disableDD = false;
+      disableDD = freeTxtQuesCount === totalQuesCount ? true : false;
+    }
+    return disableDD;
   }
 
   /* Check if free text is present in quiz */

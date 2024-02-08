@@ -1486,7 +1486,7 @@
 <!-- Text -->
 <ng-template #textPreview let-textConfig="config">
   <div class="calibri">
-    <div [innerHTML]="(textConfig.content || '') | safe: 'html'">
+    <div [innerHTML]="(textConfig.content || '')">
     </div>
   </div>
 </ng-template>
@@ -1499,7 +1499,7 @@
       {{exampleConfig.title}}</a>
     <mat-accordion>
       <mat-expansion-panel [expanded]="exampleConfig.isExpanded">
-        <div [innerHTML]="(exampleConfig.content || '') | safe: 'html'" class="exampleDivCls calibri"></div>
+        <div [innerHTML]="(exampleConfig.content || '')" class="exampleDivCls calibri"></div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
@@ -1528,7 +1528,7 @@
         <div class="row previewQuestion question  mt-5 flex-nowrap align-items-center" [ngClass]="{previewQuestionforFill : question.questionType === 'fillRightAnswer' || question.questionType === 'freeText'}">
           <div [ngClass]="{'pdfQuiz': print}" class="d-flex questionDiv">
             <span *ngIf="print" class="quizSeries fontBold">{{i+1}}</span>
-            <div [innerHTML]="(question.content || '') | safe: 'html'" class="fontBold questionContent calibri"></div>
+            <div [innerHTML]="(question.content || '')" class="fontBold questionContent calibri"></div>
           </div>
         </div>
         <!-- Single & Multi correct answers -->

@@ -706,7 +706,8 @@ export class F2fSummaryComponent implements OnInit {
     this.filterRequest.coursenameArray = this.selectedOptionsnew;
     this.filterRequest.courseName = this.filterRequest.coursenameArray;
     this.filterRequest.fromDate = this.reportFromdate;
-    this.filterRequest.toDate = this.reportTodate
+    this.filterRequest.toDate = this.reportTodate;
+    this.filterRequest.report = false;
     // this.filterRequest.trainers = this.filtertrainerList;
     // this.filterRequest.storeIds = this.filterstorecodeList;
     // this.filterRequest.storeNames = this.filterstorenameList;
@@ -1229,8 +1230,15 @@ export class F2fSummaryComponent implements OnInit {
     //  }
     this.toMinDate = new Date(this.toMinDate);
     this.toMinDate.setDate(this.toMinDate.getDate());
-    this.cdr.detectChanges();
 
+    if(this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd') !== this.datepipe.transform(this.DefaultfromDate, 'yyyy-MM-dd')){
+      this.datefilterActive = true
+    }
+    else{
+      this.datefilterActive = false
+    }
+    this.cdr.detectChanges();
+    
     if (this.fromDatevalue !== undefined && this.toDatevalue !== undefined && this.fromDatevalue !== '' && this.toDatevalue !== '') {
       this.filterwithDate();
     }
@@ -1241,6 +1249,12 @@ export class F2fSummaryComponent implements OnInit {
     this.fromMaxDate = this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd');
     this.fromMaxDate = new Date(this.fromMaxDate);
     this.fromMaxDate.setDate(this.fromMaxDate.getDate());
+    if(this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd') !== this.datepipe.transform(this.DefaulttoDate, 'yyyy-MM-dd')){
+      this.datefilterActive1 = true
+    }
+    else{
+      this.datefilterActive1 = false
+    }
     this.cdr.detectChanges();
     if (this.fromDatevalue !== undefined && this.toDatevalue !== undefined && this.fromDatevalue !== '' && this.toDatevalue !== '') {
       this.filterwithDate();
@@ -1283,16 +1297,19 @@ export class F2fSummaryComponent implements OnInit {
     }
     let today = yyyy + '-' + mm + '-' + dd;
     this.maxDate = today;
-    this.fromMinDate = (yyyy - 20) + '-' + mm + '-' + dd;
+    // this.fromMinDate = (yyyy - 20) + '-' + mm + '-' + dd;
     this.toMinDate = (yyyy - 20) + '-' + mm + '-' + dd;
     this.fromMaxDate = today;
     this.toMaxDate = today;
     // this.fromMaxDate={year: yyyy, month: mm, day: dd}
     this.fromMaxDate = new Date();
     this.fromMaxDate.setDate(this.fromMaxDate.getDate());
-    this.fromMinDate = new Date(this.fromMinDate);
-    this.fromMinDate.setDate(this.fromMinDate.getDate());
-
+    let currentDate1 = new Date();
+    currentDate1.setFullYear(currentDate1.getFullYear() - 1);
+    this.fromMinDate = currentDate1;
+    // this.fromMinDate = new Date(this.fromMinDate);
+    
+    // this.fromMinDate.setDate(this.fromMinDate.getDate() - 365);
     this.toMaxDate = new Date(this.toMaxDate);
     this.toMaxDate.setDate(this.toMaxDate.getDate());
 
@@ -1556,8 +1573,11 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   cleardateFilter() {
-    this.fromDatevalue = '';
-    this.toDatevalue = '';
+    // this.fromDatevalue = '';
+    // this.toDatevalue = '';
+    this.setsummaryDateValues();
+    this.datefilterActive = false
+    this.datefilterActive1 = false
     this.setInitialFromToDate();
     this.getSummarylist();
   }
@@ -2208,6 +2228,9 @@ export class F2fSummaryComponent implements OnInit {
     this.getSummarylist();
     this.getDraftlist();
     this.getUpcominglist();
+    this.setsummaryDateValues();
+    this.datefilterActive = false;
+    this.datefilterActive1 = false;
     this.batchData = [];
     for (let x of this.generalReportList) {
       x.checked = false;
@@ -2338,6 +2361,7 @@ export class F2fSummaryComponent implements OnInit {
   async sendMail() {
     this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
     this.filterRequest.emailIds = this.Emails;
+    this.filterRequest.report = true;
     const params = this.filterRequest;
     this.Emails = [];
     this.mailIdsend = '';
@@ -2491,14 +2515,19 @@ export class F2fSummaryComponent implements OnInit {
   valueChanged(){
     this.inactiveChanged = true
   }
+  datefilterActive= false;
+  datefilterActive1= false;
 
+  DefaultfromDate:any;
+  DefaulttoDate:any
   setsummaryDateValues(){
     const currentDatebefore = new Date();
     currentDatebefore.setDate(currentDatebefore.getDate() - 30);
 
     const currentDateafter = new Date();
     currentDateafter.setDate(currentDateafter.getDate() + 30);
-    
+     this.DefaultfromDate = currentDatebefore;
+     this.DefaulttoDate = currentDateafter;
      this.fromDatevalue = currentDatebefore;
      this.toDatevalue = currentDateafter;
     //  this.filterwithDate();
@@ -2514,7 +2543,7 @@ export class F2fSummaryComponent implements OnInit {
     this.reportFromdate = this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd');
     this.reportTodate = this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd')
     this.filtercourseNameList = this.filtercourseNameList.map((item:any)=>
-    item.courseName == summaryData.courseName ? { ...item,checked:true }:item
+    item.courseName.toLowerCase() == summaryData.courseName.toLowerCase() ? { ...item,checked:true }:item
     )  
  
 

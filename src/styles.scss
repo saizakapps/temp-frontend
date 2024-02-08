@@ -1155,7 +1155,7 @@ th.mat-header-cell {
 
 .currentEmployee .mat-datepicker-toggle {
   position: absolute;
-  top: 8px;
+  top: 6px;
   right: 0px;
 }
 
@@ -1165,7 +1165,7 @@ th.mat-header-cell {
 }
 
 .currentEmployee .mat-form-field-empty.mat-form-field-label span {
-  top: 10px;
+  top: 5px;
   height: 30px;
   display: flex;
   position: relative;
@@ -1178,6 +1178,44 @@ th.mat-header-cell {
 .currentEmployee .ng-option-label {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.currentEmployee .mat-form-field-appearance-legacy .mat-form-field-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+
+.sec-emp-start-date, .sec-emp-end-date .mat-datepicker-toggle {
+  position: absolute;
+  top: 6px;
+  right: 0px;
+}
+
+.sec-emp-start-date, .sec-emp-end-date .cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
+  position: relative;
+  top: 0px;
+}
+
+.sec-emp-start-date, .sec-emp-end-date .mat-form-field-empty.mat-form-field-label span {
+  top: 5px;
+  height: 30px;
+  display: flex;
+  position: relative;
+}
+
+.sec-emp-start-date, .sec-emp-end-date .mat-form-field-empty.mat-form-field-label {
+  left: 0 !important;
+}
+
+.sec-emp-start-date, .sec-emp-end-date .ng-option-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sec-emp-start-date, .sec-emp-end-date .mat-form-field-appearance-legacy .mat-form-field-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
 }
 
 .linkedEmployee .ng-select.ng-select-single .ng-select-container .ng-clear-wrapper {
@@ -3878,4 +3916,16 @@ input:-webkit-autofill:focus {
 
 .rolePanel,.countryPanel {
   min-width: calc(100% + 26px)!important;
+}
+
+.mat-date-picker-panel .cdk-program-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical),
+.mat-calendar-body-selected {
+  border: none !important;
+  background-color: #007bff !important;
+  color: #ffffff;
+}
+
+.mat-date-picker-panel .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  background-color: #a4d0ff !important;
+  color: #000000;
 }

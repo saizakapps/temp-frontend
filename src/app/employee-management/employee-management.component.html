@@ -583,7 +583,7 @@
                                   <img src="/assets/images/calendar.svg" width="11px" height="12.5px">
                                 </mat-icon>
                               </mat-datepicker-toggle>
-                              <mat-datepicker #picker></mat-datepicker>
+                              <mat-datepicker panelClass="mat-date-picker-panel" #picker></mat-datepicker>
                             </mat-form-field>
                           </div>
                         </div>
@@ -763,7 +763,7 @@
                         <div class="row ">
                           <div class="d-block align-items-center">
                             <span class="employeeDetails mr-3">Start Date</span>
-                            <div class="date-range profitDate" title="Select date range for employee management">
+                            <div class="date-range profitDate sec-emp-start-date" title="Select date range for employee management">
                               <mat-form-field class="dateContent">
                                 <input matInput [matDatepicker]="pickerFromName" placeholder="Choose a date"
                                   [name]="'periodDateFrom' + i" [(ngModel)]="periodFromDate[i]">
@@ -772,7 +772,7 @@
                                     <img src="/assets/images/calendar.svg" width="11px" height="12.5px">
                                   </mat-icon>
                                 </mat-datepicker-toggle>
-                                <mat-datepicker #pickerFromName></mat-datepicker>
+                                <mat-datepicker panelClass="mat-date-picker-panel" #pickerFromName></mat-datepicker>
                               </mat-form-field>
                             </div>
                           </div>
@@ -785,7 +785,7 @@
                         <div class="row">
                           <div class="d-block align-items-center">
                             <span class="employeeDetails mr-3">End Date</span>
-                            <div class="date-range profitDate profitToDate"
+                            <div class="date-range profitDate profitToDate sec-emp-end-date"
                               title="Select date range for employee management">
                               <mat-form-field class="dateContent">
                                 <input [min]="periodFromDate[i]" matInput [matDatepicker]="pickerToName"
@@ -796,7 +796,7 @@
                                     <img src="/assets/images/calendar.svg" width="11px" height="12.5px">
                                   </mat-icon>
                                 </mat-datepicker-toggle>
-                                <mat-datepicker #pickerToName></mat-datepicker>
+                                <mat-datepicker panelClass="mat-date-picker-panel" #pickerToName></mat-datepicker>
                               </mat-form-field>
                             </div>
 

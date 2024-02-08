@@ -976,6 +976,7 @@
     padding-top: 10px;
     border-top: 1px solid #CCCCCCCC;
     margin-top: 10px;
+    gap: 15px;
 
     .buttons {
         display: flex;
@@ -1947,4 +1948,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .fromToDate[readonly]{
+    background-color: #fff !important;
   }
