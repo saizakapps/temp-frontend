@@ -1387,7 +1387,7 @@
                             <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft"
                                 *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
                                 <!--data-toggle="modal" data-target="#batchemailModal" batchExport(detailsData.batchId)-->
-                                <div class="button blackbutton" (click)="sendMailbatchExport(detailsData.batchId)"
+                                <div class="button blackbutton" data-toggle="modal" data-target="#batchexportModal" (click)="batchExport(detailsData.batchId)"
                                 *ngIf="((detailsData.batchStatus == 'Assigned' && detailsData.scheduledDate >= todayDate) || detailsData.batchStatus == 'Scheduled') && update">Export Batch</div>
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
                         </div>
@@ -1761,16 +1761,16 @@
     </div>
 </div>
 
-<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="batchemailModal" data-backdrop="static" tabindex="-1"
+<div class="modal fade mailBodyPop bootstrapBackground_Pop" id="batchexportModal" data-backdrop="static" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-email">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-email1">
         <div class="modal-content">
             <div class="modal-header">
                 Batch Details - Mail
             </div>
             <div class="modal-body modal-body-no-radius">
                 <!-- pattern="^\w+([\.-]?\w+)*@smythstoys\.com$"-->
-                <form [formGroup]="form">
+                <!-- <form [formGroup]="form">
                     <div class="mailbodyCss">
                         <div class="mb-2 d-flex align-items-center">
                             <label class="form-label mb-0 fw-600 emailtext">Email</label>
@@ -1780,8 +1780,7 @@
                             <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailIdexport()"
                                 type="button" class="btn btn-primary btn-sm mailAddbtn">Add</button>
                         </div>
-                        <!-- <div class="businessMail" *ngIf="f['email']?.errors && mailIdexport !== ''">Please add only
-                            business email Id.</div> -->
+                   
                         <div class="mailCls pl-0 d-flex flex-wrap">
                             <div *ngFor="let mailId of Emails, let m = index"
                                 class="d-flex align-items-center mr-2 mailTag mb-2">
@@ -1791,11 +1790,12 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                </form> -->
+                <div style="font-size: 16px;">If you export the batch details will be send to the trainer by mail</div>
                 <div class="d-flex justify-content-end">
-                    <div type="button" class="cancelMailbtn" data-dismiss="modal" (click)="cancelMail()">Cancel</div>
+                    <div type="button" class="cancelMailbtn" data-dismiss="modal">Cancel</div>
                     <div type="button" class="cancelMailbtn sendMailbtn" data-dismiss="modal"
-                        [ngClass]="{'disabledmailbtn' : Emails.length == 0}">Send</div>
+                    (click)="sendMailbatchExport()">Confirm</div>
                 </div>
             </div>
         </div>

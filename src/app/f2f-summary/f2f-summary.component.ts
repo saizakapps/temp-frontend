@@ -2402,13 +2402,13 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
-  async sendMailbatchExport(batchId:any) {
+  async sendMailbatchExport() {
     // this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
     // this.filterRequest.emailIds = this.Emails;
     // this.filterRequest.report = true;
     // delete this.filterRequest.page;
     const params = {
-      batchId : batchId
+      batchId : this.exportId
     };
     // this.Emails = [];
     // this.mailIdexport = '';
@@ -2616,7 +2616,6 @@ export class F2fSummaryComponent implements OnInit {
   exportId:any;
   batchExport(id:any){
   this.exportId = id;
-  console.log(this.exportId, "Details Data")
   }
 
   ngOnDestroy(): void {
