@@ -133,5 +133,7 @@ export class UrlUtils {
     POST_EXPORT_MAIL_F2F: `${this.USER_URL}export-ff-list`,
     POST_GET_ACTIVE_COUNT: `${this.USER_URL}show-f2f-active-users-count`,
     POST_GET_RECURRING_COURSE: `${this.USER_URL}get-ff-courses-recurring`,
+    // POST_BATCH_ACCESS_CONFIGURATION: `${this.USER_URL}get-f2f-batch-access-configuration`,
+    POST_BATCH_EXPORT: `${this.USER_URL}export-f2f-batch`
   };
 }

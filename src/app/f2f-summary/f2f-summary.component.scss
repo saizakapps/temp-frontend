@@ -401,6 +401,13 @@
     .detailview-inactive{
         background-color: #00000090;
     }
+    .viewClose{
+        background-color: #7e7e7e;
+    }
+    .viewCancelled{
+        background-color: #7e7e7e;
+    }
+
 
     .assignedinactive{
         background-color: #ffffff50 !important;
@@ -1359,7 +1366,7 @@
     margin-top: -35px;
   }
   .showheader {
-    margin-top: -16px;
+    margin-top: 0px;
   }
   .no-record-found{
   background: #f2f2f2;

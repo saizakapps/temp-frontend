@@ -213,6 +213,7 @@ export class F2fSummaryComponent implements OnInit {
   historyData: any;
   historyTableview = false;
   mailIdsend = "";
+  mailIdexport = "";
   Emails: any[] = [];
   activeShimmer = false;
   activeData:any[] =[];
@@ -289,6 +290,10 @@ export class F2fSummaryComponent implements OnInit {
     {
       name: "Assigned",
       filterId: 3
+    },
+    {
+      name: "Closed",
+      filterId: 4
     },
   ]
 
@@ -449,6 +454,7 @@ export class F2fSummaryComponent implements OnInit {
   async getUserDetails() {
     /* const response: any = await this.apiHandler.getData(this.utils.API.GET_USER_DETAILS, this.userDetails.id, this.destroyed$);
     localStorage.setItem('userDetails', JSON.stringify(response.payload || {})); */
+    this.resetReportList();
     this.getReportList();
   }
 
@@ -2331,6 +2337,12 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
+  getMailexport(e: any) {
+    if (this.form.valid) {
+      this.mailIdexport = e.target.value;
+    }
+  }
+
   addMailId() {
     if (this.form.valid) {
       let existing = this.Emails.filter((item: any) => {
@@ -2348,12 +2360,30 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
+  addMailIdexport() {
+    if (this.form.valid) {
+      let existing = this.Emails.filter((item: any) => {
+        return item == this.mailIdexport
+      })
+
+      if (existing.length > 0) {
+        this.common.openSnackBar("Mail id already exists", 2, "Invalid")
+      }
+      else {
+        this.Emails.push(this.mailIdexport);
+        this.mailIdexport = "";
+        this.cdr.detectChanges();
+      }
+    }
+  }
+
   removeEmail(m: any) {
     let temp = this.Emails.splice(m, 1);
   }
 
   cancelMail() {
     this.mailIdsend = '';
+    this.mailIdexport = '';
     this.Emails = [];
     this.cdr.detectChanges();
   }
@@ -2362,12 +2392,31 @@ export class F2fSummaryComponent implements OnInit {
     this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
     this.filterRequest.emailIds = this.Emails;
     this.filterRequest.report = true;
+    delete this.filterRequest.page;
     const params = this.filterRequest;
     this.Emails = [];
     this.mailIdsend = '';
     const response: any = await this.apiHandler.postData(this.utils.API.POST_EXPORT_MAIL_F2F, params, this.destroyed$);
     if (response.payload) {
       this.filterRequest.emailIds = [];
+    }
+  }
+
+  async sendMailbatchExport(batchId:any) {
+    // this.common.openSnackBar('Generating the report. Will send to the mail shortly.', 2, "");
+    // this.filterRequest.emailIds = this.Emails;
+    // this.filterRequest.report = true;
+    // delete this.filterRequest.page;
+    const params = {
+      batchId : batchId
+    };
+    // this.Emails = [];
+    // this.mailIdexport = '';
+    const response: any = await this.apiHandler.postData(this.utils.API.POST_BATCH_EXPORT, params, this.destroyed$);
+    if (response.payload) {
+      if(response.payload == true){
+        this.common.openSnackBar("Batch details mail sent successfully",2,"Success")
+      }
     }
   }
 
@@ -2562,6 +2611,12 @@ export class F2fSummaryComponent implements OnInit {
     + ' - ' + this.datepipe.transform(this.toDatevalue, 'dd/MM/yyyy');
   }, 500);
 
+  }
+  
+  exportId:any;
+  batchExport(id:any){
+  this.exportId = id;
+  console.log(this.exportId, "Details Data")
   }
 
   ngOnDestroy(): void {
