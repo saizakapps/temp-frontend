@@ -1441,7 +1441,7 @@ span.ng-value-label {
 }
 
 .countryList li.mat-tree-node.storeList {
-  padding-left: 85px !important;
+  padding-left: 75px !important;
 }
 
 .ng-select .ng-has-value .ng-placeholder,
@@ -3516,6 +3516,13 @@ select:focus {
   font-family: "Inter";
 }
 
+.summaryngSelect-newDate .ng-select.ng-select-single .ng-select-container {
+  width: 92px !important;
+  height: 35px !important;
+  // margin-top: 5px !important;
+  font-family: "Inter";
+}
+
 .summaryngSelect .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
   // background-color: #1f96f4 !important;
   color: #000;
@@ -3608,7 +3615,7 @@ select:focus {
   .mat-form-field-infix {
     border-top: 0px !important;
     padding: 0px !important;
-    width: 250px;
+    width: 220px;
   }
 
   .mat-select-min-line {
@@ -3641,8 +3648,8 @@ select:focus {
   margin-left: 25px;
   margin-top: 5px;
   margin-bottom: 5px;
-  width: 250px;
-  max-width: 250px !important;
+  width: 220px;
+  max-width: 220px !important;
   min-width: unset !important;
   max-height: 245px !important;
 }
@@ -3711,7 +3718,7 @@ select:focus {
 }
 
 .f2fSummary-countryRegion .mat-form-field-flex {
-  width: 215px;
+  width: 185px;
   height: 35px !important;
 }
 
@@ -3720,7 +3727,7 @@ select:focus {
 }
 
 .f2fSummary-rolegroup .mat-form-field-flex {
-  width: 160px;
+  width: 150px;
   height: 35px !important;
 }
 
@@ -3752,10 +3759,15 @@ select:focus {
   min-width: calc(100% + 27px) !important;
   margin-top: 3px;
   max-height: 330px !important;
+  width: 158px !important;
+}
+
+.f2fPanelClass-countryregion .mat-checkbox-layout .mat-checkbox-label{
+  max-width: 88px !important;
 }
 
 .f2fPanelClass-rolegroup {
-  width: 132px;
+  width: 120px;
   min-width: calc(100% + 27px) !important;
   margin-top: 3px;
   max-height: 330px !important;
@@ -3821,7 +3833,7 @@ select:focus {
 }
 
 .modal-dialog-historyTable {
-  max-width: 750px !important;
+  max-width: 825px !important;
 }
 
 .summaryngSelect-new1 .ng-select.ng-select-single .ng-select-container {
@@ -3931,4 +3943,10 @@ input:-webkit-autofill:focus {
 .mat-date-picker-panel .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
   background-color: #a4d0ff !important;
   color: #000000;
+}
+.summaryngSelect-filterwidth .ng-select.ng-select-single .ng-select-container {
+  width: 80px !important;
+  height: 35px !important;
+  // margin-top: 5px !important;
+  font-family: "Inter";
 }
