@@ -197,7 +197,7 @@ export class F2fSummaryComponent implements OnInit {
 
   // Generate an array with a length equal to shimmerCount
   shimmerArray = Array(this.shimmerCount).fill(0).map((x, i) => i);
-  batchStatusList = 1
+  batchStatusList:any = [1,3]
   showempComponent = false;
   addpeopleArray: any;
   upDatedEmployeeCount: any;
@@ -281,19 +281,19 @@ export class F2fSummaryComponent implements OnInit {
   upcomingFilterlist = [
     {
       name: "Scheduled",
-      filterId: 1
+      filterId: [1]
     },
     {
       name: "Cancelled",
-      filterId: 0
+      filterId: [0]
     },
     {
       name: "Assigned",
-      filterId: 3
+      filterId: [3]
     },
     {
       name: "Closed",
-      filterId: 4
+      filterId: [4]
     },
   ]
 
@@ -1676,7 +1676,6 @@ export class F2fSummaryComponent implements OnInit {
       if (response.payload.length == 0) {
         const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
         if (response1.payload) {
-          this.batchData.splice(b, 1);
           this.ngxloaderService.stop();
           let paylLoad: any = response1.payload
           if (paylLoad.batchStatus == "Draft") {
@@ -1685,6 +1684,8 @@ export class F2fSummaryComponent implements OnInit {
           else {
             this.common.openSnackBar("Batch created successfully", 2, "Success")
           }
+          this.batchData.splice(b, 1);
+
         }
       }
       else {
@@ -1707,7 +1708,6 @@ export class F2fSummaryComponent implements OnInit {
           if (response.payload.length == 0) {
             const response1: any = await this.apiHandler.postData(this.utils.API.POST_CREATE_NEW_BATCH, modifiedParam, this.destroyed$);
             if (response1.payload) {
-              this.batchData.splice(b, 1);
               this.ngxloaderService.stop();
 
               let paylLoad: any = response1.payload
@@ -1718,6 +1718,8 @@ export class F2fSummaryComponent implements OnInit {
                 this.common.openSnackBar("Batch created successfully", 2, "Success")
 
               }
+              this.batchData.splice(b, 1);
+
             }
 
           }
@@ -2082,7 +2084,7 @@ export class F2fSummaryComponent implements OnInit {
     this.upcomingListData = [];
     this.cardShimmer = true;
     const param = {
-      batchStatusList: [this.batchStatusList],
+      batchStatusList: this.batchStatusList,
       isTrainer: this.loginEmployeeIstrainer,
       userRoleCode:this.loginEmployeeRoleCode,
       userEmployeeId: this.loginEmployeeId,
@@ -2506,7 +2508,7 @@ export class F2fSummaryComponent implements OnInit {
     if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
       this.currentpageNumber = this.currentpageNumber + 7;
       const param = {
-        batchStatusList: [this.batchStatusList],
+        batchStatusList: this.batchStatusList,
         isTrainer: this.loginEmployeeIstrainer,
         userRoleCode:this.loginEmployeeRoleCode,
         userEmployeeId: this.loginEmployeeId,
