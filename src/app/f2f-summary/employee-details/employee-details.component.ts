@@ -274,7 +274,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       name: "Role"
     },
     {
-      name: "360 Status"
+      name: "Status"
     },
     {
       name: "Date of joining"
@@ -312,18 +312,18 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.getAllCountries();
   }
   ngAfterViewInit(): void {
-    this.currentModule = this.router.url.replace('/', '');
-    console.log('current module', this.currentModule);
-    this.currentModule === 'employees' ? this.employeeColumns = this.utils.TABLE_HEADERS.EMPLOYEE_MANAGEMENT_TABLE : this.employeeColumns = this.utils.TABLE_HEADERS.USER_ROLE_TABLE;
-    this.linkEmployeeColumns = this.utils.TABLE_HEADERS.LINK_EMPLOYEE_TABLE;
-    // this.employeeColumnsToDisplay = this.employeeColumns.map((col: { name: any; }) => col.name);
-    console.log(this.employeeColumnsToDisplay, "employeeColumnsToDisplay employeeColumnsToDisplay")
-    this.userDetailValue = JSON.parse(localStorage.getItem("userDetails") || '{}');
+    // this.currentModule = this.router.url.replace('/', '');
+    // console.log('current module', this.currentModule);
+    // this.currentModule === 'employees' ? this.employeeColumns = this.utils.TABLE_HEADERS.EMPLOYEE_MANAGEMENT_TABLE : this.employeeColumns = this.utils.TABLE_HEADERS.USER_ROLE_TABLE;
+    // this.linkEmployeeColumns = this.utils.TABLE_HEADERS.LINK_EMPLOYEE_TABLE;
+    // // this.employeeColumnsToDisplay = this.employeeColumns.map((col: { name: any; }) => col.name);
+    // console.log(this.employeeColumnsToDisplay, "employeeColumnsToDisplay employeeColumnsToDisplay")
+    // this.userDetailValue = JSON.parse(localStorage.getItem("userDetails") || '{}');
 
-    this.getSelectedCheckbox();
-    this.getUserDetails();
-    this.getRoleGroup();
-    this.getAllCountries();
+    // this.getSelectedCheckbox();
+    // this.getUserDetails();
+    // this.getRoleGroup();
+    // this.getAllCountries();
   }
   selectedEmployeesData:any[] = [];
   selectAllheader(event:any){
@@ -602,7 +602,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       region: regionIds,
       store: storeIds,
       userId: this.userDetailValue?.id,
-      admin: this.userDetailValue.learnerRole === 'SA', // !this.userDetailValue.manager, [portalRole.superAdmin, portalRole.hr].includes(this.userDetailValue.portalRole),
+      admin: (this.userDetailValue.learnerRole === 'SA' || this.userDetailValue.learnerRole === 'HR'), // !this.userDetailValue.manager, [portalRole.superAdmin, portalRole.hr].includes(this.userDetailValue.portalRole),
       page: this.paginationIndex,
       filter: {
         countries: this.buildSelectedDropDownHierarchy(this.countryList),
@@ -636,7 +636,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       employeeObj.employeeId = employee.employeeId;
       employeeObj.username = employee.username;
       if (employee.sfEmployee == false) {
-        employee.employeeStatus = "-";
+        // employee.employeeStatus = "-";
       }
       // if(employee.lastName == null) {
       //   employee.lastName = " ";
@@ -660,6 +660,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.recordFound = true;
     // this.ngxService.stop();
     this.showShimmer = false;
+    console.log(this.employeeList, "employeeList employeeList")
   }
 
   resetEmployeeList() {

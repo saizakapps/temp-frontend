@@ -254,11 +254,11 @@
         </div>
     </mat-menu> -->
     <div class="batch-page" id="MainContent" *ngIf="createBatch == true">
-        <div class="filter-header d-flex">
+            <div class="filter-header d-flex">
             <div class="form-group">
-                <label class="list-filter-title">Search</label>
+                <label class="list-filter-title">Search by</label>
                 <div class="d-flex">
-                    <div class="searchby-dd summaryngSelect">
+                    <div class="searchby-dd summaryngSelect summaryngSelect-filterwidth">
                         <ng-select class="employeeDetail" [items]="searchLabels" name="searchBy" bindLabel="showname"
                             bindValue="key" [clearable]=false [searchable]="false" (change)="searchTextModal = ''"
                             [(ngModel)]="searchBy">
@@ -277,8 +277,7 @@
                 <!-- <input type="text" class="form-control findInput" id="pwd" placeholder="" name="name"
                     [ngModelOptions]="{standalone: true}"> -->
                 <div>
-                    <mat-form-field appearance="fill" class="f2fSummary-rolegroup"
-                        [ngClass]="{appliedFilter : selectedRoleGroupDropDown.length > 0}">
+                    <mat-form-field appearance="fill" class="f2fSummary-rolegroup">
                         <mat-label *ngIf="selectedRoleGroupDropDown.length < 1"> Select Roles
                         </mat-label>
                         <mat-label *ngIf="selectedRoleGroupDropDown.length > 0" class="levelSelected"> Filter applied
@@ -301,7 +300,7 @@
                                             <!-- <button mat-icon-button disabled></button> -->
                                             <mat-checkbox
                                                 (change)="selectionToggleLeaf($event.checked, node, 'roleGroup')"
-                                                [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                                [checked]="node.selectStatus === 'checked'" title="{{node.desc}}">{{node.desc}}</mat-checkbox>
                                         </li>
                                     </mat-nested-tree-node>
                                     <!-- This is the tree node template for expandable nodes -->
@@ -404,7 +403,7 @@
                                             <!-- <button mat-icon-button disabled class="d-none"></button> -->
                                             <mat-checkbox
                                                 (change)="selectionToggleLeaf($event.checked, node, 'country')"
-                                                [checked]="node.selectStatus === 'checked'">{{node.desc}}</mat-checkbox>
+                                                [checked]="node.selectStatus === 'checked'" title="{{node.desc}}">{{node.desc}}</mat-checkbox>
                                         </li>
                                     </mat-nested-tree-node>
                                     <!-- This is the tree node template for expandable nodes -->
@@ -452,7 +451,7 @@
                                 <img src="assets/healthsafetyimages/field-icon.svg">
                             </div>  
                             </div> -->
-                    <div class="searchby-dd summaryngSelect summaryngSelect-new">
+                    <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-newDate">
                         <label class="list-filter-title">Date Filter</label>
                         <ng-select [items]="searchDateList" name="searchDateBy" bindLabel="name" bindValue="key"
                         (change)="filterdateValue($event)" [clearable]=false [searchable]="false" [(ngModel)]="searchDateBy" class="dateJoining">
@@ -466,7 +465,7 @@
                             [options]="filterDateOption" autocomplete="off">
                         <div class="topunselectBox" *ngIf="(reportFromdate == '') && (reportTodate == '')"
                             (click)="dateRange.click()"></div>
-                        <div class="data-icon" (click)="dateRange.click()">
+                        <div class="data-icon data-icon-filter" (click)="dateRange.click()">
                             <img src="assets/healthsafetyimages/field-icon.svg">
                         </div>
                     </div>
@@ -489,13 +488,13 @@
                     <mat-form-field class="example-full-width f2f_coursename_list" [floatLabel]="'never'">
                         <mat-label class="mat-labul"
                             [ngClass]="{'mat-labulApplied' : selectedOptionsnew.length > 0}">{{selectedOptionsnew.length
-                            == 0?'Select Coursename':'Filter Applied'}}</mat-label>
+                            == 0?'Select Course Name':'Filter Applied'}}</mat-label>
                         <mat-select (openedChange)="callGetFilteredList('courses',$event)"
                             class="form-control priority-form multselecticonnew" panelClass="f2fPanelClassMatselectList"
                             [disableOptionCentering]="true" [(ngModel)]="selectedOptionsNew"
                             [ngModelOptions]="{standalone: true}" multiple>
                             <mat-select-trigger>
-                                {{ selectedOptionsnew.length > 0 ? 'Filter Applied' : 'Select Coursename' }}
+                                {{ selectedOptionsnew.length > 0 ? 'Filter Applied' : 'Select Course Name' }}
                             </mat-select-trigger>
                             <mat-option *ngFor="let option of filtercourseNameList" class="removecheckbox">
                                 <mat-checkbox [checked]="option.checked" [value]="option.courseName"
@@ -1230,7 +1229,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body modal-body-height">
-                <div *ngIf="viewDetails && viewHistory == false">
+                <div *ngIf="viewDetails && viewHistory == false && detailsData.batchStatus !== 'Closed' && detailsData.batchStatus !== 'Cancelled'">
                     <div class="d-flex justify-content-end">
                         <div class="historyviewtext" *ngIf="detailsData.batchStatus !== 'Draft'" data-toggle="modal"
                             data-target="#historyTable" (click)="historyTableview = true">
@@ -1388,13 +1387,84 @@
                                 *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
                                 <!--data-toggle="modal" data-target="#batchemailModal" batchExport(detailsData.batchId)-->
                                 <div class="button blackbutton" data-toggle="modal" data-target="#batchexportModal" (click)="batchExport(detailsData.batchId)"
-                                *ngIf="((detailsData.batchStatus == 'Assigned' && detailsData.scheduledDate >= todayDate) || detailsData.batchStatus == 'Scheduled') && update">Export Batch</div>
+                                *ngIf="(detailsData.batchStatus == 'Assigned' || detailsData.batchStatus == 'Scheduled') && update">Export Batch</div>
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
                         </div>
                     </div>
 
                     <div class="bottomfooter d-flex align-items-center justify-content-end" *ngIf="detailsData.batchStatus == 'Closed'">
                             <div class="button blackbutton" data-dismiss="modal">Close</div>
+                    </div>
+                </div>
+
+                <div *ngIf="viewDetails && viewHistory == false && (detailsData.batchStatus == 'Closed' || detailsData.batchStatus == 'Cancelled')">
+                    <div class="d-flex justify-content-end">
+                        <div class="historyviewtext" *ngIf="detailsData.batchStatus !== 'Draft'" data-toggle="modal"
+                            data-target="#historyTable" (click)="historyTableview = true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M6 12C4.46667 12 3.13056 11.4917 1.99167 10.475C0.852778 9.45833 0.2 8.18889 0.0333333 6.66667H1.4C1.55556 7.82222 2.06944 8.77778 2.94167 9.53333C3.81389 10.2889 4.83333 10.6667 6 10.6667C7.3 10.6667 8.40278 10.2139 9.30833 9.30833C10.2139 8.40278 10.6667 7.3 10.6667 6C10.6667 4.7 10.2139 3.59722 9.30833 2.69167C8.40278 1.78611 7.3 1.33333 6 1.33333C5.23333 1.33333 4.51667 1.51111 3.85 1.86667C3.18333 2.22222 2.62222 2.71111 2.16667 3.33333H4V4.66667H0V0.666667H1.33333V2.23333C1.9 1.52222 2.59167 0.972222 3.40833 0.583333C4.225 0.194444 5.08889 0 6 0C6.83333 0 7.61389 0.158333 8.34167 0.475C9.06944 0.791667 9.70278 1.21944 10.2417 1.75833C10.7806 2.29722 11.2083 2.93056 11.525 3.65833C11.8417 4.38611 12 5.16667 12 6C12 6.83333 11.8417 7.61389 11.525 8.34167C11.2083 9.06944 10.7806 9.70278 10.2417 10.2417C9.70278 10.7806 9.06944 11.2083 8.34167 11.525C7.61389 11.8417 6.83333 12 6 12ZM7.86667 8.8L5.33333 6.26667V2.66667H6.66667V5.73333L8.8 7.86667L7.86667 8.8Z" fill="#1C1B1F"/>
+                                </svg> &nbsp;History</div>
+                    </div>
+
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name no-width">F2F Course name:</div>
+                        <div>{{detailsData.courseName}}</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between historyGap">
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name no-width">Batch name:</div>
+                        <div>{{detailsData.batchName}}</div>
+                    </div>
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name no-width">Batch Status:</div>
+                        <div>{{detailsData.batchStatus}}</div>
+                    </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between historyGap">
+                        <div class="d-flex align-items-center label-input pb-15">
+                            <div class="label-name no-width">Trainer Name:</div>
+                            <div>{{detailsData.trainerName}}</div>
+                        </div>
+    
+                        <div class="d-flex align-items-center label-input pb-15">
+                            <div class="label-name no-width">Schedule Date:</div>
+                            <div>{{detailsData.scheduledDate}}</div>
+                         </div>
+                    </div>
+
+           
+                    <div class="updatedemployeeListheight updatedemployeeListheight1 updatedemployeeListheight2">
+
+                        <div class="employeeList">
+                            <div class="employeeData">
+                                <div class="font-weight-bold">Employees ({{this.detailsData.batchEmployeesCount}})
+                                </div>
+                            </div>
+                            <div *ngFor="let employee of this.detailsData.employeesList">
+                                <div class="employeeData"
+                                    title="{{employee.employeeIsActive == false?'This Employee is Inactive':''}}"
+                                    [ngClass]="{'employeeInactive' : employee.employeeIsActive == false}">
+                                    <div>
+                                        <div class="empname">{{employee.firstName}} {{employee.lastName}}</div>
+                                        <div class="d-flex align-items-center empidposition">
+                                            <div>{{employee.employeeId}}</div> &nbsp;|&nbsp; <div>{{employee.role}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bottomfooter d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center buttongap">
+                         </div>
+
+                        <div class="d-flex align-items-center buttongap">
+                               <div class="button blackbutton" data-dismiss="modal">Close</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1419,14 +1489,15 @@
                                 [(ngModel)]="detailsData.courseName" [readonly]="true"></ng-select></div> -->
                     </div>
 
+                    <div class="d-flex justify-content-between historyGap">
                     <div class="d-flex align-items-center label-input pb-15">
                         <div class="label-name no-width">Batch name:</div>
                         <div>{{historyData.batchName}}</div>
-                        <!-- <div class="selectDD">
-                            <input type="text" maxlength="65" (change)="batchName($event, detailsData);compareDataforUpdate()"
-                                [(ngModel)]="detailsData.batchName" [readOnly]="true">
-                        </div> -->
-
+                    </div>
+                    <div class="d-flex align-items-center label-input pb-15">
+                        <div class="label-name no-width">Batch Status:</div>
+                        <div>{{historyData.batchStatus}}</div>
+                    </div>
                     </div>
 
                     <div class="d-flex justify-content-between historyGap">
@@ -1484,7 +1555,7 @@
                     </div>
 
            
-                    <div class="updatedemployeeListheight updatedemployeeListheight1" [ngClass]="{'updatedemployeeListheight1-history' : viewHistory == true}">
+                    <div class="updatedemployeeListheight updatedemployeeListheight1">
 
                         <div class="employeeList">
                             <div class="employeeData">
@@ -1571,7 +1642,7 @@
                 Cancel Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius-allside">
-                Scheduled batches will be canceled and users will be notified. Please confirm.
+                Scheduled batches will be cancelled and users will be notified. Please confirm.
             </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
@@ -1591,7 +1662,7 @@
                 Cancel Confirmation
             </div>
             <div class="modal-body modal-body-delete modal-body-no-radius-allside">
-                Scheduled batches will be canceled, and any courses assigned to an employee will be reverted. Please confirm.
+                Scheduled batches will be cancelled, and any courses assigned to an employee will be reverted. Please confirm.
                 </div>
             <div class="modal-footer mail-footer border-0">
                 <button type="button" class="cancelBtn" data-dismiss="modal">No</button>
@@ -1617,6 +1688,7 @@
                             <th class="tablewidth2">Course Name</th>
                             <th class="tablewidth3">Modified By</th>
                             <th class="tablewidth1">Modified on</th>
+                            <th class="tablewidth1">Batch status</th>
                             <th style="width: 100%;"></th>
                         </tr>
                     </thead>
@@ -1628,6 +1700,7 @@
                                 history.courseName == null)? '-':history.courseName }}</td>
                             <td class="tablewidth3">{{history.batchCreatedBy}}</td>
                             <td class="tablewidth4">{{history.batchCreatedOn}}</td>
+                            <td class="tablewidth5">{{history.batchStatus}}</td>
                             <td>
                                 <div class="viewButton" (click)="viewHistorydata(history)">View</div>
                             </td>
@@ -1666,7 +1739,7 @@
                             <label class="form-label mb-0 fw-600 emailtext">Email</label>
                             <input type="text" formControlName="email" class="form-control mailInput"
                                 (change)="getMail($event)" [(ngModel)]="mailIdsend" maxlength="60"
-                                [ngClass]="{'invalid' : f['email'].errors && mailIdsend !== ''}" />
+                                [ngClass]="{'invalid' : f['email'].errors && mailIdsend !== ''}" pattern="^\w+([\.-]?\w+)*@smythstoys\.com$" />
                             <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()"
                                 type="button" class="btn btn-primary btn-sm mailAddbtn">Add</button>
                         </div>

@@ -714,6 +714,11 @@ export class F2fSummaryComponent implements OnInit {
     this.filterRequest.fromDate = this.reportFromdate;
     this.filterRequest.toDate = this.reportTodate;
     this.filterRequest.report = false;
+    if(this.filterRequest.fromDate == '' || this.filterRequest.toDate == ''){
+    delete this.filterRequest.searchDateBy;
+    delete this.filterRequest.fromDate;
+    delete this.filterRequest.toDate;
+    }
     // this.filterRequest.trainers = this.filtertrainerList;
     // this.filterRequest.storeIds = this.filterstorecodeList;
     // this.filterRequest.storeNames = this.filterstorenameList;
@@ -746,10 +751,7 @@ export class F2fSummaryComponent implements OnInit {
 
     if (response.payload && this.onetimeCall == false) {
       this.getRoleGroup();
-      // this.getCourseName();
-      if (!this.isManager) {
-        this.getAllCountries();
-      }
+      this.getAllCountries();      
       this.onetimeCall = true;
     }
     // this.getFilterLists();
@@ -2101,6 +2103,7 @@ export class F2fSummaryComponent implements OnInit {
       batchStatusList: [2],
       isTrainer: this.loginEmployeeIstrainer,
       userEmployeeId: this.loginEmployeeId,
+      userRoleCode:this.loginEmployeeRoleCode,
       pageNo: 0,
       pageSize: 7
     }
@@ -2337,11 +2340,11 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
-  getMailexport(e: any) {
-    if (this.form.valid) {
-      this.mailIdexport = e.target.value;
-    }
-  }
+  // getMailexport(e: any) {
+  //   if (this.form.valid) {
+  //     this.mailIdexport = e.target.value;
+  //   }
+  // }
 
   addMailId() {
     if (this.form.valid) {
@@ -2360,22 +2363,22 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
-  addMailIdexport() {
-    if (this.form.valid) {
-      let existing = this.Emails.filter((item: any) => {
-        return item == this.mailIdexport
-      })
+  // addMailIdexport() {
+  //   if (this.form.valid) {
+  //     let existing = this.Emails.filter((item: any) => {
+  //       return item == this.mailIdexport
+  //     })
 
-      if (existing.length > 0) {
-        this.common.openSnackBar("Mail id already exists", 2, "Invalid")
-      }
-      else {
-        this.Emails.push(this.mailIdexport);
-        this.mailIdexport = "";
-        this.cdr.detectChanges();
-      }
-    }
-  }
+  //     if (existing.length > 0) {
+  //       this.common.openSnackBar("Mail id already exists", 2, "Invalid")
+  //     }
+  //     else {
+  //       this.Emails.push(this.mailIdexport);
+  //       this.mailIdexport = "";
+  //       this.cdr.detectChanges();
+  //     }
+  //   }
+  // }
 
   removeEmail(m: any) {
     let temp = this.Emails.splice(m, 1);
@@ -2535,6 +2538,7 @@ export class F2fSummaryComponent implements OnInit {
         batchStatusList: [2],
         isTrainer: this.loginEmployeeIstrainer,
         userEmployeeId: this.loginEmployeeId,
+        userRoleCode:this.loginEmployeeRoleCode,
         pageNo: this.currentpageNumberDraft,
         pageSize: 7
       }

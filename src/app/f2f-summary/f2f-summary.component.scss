@@ -659,14 +659,16 @@
         overflow-y: auto !important;
     }
 }
-.updatedemployeeListheight1-history{
-    height: 286px;
+
+.updatedemployeeListheight1{
+    height: 287px;
 
     .employeeList{
-        max-height: 286px !important;
+        max-height: 287px !important;
         overflow-y: auto !important;
     }
 }
+
 
 .batch-page {
     padding: 20px 10px;
@@ -681,7 +683,7 @@
     flex-wrap: wrap;
     position: relative;
     // padding-right: 70px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 
     .form-group {
         margin-bottom: 0px;
@@ -690,7 +692,7 @@
     input {
         border: 1px solid #BDBDBD;
         border-radius: 2px;
-        padding: 8px 10px 8px 10px;
+        padding: 8px 5px 8px 5px;
         background-color: #fff;
         height: 35px;
         width: 150px;
@@ -700,7 +702,7 @@
         }
     }
     .empSearchInput{
-        width: 180px;
+        width: 140px;
         padding: 8px 8px 8px 8px;
     }
     .empSearchInput::placeholder{
@@ -711,8 +713,14 @@
     }
 
     .input-group-append {
-        width: 200px;
+        width: 190px;
         font-size: 13px;
+    }
+
+    .data-icon-filter{
+        position: absolute;
+        right: 5px;
+        top: 5px;
     }
 
     .list-filter-title {
@@ -822,7 +830,7 @@
 // }
 
 .table-container {
-    height: calc(100vh - 260px);
+    height: calc(100vh - 195px);
     overflow-y: auto;
 
     table {
@@ -1018,7 +1026,7 @@
 .batchContent {
     width: 35%;
     background-color: #E2E2E2;
-    height: calc(100vh - 173px);
+    height: calc(100vh - 110px);
     // min-width: 375px;
     transition: all .35s ease-in-out;
     position: relative;
@@ -1332,13 +1340,13 @@
 
 }
 
-@media screen and (min-width: 1593px) {
+@media screen and (max-width: 1365px) {
     .batchContent {
-        height: calc(100vh - 113px);
+        height: calc(100vh - 180px);
     }
 
     .table-container {
-        height: calc(100vh - 200px);
+        height: calc(100vh - 267px);
     }
 }
 
@@ -1618,12 +1626,12 @@
         cursor: pointer;
     }
     .tablewidth1{
-        max-width: 150px;
+        max-width: 135px;
         text-overflow: ellipsis;
         overflow: hidden;
     }
     .tablewidth2{
-        max-width: 220px;
+        max-width: 200px;
         text-overflow: ellipsis;
         overflow: hidden;
     }
@@ -1951,7 +1959,7 @@
     color: #fff !important;
   }
   .coursename-option{
-    width: 198px;
+    width: 172px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
