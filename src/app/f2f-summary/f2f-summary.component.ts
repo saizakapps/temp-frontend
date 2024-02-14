@@ -197,7 +197,8 @@ export class F2fSummaryComponent implements OnInit {
 
   // Generate an array with a length equal to shimmerCount
   shimmerArray = Array(this.shimmerCount).fill(0).map((x, i) => i);
-  batchStatusList:any = [1,3]
+  batchStatusList:any = [1,3];
+  batchStatusListId = "";
   showempComponent = false;
   addpeopleArray: any;
   upDatedEmployeeCount: any;
@@ -2072,11 +2073,16 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   filterbyListstatus(event: any) {
-    this.currentpageNumber = 0;
-    this.scrollevent = true;
-    this.batchStatusList = event.filterId;
-    this.cardShimmer = true;
-    this.getUpcominglist();
+    console.log("FILTER CHANGES")
+    console.log(this.batchStatusList.toString()+ '=='+ event.toString())
+    if(this.batchStatusList.toString() !== event.toString()){
+      this.currentpageNumber = 0;
+      this.scrollevent = false;
+      this.batchStatusList = event;
+      this.cardShimmer = true;
+      this.batchStatusListId = this.batchStatusList.toString();
+      this.getUpcominglist();
+    }
   }
   currentpageNumber = 0;
   currentpageNumberDraft = 0
@@ -2095,6 +2101,7 @@ export class F2fSummaryComponent implements OnInit {
     if (response.payload) {
       this.upcomingListData = response.payload;
       this.cardShimmer = false;
+      this.scrollevent = true;
     }
   }
 
@@ -2233,6 +2240,8 @@ export class F2fSummaryComponent implements OnInit {
     this.createBatch = false;
     this.selectedTab = 1;
     this.currentpageNumber = 0;
+    this.batchStatusList = [1,3];
+    this.batchStatusListId = '';
     this.scrollevent = true;
     this.scrolleventDraft = true;
     this.currentpageNumberDraft = 0
@@ -2622,6 +2631,15 @@ export class F2fSummaryComponent implements OnInit {
   exportId:any;
   batchExport(id:any){
   this.exportId = id;
+  }
+
+  clearfilterList(){
+    this.batchStatusList = [1,3];
+    this.batchStatusListId = '';
+    this.currentpageNumber = 0;
+    this.scrollevent = false;
+    this.cardShimmer = true;
+    this.getUpcominglist();
   }
 
   ngOnDestroy(): void {

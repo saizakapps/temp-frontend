@@ -123,14 +123,31 @@
             </div> -->
             <div class="card-wrap-flex">
                 <div class="cardListItems">
-                    <div class="summarytitle summarytitle1">Upcoming Events
+                    <div class="summarytitle summarytitle1 d-flex justify-content-between"><span><span *ngIf="batchStatusListId == ''">Upcoming</span><span *ngIf="batchStatusListId == '1'">Scheduled</span><span *ngIf="batchStatusListId == '4'">Closed</span><span *ngIf="batchStatusListId == '0'">Cancelled</span><span *ngIf="batchStatusListId == '3'">Assigned</span> Events</span> 
+                        <span>                        
+                            <span class="small_clear" *ngIf="batchStatusListId !== ''" (click)="clearfilterList()">clear</span>
+                        <span mat-button [matMenuTriggerFor]="menu" class=""><svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6" fill="none">
+                        <path d="M4 5.5L0 0.5H8L4 5.5Z" fill="black"/>
+                        </svg></span>
+
+                            </span>
                     </div>
-                    <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
+              
+                      <mat-menu #menu="matMenu" [xPosition]="'before'" [yPosition]="'below'"
+                      class="upcoming-metmenu">
+                      <div class=" p-0 coursePopup">
+
+                            <div mat-menu-item *ngFor="let item of upcomingFilterlist" (click)="filterbyListstatus(item.filterId)">
+                                {{ item.name }}
+                            </div>
+                      </div>
+                  </mat-menu>
+                    <!-- <div class="searchby-dd summaryngSelect summaryngSelect-new summaryngSelect-new1">
                         <ng-select [items]="upcomingFilterlist" name="searchDateByList" bindLabel="name"
                             bindValue="filterId" [clearable]=false [searchable]="false" [(ngModel)]="batchStatusList"
                             class="dateJoining" (change)="filterbyListstatus($event)">
                         </ng-select>
-                    </div>
+                    </div> -->
                     <div class="cardData cardDataupcoming webkitscrollStyle" (scroll)="onScroll($event)">
                         <div *ngFor="let item of this.upcomingListData; let j =index" class="card"
                             [ngClass]="{'assignedinactive' : (item.batchStatus == 'Assigned' && (item.scheduledDate < todayDate)) || item.batchStatus == 'Closed' }" title="{{item.courseIsActive == false?'This Course is Inactive':''}}">
