@@ -1646,19 +1646,10 @@ export class F2fSummaryComponent implements OnInit {
     this.scheduleParams = JSON.parse(JSON.stringify(item));
     this.scheduleParams.employeesList = this.scheduleParams.employeesList.map(employee => ({ employeeId: employee.employeeId, isDeleted: false, isNewEmployee:true }));
     this.scheduleParams.scheduledDate = this.datepipe.transform(this.scheduleParams.scheduledDate, 'yyyy-MM-dd') || '';;
-    // this.scheduleParams.trainerId = this.scheduleParams.trainerId.map(name => `${name}`).join(', ');
-    // this.scheduleParams.trainerName = this.scheduleParams.trainerName.map(name => `${name}`).join(', ');
     this.scheduleParams.batchEmployeesCount = this.scheduleParams.employeesList.length;
     this.scheduleParams.courseId = `"${this.scheduleParams.courseId.toString()}"`;
     this.scheduleParams.courseId = this.scheduleParams.courseId.replace(/\"/g, '');
-    // if (this.scheduleParams.hasOwnProperty('courseName')) {
-    //   delete this.scheduleParams.courseName;
-    // }
-
-    // if (this.scheduleParams.hasOwnProperty('batchname')) {
-    //   delete this.scheduleParams.batchname;
-    // }
-
+  
     const modifiedParam = this.scheduleParams;
     if (type == 'Scheduled') {
       modifiedParam.batchStatus = 'Scheduled'
@@ -1666,8 +1657,6 @@ export class F2fSummaryComponent implements OnInit {
     else if (type == 'Draft') {
       modifiedParam.batchStatus = 'Draft'
     }
-    //  
-    // 
     this.cloneBatchdata = [...this.batchData];
     this.cloneBatchdata.splice(b, 1);
     // Compare objects in the array
@@ -2514,8 +2503,10 @@ export class F2fSummaryComponent implements OnInit {
   scrollevent = true;
   async onScroll(event:any){
     if(this.scrollevent){
-    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+      console.log(event.target.offsetHeight + event.target.scrollTop + ">=" + (event.target.scrollHeight - 30))
+    if (event.target.offsetHeight + event.target.scrollTop >= (event.target.scrollHeight - 50)) {
       this.currentpageNumber = this.currentpageNumber + 7;
+      this.scrollevent = false;
       const param = {
         batchStatusList: this.batchStatusList,
         isTrainer: this.loginEmployeeIstrainer,
@@ -2526,6 +2517,7 @@ export class F2fSummaryComponent implements OnInit {
       }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_UPCOMING_BATCH_LIST, param, this.destroyed$);
       if (response.payload.length > 0) {
+        this.scrollevent = true;
         const scrollData = response.payload;
         for(let x of scrollData){
           this.upcomingListData.push(x)
@@ -2543,8 +2535,9 @@ export class F2fSummaryComponent implements OnInit {
   scrolleventDraft = true;
   async onScrollDraft(event:any){
     if(this.scrolleventDraft){
-    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+    if (event.target.offsetHeight + event.target.scrollTop >= (event.target.scrollHeight - 50)) {
       this.currentpageNumberDraft = this.currentpageNumberDraft + 7;
+      this.scrollevent = false;
       const param = {
         batchStatusList: [2],
         isTrainer: this.loginEmployeeIstrainer,
@@ -2555,6 +2548,7 @@ export class F2fSummaryComponent implements OnInit {
       }
       const response: any = await this.apiHandler.postData(this.utils.API.POST_EVENT_DRAFT_BATCH_LIST, param, this.destroyed$);
       if (response.payload.length > 0) {
+        this.scrollevent = true;
         const scrollDataDraft = response.payload;
         for(let x of scrollDataDraft){
           this.draftListData.push(x)
