@@ -3950,3 +3950,23 @@ input:-webkit-autofill:focus {
   // margin-top: 5px !important;
   font-family: "Inter";
 }
+.summaryngSelect-filterwidth .ng-select.ng-select-single .ng-select-container {
+  width: 80px !important;
+  height: 35px !important;
+  // margin-top: 5px !important;
+  font-family: "Inter";
+}
+.upcoming-metmenu .mat-menu-content{
+  background-color: #fff !important;
+}
+.upcoming-metmenu .mat-menu-content:not(:empty){
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.upcoming-metmenu .mat-menu-item{
+  height: 35px !important;
+  line-height: 35px !important;
+  width: 160px !important;
+  font-size: 15px;
+  padding-right: 5px !important;
+}
