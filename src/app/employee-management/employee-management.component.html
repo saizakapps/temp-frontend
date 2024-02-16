@@ -295,7 +295,7 @@
                 </span> -->
                 <div class="suggestedEmpName">
                   <span *ngIf="column.property === 'username'" class="d-flex align-items-center">
-                    <span (click)="getManagerConfirmation(element)" *ngIf="element.managerConfirmation"><img
+                    <span [ngClass]="{'widthseticon':element.managerConfirmation}" (click)="getManagerConfirmation(element)" *ngIf="element.managerConfirmation"><img
                         src="/assets/images/indication.png" width="16px" height="16px" class="mr-2 mb-1"
                         data-target="#courseConfirmation" data-toggle="modal"></span>
                     <span data-toggle="tooltip" title="{{element.username}}">{{element.username || '-'}}</span>
@@ -1287,21 +1287,24 @@
               
               <ng-container matColumnDef="manualUpload">
                 <th mat-header-cell *matHeaderCellDef> Certificate upload </th>
-                <td mat-cell *matCellDef="let element">
-                  <div *ngIf="element.manualUpload">
+                <td data-toggle="tooltip" [title]="element.certName ? element.certName : '-'" mat-cell *matCellDef="let element">
+                  <div style="display: flex;" *ngIf="element.manualUpload || element.certName">
                     <!--  If there is no certificate -->
-                    <span style="color: blue;" *ngIf="!element.certName" (click)="import($event)">
+                    <span style="color: #007bff;" *ngIf="!element.certName" (click)="import($event, element)">
                       Upload
                     </span>
                     <!-- If there is certificate -->
-                    <span *ngIf="element.certName" (click)="openPdf(element)">
-                      Uploaded
+                    <span style="max-width: 100px !important;" *ngIf="element.certName">
+                      <a style="text-decoration: none; color: #007bff;" [href]="imagePath + element.certName">{{ element.certName }}</a>
+                    </span>
+                    <span *ngIf="element.certName" (click)="deleteCertificate(element, 'file' + element.courseId + element.levelId)">
+                      <mat-icon style="font-size: 15px;line-height: 20px;">close</mat-icon>
                     </span>
                     <!-- Upload area -->
-                    <input type="file" class="fileInputCls" (change)="onFileBrowse($event, element)" hidden #uploadFileInput id="file"
-                      name="file" [accept]="'application/pdf'" />
+                    <input type="file" class="fileInputCls" (change)="onFileBrowse($event, element, 'file' + element.courseId + element.levelId)" hidden #uploadFileInput [id]="'file' + element.courseId + element.levelId"
+                      [name]="'file' + element.courseId + element.levelId" [accept]="'application/pdf'" />
                   </div>
-                  <div *ngIf="!element.manualUpload"> - </div>
+                  <div *ngIf="!element.manualUpload && !element.certName"> - </div>
                 </td>
               </ng-container>
 

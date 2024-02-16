@@ -1007,7 +1007,7 @@
         <div class="">
           <!-- selectedLevelCount < 1 || !areCountriesSelected() ||  -->
           <!-- selectedLevelCount < 1 || !areCountriesSelected() ||  -->
-          <button class="saveDraft float-left" [disabled]="!course.externalCourseName || (view && !create && !update) || (courseConfig.code === courseCode.F2F && checkInValidCertItems())"
+          <button class="saveDraft float-left" [disabled]="!course.externalCourseName || (view && !create && !update)"
             (click)="alertBeforeSubmit(false)" [title]="!course.externalCourseName ? 'Please fill name' : ''">
             Save Draft </button>
           <button class="submitCourse ml-2" [disabled]="submitButton() || (view && !create && !update)" (click)="alertBeforeSubmit(true)"
@@ -1486,7 +1486,7 @@
 <!-- Text -->
 <ng-template #textPreview let-textConfig="config">
   <div class="calibri">
-    <div [innerHTML]="(textConfig.content || '')">
+    <div [innerHTML]="(textConfig.content || '') | safe: 'html'">
     </div>
   </div>
 </ng-template>
@@ -1499,7 +1499,7 @@
       {{exampleConfig.title}}</a>
     <mat-accordion>
       <mat-expansion-panel [expanded]="exampleConfig.isExpanded">
-        <div [innerHTML]="(exampleConfig.content || '')" class="exampleDivCls calibri"></div>
+        <div [innerHTML]="(exampleConfig.content || '') | safe: 'html'" class="exampleDivCls calibri"></div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
@@ -1674,7 +1674,7 @@
 <button #confirmModal class="d-none" data-toggle="modal" data-target="#confirmModal"></button>
 <div class="modal fade modalPopup checkDelModal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-sml modal-dialog-centered" role="document">
+  <div style="justify-content: center;" class="modal-dialog modal-sml modal-dialog-centered" role="document">
     <div class="modal-content ">
 
       <!-- modal header -->
@@ -1728,7 +1728,7 @@
 
         <!-- close icon -->
         <button type="button" class="close d-flex px-3 py-2" data-dismiss="modal" aria-label="Close">
-          <mat-icon class="clr-white">close</mat-icon>
+          <img style="margin-top: 5px;" height="12px" width="12px" src="assets/images/close.png">
         </button>
 
       </div>

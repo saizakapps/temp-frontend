@@ -255,7 +255,13 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   switchPulishDraft(viewType: any) {
     this.courseTypeDetail.view = viewType;
-    this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view]);
+    let version;
+    if (viewType === 'draft') {
+      version = this.currentVersion;
+    } else if (viewType === 'publish') {
+      version = undefined;
+    }
+    this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view], version);
   }
 
   getCourseConfig() {
@@ -266,7 +272,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     // this.courseTypes = courseCategory.filter((cat) => [this.courseCode.Regular, this.courseCode.Recurring].includes(cat.code));
     if (this.courseConfig.completionMessage) {
       this.getCompTemplates();
-      this.getCompletionTypeTemplate();
+      if (this.courseConfig.code === this.courseCode.F2F) this.getCompletionTypeTemplate();
     }
     // Change chaptertype & activitytype if course type is checklist
     if (this.courseConfig.code === this.courseCode.Checklist) {
@@ -298,7 +304,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     if (this.courseTypeDetail.type === 'edit' || this.courseTypeDetail.type === 'copy') {
       this.getCourseDetails();
     } else {
-      if ([this.courseCode.F2F, this.courseCode.Checklist].includes(this.courseConfig.code)) {
+      if ([this.courseCode.Checklist].includes(this.courseConfig.code)) {
         this.course.managerConfirmation = true;
       } else if (this.courseConfig.code === this.courseCode.SlideShow) {
         this.selectedActivity.activityType = 'slideShow';
@@ -375,7 +381,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       }
       this.masterTemplates.push(obj);
     }
-    if ((this.getF2FCompTemplatesApiCount === this.completionCategories.length) || element) {
+    if ((this.getF2FCompTemplatesApiCount === this.completionCategories.length) || isGetCourseDetails) {
       this.compCategoryTemplates = this.masterTemplates.find(template => template.id === 1).data;
       this.selectedCompletionType.templateId = 'new';
       this.getCertificationItems(element);
@@ -394,7 +400,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     this.compTemplateObj.id = 'new';
   }
 
+  currentVersion: any;
   async getCourseDetails(element?: any) {
+    this.currentVersion = element;
     const userDetails = JSON.parse(localStorage.getItem("userDetails") || '{}');
     const payload = {
       courseId: element ? element.id : this.courseTypeDetail.courseId,
@@ -403,9 +411,6 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       userName: userDetails?.username
     };
     const response: any = await this.apiHandler.postData(this.utils.API.GET_COURSE_DETAILS, payload, this.destroyed$);
-    if (response) {
-      this.getF2FCompTemplates(true, '', element);
-    }
     this.quizPosition = response.payload[0].quizPosition;
     if (element) {
       const courseObj = response.payload[0];
@@ -452,14 +457,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           this.publishDraft['draft'] = element;
         }
         if (this.publishDraft[this.courseTypeDetail.view]) {
-          this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view]);
+          this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view], this.currentVersion);
         }
       } else if (this.courseTypeDetail.type === 'copy') {
         let courseData: any = {};
         if (element.published || response.payload?.length === 1) {
           courseData = element;
           courseData.courseId = null;
-          this.setPredefinedVal(courseData);
+          this.setPredefinedVal(courseData, this.currentVersion);
         }
       }
     });
@@ -470,7 +475,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
   }
 
-  setPredefinedVal(courseData) {
+  setPredefinedVal(courseData, currentVersion?) {
     this.course = $.extend(true, {}, courseData);
     console.log('set pre-defined: ', this.course);
     if (this.courseTypeDetail.courseTypeCode === this.utils.CourseCode.Policies && (this.courseTypeDetail.type === 'edit' || this.courseTypeDetail.type === 'copy')) {
@@ -512,6 +517,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     this.isPdfActivity();
     this.completionObject = { content: this.course.completionMessage || '' };
     this.clonedCourse = $.extend(true, {}, this.course);
+
+    /* Get F2F completion templates */
+    if (this.courseConfig.code === this.courseCode.F2F) {
+      this.showShimmer = true;
+      this.getF2FCompTemplates(true, '', currentVersion);
+    }
   }
 
   setSelectedForm() {
@@ -1205,7 +1216,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     } else if (type === 'switchPulishDraft') {
       // if (false && this.deepCompare(this.clonedCourse, this.course)) {
       if (this.checkCourseMod()) {
-        this.alertModal['text'] = 'Updated content will not be saved';
+        this.alertModal['text'] = 'Changes are not saved. Do you want to proceed?';
       } else {
         //Here index means viewType
         this.switchPulishDraft(index);
@@ -1221,7 +1232,16 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       for (let category of [categoryObj.evaluate, categoryObj.passed, categoryObj.failed, categoryObj.redo]) {
         if (!category.isValid) {
           let index = this.completionCategories.findIndex(cat => cat.id === category.id);
-          categories = categories + `${this.completionCategories[index].name}, `;
+          let temp;
+          if (this.completionCategories[index].name === 'Evaluate') {
+            temp = 'Evaluation';
+          } else if (this.completionCategories[index].name === 'Passed') {
+            temp = 'Pass';
+          } else {
+            temp = this.completionCategories[index].name;
+          }
+  
+          categories = categories + `${temp}, `;
         }
       }
       categories.trim();
@@ -1229,11 +1249,11 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         let temp = categories.slice(0, -2);
         categories = temp;
       }
-      this.alertModal['text'] = `Please enter content for ${categories} completion category`;
+      this.alertModal['text'] = `${categories}  message to be filled.`;
     } else if (type === 'removeFreeText') {
-      this.alertModal['text'] = 'Please remove fill right answer/Free text question type from Questionnaire, Otherwise you will not be able to select both country and role';
+      this.alertModal['text'] = 'Seems Fill-in-the-Blank and Free Text quiz in the course. Please remove these to enable selection of both Roles and Locations.';
     } else if (type === 'clearCertLineItems') {
-      this.alertModal['text'] = `If location changes created certificates will be removed, Are you sure you want to proceed?`;
+      this.alertModal['text'] = `Location is changed, Any selected certifications will be clear. Please confirm the action.`;
     } else if (type === 'deleteCertItem') {
       this.alertModal['text'] = `Are you sure you want to delete this line item?`;
     } /* else if (type === 'callGetCompTemplate') {
@@ -1365,7 +1385,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       id: [this.course.courseId],
       courseStatus: status
     }
-    const response: any = await this.apiHandler.postData(this.utils.API.CHANGE_COURSE_STATUS, params, this.destroyed$, `Course has been ${this.course.active ? 'Inactivated' : 'Activated'}`);
+    const response: any = await this.apiHandler.postData(this.utils.API.CHANGE_COURSE_STATUS, params, this.destroyed$, `Course ${this.course.active ? 'deactivated' : 'activated'}`);
     this.course.active = status === 'Active';
   }
 
@@ -2803,7 +2823,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     const response: any = await this.apiHandler.getData(this.utils.API.GET_CERTIFICATES_LIST, null, this.destroyed$);
     const certificates = _.sortBy(response.payload, 'id').reverse();
     this.certificates = certificates.filter(certificate => certificate.id !== this.certificationItems.find(certItem => certItem.id === certificate.id)?.id);
-    this.copyCertificates = $.extend(true, [], response.payload);
+    this.copyCertificates = $.extend(true, [], certificates);
   }
 
   /* Create update certificate list API, Once called with courseId after course creation */
@@ -3155,8 +3175,17 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         });
       });
     });
+    this.certificationItems.forEach((certItem) => {
+        certItem.renderingData.countryList.forEach(country => {
+          country.child.forEach(region => {
+            this.updateParentShowProperty(region.child);
+          });
+          this.updateParentShowProperty(country.child);
+        });
+        this.updateParentShowProperty(certItem.renderingData.countryList);
+    });
     this.certificates.push(this.copyCertificates.find(c => c.id === certItem.id));
-    this.certificates.sort((a, b) => a.id - b.id);
+    this.certificates = _.sortBy(this.certificates.sort((a, b) => a.id - b.id), 'id').reverse();
     this.previewData = undefined;
   }
 

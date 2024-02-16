@@ -281,6 +281,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getModuleAccess();
+    this.getImagePath();
     this.currentModule = this.router.url.replace('/', '');
     console.log('current module', this.currentModule);
     this.currentModule === 'employees' ? this.employeeColumns = this.utils.TABLE_HEADERS.EMPLOYEE_MANAGEMENT_TABLE : this.employeeColumns = this.utils.TABLE_HEADERS.USER_ROLE_TABLE;
@@ -293,6 +294,14 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.getUserDetails();
     this.getRoleGroup();
     this.getAllCountries();
+  }
+
+  imagePath: any;
+  pdfUrl: any;
+  async getImagePath() {
+    const response: any = await this.apiHandler.getData(this.utils.API.GET_BUCKET_URL, null, this.destroyed$);
+    this.imagePath = response.payload.mediaUrl; // url
+    this.pdfUrl = response.payload.url;
   }
 
   getModuleAccess() {
@@ -524,7 +533,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       region: regionIds,
       store: storeIds,
       userId: this.userDetailValue?.id,
-      admin: this.userDetailValue.learnerRole === 'SA', // !this.userDetailValue.manager, [portalRole.superAdmin, portalRole.hr].includes(this.userDetailValue.portalRole),
+      admin: this.userDetailValue.learnerRole === 'SA' || this.userDetailValue.learnerRole === 'HR', // !this.userDetailValue.manager, [portalRole.superAdmin, portalRole.hr].includes(this.userDetailValue.portalRole),
       page: this.paginationIndex,
       filter: {
         countries: this.buildSelectedDropDownHierarchy(this.countryList),
@@ -2262,7 +2271,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('uploadFileInput', { static: false }) uploadFileInput!: ElementRef;
-  async import(data) {
+  selectedUserCourse: any;
+  async import(data, element) {
+    this.selectedUserCourse = element;
     const response: any = await this.apiHandler.getData(this.utils.API.GET_F2F_STATUS, '', this.destroyed$);
     if (response.payload === false) {
       this.uploadFileInput.nativeElement.click()
@@ -2272,18 +2283,18 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   selectedFile: File;
-  onFileBrowse(event, element) {
+  onFileBrowse(event) {
     this.selectedFile = event.target.files[0];
-    this.onUpload(element);
+    this.onUpload(this.selectedUserCourse);
   }
 
   async onUpload(element) {
+    this.ngxService.start();
     if (this.selectedFile) {
       let formData = new FormData();
       formData.append('request', this.selectedFile);
       const response: any = await this.apiHandler.fileUpload(this.utils.API.UPLOAD_FILES, formData, this.destroyed$);
-      element.certName = response.payload[0].name;
-      element.certUrl = response.payload[0].url;
+      element.certName = response.payload[0].url;
       if (response) {
         this.updateManualCertificate(response, element);
       }
@@ -2293,21 +2304,30 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   /* Update manual certificate */
-  async updateManualCertificate(response, element) {
+  async updateManualCertificate(response, element, type?) {
     const param = {
       userId: this.formSuggestCourseObj.id,
       courseId: element.courseId,
-      url: response.payload[0].url
+      url: type === 'delete' ? '' : response.payload[0].url
     }
     const res = await this.apiHandler.postData(this.utils.API.UPDATE_MANUAL_CERTIFICATE, param, this.destroyed$);
+    this.ngxService.stop();
   }
 
   @ViewChild('pdfModal', { static: false }) pdfModal!: ElementRef;
-  pdfUrl: string = 'https://smyths360-dev-admin.smythstoys.com/api/web/user/files/';
   pdfConfig: any = {url: ''};
   openPdf(element) {
     this.pdfConfig.url = element.certUrl;
     this.pdfModal.nativeElement.click();
+  }
+
+  deleteCertificate(element, id) {
+    this.ngxService.start();
+    this.updateManualCertificate('', element, 'delete');
+    element.certName = '';
+    element.manualUpload = true;
+    const doc: any = document.getElementById(id);
+    doc.value = '';
   }
 
   pdfLoader(type: string) {
