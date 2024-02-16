@@ -1314,9 +1314,9 @@ export class F2fSummaryComponent implements OnInit {
     this.fromMaxDate = new Date();
     this.fromMaxDate.setDate(this.fromMaxDate.getDate());
     let currentDate1 = new Date();
-    currentDate1.setFullYear(currentDate1.getFullYear() - 1);
+    currentDate1.setDate(currentDate1.getDate());
     this.fromMinDate = currentDate1;
-    // this.fromMinDate = new Date(this.fromMinDate);
+    this.fromMinDate = new Date(this.fromMinDate);
     
     // this.fromMinDate.setDate(this.fromMinDate.getDate() - 365);
     this.toMaxDate = new Date(this.toMaxDate);
@@ -1328,6 +1328,7 @@ export class F2fSummaryComponent implements OnInit {
     this.scheduleminDate = today;
     this.scheduleminDate = new Date();
     this.scheduleminDate.setDate(this.scheduleminDate.getDate());
+    console.log(this.toDatevalue, "toDatevalue")
     // this.scheduleminDate.setDate(this.scheduleminDate.getDate() + 1);
   }
 
@@ -2580,7 +2581,7 @@ export class F2fSummaryComponent implements OnInit {
   DefaulttoDate:any
   setsummaryDateValues(){
     const currentDatebefore = new Date();
-    currentDatebefore.setDate(currentDatebefore.getDate() - 30);
+    currentDatebefore.setDate(currentDatebefore.getDate());
 
     const currentDateafter = new Date();
     currentDateafter.setDate(currentDateafter.getDate() + 30);
@@ -2620,6 +2621,22 @@ export class F2fSummaryComponent implements OnInit {
     + ' - ' + this.datepipe.transform(this.toDatevalue, 'dd/MM/yyyy');
   }, 500);
 
+  }
+
+  gotof2fReportsCertificate(summaryData:any){
+    // this.reportFromdate = this.fromDatevalue;
+    // this.reportTodate = this.toDatevalue;
+    this.ngxloaderService.start();
+    this.filtercourseNameList = this.filtercourseNameList.map((item:any)=>
+    item.courseName.toLowerCase() == summaryData.courseName.toLowerCase() ? { ...item,checked:true }:item
+    )  
+  this.selectedOptionsnew = this.filtercourseNameList.filter((item: any) => {
+    return item.checked == true;
+  }).map(item => item.courseName);
+
+  this.createBatch = true;
+  this.resetReportList();
+  this.getReportList();
   }
   
   exportId:any;
