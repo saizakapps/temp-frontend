@@ -445,9 +445,9 @@ export class F2fSummaryComponent implements OnInit {
     this.view = module.view;
     this.create = module.create;
     this.update = module.update;
-    console.log(this.view, "VIEW");
-    console.log(this.create, "CREATE")
-    console.log(this.update, "UPDATE")
+    // console.log(this.view, "VIEW");
+    // console.log(this.create, "CREATE")
+    // console.log(this.update, "UPDATE")
 
   }
 
@@ -1328,7 +1328,6 @@ export class F2fSummaryComponent implements OnInit {
     this.scheduleminDate = today;
     this.scheduleminDate = new Date();
     this.scheduleminDate.setDate(this.scheduleminDate.getDate());
-    console.log(this.toDatevalue, "toDatevalue")
     // this.scheduleminDate.setDate(this.scheduleminDate.getDate() + 1);
   }
 
@@ -2063,8 +2062,8 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   filterbyListstatus(event: any) {
-    console.log("FILTER CHANGES")
-    console.log(this.batchStatusList.toString()+ '=='+ event.toString())
+    // console.log("FILTER CHANGES")
+    // console.log(this.batchStatusList.toString()+ '=='+ event.toString())
     if(this.batchStatusList.toString() !== event.toString()){
       this.currentpageNumber = 0;
       this.scrollevent = false;
@@ -2504,7 +2503,7 @@ export class F2fSummaryComponent implements OnInit {
   scrollevent = true;
   async onScroll(event:any){
     if(this.scrollevent){
-      console.log(event.target.offsetHeight + event.target.scrollTop + ">=" + (event.target.scrollHeight - 30))
+      // console.log(event.target.offsetHeight + event.target.scrollTop + ">=" + (event.target.scrollHeight - 30))
     if (event.target.offsetHeight + event.target.scrollTop >= (event.target.scrollHeight - 50)) {
       this.currentpageNumber = this.currentpageNumber + 7;
       this.scrollevent = false;

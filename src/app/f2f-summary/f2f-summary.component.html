@@ -30,7 +30,7 @@
                                 placeholder=" " name="toDate" [(ngModel)]="toDatevalue"
                                 [ngModelOptions]="{standalone: true}" bsDatepicker
                                 (ngModelChange)="toDateChange($event)" autocomplete="off" bsDatepicker
-                                [bsConfig]="common.bsConfig2" [minDate]="fromMinDate" #toDate
+                                [bsConfig]="common.bsConfig2" [minDate]="fromDatevalue" #toDate
                                 required [readonly]="true">
                             <div class="data-icon data-icon-new" (click)="toDate.click()">
                                 <img src="assets/healthsafetyimages/field-icon.svg">
@@ -84,8 +84,8 @@
                             <div class="list_title" title="{{data.courseName}}">{{data.courseName}}</div>
                             <div class="d-flex align-items-center">
                                 <div class="list_expired list_expired_activeCount notification" (click)="gotof2fReportsCertificate(data)"
-                                    [ngClass]="{'opacity0' : data.activeUsersCount == '' || data.activeUsersCount == 0 || data.activeUsersCount == null}">
-                                    {{data.activeUsersCount == null?0:data.activeUsersCount}}
+                                    [ngClass]="{'opacity0' : (data.activeUsersCount == '' && data.expiredUsersCount == '')  || (data.activeUsersCount == 0 && data.expiredUsersCount == 0) || (data.activeUsersCount == null && data.expiredUsersCount == null)}">
+                                    {{ (data.activeUsersCount == null ? 0 : data.activeUsersCount) + (data.expiredUsersCount == null ? 0 : data.expiredUsersCount) }}
                                 </div>
                                
                             </div>
@@ -193,7 +193,7 @@
                         </div>
                     </div>
                     <div class="nofoundtext nofoundtextupcoming" *ngIf="upcomingListData.length == 0 && cardShimmer == false">
-                        <span *ngIf="batchStatusListId == ''">No Upcoming record found</span>
+                        <span *ngIf="batchStatusListId == ''">No upcoming record found</span>
                         <span *ngIf="batchStatusList == 1">No scheduled record found</span>
                         <span *ngIf="batchStatusList == 0">No cancelled record found</span>
                         <span *ngIf="batchStatusList == 3">No assigned record found</span>

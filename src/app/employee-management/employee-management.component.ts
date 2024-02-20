@@ -1835,7 +1835,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       levelId: data.currentLevel,
       roleId: data.roleId,
       type: 'Policies',
-      suggested: true
+      suggested: false
     }
 
     const [api1Response, api2Response]: any = await Promise.all([

@@ -246,11 +246,11 @@ export class DropdownOptions {
     ],
     searchF2FDateList: [
       {
-        name: 'Trained date',
+        name: 'Trained',
         key: 'trainedDate'
       },
       {
-        name: 'Expired date',
+        name: 'Expired',
         key: 'expiredDate'
       }
     ],
@@ -288,12 +288,12 @@ export class DropdownOptions {
       {
         name: 'Employee Name',
         key: 'employeeName',
-        showname:'Search by Name'
+        showname:'Name'
       },
       {
         name: 'Employee Id',
         key: 'employeeId',
-        showname:'Search by Id'
+        showname:'Id'
       }
     ],
   }

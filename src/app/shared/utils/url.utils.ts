@@ -10,7 +10,7 @@ export class UrlUtils {
 
   // public browserHostName = this.tempHostName.replace('-admin', '');
   public HOSTNAME: any = `//${this.browserHostName}/`;
-  public WEB_URL = `${this.HOSTNAME}api/web/`;
+  public WEB_URL = `${this.HOSTNAME}api/web/learners/`;
   public AUTH_URL = `${this.HOSTNAME}api/auth/`;
   public USER_URL = `${this.WEB_URL}user/`;
   public COURSE_URL = `${this.WEB_URL}course/`;

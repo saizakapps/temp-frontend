@@ -1298,6 +1298,16 @@
               </ng-template>
             </ng-select>
 
+            <!-- <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz'">
+              <span style="margin-right: 25px; color: #AAAAAA" *ngIf="courseConfig.code === courseCode.F2F">|</span>
+              <input (change)="updateQuestionLimit()"
+                [name]="'reAttempt' + config.chapterData?.chapterId + question.questionId" class="mandatory-check"
+                type="checkbox" [(ngModel)]="question.reAttempt" required>
+              <label class="form-check-label mb-3 mandatoryLbl">
+                Re-attempt
+              </label>
+            </span> -->
+
             <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
               <span style="margin-right: 25px; color: #AAAAAA" *ngIf="courseConfig.code === courseCode.F2F">|</span>
               <input (change)="updateQuestionLimit()"

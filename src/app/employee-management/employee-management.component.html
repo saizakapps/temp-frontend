@@ -1265,7 +1265,7 @@
 
               <ng-container matColumnDef="levels">
                 <th mat-header-cell *matHeaderCellDef> Level Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.levelName || '-'}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.isSuggested && element.courseTypeCode !== 'LA004' && element.courseTypeCode !== 'LA005' ? 'Suggested' : element.levelName ? element.levelName : '-'}} </td>
               </ng-container>
 
               <ng-container matColumnDef="externalName">
