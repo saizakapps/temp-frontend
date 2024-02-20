@@ -1844,15 +1844,15 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       // this.apiHandler.postData(this.utils.API.GET_FF_COURSES, { userId: data.id }, this.destroyed$)
     ]);
 
-    api1Response.payload.data?.forEach((userCourse) => {
+    this.uniqBy(api1Response.payload.data, 'courseId', 'completionDate')?.forEach((userCourse) => {
       userCourse.isSuggested = false;
       this.empCourseList.push(userCourse);
     });
-    api1Response.payload.suggestedCourses?.forEach((suggest) => {
+    this.uniqBy(api1Response.payload.suggestedCourses, 'courseId', 'completionDate')?.forEach((suggest) => {
       suggest.isSuggested = true;
       this.empCourseList.push(suggest);
     });
-    api2Response.payload.data?.forEach((policy) => {
+    this.uniqBy(api2Response.payload.data, 'courseId', 'completionDate')?.forEach((policy) => {
       policy.isSuggested = false;
       this.empCourseList.push(policy);
     });
@@ -1867,23 +1867,23 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     policies = this.sortCourses('policy');
     faceToFace = this.sortCourses('Face to Face');
 
-    this.empCourseList = level1Courses.concat(level2Courses, level3Courses, checkListCourses, suggestedCourses, policies, faceToFace);
+    this.empCourseList = level1Courses.concat(level2Courses, level3Courses, checkListCourses, faceToFace, suggestedCourses, policies);
 
     // this.empCourseList = [...this.uniqBy(this.empCourseList, 'courseId')];
     this.showShimmer1 = false;
 
   }
 
-  uniqBy(arr, key) {
+  uniqBy(arr, key1, key2?) {
     return arr.filter((item, index, self) =>
-      index === self.findIndex((t) => t[key] === item[key])
+      index === self.findIndex((t) => (t[key1] === item[key1]) && (t[key2] === item[key2]))
     );
   }
 
   sortCourses(filterBy: any) {
     let filteredValues: any;
     if (filterBy === 'Level1' || filterBy === 'Level2' || filterBy === 'Level3') {
-      filteredValues = this.empCourseList.filter((ele: any) => (ele.isSuggested === false) && (ele.levelName === filterBy) && (ele.courseTypeCode !== 'LA003'));
+      filteredValues = this.empCourseList.filter((ele: any) => (ele.isSuggested === false) && (ele.levelName === filterBy) && ((ele.courseTypeCode === 'LA003' && ele.evaluation === false) || ele.courseTypeCode !== 'LA003'));
     } else if (filterBy === 'checkList') {
       filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA005');
     } else if (filterBy === 'suggested') {
@@ -1891,7 +1891,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     } else if (filterBy === 'policy') {
       filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA004');
     } else if (filterBy === 'Face to Face') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.courseType === filterBy);
+      filteredValues = this.empCourseList.filter((ele: any) => (ele.courseTypeCode === 'LA003') && (ele.evaluation === true));
     }
     return filteredValues.sort((a: any, b: any) => (a.completionDate > b.completionDate) ? 1 : -1);
   }
