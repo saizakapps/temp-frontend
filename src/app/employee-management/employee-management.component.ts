@@ -1853,7 +1853,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       this.empCourseList.push(suggest);
     });
     api2Response.payload.data?.forEach((policy) => {
-      policy.isSuggested = true;
+      policy.isSuggested = false;
       this.empCourseList.push(policy);
     });
 
@@ -1869,7 +1869,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
     this.empCourseList = level1Courses.concat(level2Courses, level3Courses, checkListCourses, suggestedCourses, policies, faceToFace);
 
-    this.empCourseList = [...this.uniqBy(this.empCourseList, 'courseId')];
+    // this.empCourseList = [...this.uniqBy(this.empCourseList, 'courseId')];
     this.showShimmer1 = false;
 
   }
@@ -1883,11 +1883,11 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   sortCourses(filterBy: any) {
     let filteredValues: any;
     if (filterBy === 'Level1' || filterBy === 'Level2' || filterBy === 'Level3') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.levelName === filterBy && ele.courseType !== 'Face to Face');
+      filteredValues = this.empCourseList.filter((ele: any) => (ele.isSuggested === false) && (ele.levelName === filterBy) && (ele.courseTypeCode !== 'LA003'));
     } else if (filterBy === 'checkList') {
       filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA005');
     } else if (filterBy === 'suggested') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.isSuggested && ele.courseTypeCode !== 'LA004' && ele.courseTypeCode !== 'LA005');
+      filteredValues = this.empCourseList.filter((ele: any) => ele.isSuggested === true);
     } else if (filterBy === 'policy') {
       filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA004');
     } else if (filterBy === 'Face to Face') {
