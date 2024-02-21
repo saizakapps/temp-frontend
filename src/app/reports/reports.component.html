@@ -708,8 +708,7 @@ fill="#000000" stroke="none">
                       <label for="email" class="lblCls fontBold">Email Id</label>
                       <div class="col-sm-8 pl-0 ">
                         <input [disabled]="disabled" type="text" class="form-control error-input-box reportEmailInput" name="email" id="email"
-                          [(ngModel)]="mailId" placeholder="{{'Enter Email ID'}}" #email="ngModel"
-                          pattern="^\w+([\.-]?\w+)*@smythstoys\.com$">                       
+                          [(ngModel)]="mailId" placeholder="{{'Enter Email ID'}}" #email="ngModel">                       
                       </div>
                       <div class="col-sm-1 pl-0 addEmailCls">
                         <button [disabled]="!mailId || email.errors && email.errors?.['pattern']" (click)="addEmail()"
