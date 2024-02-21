@@ -116,7 +116,7 @@
         <div class="d-flex p-0 mt-2">
           <div class="searchby-dd ">
             <ng-select class="employeeDetail" [items]="searchLabels" name="searchBy" bindLabel="name" bindValue="key"
-              [clearable]=false [searchable]="false" (change)="searchTextModal = ''" [(ngModel)]="searchBy">
+              [clearable]=false [searchable]="false" (change)="onSearchByChange()" [(ngModel)]="searchBy">
             </ng-select>
           </div>
         </div>

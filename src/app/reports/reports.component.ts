@@ -380,6 +380,11 @@ export class ReportsComponent implements OnInit {
     this.ngxService.stop();
   }
 
+  onSearchByChange() {
+    this.searchTextModal = '';
+    this.callGetFilteredList('search');
+  }
+
   /* Call API if header filter change */
   callGetFilteredList(type: any, event?: any, isPopup?: boolean) {
     console.log('callGetFilteredList');

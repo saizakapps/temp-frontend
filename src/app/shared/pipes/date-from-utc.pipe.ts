@@ -9,8 +9,8 @@ export class DateFromUTCPipe implements PipeTransform {
   transform(value: any, format: any, isConvert?: any): any {
     if (value) {
       const time = value;
-      // let m = moment.utc(time);
-      let m = moment(time);
+      let m = moment.utc(time);
+      // let m = moment(time);
       if (isConvert) {
         m = m.local();
       }
