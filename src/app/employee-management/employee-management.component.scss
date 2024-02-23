@@ -945,3 +945,10 @@ input.noarrow::-webkit-inner-spin-button {
 .widthseticon {
   min-width: 25px !important;
 }
+
+
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+  padding: 0 10px;
+}

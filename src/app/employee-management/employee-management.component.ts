@@ -1819,6 +1819,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   async onPromotionChange(event) {
     if (!event) {
+      this.userCourseModalRoleName = this.formSuggestCourseObj.role;
       this.getCourses(this.formSuggestCourseObj);
       return;
     }

@@ -88,8 +88,14 @@ body {
 /* course creation css ends */
 .randomTxt .ng-select.ng-select-single .ng-select-container {
   height: 30px !important;
-  width: 50px !important;
+  width: 60px !important;
   margin-top: 5px;
+}
+
+.randomTxt ::-webkit-scrollbar {
+  width: 3px;
+  height: 8px;
+  padding: 0px 10px;
 }
 
 .ng-select .ng-select-container,
@@ -1228,6 +1234,10 @@ th.mat-header-cell {
 
 #courseDetailsModal .ng-select.ng-select-single .ng-select-container .ng-value-container, .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
   line-height: 16px !important;
+}
+
+#courseDetailsModal .ng-select.ng-select-single .ng-select-container {
+  border-radius: 4px !important;  
 }
 
 .ng-placeholder,
