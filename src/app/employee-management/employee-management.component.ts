@@ -1794,6 +1794,8 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.selection.clear();
   }
 
+  promotedList: any = [];
+  userCourseModalRoleName: any;
   openSuggestCourse(data) {
     // this.ngxService.start();
     this.getCourseCallCount = 0;
@@ -1801,12 +1803,55 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
     this.formSuggestCourseObj = {};
     this.formSuggestCourseObj = data;
+    this.userCourseModalRoleName = this.formSuggestCourseObj.role;
+    this.getPromotedDetails(data);
 
     this.getCourses({ ...data});
   }
 
-  async getCourses(data) {
+  async getPromotedDetails(data) {
+    const params = {
+      userId: data.id
+    }
+    const response: any = await this.apiHandler.postData(this.utils.API.PROMOTIONS_LIST, params, this.destroyed$);
+    this.promotedList = response.payload.filter(promoted => promoted.roleId !== this.formSuggestCourseObj.roleId);
+  }
+
+  async onPromotionChange(event) {
+    if (!event) {
+      this.getCourses(this.formSuggestCourseObj);
+      return;
+    }
     this.showShimmer1 = true;
+    this.userCourseModalRoleName = event.role;
+    let list: any = [];
+    const params = {
+      promotedUserId: event?.userId,
+      userId: this.userDetail?.id,
+      employeeId: event?.employeeId,
+      roleId: event?.roleId,
+      promotedDate: moment(event?.updatedAt).format('YYYY-MM-DD'),
+      type: 'Course',
+      suggested: true
+    }
+    console.log('params', event);
+    const response: any = await this.apiHandler.postData(this.utils.API.GET_HISTORY_COURSES, params, this.destroyed$);
+
+    this.uniqBy(response.payload.data, 'courseId', 'completionDate')?.forEach((userCourse) => {
+      userCourse.isSuggested = false;
+      list.push(userCourse);
+    });
+    this.uniqBy(response.payload.suggestedCourses, 'courseId', 'completionDate')?.forEach((suggest) => {
+      suggest.isSuggested = true;
+      list.push(suggest);
+    });
+
+    this.empCourseList = this.orderingCourses(list);
+    this.showShimmer1 = false;
+  }
+
+  orderingCourses(data) {
+    let courses: any = [];
 
     let level1Courses: any;
     let level2Courses: any;
@@ -1816,6 +1861,20 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     let policies: any;
     let faceToFace: any;
 
+    level1Courses = this.sortCourses('Level1', data);
+    level2Courses = this.sortCourses('Level2', data);
+    level3Courses = this.sortCourses('Level3', data);
+    checkListCourses = this.sortCourses('checkList', data);
+    suggestedCourses = this.sortCourses('suggested', data);
+    policies = this.sortCourses('policy', data);
+    faceToFace = this.sortCourses('Face to Face', data);
+
+    courses = level1Courses.concat(level2Courses, level3Courses, checkListCourses, faceToFace, suggestedCourses, policies);
+    return courses;
+  }
+
+  async getCourses(data) {
+    this.showShimmer1 = true;
     const param1: any = {
       userId: data.id,
       countryId: data.countryId,
@@ -1857,21 +1916,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       this.empCourseList.push(policy);
     });
 
-    // this.empCourseList = this.empCourseList.concat(api3Response.payload);
+    this.empCourseList = this.orderingCourses(this.empCourseList);
 
-    level1Courses = this.sortCourses('Level1');
-    level2Courses = this.sortCourses('Level2');
-    level3Courses = this.sortCourses('Level3');
-    checkListCourses = this.sortCourses('checkList');
-    suggestedCourses = this.sortCourses('suggested');
-    policies = this.sortCourses('policy');
-    faceToFace = this.sortCourses('Face to Face');
-
-    this.empCourseList = level1Courses.concat(level2Courses, level3Courses, checkListCourses, faceToFace, suggestedCourses, policies);
-
-    // this.empCourseList = [...this.uniqBy(this.empCourseList, 'courseId')];
     this.showShimmer1 = false;
-
   }
 
   uniqBy(arr, key1, key2?) {
@@ -1880,20 +1927,26 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     );
   }
 
-  sortCourses(filterBy: any) {
+  sortCourses(filterBy: any, data) {
     let filteredValues: any;
     if (filterBy === 'Level1' || filterBy === 'Level2' || filterBy === 'Level3') {
-      filteredValues = this.empCourseList.filter((ele: any) => (ele.isSuggested === false) && (ele.levelName === filterBy) && ((ele.courseTypeCode === 'LA003' && ele.evaluation === false) || ele.courseTypeCode !== 'LA003'));
+      filteredValues = data.filter((ele: any) => (ele.isSuggested === false) && (ele.levelName === filterBy) && ((ele.courseTypeCode === 'LA003' && !ele.evaluation) || ele.courseTypeCode !== 'LA003'));
     } else if (filterBy === 'checkList') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA005');
+      filteredValues = data.filter((ele: any) => ele.courseTypeCode === 'LA005');
     } else if (filterBy === 'suggested') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.isSuggested === true);
+      filteredValues = data.filter((ele: any) => ele.isSuggested === true);
     } else if (filterBy === 'policy') {
-      filteredValues = this.empCourseList.filter((ele: any) => ele.courseTypeCode === 'LA004');
+      filteredValues = data.filter((ele: any) => ele.courseTypeCode === 'LA004');
     } else if (filterBy === 'Face to Face') {
-      filteredValues = this.empCourseList.filter((ele: any) => (ele.courseTypeCode === 'LA003') && (ele.evaluation === true));
+      filteredValues = data.filter((ele: any) => (ele.courseTypeCode === 'LA003') && (ele.evaluation === true));
     }
     return filteredValues.sort((a: any, b: any) => (a.completionDate > b.completionDate) ? 1 : -1);
+  }
+
+  selectedPromotedRole: any;
+  courseDetailModalClose() {
+    this.promotedList = [];
+    this.selectedPromotedRole = null;
   }
 
   async changeSuggestRoleList(event) {
@@ -2344,6 +2397,18 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
 
   pageRendered(e: CustomEvent) {
     window.dispatchEvent(new Event('resize'));
+  }
+
+  allowNumberOnly(event: any): boolean {
+    if (this.searchBy === 'employeeId') {
+      const charCode = event.which ? event.which : event.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
+      return true;
+    } else {
+      return true;
+    }
   }
 
   ngOnDestroy(): void {

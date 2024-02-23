@@ -17,7 +17,10 @@ import { ngxService } from "./ngxservice";
   providedIn: "root",
 })
 export class CommonService {
-  public bsConfig ={dateInputFormat: 'DD/MM/YYYY',containerClass: 'theme-dark-blue',
+  public bsConfig ={dateInputFormat: 'DD-MM-YYYY',containerClass: 'theme-dark-blue',
+      showWeekNumbers: false,isAnimated:true, adaptivePosition: true
+    }
+    public bsConfigf2f ={dateInputFormat: 'DD/MM/YYYY',containerClass: 'theme-dark-blue',
       showWeekNumbers: false,isAnimated:true, adaptivePosition: true
     }
     public bsConfig1 ={dateInputFormat: 'YYYY-MM-DD',containerClass: 'theme-dark-blue',

@@ -868,7 +868,7 @@
                                     maxlength="10" placeholder=" " name="scheduleDate{{b}}"
                                     [(ngModel)]="item.scheduledDate" [ngModelOptions]="{standalone: true}" bsDatepicker
                                     (change)="scheduleDateselect($event, item)" autocomplete="off" bsDatepicker
-                                    [bsConfig]="common.bsConfig" [minDate]="scheduleminDate" #scheduleDate required [readOnly]="true">
+                                    [bsConfig]="common.bsConfigf2f" [minDate]="scheduleminDate" #scheduleDate required [readOnly]="true">
                                 <div class="data-icon" (click)="scheduleDate.click()">
                                     <img src="assets/healthsafetyimages/field-icon.svg">
                                 </div>
@@ -1158,7 +1158,7 @@
                                     id="scheduleDate" maxlength="10" placeholder=" " name="scheduleDate"
                                     [(ngModel)]="selected_PopupData.scheduledDate" [ngModelOptions]="{standalone: true}"
                                     bsDatepicker (change)="scheduleDateselect($event, selected_PopupData)"
-                                    autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"
+                                    autocomplete="off" bsDatepicker [bsConfig]="common.bsConfigf2f"
                                     [minDate]="scheduleminDate" #scheduleDate required [readOnly]="true">
                                 <div class="data-icon" (click)="scheduleDate.click()">
                                     <img src="assets/healthsafetyimages/field-icon.svg">
@@ -1331,7 +1331,7 @@
                                         name="detailsDatascheduleDate" [(ngModel)]="detailsData.scheduledDate"
                                         bsDatepicker
                                         (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()"
-                                        autocomplete="off" bsDatepicker [bsConfig]="common.bsConfig"
+                                        autocomplete="off" bsDatepicker [bsConfig]="common.bsConfigf2f"
                                         [minDate]="scheduleminDate" #scheduleDate1
                                         [ngClass]="{'read-only' : detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || detailsData.batchStatus == 'Closed' || !update}"
                                         required [readOnly]="true">

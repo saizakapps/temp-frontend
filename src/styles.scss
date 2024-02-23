@@ -1222,6 +1222,14 @@ th.mat-header-cell {
   bottom: 3px;
 }
 
+#courseDetailsModal .ng-select.ng-select-single .ng-select-container .ng-clear-wrapper {
+  bottom: 6px;
+}
+
+#courseDetailsModal .ng-select.ng-select-single .ng-select-container .ng-value-container, .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+  line-height: 16px !important;
+}
+
 .ng-placeholder,
 span.ng-value-label {
   font-size: 11px;

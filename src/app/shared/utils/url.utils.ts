@@ -64,6 +64,8 @@ export class UrlUtils {
     GET_ROLE_COURSES: `${this.USER_URL}get-all-role-courses`,
     DELETE_SUGGEST_COURSE: `${this.USER_URL}delete-suggested-course-role-level`,
     MANAGER_CONFIRM_COURSE: `${this.USER_URL}update-manager-confirmation`,
+    PROMOTIONS_LIST: `${this.USER_URL}promotions-list`,
+    GET_HISTORY_COURSES: `${this.USER_URL}getcoursehistory`,
 
     /* UserManagement APIs */
     GET_USER_LIST: `${this.USER_URL}get-user-access-list`,

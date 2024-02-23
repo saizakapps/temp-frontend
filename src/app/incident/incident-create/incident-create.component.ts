@@ -457,8 +457,7 @@ export class IncidentCreateComponent implements OnInit, AfterViewInit {
         let incidentCreateData ={isAdd:false,idIncident:this.inciID,id:this.id,incidentSelectedTypeData:{id:0,name:this.inciType,isShow:false},incidentRowData:{}};
           this.incidentService.subject$.next(incidentCreateData);
       }
-      else 
-      if(details !== undefined && this.id == 0){
+      else if(details !== undefined && this.id == 0){
         this.common.openSnackBar("Invalid URL",2,"Invalid")
         this.invalidUrl = true;
         this.router.navigate(["incident-list"]);
