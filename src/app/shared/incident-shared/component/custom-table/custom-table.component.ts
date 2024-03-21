@@ -186,6 +186,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
     if (Object.keys(this.tableData.commonparams).length !== 0) {
       if (this.publicParam == undefined) {
         if( this.tableData.commonparams.caseId !== '' ||
+        this.tableData.commonparams.productBatchNo !== '' ||
         this.tableData.commonparams.allStatus.length > 0 ||
         this.tableData.commonparams.countryRegions.length > 0||
         this.tableData.commonparams.createdFromDate !== '' ||

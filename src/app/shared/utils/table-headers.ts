@@ -165,12 +165,12 @@ export class TableHeaders {
         filter: false,
         sort: false
       }, */
-      {
-        name: 'SF Status',
-        property: 'employeeStatus',
-        filter: true,
-        sort: false
-      },
+      // {
+      //   name: 'SF Status',
+      //   property: 'employeeStatus',
+      //   filter: true,
+      //   sort: false
+      // },
       /* {
         name: 'Created at',
         property: 'sfEmployee',

@@ -124,7 +124,10 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       let userDetails = JSON.parse(localStorage.getItem('userDetails'));
       this.username = localStorage.getItem('username');
       this.loginEmployeeId = userDetails.employeeId;
-      let countryRegionData:any = await this.getEmployeeRegion();
+      let countryRegionDatabefore:any = await this.getEmployeeRegion();
+      let countryRegionData:any = countryRegionDatabefore.filter((item:any)=>{
+       return item.countryDescription !== 'UnAssigned'
+      })
         let data1:any = [];
       for (var i = 0; i < countryRegionData.length; i++) {
         let country:any={item:countryRegionData[i].countryDescription,
@@ -226,7 +229,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     public incidentDataList: any = [];
   tableData:any = {colums:[],data:[],showColumn:[],commonparams:{}};
   isShowTable:any = false;
-  filterParam ={findCase:'',countryRegion:'',fromDate:'',toDate:'',status:'all',storeId:'', searchby : '1'};
+  filterParam ={findCase:'',countryRegion:'',fromDate:'',toDate:'',status:'all',storeId:'', searchby : '1',batchno:''};
   statusListData:any = []
   public countryRegionData:any = [];
   public filterAppliadText:any = '';
@@ -255,7 +258,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     myControl = new FormControl();
     options: string[] = ["One", "Two", "Three"];
     filteredOptions: any;
-    
+
   constructor(public ngxservice:ngxService, public learnutils: leranersutils,private api: RequestApiService,private http: HttpClient, public formBuilder: FormBuilder, private datepipe:DatePipe,private cdref:ChangeDetectorRef,public common:CommonService,private _database: ChecklistDatabase,private utils:Utils,public incidentService:IncidentService,private router:Router,private requestapi:RequestApiService, private ngxService: NgxUiLoaderService){
   
       this.treeFlattener = new MatTreeFlattener(
@@ -332,7 +335,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     this.isIncharge = userDetails.incharge;
     if(this.loginEmployeeRoleCode == 'PC'){
       this.findCasetooltipmsg = 'Search by Incident ID/ CSD no./ Article ID/ Key Word 1 & 2 (If applicable)'; 
-      this.checkboxdata = ['Product Report'] 
+      this.checkboxdata = [] 
     }
     else{
      this.findCasetooltipmsg = "Search by Incident ID/ CSD no./ Article ID";
@@ -340,6 +343,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     }
     this.getIncidentDDlist();
     this.setInitialFromToDate();
+    // this.ReportsetInitialFromToDate();
     this.getRetectedRoleMapInfo();
     this.getotherinfodropDown1();
     this.getIncidentsearchByDD();
@@ -389,7 +393,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     if(response){
      let dropdownOptions = JSON.parse(response.payLoad.dropdownOptions)
      this.ddLsitdata = dropdownOptions;
-     this.filterParam ={findCase:'',countryRegion:'',fromDate:'',toDate:'',status:this.ddLsitdata[0].name,storeId:'', searchby : '1'};
+     this.filterParam ={findCase:'',batchno:'',countryRegion:'',fromDate:'',toDate:'',status:this.ddLsitdata[0].name,storeId:'', searchby : '1'};
     }
   }
   async getIncidentsearchByDD(){
@@ -448,6 +452,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
      if(this.filterParam.fromDate!=undefined && this.filterParam.fromDate!='' && this.filterParam.toDate!='' && this.filterParam.fromDate!=null && this.filterParam.toDate!=null){
       this.filterParam.status= this.ddLsitdata[0].name;
       this.filterParam.findCase='';
+      this.filterParam.batchno = '';
        this.filterParam.storeId='';
        this.selectedOptionsnew = [];
       this.clearCuntryRegion();
@@ -464,6 +469,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     if(this.filterParam.fromDate!=undefined && this.filterParam.fromDate!='' && this.filterParam.toDate!='' && this.filterParam.fromDate!='' && this.filterParam.toDate!='' && this.filterParam.toDate!=undefined){
       this.filterParam.status= this.ddLsitdata[0].name;
       this.filterParam.findCase='';
+      this.filterParam.batchno = '';
        this.filterParam.storeId='';
        this.selectedOptionsnew = [];
       this.clearCuntryRegion();
@@ -498,7 +504,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
         todate=this.filterParam.toDate;
      }
     if(this.filterParam.findCase!='' || (this.filterParam.fromDate!='' && this.filterParam.fromDate!=null && this.filterParam.fromDate!=undefined) && (todate!='' || todate!=null || todate!=undefined) || selectedCountry.length > 0 || this.selectedOptionsnew.length > 0  ||
-      this.filterParam.storeId!='' || this.keyword1Array.length > 0){      
+      this.filterParam.storeId!='' || this.keyword1Array.length > 0 || this.filterParam.batchno != ''){      
   let fromdate=this.filterParam.fromDate;
    let todatefinal=this.filterParam.toDate;
   let incidentDate = "";
@@ -517,6 +523,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
    
       let param = {
       "caseId": this.filterParam.findCase.trim(),
+      "productBatchNo": this.filterParam.batchno.trim(),
       "createdFromDate": (fromdate!='' && fromdate!=null)?fromdate:'',
       "createdToDate":(todatefinal!='' && todatefinal!=null)?todatefinal:'',
       "pageNo":0,
@@ -572,6 +579,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       
           let param = {
           "caseId": this.filterParam.findCase.trim(),
+          "productBatchNo": this.filterParam.batchno.trim(),
           "createdFromDate": (fromdate!='' && fromdate!=null)?fromdate:'',
           "createdToDate":(todatefinal!='' && todatefinal!=null)?todatefinal:'',
           "pageNo":0,
@@ -613,6 +621,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
 
     this.ngxService.start();
     this.tableData.commonparams.caseId = '';
+    this.tableData.commonparams.productBatchNo = '';
     this.tableData.commonparams.allStatus = [];
     this.tableData.commonparams.countryRegions = [];
     this.tableData.commonparams.createdFromDate = '';
@@ -654,7 +663,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
      }else {
         todate=this.filterParam.toDate;
      }
-    if(this.filterParam.findCase!='' || (this.filterParam.fromDate!='' && this.filterParam.fromDate!=null && this.filterParam.fromDate!=undefined) && (todate!='' || todate!=null || todate!=undefined) || selectedCountry.length>0 || this.selectedOptionsnew.length > 0 || this.filterParam.storeId!='' || this.keyword1Array.length > 0
+    if(this.filterParam.findCase!='' || this.filterParam.batchno != '' || (this.filterParam.fromDate!='' && this.filterParam.fromDate!=null && this.filterParam.fromDate!=undefined) && (todate!='' || todate!=null || todate!=undefined) || selectedCountry.length>0 || this.selectedOptionsnew.length > 0 || this.filterParam.storeId!='' || this.keyword1Array.length > 0
    ){
   // let fromdate=this.datepipe.transform(this.filterParam.fromDate,'yyyy-MM-dd');
   //  let todatefinal=this.datepipe.transform( todate,'yyyy-MM-dd');
@@ -678,6 +687,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       let param = {
       "storeCode":  this.filterParam.storeId,
       "caseId": this.filterParam.findCase.trim(),
+      "productBatchNo": this.filterParam.batchno.trim(),
       "createdFromDate": (fromdate!='' && fromdate!=null)?fromdate:'',
       "createdToDate":(todatefinal!='' && todatefinal!=null)?todatefinal:'',
       "pageNo":this.currentPageNo,
@@ -749,6 +759,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       let param = {
       "storeCode":  this.filterParam.storeId,
       "caseId": this.filterParam.findCase.trim(),
+      "productBatchNo": this.filterParam.batchno.trim(),
       "createdFromDate": (fromdate!='' && fromdate!=null)?fromdate:'',
       "createdToDate":(todatefinal!='' && todatefinal!=null)?todatefinal:'',
       "pageNo":this.currentPageNo,
@@ -800,6 +811,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
   else{
     this.ngxService.start();
     this.tableData.commonparams.caseId = '';
+    this.tableData.commonparams.productBatchNo = '';
     this.tableData.commonparams.allStatus = [];
     this.tableData.commonparams.countryRegions = [];
     this.tableData.commonparams.createdFromDate = '';
@@ -814,6 +826,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
   clearFilter(){
     this.ngxService.start();
     this.tableData.commonparams.caseId = '';
+    this.tableData.commonparams.productBatchNo = '';
     this.tableData.commonparams.allStatus = [];
     this.tableData.commonparams.countryRegions = [];
     this.tableData.commonparams.createdFromDate = '';
@@ -824,7 +837,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     this.tableData.commonparams.storeCode = '';
     this.picker.datePicker.setStartDate(new Date());
     this.picker.datePicker.setEndDate(new Date());
-        this.filterParam ={findCase:'',countryRegion:'',fromDate:'',toDate:'',status:this.ddLsitdata[0].name,storeId:'',searchby : '1'};
+        this.filterParam ={findCase:'',batchno:'',countryRegion:'',fromDate:'',toDate:'',status:this.ddLsitdata[0].name,storeId:'',searchby : '1'};
        this.isAllSelected = false;
        this.drop1changeValue = '';
        this.dropdownSelect = 'filter1';
@@ -861,7 +874,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
   }
   getTableListEvent(data:any){
     if(data.type==1){
-      if(this.tableData.commonparams?.caseId !== '' || this.tableData.commonparams?.createdFromDate !== '' || this.tableData.commonparams?.createdToDate !== '' || this.tableData.commonparams?.countryRegions.length > 0 || 
+      if(this.tableData.commonparams?.caseId !== '' || this.tableData.commonparams?.productBatchNo !== '' || this.tableData.commonparams?.createdFromDate !== '' || this.tableData.commonparams?.createdToDate !== '' || this.tableData.commonparams?.countryRegions.length > 0 || 
       this.tableData.commonparams?.allStatus.length > 0 || this.tableData.commonparams?.storeCode !== '' || this.tableData.commonparams?.keyword1.length > 0 ){
         this.commontableParam = data.param;
         this.commontableParam.pageNo = 0;
@@ -908,7 +921,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     }else if(data.type==3){
       this.currentPageNo=this.currentPageNo == 0? this.currentPageNo + 100 : this.currentPageNo + 100;
       this.currentPageSize=100;
-        if(this.filterParam.findCase!='' || this.filterParam.countryRegion!='' || (this.filterParam.fromDate!='' && this.filterParam.fromDate!=undefined) || (this.filterParam.toDate!='' && this.filterParam.toDate!=undefined) || this.selectedOptionsnew.length > 0 || this.filterParam.storeId!='' || this.keyword1Array.length > 0){
+        if(this.filterParam.findCase!='' || this.filterParam.batchno != '' || this.filterParam.countryRegion!='' || (this.filterParam.fromDate!='' && this.filterParam.fromDate!=undefined) || (this.filterParam.toDate!='' && this.filterParam.toDate!=undefined) || this.selectedOptionsnew.length > 0 || this.filterParam.storeId!='' || this.keyword1Array.length > 0){
           if(this.dontCallScrollFilter==false){
                this.getFilterDataPageNext();
           }
@@ -1097,6 +1110,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
   if(this.checklistSelection.selected.length>0){
     this.filterAppliadText="Filter Applied";
     this.filterParam.findCase = '';
+    this.filterParam.batchno = '';
     // this.filterParam.fromDate = '';
     // this.filterParam.toDate = '';
   //   this.filterParam.status = this.ddLsitdata[0].name;
@@ -1168,6 +1182,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       }
     this.filterAppliadText='Filter Applied';
     this.filterParam.findCase = '';
+    this.filterParam.batchno = '';
     // this.filterParam.fromDate = '';
     // this.filterParam.toDate = '';
     // this.filterParam.status = this.ddLsitdata[0].name;
@@ -1183,7 +1198,8 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     }else{
         this.isAllSelected = false;
        this.filterAppliadText='';
-       this.filterParam.findCase = ''
+       this.filterParam.findCase = '';
+       this.filterParam.batchno = '';
       //  this.filterParam ={findCase:'',countryRegion:'',fromDate:'',toDate:'',status:this.ddLsitdata[0].name,storeId:'', searchby : '1'};    
        for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
         // this.myModelDatepicker = null; 
@@ -1200,6 +1216,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       }
     }
     this.filterParam.findCase = '';
+    this.filterParam.batchno = '';
     this.filterParam.countryRegion = '';
   // this.filterParam ={findCase:'',countryRegion:'',fromDate:'',toDate:'',status:this.ddLsitdata[0].name,storeId:'',searchby : '1'};
   // this.myModelDatepicker = null;  
@@ -1309,6 +1326,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
   
    getDataByStoreIdChange(e:any){
       this.filterParam.findCase = '';
+      this.filterParam.batchno = '';
       // this.filterParam.fromDate= '';
       // this.filterParam.toDate= '';
       // this.filterParam.status= this.ddLsitdata[0].name;
@@ -1417,6 +1435,12 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     // this.drop1changeValue = '';
     // this.clearCuntryRegion();
     this.dropdownSelect = event.srcElement.value;
+    if(this.dropdownSelect == 'filter4'){
+      this.filterParam.findCase = '';
+    }
+    else if(this.dropdownSelect == 'filter1'){
+      this.filterParam.batchno = '';
+    }
    }
    mailId = "";
    Emails = [];
@@ -1443,23 +1467,30 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     //  }
     // }
     // });
-    
+     let startDate = this.datepipe.transform(this.report_FromDatevalue,'yyyy-MM-dd')
+     let endDate = this.datepipe.transform(this.report_ToDatevalue,'yyyy-MM-dd')
+
      let singleparam:any;
      singleparam = {
       "emailIds": this.Emails,
       "exportOption": this.checkedValues,
-      "username": this.username
+      "username": this.username,
+      // "fromDate": startDate,
+      // "toDate": endDate
     }
   
    let fullparam = {
     "emailIds": this.Emails,
     "exportOption": this.checkedValues,
+    // "fromDate": startDate,
+    // "toDate": endDate,
     ... this.commontableParam,
     ...this.sendmailParam // Include properties from this.sendmailParam
   };
 
   if(((this.sendmailParam?.allStatus !== undefined && this.sendmailParam?.allStatus.length > 0) ||
     (this.sendmailParam?.caseId !== undefined && this.sendmailParam?.caseId !== '') ||
+    (this.sendmailParam?.productBatchNo !== undefined && this.sendmailParam?.productBatchNo !== '') ||
     (this.sendmailParam?.countryRegions !== undefined && this.sendmailParam?.countryRegions.length > 0) ||
    (this.sendmailParam?.createdFromDate !== undefined && this.sendmailParam?.createdFromDate !== '') ||
    (this.sendmailParam?.createdToDate !== undefined && this.sendmailParam?.createdToDate !== '') ||
@@ -1547,6 +1578,8 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
    exportpopup(){
     this.Emails = []; 
     this.checkedValues = [];
+    this.alertText = false;
+    // this.ReportsetInitialFromToDate();
     if(this.loginEmployeeRoleCode == 'PC'){
       this.checkedValues.push('product')
     }
@@ -1580,6 +1613,8 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
       if(this.filterParam.fromDate!=undefined && this.filterParam.fromDate!='' && this.filterParam.toDate!='' && this.filterParam.fromDate!=null && this.filterParam.toDate!=null){
         // this.filterParam.status= this.ddLsitdata[0].name;
         this.filterParam.findCase='';
+        this.filterParam.batchno = '';
+
         //  this.filterParam.storeId='';
         //  this.drop1changeValue = '';
       //  this.dropdownSelect = 'filter1';
@@ -1595,6 +1630,7 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     drop1changeValue:any = '';
     drop1change(event: any) {
       this.filterParam.findCase = '';
+      this.filterParam.batchno = '';
       // this.filterParam.fromDate = '';
       // this.filterParam.toDate = '';
       // this.myModelDatepicker = null;
@@ -1620,6 +1656,8 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
         }
       }
       this.filterParam.findCase= '';
+      this.filterParam.batchno = '';
+
       // this.filterParam.fromDate= '';
       // this.filterParam.toDate= '';
         // this.filterParam.storeId='';
@@ -1648,6 +1686,97 @@ import { Component,OnInit,Injectable,  ChangeDetectorRef,HostListener,ViewChild
     isSelectednew(optionName: string): boolean {
       return this.selectedOptionsnew.includes(optionName);
     }
-   
+
+    cleardateFilter(){
+      // this.ReportsetInitialFromToDate()
+    }
+    reportfromMaxDate:any;
+    reportfromMinDate:any;
+    reporttoMaxDate:any;
+    reporttoMinDate:any;
+    reportmaxDate:any;
+    report_FromDatevalue:any;
+    report_ToDatevalue:any;
+    alertText = false;
+    betweenDays:number = 0;
+  //   ReportsetInitialFromToDate() {
+  //     let currentDate = new Date();
+  //     let year = currentDate.getFullYear();
+  //     var dd = (currentDate.getDate()).toString();
+  //     var mm = (currentDate.getMonth() + 1).toString(); //January is 0!
+  //     var yyyy = currentDate.getFullYear();
+  //     if (parseInt(dd) < 10) {
+  //       dd = '0' + dd;
+  //     }
+  //     if (parseInt(mm) < 10) {
+  //       mm = '0' + mm;
+  //     }
+  //     let today = yyyy + '-' + mm + '-' + dd;
+  //     this.reportmaxDate = today;
+  //     // this.fromMinDate = (yyyy - 20) + '-' + mm + '-' + dd;
+  //     this.reporttoMinDate = (yyyy - 20) + '-' + mm + '-' + dd;
+  //     this.reportfromMaxDate = today;
+  //     this.reporttoMaxDate = today;
+  //     // this.fromMaxDate={year: yyyy, month: mm, day: dd}
+  //     this.reportfromMaxDate = new Date();
+  //     this.reportfromMaxDate.setDate(this.fromMaxDate.getDate());
+     
+  //     currentDate.setMonth(currentDate.getMonth() - 6);
+  //     this.reportfromMinDate = currentDate;
+  //     this.reportfromMinDate = new Date(this.reportfromMinDate);
+  //     this.report_FromDatevalue = this.reportfromMinDate
+  //     // this.fromMinDate.setDate(this.fromMinDate.getDate() - 365);
+  //     this.reporttoMaxDate = new Date(this.toMaxDate);
+  //     this.reporttoMaxDate.setDate(this.toMaxDate.getDate());
+  //     this.report_ToDatevalue = this.reporttoMaxDate;
+  
+  //     this.reporttoMinDate = new Date(this.reporttoMaxDate);
+  //     this.reporttoMinDate.setDate(this.reporttoMaxDate.getDate());
+  //   }
+  //   reportfromDateChange(event:any){
+  //   this.report_FromDatevalue = event;
+  //   this.getDaysBetweenDates(this.report_FromDatevalue, this.report_ToDatevalue);
+  //   console.log(this.betweenDays, "betweenDays")
+  //   if(this.betweenDays > 182){
+  //     this.alertText = true
+  //   // let toDate = new Date(this.report_FromDatevalue);
+  //   // toDate.setMonth(toDate.getMonth() + 6);
+  //   // this.report_ToDatevalue = toDate;
+  //   }
+  //   else{
+  //     this.alertText = false
+  //   }
+  //   }
+  //   reporttoDateChange(event:any){
+  //     this.report_ToDatevalue = event;
+  //     this.getDaysBetweenDates(this.report_FromDatevalue, this.report_ToDatevalue);
+  //     console.log(this.betweenDays, "betweenDays")
+  //     if(this.betweenDays > 182){
+  //       this.alertText = true
+  //     // let fromDate = new Date(this.report_ToDatevalue);
+  //     // fromDate.setMonth(fromDate.getMonth() - 6);
+  //     // this.report_FromDatevalue = fromDate;
+  //     }
+  //     else{
+  //       this.alertText = false
+  //     }
+  //   }
+  //   getDaysBetweenDates(startDate, endDate) {
+  //     // Copy start date so we don't modify the original
+  //     const currentDate = new Date(startDate);
+  //     this.betweenDays = 0;
+  
+  //     // Loop until we reach the end date
+  //     while (currentDate <= endDate) {
+  //         // Push the current date to the array
+  //         this.betweenDays++;
+  
+  //         // Move to the next day
+  //         currentDate.setDate(currentDate.getDate() + 1);
+  //     }
+  
+  //     return this.betweenDays;
+  // }
+  
   }
   

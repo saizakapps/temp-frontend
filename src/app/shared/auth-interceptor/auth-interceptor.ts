@@ -44,11 +44,12 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log('auth err', error);
         let errorMessage = '';
         if (error.status === 401 || error.status === 403 || error.status === 0 || error.error.errors.message.includes('[401 Unauthorized]')) {
-          if (error.error.errors.message.includes('[401 Unauthorized]')) {
+          /* if (error.error.errors.message.includes('[401 Unauthorized]')) {
             errorMessage = 'Session expired, Please login again';
           } else {
             errorMessage = `${error.error.errors.message}`;
-          }
+          } */
+          errorMessage = 'Session expired, Please login again';
           this.loginService.logout();
          // location.reload();
         } else if (error.error.error instanceof ErrorEvent) {

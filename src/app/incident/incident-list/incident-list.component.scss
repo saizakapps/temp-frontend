@@ -608,3 +608,68 @@ margin-right: 15px;
   font-size: 14px;
   color: #495057;
 }
+.mtop-23{
+margin-top: 23px;
+}
+
+.date-filters {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  .relative {
+    position: relative;
+}
+
+.data-icon-new{
+    position: absolute;
+    right: 6px;
+    top: 3px;
+}
+  .dataiconrel {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0px;
+  }
+
+  .fromToDate {
+      width: 122px;
+      height: 30px !important;
+      padding: 8px 6px !important;
+      border: 1px solid #bdbdbd;
+      border-radius: 2px;
+      font-size: 14px;
+      color: #000 !important;
+  }
+
+  .list-filter-title {
+      margin-bottom: 0px;
+      white-space: nowrap;
+  }
+  .clear-filter-text1{
+
+      .clearFilterButton {
+          width: 30px;
+          height: 30px;
+          background: #ffffff;
+          border: 1px solid #818181;
+          border-radius: 6px;
+          font-size: 13px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+        }
+  }
+  .disabledateClear{
+      opacity: 0.5;
+      pointer-events: none;
+  }
+
+
+}
+.noteText{
+  color: #e20512;
+  font-weight: 500;
+  font-size: 13px;
+}

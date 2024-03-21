@@ -946,9 +946,12 @@ input.noarrow::-webkit-inner-spin-button {
   min-width: 25px !important;
 }
 
-
 ::-webkit-scrollbar {
   height: 5px;
   width: 5px;
   padding: 0 10px;
+}
+.checkBoxdisabled{
+  pointer-events: none !important;
+  opacity: 0.5;
 }

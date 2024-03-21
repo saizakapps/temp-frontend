@@ -2000,6 +2000,7 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   async batchUpdate(param: any) {
+    param.batchCreatedBy = this.loginEmployeeId;
     const response: any = await this.apiHandler.postData(this.utils.API.POST_UPDATE_BATCH, param, this.destroyed$);
     if (response.payload) {
       this.ngxloaderService.stop();
@@ -2598,6 +2599,7 @@ export class F2fSummaryComponent implements OnInit {
     this.ngxloaderService.start();
     this.searchDateBy = 'expiredDate';
     this.filterRequest.searchDateBy = 'expiredDate';
+    this.filterRequest.employeeStatus = 'Active';
     this.reportFromdate = this.datepipe.transform(this.fromDatevalue, 'yyyy-MM-dd');
     this.reportTodate = this.datepipe.transform(this.toDatevalue, 'yyyy-MM-dd')
     this.filtercourseNameList = this.filtercourseNameList.map((item:any)=>
@@ -2634,6 +2636,7 @@ export class F2fSummaryComponent implements OnInit {
   }).map(item => item.courseName);
 
   this.createBatch = true;
+  this.filterRequest.employeeStatus = 'Active';
   this.resetReportList();
   this.getReportList();
   }

@@ -1756,8 +1756,8 @@
                         <div class="mb-2 d-flex align-items-center">
                             <label class="form-label mb-0 fw-600 emailtext">Email</label>
                             <input type="text" formControlName="email" class="form-control mailInput"
-                                (change)="getMail($event)" [(ngModel)]="mailIdsend" maxlength="60"
-                                [ngClass]="{'invalid' : f['email'].errors && mailIdsend !== ''}" pattern="^\w+([\.-]?\w+)*@smythstoys\.com$" />
+                                (change)="getMail($event)" [(ngModel)]="mailIdsend" maxlength="60" pattern="^\w+([\.-]?\w+)*@smythstoys\.com$"
+                                [ngClass]="{'invalid' : f['email'].errors && mailIdsend !== ''}" />
                             <button [ngClass]="{'disabledmailbtn' : f['email'].errors}" (click)="addMailId()"
                                 type="button" class="btn btn-primary btn-sm mailAddbtn">Add</button>
                         </div>

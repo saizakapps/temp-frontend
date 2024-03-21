@@ -53,7 +53,7 @@ export class ReportsComponent implements OnInit {
 
   /* filter request object */
   filterRequest: any = {
-    courseName: '',
+    courseName: [],
     courseType: '',
     sortBy: '',
     sortValue: ''
@@ -1082,6 +1082,8 @@ export class ReportsComponent implements OnInit {
     this.filter = [];
     this.filters = this.viewType === 'reportView' ? $.extend(true, [], this.utils.ddOptions.DD_LABELS.filters) : $.extend(true, [], this.utils.ddOptions.DD_LABELS.filters).filter(ele => ele.key === 'inactive');
     this.filterRequest = {};
+    this.filterCourseNamevalues.forEach(course => course.checked = false);
+    this.filtercourseList = [];
     this.searchTextModal = null;
     this.searchBy = 'employeeId';
     // this.showShimmer = false;

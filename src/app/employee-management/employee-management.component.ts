@@ -130,7 +130,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   };
 
   availableFilter: any = {
-    'active': [{ name: 'All', key: 'All' }, { name: 'Active', key: 'Active' }, { name: 'Temporarily disabled', key: 'Inactive' }],
+    'active': [{ name: 'All', key: 'All' }, { name: 'Active', key: 'Active' }, { name: 'Temporarily disabled', key: 'Inactive' }, { name: 'Terminated', key: 'terminated' }],
     'employeeStatus': [{ name: 'All', key: 'All' }, { name: 'Active', key: 'Active' }, { name: 'Retired', key: 'Retired' }, { name: 'Terminated', key: "Terminated" }],
     'appStatus': [{ name: 'All', key: 'All' }, { name: 'Invited', key: 'Invited' }, { name: 'Blank', key: 'Blank' }],
     'sfEmployee': [{ name: 'All', key: 'All' }, { name: 'SF', key: true }, { name: '360', key: false }]
@@ -1516,12 +1516,12 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   changeStatusAction(event) {
     this.statusAction = event;
     this.activeCount = _.filter(this.selectedRowDetail, (item) => item.active === true).length;
-    this.inactiveCount = _.filter(this.selectedRowDetail, (item) => item.active === false).length;
+    this.inactiveCount = _.filter(this.selectedRowDetail, (item) => item.active === false && item.sfEmployee === false).length;
     this.selectedCount = this.selectedRowDetail.length;
     this.employeeStatusId = [];
     this.selectedRowDetail.forEach(empList => {
       this.proEmpDetail = empList;
-      if (this.statusAction === 'Make active' || this.statusAction === 'Temporarily disable' || (this.statusAction === 'Delete' && empList.sfEmployee === false)) { //To avoid deleting the sf employee
+      if ((this.statusAction === 'Make active' && empList.sfEmployee === false) || this.statusAction === 'Temporarily disable' || (this.statusAction === 'Delete' && empList.sfEmployee === false)) { //To avoid deleting the sf employee
         this.employeeStatusId.push(empList.id)
       }
     });
@@ -1795,7 +1795,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
   }
 
   promotedList: any = [];
+  promotions: any = [];
   userCourseModalRoleName: any;
+  userCourseModalPromotedDate: any;
   openSuggestCourse(data) {
     // this.ngxService.start();
     this.getCourseCallCount = 0;
@@ -1804,6 +1806,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.formSuggestCourseObj = {};
     this.formSuggestCourseObj = data;
     this.userCourseModalRoleName = this.formSuggestCourseObj.role;
+    this.userCourseModalPromotedDate = this.formSuggestCourseObj.updatedAt;
     this.getPromotedDetails(data);
 
     this.getCourses({ ...data});
@@ -1814,24 +1817,32 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       userId: data.id
     }
     const response: any = await this.apiHandler.postData(this.utils.API.PROMOTIONS_LIST, params, this.destroyed$);
-    this.promotedList = response.payload.filter(promoted => promoted.roleId !== this.formSuggestCourseObj.roleId);
+    // this.promotions = response.payload.sort((a: any, b: any) => (a.updatedAt > b.updatedAt) ? 1 : -1);
+    this.promotions = response.payload;
+    this.promotedList = this.promotions.filter((promoted, index) => index !== this.promotions.length - 1);
   }
 
   async onPromotionChange(event) {
+    this.empCourseList = [];
     if (!event) {
       this.userCourseModalRoleName = this.formSuggestCourseObj.role;
+      this.userCourseModalPromotedDate = this.formSuggestCourseObj.updatedAt;
       this.getCourses(this.formSuggestCourseObj);
       return;
     }
     this.showShimmer1 = true;
     this.userCourseModalRoleName = event.role;
+    this.userCourseModalPromotedDate = event.updatedAt;
     let list: any = [];
+    console.log('Promoted: ', this.promotions[this.promotions.findIndex(promotion => promotion.id === event.id) + 1]);
+    const promotedDate = moment.utc(this.promotions[this.promotions.findIndex(promotion => promotion.id === event.id) + 1].updatedAt);
     const params = {
+      id: event.id,
       promotedUserId: event?.userId,
       userId: this.userDetail?.id,
       employeeId: event?.employeeId,
       roleId: event?.roleId,
-      promotedDate: moment(event?.updatedAt).format('YYYY-MM-DD'),
+      promotedDate: promotedDate.format('YYYY-MM-DD'),
       type: 'Course',
       suggested: true
     }
@@ -1933,13 +1944,13 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     if (filterBy === 'Level1' || filterBy === 'Level2' || filterBy === 'Level3') {
       filteredValues = data.filter((ele: any) => (ele.isSuggested === false) && (ele.levelName === filterBy) && ((ele.courseTypeCode === 'LA003' && !ele.evaluation) || ele.courseTypeCode !== 'LA003'));
     } else if (filterBy === 'checkList') {
-      filteredValues = data.filter((ele: any) => ele.courseTypeCode === 'LA005');
+      filteredValues = data.filter((ele: any) => ele.isSuggested === false && ele.courseTypeCode === 'LA005');
     } else if (filterBy === 'suggested') {
       filteredValues = data.filter((ele: any) => ele.isSuggested === true);
     } else if (filterBy === 'policy') {
       filteredValues = data.filter((ele: any) => ele.courseTypeCode === 'LA004');
     } else if (filterBy === 'Face to Face') {
-      filteredValues = data.filter((ele: any) => (ele.courseTypeCode === 'LA003') && (ele.evaluation === true));
+      filteredValues = data.filter((ele: any) => (ele.isSuggested === false) && (ele.courseTypeCode === 'LA003') && (ele.evaluation === true));
     }
     return filteredValues.sort((a: any, b: any) => (a.completionDate > b.completionDate) ? 1 : -1);
   }
@@ -2160,6 +2171,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     console.log(this.periodCountry), 'periodCountry';
   }
   cleanoldSuggest() {
+    this.selection.clear();
     this.empSuggestedCourseDetails = []
   }
 
@@ -2323,7 +2335,7 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
     this.authRoleId = undefined;
     this.roleIds = [];
   }
-
+  
   @ViewChild('uploadFileInput', { static: false }) uploadFileInput!: ElementRef;
   selectedUserCourse: any;
   async import(data, element) {

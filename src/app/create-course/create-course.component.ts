@@ -255,13 +255,12 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   switchPulishDraft(viewType: any) {
     this.courseTypeDetail.view = viewType;
-    let version;
     if (viewType === 'draft') {
-      version = this.currentVersion;
+      this.version = this.currentVersion;
     } else if (viewType === 'publish') {
-      version = undefined;
+      this.version = undefined;
     }
-    this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view], version);
+    this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view]);
   }
 
   getCourseConfig() {
@@ -359,7 +358,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   async getF2FCompTemplates(isGetCourseDetails: boolean, type?: any, element?: any) {
     const param = {
       typeId: !isGetCourseDetails ? type : null,
-      courseId: isGetCourseDetails ? element ? element.id : this.courseTypeDetail.courseId : null,
+      courseId: isGetCourseDetails ? this.version ? this.version.id : element.courseId ? element.courseId : this.courseTypeDetail.courseId : null,
       code: this.courseConfig.code
     }
     const response: any = await this.apiHandler.postData(this.utils.API.GET_COMP_TEMPLATES, param, this.destroyed$);
@@ -381,10 +380,10 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       }
       this.masterTemplates.push(obj);
     }
-    if ((this.getF2FCompTemplatesApiCount === this.completionCategories.length) || isGetCourseDetails) {
+    if ((this.getF2FCompTemplatesApiCount === this.completionCategories.length) || (response?.payload && isGetCourseDetails)) {
       this.compCategoryTemplates = this.masterTemplates.find(template => template.id === 1).data;
       this.selectedCompletionType.templateId = 'new';
-      this.getCertificationItems(element);
+      this.getCertificationItems(element?.courseId);
     }
   }
 
@@ -401,8 +400,10 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   currentVersion: any;
+  version: any;
   async getCourseDetails(element?: any) {
     this.currentVersion = element;
+    this.version = element;
     const userDetails = JSON.parse(localStorage.getItem("userDetails") || '{}');
     const payload = {
       courseId: element ? element.id : this.courseTypeDetail.courseId,
@@ -457,14 +458,14 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           this.publishDraft['draft'] = element;
         }
         if (this.publishDraft[this.courseTypeDetail.view]) {
-          this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view], this.currentVersion);
+          this.setPredefinedVal(this.publishDraft[this.courseTypeDetail.view]);
         }
       } else if (this.courseTypeDetail.type === 'copy') {
         let courseData: any = {};
         if (element.published || response.payload?.length === 1) {
           courseData = element;
           courseData.courseId = null;
-          this.setPredefinedVal(courseData, this.currentVersion);
+          this.setPredefinedVal(courseData);
         }
       }
     });
@@ -475,7 +476,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     }
   }
 
-  setPredefinedVal(courseData, currentVersion?) {
+  setPredefinedVal(courseData) {
     this.course = $.extend(true, {}, courseData);
     console.log('set pre-defined: ', this.course);
     if (this.courseTypeDetail.courseTypeCode === this.utils.CourseCode.Policies && (this.courseTypeDetail.type === 'edit' || this.courseTypeDetail.type === 'copy')) {
@@ -521,7 +522,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     /* Get F2F completion templates */
     if (this.courseConfig.code === this.courseCode.F2F) {
       this.showShimmer = true;
-      this.getF2FCompTemplates(true, '', currentVersion);
+      this.getF2FCompTemplates(true, '', courseData);
     }
   }
 
@@ -745,8 +746,10 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   addOption(question: any) {
     const increment = question.options[question.options.length - 1].key + 1;
     question.options.push({ key: increment, value: '' });
-    this.previewScrollDown();
-    this.questionScrollDown();
+    if (question.questionId === this.selectedChapter.questions[this.selectedChapter.questions.length - 1].questionId) {
+      this.previewScrollDown();
+      this.questionScrollDown();
+    }
   }
 
   /* Remove Options in quiz */
@@ -775,9 +778,9 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   setQuestionLimit(value: any) {
     if (this.quizPosition) {
-      this.course.questionLimit = value;
+      this.course.questionLimit = value === 'NA' ? undefined : value;
     } else {
-      this.course.chapters[this.selectedQuestionnaireIndex].questionLimit = value;
+      this.course.chapters[this.selectedQuestionnaireIndex].questionLimit = value === 'NA' ? undefined : value;
     }
     this.randomLimit = value;
   }
@@ -809,7 +812,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   updateQuestionLimit() {
     this.course.quizPosition = this.quizPosition;
-    this.questionLimit = [];
+    this.questionLimit = ['NA'];
     let mandatoryCount = 0;
     let questionCount = 0;
     if (this.quizPosition) {
@@ -832,6 +835,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
         }
       }
       this.randomLimit = this.questionLimit.includes(this.course.questionLimit) ? this.course.questionLimit : undefined;
+      this.course.questionLimit = this.randomLimit;
     } else {
       if (this.course.chapters[this.selectedQuestionnaireIndex].chapterType) {
         for (const question of this.course.chapters[this.selectedQuestionnaireIndex].questions || []) {
@@ -846,6 +850,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           }
         }
         this.randomLimit = this.questionLimit.includes(this.course.chapters[this.selectedQuestionnaireIndex].questionLimit) ? this.course.chapters[this.selectedQuestionnaireIndex].questionLimit : undefined;
+        this.course.chapters[this.selectedQuestionnaireIndex].questionLimit = this.randomLimit;
       }
     }
   }
@@ -1947,6 +1952,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
 
   overlay:boolean = false;
   async hitCourseAPI(type?, isPublished?) {
+    this.currentVersion = undefined; // Otherwise version course id will call when switching published to draft version or vice versa
     if (!type) {
       this.ngxService.start();
       this.overlay = true;
@@ -2022,8 +2028,8 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   setQuestionType(question: any) {
-    if (question.questionType === 'multiAnswer') {
-      const crctAnswers = question.options?.filter(option => option.correctAnswer);
+    if (question.questionType === 'multiAnswer' || question.questionType === 'singleAnswer') {
+      const crctAnswers = question.options?.filter(option => option.correctAnswer === true);
       if (crctAnswers.length === 1) {
         question.questionType = 'singleAnswer';
         question.correctAnswer = crctAnswers[0].key;
@@ -2324,7 +2330,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   areQuestionnaireValid(questions) {
     let areQuesValid: boolean = true;
     for (let question of questions || []) {
-      if (question.questionType === 'multiAnswer') {
+      if (question.questionType === 'multiAnswer' || question.questionType === 'singleAnswer') {
         areQuesValid = this.isQuestionValid(question);
         if (areQuesValid === false) {
           break;
@@ -2374,7 +2380,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
           }
         }
       }
-      if (validOptions < 2 || correctOptions < 1) {
+      if (validOptions < question.options.length || correctOptions < 1) {
         isQueValid = false;
         return isQueValid;
       }
@@ -2861,7 +2867,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
       }
     }
     if (!this.publishCourse.published) {
-      this.getCertificationItems();
+      this.getCertificationItems(courseId);
     }
     this.ngxService.stop();
     this.overlay = false;
@@ -2942,7 +2948,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   /* Get certification items from created F2F course, Once called with courseId after got course detail */
   async getCertificationItems(element?) {
     const params: any = {
-      courseId: element ? element.id : this.courseTypeDetail.courseId,
+      courseId: this.version ? this.version.id : element ? element : this.courseTypeDetail.courseId,
     }
     const response: any = await this.apiHandler.plainPostData(this.utils.API.GET_CERTIFICATE, params, this.destroyed$);
     if (response.payload && response.payload.data.length > 0) {

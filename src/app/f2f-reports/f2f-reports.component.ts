@@ -54,7 +54,7 @@ export class F2fReportsComponent implements OnInit {
 
   /* filter request object */
   filterRequest: any = {
-    courseName: '',
+    courseName: [],
     courseType: '',
     sortBy: '',
     sortValue: ''
@@ -281,8 +281,6 @@ export class F2fReportsComponent implements OnInit {
       this.availableFilter.courseName?.push({ name: category?.courseName, key: category?.courseName });
       this.filterCourseNamevalues?.push({name: category?.courseName, key: category?.courseName, checked:false})
     });
-    console.log(this.filterCourseNamevalues)
-
     // this.ngxService.stop();
   }
 
@@ -925,7 +923,8 @@ export class F2fReportsComponent implements OnInit {
   }
 
   deepCompareArrays(arr1, arr2) {
-    if (arr1.length !== arr2.length) {
+    if (arr1 === undefined || arr2 === undefined || arr1.length !== arr2.length) {
+
       return false;
     }
 
@@ -951,6 +950,7 @@ export class F2fReportsComponent implements OnInit {
 
     return true;
   }
+
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

@@ -112,6 +112,19 @@
 						</div>
 					</div>
 
+					<div class="form-group leftalignInput mtop-23" *ngIf="dropdownSelect == 'filter4'">
+						<!-- <label class="list-filter-title d-flex align-items-center dummylable"><span>Find Case</span>
+							<span class="findCaseIcon ps-1" placement="bottom" [tooltipClass]="loginEmployeeRoleCode == 'PC'?'my-custom-class1':'my-custom-class2'"
+								[ngbTooltip]="findCasetooltipmsg">
+								<mat-icon>help_outline</mat-icon>
+							</span>
+
+						</label>  -->
+						<input type="text" class="form-control findInput findInput-width" id="pwd" placeholder="Search by batch no." name="name"
+							(change)="getDataByFindCaseChange($event)" [(ngModel)]="filterParam.batchno" 
+							[ngModelOptions]="{standalone: true}">
+					</div>
+
 					<div class="form-group" *ngIf="isStoreFilterShow()">
 						<label class="list-filter-title d-flex align-items-center"><span>Store Id</span>
 							<span class="findCaseIcon ps-1" placement="bottom" tooltipClass="my-custom-class1"
@@ -243,7 +256,7 @@
 							[ngClass]="{'disableClear' : filterParam.findCase == '' && filterParam.countryRegion == '' && (filterParam.fromDate == '' || filterParam.fromDate == undefined) && (filterParam.toDate == '' || filterParam.toDate == undefined) && filterParam.status == this.ddLsitdata[0]?.name && filterAppliadText==''}"
 							(click)="clearFilter()">Clear all filters</span> -->
 							<button type="button" title="Clear Filter"
-							[ngClass]="{'disableClear' :drop1changeValue == '' && filterParam.findCase == '' && filterParam.countryRegion == '' && filterParam.storeId == '' && (filterParam.fromDate == '' || filterParam.fromDate == undefined) && (filterParam.toDate == '' || filterParam.toDate == undefined) && this.selectedOptionsnew.length == 0 && filterAppliadText==''}"
+							[ngClass]="{'disableClear' :drop1changeValue == '' && filterParam.findCase == '' && filterParam.batchno == '' && filterParam.countryRegion == '' && filterParam.storeId == '' && (filterParam.fromDate == '' || filterParam.fromDate == undefined) && (filterParam.toDate == '' || filterParam.toDate == undefined) && this.selectedOptionsnew.length == 0 && filterAppliadText==''}"
 							 (click)="clearFilter()" class="clearFilterButton">
 								<img height="22px" width="22px" src="assets/images/clear-filter.png" alt="clear-filter">
 							  </button>
@@ -400,13 +413,60 @@
 			</div>
 
 			<div class="modal-body">
-				<div class="d-flex align-items-center mb-3">
+				<!-- <div class="mb-3">
+				<div class="date-filters mb-1">
+                    <div class="form-group dataiconrel">
+                        <label class="list-filter-title">From Date</label>
+                        <div class="relative">
+                            <input type="text" class="form-control fromToDate " id="fromDate" maxlength="10"
+                                placeholder=" " name="fromDate" [(ngModel)]="report_FromDatevalue"
+                                [ngModelOptions]="{standalone: true}" bsDatepicker
+                                (ngModelChange)="reportfromDateChange($event)" autocomplete="off" bsDatepicker
+                                [bsConfig]="common.bsConfig2" [minDate]=""
+                                [maxDate]="report_ToDatevalue"
+                                #fromDate required [readonly]="true">
+                            <div class="data-icon data-icon-new" (click)="fromDate.click()">
+                                <img src="assets/healthsafetyimages/field-icon.svg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group dataiconrel">
+                        <label class="list-filter-title">To Date</label>
+                        <div class="relative">
+                            <input type="text" class="form-control fromToDate " id="toDate1" maxlength="10"
+                                placeholder=" " name="toDate" [(ngModel)]="report_ToDatevalue"
+                                [ngModelOptions]="{standalone: true}" bsDatepicker
+                                (ngModelChange)="reporttoDateChange($event)" autocomplete="off" bsDatepicker
+                                [bsConfig]="common.bsConfig2"  [maxDate]="reporttoMaxDate" #toDate
+                                required [readonly]="true">
+                            <div class="data-icon data-icon-new" (click)="toDate.click()">
+                                <img src="assets/healthsafetyimages/field-icon.svg">
+                            </div>
+                        </div>
+
+                    </div>
+     (fromDatevalue == '' || fromDatevalue == undefined) && (toDatevalue == '' || toDatevalue == undefined) && 
+							[ngClass]="{'disabledateClear' : !datefilterActive && !datefilterActive1}" 
+                     
+                   <div class="clear-filter-text1">
+                       <button type="button" title="Clear Filter"
+                            
+                            (click)="cleardateFilter()" class="clearFilterButton">
+                            <img height="22px" width="22px" src="assets/images/clear-filter.png" alt="clear-filter">
+                        </button>
+                    </div> 
+
+                </div>
+				<div class="noteText" *ngIf="alertText">Please select date between maximum of 6 months</div>
+				</div> -->
+				<div class="d-flex align-items-center mb-3" *ngIf="checkboxdata.length > 0">
 					<div *ngFor="let value of checkboxdata; let i = index" class="d-flex align-items-center">
 						<mat-checkbox class="checkboxdivAccess" [checked] = "checkboxdata.length == 1" #chkboxes
 							(change)="onCheckboxChange(value, $event)"></mat-checkbox>
 						<div class="cbText">{{ value }}</div>
 					</div>
 				</div>
+				<!--pattern="^\w+([\.-]?\w+)*@smythstoys\.com$"-->
 				<form [formGroup]="form">
 					<div class="mailbodyCss">
 						<div class="mb-2 d-flex align-items-center">
@@ -433,7 +493,7 @@
 				<button type="button" class="btn userDlgBtn cancelBtn saveDraft addBtn" data-dismiss="modal"
 					(click)="cancelMail()">Cancel</button>
 				<button type="button" class="btn userDlgBtn cancelBtn saveDraft" data-dismiss="modal"
-					[ngClass]="{'disabledmailbtn' : Emails.length == 0 || checkedValues.length == 0}" (click)="sendMail()">Send</button>
+					[ngClass]="{'disabledmailbtn' : (Emails.length == 0 || checkedValues.length == 0) || alertText}" (click)="sendMail()">Send</button>
 			</div>
 		</div>
 	</div>

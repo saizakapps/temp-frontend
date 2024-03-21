@@ -793,7 +793,7 @@
                   </span>
                   <label class="randomQuestion randomCls"> Random questions</label>
                   <ng-select [disabled]="disableRandomDD()" (click)="policyGroupOnClick()" [items]="questionLimit" name="randomQuestion" (change)="setQuestionLimit($event)" [clearable]=false
-                    [searchable]="false" [(ngModel)]="randomLimit"> </ng-select>
+                    [searchable]="false" [(ngModel)]="randomLimit === undefined ? 'NA' : randomLimit"> </ng-select>
                 </div>
               </div>
               <ng-container
@@ -1298,7 +1298,7 @@
               </ng-template>
             </ng-select>
 
-            <!-- <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz'">
+            <!-- <span class="form-check confirmCourse" *ngIf="config.type === 'chapterQuiz' && question.questionType !== 'fillRightAnswer' && question.questionType !== 'freeText'">
               <span style="margin-right: 25px; color: #AAAAAA" *ngIf="courseConfig.code === courseCode.F2F">|</span>
               <input (change)="updateQuestionLimit()"
                 [name]="'reAttempt' + config.chapterData?.chapterId + question.questionId" class="mandatory-check"
@@ -1826,14 +1826,24 @@
 
             <!-- Text -->
             <ng-container *ngIf="activity.activityType === 'text'">
-              <ng-container *ngTemplateOutlet="textPreview; context: { config : activity }">
-              </ng-container>
+              <div class="calibri">
+                <div [innerHTML]="(activity.content || '')">
+                </div>
+              </div>
             </ng-container>
 
             <!-- Example -->
             <ng-container *ngIf="activity.activityType === 'example'">
-              <ng-container *ngTemplateOutlet="examplePreview; context: { config : activity }">
-              </ng-container>
+              <div class="exampleDivCls">
+                <a *ngIf="activity.title" class="example mb-3" (click)="activity.isExpanded = !activity.isExpanded;">
+                  {{activity.isExpanded ? '[ - ]' : '[ + ]'}}
+                  {{activity.title}}</a>
+                <mat-accordion>
+                  <mat-expansion-panel [expanded]="activity.isExpanded">
+                    <div [innerHTML]="(activity.content || '')" class="exampleDivCls calibri"></div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
             </ng-container>
 
             <!-- Quiz -->

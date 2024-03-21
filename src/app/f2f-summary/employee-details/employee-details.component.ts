@@ -312,18 +312,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.getAllCountries();
   }
   ngAfterViewInit(): void {
-    // this.currentModule = this.router.url.replace('/', '');
-    // console.log('current module', this.currentModule);
-    // this.currentModule === 'employees' ? this.employeeColumns = this.utils.TABLE_HEADERS.EMPLOYEE_MANAGEMENT_TABLE : this.employeeColumns = this.utils.TABLE_HEADERS.USER_ROLE_TABLE;
-    // this.linkEmployeeColumns = this.utils.TABLE_HEADERS.LINK_EMPLOYEE_TABLE;
-    // // this.employeeColumnsToDisplay = this.employeeColumns.map((col: { name: any; }) => col.name);
-    // console.log(this.employeeColumnsToDisplay, "employeeColumnsToDisplay employeeColumnsToDisplay")
-    // this.userDetailValue = JSON.parse(localStorage.getItem("userDetails") || '{}');
-
-    // this.getSelectedCheckbox();
-    // this.getUserDetails();
-    // this.getRoleGroup();
-    // this.getAllCountries();
+   
   }
   selectedEmployeesData:any[] = [];
   selectAllheader(event:any){
@@ -388,6 +377,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   async getUserDetails() {
     /* const response: any = await this.apiHandler.getData(this.utils.API.GET_USER_DETAILS, this.userDetailValue.id, this.destroyed$);
     localStorage.setItem('userDetails', JSON.stringify(response.payload || {})); */
+    this.resetEmployeeList();
     this.getEmployeeList();
   }
 
