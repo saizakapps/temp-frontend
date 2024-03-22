@@ -560,9 +560,9 @@ export class EmployeeManagementComponent implements OnInit, OnDestroy {
       let employeeObj: any = {};
       employeeObj.employeeId = employee.employeeId;
       employeeObj.username = employee.username;
-      if (employee.sfEmployee == false) {
-        employee.employeeStatus = "-";
-      }
+      // if (employee.sfEmployee == false) {
+      //   employee.employeeStatus = "-";
+      // }
       // if(employee.lastName == null) {
       //   employee.lastName = " ";
       // }

@@ -515,12 +515,12 @@ export class TableHeaders {
         filter: true,
         sort: false
       },
-      {
-        name: 'SF Status',
-        property: 'sfStatus',
-        filter: true,
-        sort: false
-      },
+      // {
+      //   name: 'SF Status',
+      //   property: 'sfStatus',
+      //   filter: true,
+      //   sort: false
+      // },
       {
         name: '360° Role',
         property: 'portalRole',

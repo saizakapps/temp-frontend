@@ -346,7 +346,7 @@
                   {{element[column.property] === true ? 'SF' : '360' || '-'}}
                 </span>
                 <span *ngIf="column.property === 'active'">
-                  {{element[column.property] === true ? element['employeeStatus'] : element['employeeStatus'] || '-'}}
+                  {{element['employeeStatus']}}
                 </span>
                 <span *ngIf="column.property === 'appStatus'">
                   {{element[column.property] === true ? 'Invited' : '-' || '-'}}
@@ -397,7 +397,7 @@
                   {{element[column.property] === 'UnAssigned' ? '-' : element[column.property] || '-'}}
                 </span>
                 <span *ngIf="column.property === 'active'">
-                  {{element[column.property] === true ? 'Active' : 'Temporarily disabled' || '-'}}
+                  {{element['employeeStatus']}}                
                 </span>
                 <span *ngIf="column.property === 'appStatus'">
                   {{element[column.property] === true ? 'Invited' : '-' || '-'}}
