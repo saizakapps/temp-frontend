@@ -2,8 +2,8 @@ export class UrlUtils {
   /*   public browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
       window.location.hostname : 'smyths360-dev-admin.smythstoys.com'); */
 
-  private browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
-    window.location.hostname : 'smyths360-dev-admin.smythstoys.com');
+    private browserHostName = ((window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') ?
+     window.location.hostname : 'smyths360-dev-admin.smythstoys.com');
   //private browserHostName = 'smyths360-dev-admin.smythstoys.com';
   public AUTH_BASE_URL = `//${this.browserHostName}/`;
 
@@ -136,6 +136,7 @@ export class UrlUtils {
     POST_GET_ACTIVE_COUNT: `${this.USER_URL}show-f2f-active-users-count`,
     POST_GET_RECURRING_COURSE: `${this.USER_URL}get-ff-courses-recurring`,
     // POST_BATCH_ACCESS_CONFIGURATION: `${this.USER_URL}get-f2f-batch-access-configuration`,
-    POST_BATCH_EXPORT: `${this.USER_URL}export-f2f-batch`
+    POST_BATCH_EXPORT: `${this.USER_URL}export-f2f-batch`,
+    GET_BATCH_CONFIG: `${this.USER_URL}get-batch-configs`
   };
 }

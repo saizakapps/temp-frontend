@@ -1592,6 +1592,7 @@
   pointer-events: unset !important;
   }
 .read-only{
+    opacity: 0.5;
     pointer-events: none !important;
 }
 .modal-body-no-radius{

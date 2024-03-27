@@ -50,10 +50,10 @@
 
                 </div>
                 <div class="infoData" *ngIf="selectedTab == 1">
-                    <div class="d-flex align-items-center">
+                    <!-- <div class="d-flex align-items-center">
                         <div class="colorbox"></div>
                         <div class="colorbox_text">Expired</div>
-                    </div>
+                    </div> -->
                     <div class="d-flex align-items-center">
                         <div class="colorbox yellow"></div>
                         <div class="colorbox_text">About to Expire</div>
@@ -1262,7 +1262,8 @@
                                 [clearable]=false [searchable]="false"
                                 (change)="batchCoursename($event, detailsData);compareDataforUpdate();valueChanged()"
                                 [(ngModel)]="detailsData.courseName"
-                                [readonly]="detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || detailsData.batchStatus == 'Closed' || update == false"></ng-select></div>
+                                [ngClass]="{'read-only' : detailsData.batchStatus == 'Assigned' || !update || managerReadonly}"
+                                [readonly]="detailsData.batchStatus == 'Assigned' || update == false"></ng-select></div>
                     </div>
 
                     <div class="d-flex align-items-center label-input pb-15">
@@ -1270,8 +1271,9 @@
                         <div class="selectDD">
                             <input type="text" maxlength="65"
                                 (change)="batchName($event, detailsData);compareDataforUpdate()"
-                                [(ngModel)]="detailsData.batchName"
-                                [readOnly]="detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || detailsData.batchStatus == 'Closed' || update == false">
+                                [(ngModel)]="detailsData.batchName" 
+                                [ngClass]="{'read-only' : detailsData.batchStatus == 'Assigned' || !update || managerReadonly}"
+                                [readOnly]="detailsData.batchStatus == 'Assigned' || update == false">
                         </div>
              <!-- [readonly]="detailsData.batchStatus == 'Cancelled' || updateReadonly"-->
 
@@ -1317,7 +1319,8 @@
                                     bindValue="username" bindLabel="username" [clearable]=false [searchable]="false"
                                      (change)="batchTrainername($event, detailsData);compareDataforUpdate()"
                                     [(ngModel)]="detailsData.trainerName"
-                                    [readonly]="detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Closed' || updateReadonly || update == false">
+                                    [ngClass]="{'read-only' : !update || managerReadonly}"
+                                    [readonly]="updateReadonly || (detailsData.batchStatus == 'Assigned' && managerReadonly) || !update || managerReadonly">
                                 </ng-select>
                             </div>
                         </div>
@@ -1333,10 +1336,10 @@
                                         (ngModelChange)="scheduleDateselect1($event, detailsData);compareDataforUpdate()"
                                         autocomplete="off" bsDatepicker [bsConfig]="common.bsConfigf2f"
                                         [minDate]="scheduleminDate" #scheduleDate1
-                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || detailsData.batchStatus == 'Closed' || !update}"
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Assigned' || !update || managerReadonly}"
                                         required [readOnly]="true">
                                     <div class="data-icon" (click)="scheduleDate1.click()"
-                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Cancelled' || detailsData.batchStatus == 'Assigned' || detailsData.batchStatus == 'Closed' || !update}">
+                                        [ngClass]="{'read-only' : detailsData.batchStatus == 'Assigned' || !update || managerReadonly}">
                                         <img src="assets/healthsafetyimages/field-icon.svg">
                                     </div>
                                 </div>
@@ -1368,7 +1371,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div *ngIf="(detailsData.batchStatus !== 'Cancelled' && detailsData.batchStatus !== 'Closed' && !updateReadonly && update)"
+                                    <div *ngIf="(!updateReadonly && update) || (employee.isManagerStore == null || employee.isManagerStore == 'yes')"
                                        class="cursor"  (click)="deleteEmployeefromUpdate(detailsData.employeesList,employee);compareDataforUpdate()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                             viewBox="0 0 22 22" fill="none">
@@ -1395,12 +1398,12 @@
                         <div class="d-flex align-items-center buttongap">
                             <div class="button blackbutton" data-toggle="modal" data-target="#addPeople"
                                 (click)="addPeopleData(detailsData)"
-                                *ngIf="detailsData.batchStatus !== 'Cancelled' && !updateReadonly && update">+ Add people
+                                *ngIf="detailsData.batchStatus !== 'Cancelled' && detailsData.batchStatus !== 'Assigned'  && !updateReadonly && update">+ Add people
                             </div>
-                            <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled' && update"
+                            <div class="button blackbutton" *ngIf="detailsData.batchStatus == 'Scheduled' && update && managerReadonly == false"
                                 data-toggle="modal" data-target="#cancelSchedule">Cancel schedule</div>
                                 <div class="button blackbutton"
-                                data-toggle="modal" data-target="#assignedcancelSchedule" *ngIf="detailsData.batchStatus == 'Assigned' && !updateReadonly && update">Cancel schedule</div>
+                                data-toggle="modal" data-target="#assignedcancelSchedule" *ngIf="detailsData.batchStatus == 'Assigned' && !updateReadonly && update && cancelButtonshow == true">Cancel schedule</div>
                             <div class="button blackbutton" data-toggle="modal" data-target="#deleteDraft"
                                 *ngIf="detailsData.batchStatus == 'Draft'">Delete</div>
                                 <!--data-toggle="modal" data-target="#batchemailModal" batchExport(detailsData.batchId)-->

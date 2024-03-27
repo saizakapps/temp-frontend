@@ -16,7 +16,6 @@ import { Subject } from 'rxjs';
 import { NgForm, FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { Console, count } from 'console';
 import { ErrorHandlerService } from '../../shared/services/error-handler.service';
 import { RequestApiService } from '../../shared/services/incident-services/request-api.service';
 
@@ -299,11 +298,11 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
 
   ngOnInit(): void {
     this.currentModule = this.router.url.replace('/', '');
-    console.log('current module', this.currentModule);
+    // console.log('current module', this.currentModule);
     this.currentModule === 'employees' ? this.employeeColumns = this.utils.TABLE_HEADERS.EMPLOYEE_MANAGEMENT_TABLE : this.employeeColumns = this.utils.TABLE_HEADERS.USER_ROLE_TABLE;
     this.linkEmployeeColumns = this.utils.TABLE_HEADERS.LINK_EMPLOYEE_TABLE;
     // this.employeeColumnsToDisplay = this.employeeColumns.map((col: { name: any; }) => col.name);
-    console.log(this.employeeColumnsToDisplay, "employeeColumnsToDisplay employeeColumnsToDisplay")
+    // console.log(this.employeeColumnsToDisplay, "employeeColumnsToDisplay employeeColumnsToDisplay")
     this.userDetailValue = JSON.parse(localStorage.getItem("userDetails") || '{}');
 
     this.getSelectedCheckbox();
@@ -352,7 +351,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     //     this.selectedEmployeesData.splice(selectedIndex, 1);
     //   }
     // }
-    console.log(this.selectedEmployeesData, "selectedEmployeesData")
+    // console.log(this.selectedEmployeesData, "selectedEmployeesData")
     this.selectedEmployeesData = this.selectedEmployeesData.map((list:any)=> {
       return {...list, isNewEmployee:true, isDeleted : false};
      })
@@ -531,7 +530,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   containerScrollCheck(event: any) {
     const doc: any = document.querySelector("#employee-container")
     if (doc.scrollHeight > doc.clientHeight && (doc.scrollTop + doc.clientHeight > doc.scrollHeight - 5) && this.allowCall && this.nextPage) {
-      console.log(this.showShimmer)
+      // console.log(this.showShimmer)
       this.allowCall = false;
       this.paginationIndex++;
       this.getEmployeeList()
@@ -606,7 +605,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
         filterValue: this.sortByField !== undefined ? this.sortBy === 'Sort By Asc' ? 'asc' : this.sortBy === 'Sort By Desc' ? 'desc' : '' : ''
       }
     };
-    console.log('Request', payload);
+    // console.log('Request', payload);
     const response: any = await this.apiHandler.postData(this.utils.API.GET_EMPLOYEE_LIST, payload, this.destroyed$);
     this.employeeList = __.flatten(this.constructEmployeeList(response.payload.users));
     this.employeeList = this.employeeList.filter((employeeData:any)=>{
@@ -636,7 +635,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
 
     this.cloneEmployeeList = [...this.employeeList];
     this.employeedIdandName = [...employeeArray];
-    console.log(this.employeeList, 'employeeList');
+    // console.log(this.employeeList, 'employeeList');
 
     // this.getFilterLists();
     // this.dateFilter();
@@ -650,7 +649,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.recordFound = true;
     // this.ngxService.stop();
     this.showShimmer = false;
-    console.log(this.employeeList, "employeeList employeeList")
+    // console.log(this.employeeList, "employeeList employeeList")
   }
 
   resetEmployeeList() {
@@ -666,7 +665,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       this.tempEmpList.push([...response]);
     }
     this.allowCall = true;
-    console.log('employeeList', this.tempEmpList);
+    // console.log('employeeList', this.tempEmpList);
     return this.tempEmpList;
   }
 
@@ -687,7 +686,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.filteredDate.fromDate = event.start.format('yyyy-MM-DD');
     this.filteredDate.toDate = event.end.format('yyyy-MM-DD');
     // this.dateFilter(true);
-    console.log(this.filteredDate, 'this.filteredDate');
+    // console.log(this.filteredDate, 'this.filteredDate');
     this.resetEmployeeList();
     this.getEmployeeList()
   }
@@ -742,7 +741,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   }
 
   loadRegionList(data, event, index) {
-    console.log(index, event, data, 'country index data');
+    // console.log(index, event, data, 'country index data');
     const regions = [];
     const stores = [];
     if (event === undefined && index === null) {
@@ -779,7 +778,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
 
             this.storeEnable = stores.length > 0 ? false : true;
             this.userDetail.store = null;
-            console.log(this.userDetail, 'this.userDetail');
+            // console.log(this.userDetail, 'this.userDetail');
             /* country.child?.forEach((region: any) => {
               if (region.active === true) {
                 regions.push(region);
@@ -834,7 +833,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       });
     }
 
-    console.log('periodStoreList', this.periodStoreList[index]);
+    // console.log('periodStoreList', this.periodStoreList[index]);
 
     // this.loadStoreList('singleStore', null, index);
   }
@@ -1078,7 +1077,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
 
   /* Select All from drop down list */
   selectAll(event: any, list: any, type: any) {
-    console.log('selectAll');
+    // console.log('selectAll');
     /* list.forEach(element => {
       this.selectionToggle(event.checked, element, type);
     }); */
@@ -1087,13 +1086,13 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.updateSelectionstatus(type);
     this.filterUpdate(this.countryList, type);
     this.calcSelectedStore();
-    console.log('selectAll', this.countryList);
-    console.log('selected', this.buildSelectedDropDownHierarchy(this.countryList));
+    // console.log('selectAll', this.countryList);
+    // console.log('selected', this.buildSelectedDropDownHierarchy(this.countryList));
   }
 
   /* Filter update once drop down value selected */
   filterUpdate(ddList: any, type: any) {
-    console.log('filterUpdate')
+    // console.log('filterUpdate')
     let tempSelected = [];
     for (let country of ddList) {
       this.selectedDropDown(country, tempSelected, type);
@@ -1427,13 +1426,13 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   /* Save/ update user details */
   async saveUserDetail(val) {
 
-    console.log(this.periodContainer);
-    console.log(this.periodContainer.length);
+    // console.log(this.periodContainer);
+    // console.log(this.periodContainer.length);
 
     this.userDetail.period = [];
     var p = 0;
     this.periodContainer.forEach(count => {
-      console.log(count, 'periodContainer');
+      // console.log(count, 'periodContainer');
       this.periodObj = {};
       if (count.id) {
         this.periodObj.id = count.id;
@@ -1498,7 +1497,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
       p++;
     });
 
-    console.log(this.userDetail, "Save this.userDetail");
+    // console.log(this.userDetail, "Save this.userDetail");
 
     const cloneUserDetails = { ...this.userDetail };
 
@@ -1703,15 +1702,15 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   }
 
   async getEmployeePeriodData(userId) {
-    console.log(userId);
+    // console.log(userId);
     const res: any = await this.apiHandler.getData(this.utils.API.GET_MULTIPLE_USER, userId, this.destroyed$);
     this.multipleUserData = res.payload;
-    console.log(this.multipleUserData, 'multipleUserData');
+    // console.log(this.multipleUserData, 'multipleUserData');
     var i = 0;
 
     this.multipleUserData.forEach(count => {
       this.periodId[i] = count.id;
-      console.log(this.periodId[i]);
+      // console.log(this.periodId[i]);
       this.empEditStatusMultiEdit[i] = true;
 
 
@@ -2006,7 +2005,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
   async deleteSuggestedCourse(event) {
     // this.ngxService.start();
     this.showShimmer2 = true;
-    console.log(event, 'deleteEvent');
+    // console.log(event, 'deleteEvent');
     this.suggestDeletePayloadObj.userId = event.userId;
     this.suggestDeletePayloadObj.courseId = [];
     this.suggestDeletePayloadObj.levels = event.levelId;
@@ -2036,8 +2035,8 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.periodContainer.push(++this.counter);
 
     //this.periodContainer.push(this.periodContainer.length);
-    console.log(this.periodCountry, 'this.periodCountry');
-    console.log(this.multipleUserData, this.multipleUserData.length, this.periodContainer);
+    // console.log(this.periodCountry, 'this.periodCountry');
+    // console.log(this.multipleUserData, this.multipleUserData.length, this.periodContainer);
     var j = 0;
     this.periodContainer.forEach(period => {
       if (period.id) {
@@ -2052,7 +2051,7 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
 
   async deletePrieod(index: number, event) {
 
-    console.log(this.periodCountry, index, 'delete index');
+    // console.log(this.periodCountry, index, 'delete index');
     //const deleteId = {};
     //this.deleteId = this.periodContainer[index].id;
 
@@ -2104,14 +2103,14 @@ export class EmployeeDetailsComponent implements OnInit,AfterViewInit  {
     this.periodToDate.forEach(data => {
       pt.push(data);
     });
-    console.log(pc, 'pc');
+    // console.log(pc, 'pc');
 
     this.periodCountry = [...pc];
     this.periodRegion = [...pr];
     this.periodStore = [...ps];
     this.periodFromDate = [...pf];
     this.periodToDate = [...pt];
-    console.log(this.periodCountry), 'periodCountry';
+    // console.log(this.periodCountry), 'periodCountry';
   }
   cleanoldSuggest() {
     this.empSuggestedCourseDetails = []

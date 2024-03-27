@@ -201,7 +201,7 @@ export class F2fSummaryComponent implements OnInit {
   batchStatusListId = "";
   showempComponent = false;
   addpeopleArray: any;
-  upDatedEmployeeCount: any;
+  upDatedEmployeeCount: any = 0;
   receivedpeopleData: any;
   upcomingListData: any[] = [];
   draftListData: any[] = [];
@@ -246,6 +246,7 @@ export class F2fSummaryComponent implements OnInit {
   loginEmployeeAdmin:any;
   todayDate:any;
   private subscription: Subscription;
+  batchConfiguration:any;
 
   @ViewChildren(MatAutocompleteTrigger) autoCompleteTriggers: any;
   @HostListener('window:keydown.esc', ['$event'])
@@ -351,6 +352,7 @@ export class F2fSummaryComponent implements OnInit {
     this.getBatchCourseList();
     this.getBatchTrainerlist();
     this.getCourseName();
+    this.getConfigValue();
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]]
     });
@@ -411,6 +413,12 @@ export class F2fSummaryComponent implements OnInit {
       this.hideBatch = false;
       this.firstclick = true;
     }
+  }
+
+ async getConfigValue(){
+      const response: any = await this.apiHandler.getData(this.utils.API.GET_BATCH_CONFIG, null, this.destroyed$);
+      this.batchConfiguration = response.payload;
+      console.log(this.batchConfiguration, "configValues")
   }
 
   async getBatchCourseList() {
@@ -1430,6 +1438,9 @@ export class F2fSummaryComponent implements OnInit {
             this.oldNumber = this.oldNumber + 1;
             this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "")
           }
+          else if(item.employeesList.length > (this.batchConfiguration.configValue - 1)){
+            this.common.openSnackBar(`${this.batchConfiguration.configDescription}`, 2, "")
+          }
           else {
             item.employeesList.unshift(droppedData); // Push the dropped data to the destinationArray
           }
@@ -1455,6 +1466,9 @@ export class F2fSummaryComponent implements OnInit {
         if (oldEployee.length > 0) {
           this.common.openSnackBar("Employee already in this batch list", 2, "")
         }
+        else if(item.employeesList.length > (this.batchConfiguration.configValue - 1)){
+          this.common.openSnackBar(`${this.batchConfiguration.configDescription}`, 2, "")
+        }
         else {
           item.employeesList.unshift(droppedData); // Push the dropped data to the destinationArray
         }
@@ -1472,6 +1486,9 @@ export class F2fSummaryComponent implements OnInit {
       if (oldEployee.length > 0) {
         this.oldNumber = this.oldNumber + 1;
         this.common.openSnackBar(`${this.oldNumber} Employee(s) already in this batch list`, 2, "")
+      }
+      else if(item.employeesList.length > (this.batchConfiguration.configValue - 1)){
+        this.common.openSnackBar(`${this.batchConfiguration.configDescription}`, 2, "")
       }
       else {
         item.employeesList.unshift(this.selectedIndices[i]); // Push the dropped data to the destinationArray
@@ -1805,12 +1822,17 @@ export class F2fSummaryComponent implements OnInit {
         //   this.common.openSnackBar(`You added Trainer`, 2, "");
         // }
         else {
+          if(this.upDatedEmployeeCount < (this.batchConfiguration.configValue)){
           this.addpeopleArray.employeesList.unshift(droppedData);
           const updatedCount = this.addpeopleArray.employeesList.filter(
             (employee: any) => employee.isDeleted === false
           );
           this.upDatedEmployeeCount = updatedCount.length;
           this.updateEmployeeList = updatedCount;
+          }
+          else{
+            this.common.openSnackBar(`${this.batchConfiguration.configDescription}`,2,"")
+          }
         }
 
         if (this.showPopUP) {
@@ -2000,7 +2022,7 @@ export class F2fSummaryComponent implements OnInit {
   }
 
   async batchUpdate(param: any) {
-    param.batchCreatedBy = this.loginEmployeeId;
+    param.batchUpdatedBy = this.loginEmployeeId;
     const response: any = await this.apiHandler.postData(this.utils.API.POST_UPDATE_BATCH, param, this.destroyed$);
     if (response.payload) {
       this.ngxloaderService.stop();
@@ -2082,7 +2104,7 @@ export class F2fSummaryComponent implements OnInit {
     const param = {
       batchStatusList: this.batchStatusList,
       isTrainer: this.loginEmployeeIstrainer,
-      userRoleCode:this.loginEmployeeRoleCode,
+      userRoleCode:this.loginEmployeeManager == true ? 'Manager' : this.loginEmployeeRoleCode,
       userEmployeeId: this.loginEmployeeId,
       pageNo: 0,
       pageSize: 7
@@ -2102,7 +2124,7 @@ export class F2fSummaryComponent implements OnInit {
       batchStatusList: [2],
       isTrainer: this.loginEmployeeIstrainer,
       userEmployeeId: this.loginEmployeeId,
-      userRoleCode:this.loginEmployeeRoleCode,
+      userRoleCode:this.loginEmployeeManager == true ? 'Manager' : this.loginEmployeeRoleCode,
       pageNo: 0,
       pageSize: 7
     }
@@ -2113,10 +2135,14 @@ export class F2fSummaryComponent implements OnInit {
     }
   }
 
-  updateReadonly = false
+  updateReadonly = false;
+  managerReadonly = false;
+  cancelButtonshow = false
   async getscheduledDetails(item: any) {
     this.ngxloaderService.start();
     this.updateReadonly = false;
+    this.managerReadonly = true;
+    this.cancelButtonshow = false;
     this.saveButtonshow = false;
     this.viewDetails = false;
     this.showPopUP = true;
@@ -2127,6 +2153,14 @@ export class F2fSummaryComponent implements OnInit {
 
     if(item.batchStatus == 'Assigned' && (currentFormatDate !== item.scheduledDate)){
       this.updateReadonly = true
+    }
+    
+    if(item.batchCreatedBy == this.loginEmployeeId || item.trainerId == this.loginEmployeeId || this.loginEmployeeAdmin == 'SA' || this.loginEmployeeAdmin == 'HR'){
+      this.managerReadonly = false;
+    }
+
+    if((item.trainerId == this.loginEmployeeId || this.loginEmployeeAdmin == 'SA' || this.loginEmployeeAdmin == 'HR')){
+      this.cancelButtonshow = true;
     }
 
     const param = {
@@ -2322,7 +2356,9 @@ export class F2fSummaryComponent implements OnInit {
     this.ngxloaderService.start()
     const param = {
       batchId: history.batchId,
-      revisionId: history.revision
+      revisionId: history.revision,
+      userEmployeeId: this.loginEmployeeId,
+      isManager:this.loginEmployeeManager
     }
     const response: any = await this.apiHandler.postData(this.utils.API.POST_GET_BATCH_HISTORY, param, this.destroyed$);
     if (response.payload) {
@@ -2511,7 +2547,7 @@ export class F2fSummaryComponent implements OnInit {
       const param = {
         batchStatusList: this.batchStatusList,
         isTrainer: this.loginEmployeeIstrainer,
-        userRoleCode:this.loginEmployeeRoleCode,
+        userRoleCode:this.loginEmployeeManager == true ? 'Manager' : this.loginEmployeeRoleCode,
         userEmployeeId: this.loginEmployeeId,
         pageNo: this.currentpageNumber,
         pageSize: 7
@@ -2543,7 +2579,7 @@ export class F2fSummaryComponent implements OnInit {
         batchStatusList: [2],
         isTrainer: this.loginEmployeeIstrainer,
         userEmployeeId: this.loginEmployeeId,
-        userRoleCode:this.loginEmployeeRoleCode,
+        userRoleCode:this.loginEmployeeManager == true ? 'Manager' : this.loginEmployeeRoleCode,
         pageNo: this.currentpageNumberDraft,
         pageSize: 7
       }
