@@ -358,6 +358,12 @@
                   </ng-container>
                 </div>
 
+                <div *ngIf="((courseConfig.code === courseCode.F2F && !checkFreeTextQues()) || courseConfig.code !== courseCode.F2F) && courseConfig.code !== courseCode.Policies"  class="d-flex align-items-center ml-3" >
+                  <mat-checkbox [(ngModel)]="course.notSuggested" name="notSuggestible">
+                    Not suggestible
+                  </mat-checkbox>
+                </div>
+
                 <div class="float-right w-100 d-flex align-items-center justify-content-end">
                   <div class="btn-group float-left courseGroupCls" role="group" aria-label="First group">
                     <button type="button" class="btn courseContentDetails publishDraftContent active mr-0"
@@ -642,6 +648,100 @@
                         </ng-container>
                       </div>
                       <!-- File Upload end -->
+
+                      <!-- If selected type is check list -->
+                      <div *ngIf="selectedChapter.chapterType === 'checklistchapter'" class="checklistCls row">
+                        <div class="col-sm-6 pr-0">
+                          <span class="checklistHeading"> Topic </span>
+                          <div [ngClass]="{'viewOnly': (view && !create && !update)}" cdkDropList [cdkDropListData]="selectedChapter.content"
+                            (cdkDropListDropped)="dropChapterCheckList($event, selectedChapter.content)" class="checklistDiv">
+                            <div [ngClass]="{'selectedTopic' : selectedTopic.id === topic.id}"
+                              *ngFor="let topic of selectedChapter.content, let topicIndex = index"
+                              (click)="setSelectedTopic(topic)"
+                              class="chapterTopic">
+                              <div style="padding-bottom: 8px !important;" cdkDrag *ngIf="topic.topicContent === '' || topic.topicContent" class="chaptersTopic">
+                                <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="topicSvg">
+                                  <path d="M3.5 12.5L0 7.5H7L3.5 12.5Z" fill="#818181" />
+                                  <path d="M3.5 0.5L0 5.5H7L3.5 0.5Z" fill="#818181" />
+                                </svg>
+                      
+                                <label *ngIf="topic.editable && topic.topicContent"
+                                  class="d-flex align-items-center w-100 mb-0 topicActiveLbl">{{topic.topicContent}}</label>
+                                <input style="border: none;" [id]="topicIndex + '-input'" *ngIf="!topic.editable" autofocus="true"
+                                  (focusout)="topic.topicContent.length !== 0 && topic.editable = true" [(ngModel)]="topic.topicContent"
+                                  placeholder="Enter a topic title..." />
+                                <a [ngClass]="{invisible : !topic.editable || !topic.topicContent, topicEditIconActive: selectedTopic.id === topic.id}"
+                                  [matMenuTriggerFor]="statusButton" class="statusHighlight topicEditIcon">
+                                  &#65049;
+                                </a>
+                                <mat-menu #statusButton="matMenu" class="newCoursePopup statusPopup checklistPopup editCheckPopup">
+                                  <div class=" p-0 coursePopup">
+                                    <div>
+                                      <div class="d-flex justify-content-start align-items-center courseMenu" mat-menu-item>
+                                        <button (click)="topic.editable = false; focusInput(topicIndex+'-input')"
+                                          class=" d-flex justify-content-start" mat-menu-item data-target="#statusModal"
+                                          data-toggle="modal">Edit</button>
+                                      </div>
+                                      <div class="d-flex justify-content-start align-items-center courseMenu" mat-menu-item>
+                                        <button (click)="openAlert('deleteTopic', topicIndex, topic)"
+                                          class=" d-flex justify-content-start deleteList" mat-menu-item data-target="#statusModal"
+                                          data-toggle="modal">Delete</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </mat-menu>
+                              </div>
+                              <button class="chapterCheckListBtn" *ngIf="selectedChapter.content.length - 1 === topicIndex" (click)="addChapterTopic((topicIndex+1)+'-input')" [disabled]="!validTopic(topic)">
+                                Add a topic </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 p-0">
+                          <span class="checklistHeading checkLst"> Checklist </span>
+                          <div [ngClass]="{'viewOnly': (view && !create && !update)}" cdkDropList
+                            [cdkDropListData]="selectedTopic.list" (cdkDropListDropped)="dropChapterCheckList($event, selectedTopic.list)" class="checklistDiv ml-1 ">
+                            <div *ngFor="let list of selectedTopic.list, let listIndex = index"
+                              class="chapterTopic checkCls">
+                              <div cdkDrag *ngIf="list.listContent === '' || list.listContent" class="chaptersTopic">
+                                <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="topicSvg">
+                                  <path d="M3.5 12.5L0 7.5H7L3.5 12.5Z" fill="#818181" />
+                                  <path d="M3.5 0.5L0 5.5H7L3.5 0.5Z" fill="#818181" />
+                                </svg>
+                                <input readonly [value]="list.listContent" *ngIf="list.editable && list.listContent"
+                                  class="d-flex align-items-center w-100 mb-0 topicActiveLbl">
+                                <input [id]="listIndex + '-input'" *ngIf="!list.editable" autofocus="true"
+                                  (focusout)="list.listContent.length !== 0 && list.editable = true" [(ngModel)]="list.listContent"
+                                  placeholder="Add an item..." />
+                                <a [ngClass]="{invisible : !list.editable || !list.listContent}" [matMenuTriggerFor]="statusButton"
+                                  class="statusHighlight topicEditIcon">
+                                  &#65049;
+                                </a>
+                                <mat-menu #statusButton="matMenu" class="newCoursePopup statusPopup checklistPopup editCheckPopup">
+                                  <div class=" p-0 coursePopup">
+                                    <div>
+                                      <div class="d-flex justify-content-start align-items-center courseMenu" mat-menu-item>
+                                        <button (click)="list.editable = false; focusInput(listIndex+'-input')"
+                                          class="d-flex justify-content-start" mat-menu-item data-target="#statusModal"
+                                          data-toggle="modal">Edit</button>
+                                      </div>
+                                      <div class="d-flex justify-content-start align-items-center courseMenu" mat-menu-item>
+                                        <button
+                                          (click)="openAlert('deleteList', listIndex, list);$event.stopPropagation();"
+                                          class="d-flex justify-content-start deleteList" mat-menu-item data-target="#statusModal"
+                                          data-toggle="modal">Delete</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </mat-menu>
+                              </div>
+                              <button class="chapterCheckListBtn" *ngIf="selectedTopic.list.length - 1 === listIndex" (click)="addChapterList((listIndex+1)+'-input')" [disabled]="!list.listContent">
+                                Add a checklist </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- checklist end -->
+
                     </div>
                   </div>
                 </div>
@@ -1175,6 +1275,16 @@
                     </ng-container>
                   </div>
                 </ng-container>
+
+                <ng-container>                  
+                  <!-- checklistchapter -->
+                  <div *ngIf="course.chapters[currentPage].chapterType === 'checklistchapter'">
+                    <ng-container *ngIf="course.chapters[currentPage].chapterType === 'checklistchapter'">
+                      <ng-container *ngTemplateOutlet="checklistchapter; context: { config :course.chapters[currentPage].content}">
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </ng-container>
               </ng-container>
 
               <!-- Questionnaire -->
@@ -1678,6 +1788,34 @@
     </div>
     <span class="doneTxt">Please confirm that you have read and understand the course.</span>
   </div>
+</ng-template>
+
+<!-- Checklist chapter section -->
+<ng-template #checklistchapter let-checklistchapterconfig="config">
+  <ng-container *ngIf="!isCheckList">
+    <div class="topicList" *ngFor="let topic of checklistchapterconfig">
+      <div (click)="openCheckListPage(topic)">
+        {{ topic.topicContent }} 
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isCheckList">
+    <div class="d-flex w-100 mb-4">
+      <div class="float-left searchby-dd  d-flex" style="width: 10%; align-items: center;" (click)="backToTopics()">
+        <mat-icon class="matArrow pl-2" style="font-size: 16px; line-height: 0.4;">arrow_back</mat-icon>
+      </div>  
+      <label class="checklistlabel"> {{selectedChapterTopic.topicContent}} </label>
+    </div>
+    <div class="checklistSelect courseContentCls" *ngFor="let list of selectedChapterTopic.list">
+      <mat-checkbox [name]="'clActivity' + list.id">
+        <span>{{list.listContent}}</span>
+      </mat-checkbox>
+    </div>
+    <div class="bottom-div">
+      <button class="submitBtn">Submit</button>
+    </div>
+  </ng-container>
 </ng-template>
 
 <!-- Confirm popup -->
